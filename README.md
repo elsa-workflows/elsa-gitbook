@@ -11,7 +11,7 @@ Workflows in Elsa can be defined in two ways:
 * Programmatically: By writing .NET code, developers can define complex workflows tailored to specific business needs.
 * Visually: Using the built-in designer, non-developers or those who prefer a visual approach can create and modify workflows with ease.
 
-```
+```csharp
 // Define workflows directly from code.
 var workflow = new Sequence
 {
