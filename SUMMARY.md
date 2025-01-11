@@ -6,6 +6,17 @@
 
 * [Prerequisites](getting-started/prerequisites.md)
 * [Packages](getting-started/packages.md)
+* [Hello World](getting-started/hello-world.md)
+
+## Application Types
+
+* [Elsa Server](application-types/elsa-server.md)
+* [Elsa Studio](application-types/elsa-studio.md)
+* [Elsa Server + Studio (WASM)](application-types/elsa-server-+-studio-wasm.md)
+
+***
+
+* [Concepts](concepts.md)
 
 ## Docker
 
