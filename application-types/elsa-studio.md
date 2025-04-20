@@ -19,6 +19,14 @@ To setup Elsa Studio, we'll go through the following steps:
     ```bash
     dotnet new blazorwasm-empty -n "ElsaStudioBlazorWasm"
     ```
+    {% hint style="warning" %}
+    **Deprecation warning**
+
+    The `blazorwasm-empty` template is [dicontinued since .NET 8.0](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-sdk-templates).
+    If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm-empty`.
+    {% endhint %}
+
+    
 2.  **Add Elsa Studio Packages**
 
     Navigate to the root directory of your project and integrate the following Elsa Studio packages:
