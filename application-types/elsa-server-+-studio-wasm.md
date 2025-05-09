@@ -32,7 +32,7 @@ dotnet new web -n "ElsaServer"
 dotnet sln add ElsaServer/ElsaServer.csproj
 
 # Create the client project
-dotnet new blazorwasm-empty -n "ElsaStudio"
+dotnet new blazorwasm -n "ElsaStudio"
 
 # Add the client project to the solution
 dotnet sln add ElsaStudio/ElsaStudio.csproj
