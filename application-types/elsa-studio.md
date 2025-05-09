@@ -17,7 +17,7 @@ To setup Elsa Studio, we'll go through the following steps:
     Execute the following command in the terminal:
 
     ```bash
-    dotnet new blazorwasm-empty -n "ElsaStudioBlazorWasm"
+    dotnet new blazorwasm -n "ElsaStudioBlazorWasm"
     ```
 2.  **Add Elsa Studio Packages**
 
