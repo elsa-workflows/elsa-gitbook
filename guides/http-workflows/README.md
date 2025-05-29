@@ -6,9 +6,3 @@ In this guide, we'll take a look at a workflow that can receive HTTP requests, s
 * SendHttpRequest
 * WriteHttpResponse
 * SetVariable
-
-For this guide, we will need the following:
-
-* An [Elsa Server](https://elsa-workflows.github.io/elsa-documentation/elsa-server.html?section=Programmatic) project
-
-Please return here when you are ready.
