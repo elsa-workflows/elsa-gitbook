@@ -22,7 +22,7 @@ services:
             - "5432:5432"
 
     elsa-server-and-studio:
-        image: elsaworkflows/elsa-server-and-studio-v3-3-0-preview:latest
+        image: elsaworkflows/elsa-server-and-studio-v3-4-0-preview:latest
         pull_policy: always
         environment:
             ASPNETCORE_ENVIRONMENT: Development

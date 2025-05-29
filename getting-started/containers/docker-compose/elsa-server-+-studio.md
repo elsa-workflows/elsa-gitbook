@@ -16,7 +16,7 @@ services:
 
     # Elsa Server.
     elsa-server:
-        image: elsaworkflows/elsa-server-v3-3-0-preview:latest
+        image: elsaworkflows/elsa-server-v3-4-0-preview:latest
         pull_policy: always
         environment:
             ASPNETCORE_ENVIRONMENT: Development
@@ -27,7 +27,7 @@ services:
 
     # Elsa Studio connected to Elsa Server.
     elsa-studio:
-        image: elsaworkflows/elsa-studio-v3-3-0-preview:latest
+        image: elsaworkflows/elsa-studio-v3-4-0-preview:latest
         pull_policy: always
         environment:
             ASPNETCORE_ENVIRONMENT: Development
@@ -52,7 +52,7 @@ docker-compose up
 
 This command will:
 
-* Pull the necessary Docker images (elsaworkflows/elsa-server-v3 and elsaworkflows/elsa-studio-v3).
+* Pull the necessary Docker images (elsaworkflows/elsa-server-v3-4-0-preview and elsaworkflows/elsa-studio-v3-4-0-preview).
 * Start both services (Elsa Server and Elsa Studio).
 
 Once the services are running, you can access them at the following URLs:

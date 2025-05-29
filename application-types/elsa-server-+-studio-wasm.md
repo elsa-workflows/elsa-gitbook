@@ -90,8 +90,8 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
                 identity.UseAdminUserProvider();
             })
             .UseDefaultAuthentication()
-            .UseWorkflowManagement(management => management.UseEntityFrameworkCore())
-            .UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore())
+            .UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseSqlite()))
+            .UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UseSqlite()))
             .UseScheduling()
             .UseJavaScript()
             .UseLiquid()
@@ -230,17 +230,17 @@ Next, we will modify the client project.
 
     ```csharp
     using System.Text.Json;
-    using Elsa.Studio.Dashboard.Extensions;
-    using Elsa.Studio.Shell;
-    using Elsa.Studio.Shell.Extensions;
-    using Elsa.Studio.Workflows.Extensions;
     using Elsa.Studio.Contracts;
     using Elsa.Studio.Core.BlazorWasm.Extensions;
+    using Elsa.Studio.Dashboard.Extensions;
     using Elsa.Studio.Extensions;
     using Elsa.Studio.Login.BlazorWasm.Extensions;
     using Elsa.Studio.Login.HttpMessageHandlers;
     using Elsa.Studio.Options;
+    using Elsa.Studio.Shell;
+    using Elsa.Studio.Shell.Extensions;
     using Elsa.Studio.Workflows.Designer.Extensions;
+    using Elsa.Studio.Workflows.Extensions;
     using Microsoft.AspNetCore.Components.Web;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.Options;
@@ -257,7 +257,10 @@ Next, we will modify the client project.
     // Register shell services and modules.
     builder.Services.AddCore();
     builder.Services.AddShell();
-    builder.Services.AddRemoteBackend(elsaClient => elsaClient.AuthenticationHandler = typeof(AuthenticatingApiHttpMessageHandler));
+    builder.Services.AddRemoteBackend(new()
+    {
+        ConfigureHttpClientBuilder = options => options.AuthenticationHandler = typeof(AuthenticatingApiHttpMessageHandler)
+    });
     builder.Services.AddLoginModule();
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
@@ -268,8 +271,8 @@ Next, we will modify the client project.
     // Apply client config.
     var js = app.Services.GetRequiredService<IJSRuntime>();
     var clientConfig = await js.InvokeAsync<JsonElement>("getClientConfig");
-    var apiUrl = clientConfig.GetProperty("apiUrl").GetString()!;
-    app.Services.GetRequiredService<IOptions<BackendOptions>>().Value.Url = new Uri(apiUrl);
+    var apiUrl = clientConfig.GetProperty("apiUrl").GetString() ?? throw new InvalidOperationException("No API URL configured.");
+    app.Services.GetRequiredService<IOptions<BackendOptions>>().Value.Url = new(apiUrl);
 
     // Run each startup task.
     var startupTaskRunner = app.Services.GetRequiredService<IStartupTaskRunner>();
@@ -303,7 +306,7 @@ cd ../ElsaServer
 Then execute the following command:
 
 ```bash
-dotnet run --urls https://localhost:5001
+dotnet run --urls https://locahost:5001
 ```
 
 Your application is now accessible at [https://localhost:5001](https://localhost:5001/).
