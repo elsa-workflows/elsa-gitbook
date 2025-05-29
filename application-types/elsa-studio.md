@@ -42,6 +42,7 @@ To setup Elsa Studio, we'll go through the following steps:
     using Elsa.Studio.Shell.Extensions;
     using Elsa.Studio.Workflows.Extensions;
     using Elsa.Studio.Contracts;
+    using Elsa.Studio.Models;
     using Elsa.Studio.Core.BlazorWasm.Extensions;
     using Elsa.Studio.Extensions;
     using Elsa.Studio.Login.BlazorWasm.Extensions;
