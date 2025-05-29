@@ -10,7 +10,7 @@ Instead of running Elsa Server and Elsa Stusio as separate ASP.NET Core applicat
 
 For Elsa Studio, we will setup the Blazor parts using Blazor WebAssembly, which static files will be served from the ASP.NET Core host application.
 
-## Create Solution﻿ <a href="#create-solution" id="create-solution"></a>
+## Create Solution <a href="#create-solution" id="create-solution"></a>
 
 In this chapter, we will scaffold a new solution and two projects:
 
@@ -44,7 +44,7 @@ cd ElsaServer
 dotnet add reference ../ElsaStudio/ElsaStudio.csproj
 ```
 
-## Setup Host﻿ <a href="#setup-host" id="setup-host"></a>
+## Setup Host <a href="#setup-host" id="setup-host"></a>
 
 In this chapter, we will setup the host, which will host both the Elsa Server engine as well as the webassembly files for serving the Elsa Studio client assets to the browser.
 
@@ -71,6 +71,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     **Program.cs**
 
     ```csharp
+    using Elsa.EntityFrameworkCore.Extensions;
     using Elsa.EntityFrameworkCore.Modules.Management;
     using Elsa.EntityFrameworkCore.Modules.Runtime;
     using Elsa.Extensions;
@@ -207,7 +208,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     </html>
     ```
 
-## Setup Client﻿ <a href="#setup-client" id="setup-client"></a>
+## Setup Client <a href="#setup-client" id="setup-client"></a>
 
 Next, we will modify the client project.
 
@@ -295,7 +296,7 @@ Next, we will modify the client project.
     </main>
     ```
 
-## Launch the Application﻿ <a href="#run-application" id="run-application"></a>
+## Launch the Application <a href="#run-application" id="run-application"></a>
 
 To see your application in action, navigate back to the root directory containing the host project:
 
@@ -318,6 +319,6 @@ username: admin
 password: password
 ```
 
-## Source Code﻿ <a href="#source-code" id="source-code"></a>
+## Source Code <a href="#source-code" id="source-code"></a>
 
 The source code for this chapter can be found [here](https://github.com/elsa-workflows/elsa-guides/tree/main/src/installation/elsa-server-and-studio)
