@@ -92,6 +92,7 @@ To setup Elsa Studio, we'll go through the following steps:
     * Pages
     * App.razor
     * MainLayout.razor
+    * MainLayout.razor.css
     * \_Imports.razor
 5.  **Generate appsettings.json**
 
