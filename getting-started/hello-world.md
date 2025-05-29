@@ -83,6 +83,7 @@ Navigate to your project's root directory and install the Elsa package:
 ```bash
 cd ElsaWeb
 dotnet add package Elsa
+dotnet add package Elsa.Http
 ```
 {% endstep %}
 
