@@ -8,7 +8,7 @@ description: >-
 
 Elsa Studio is a Blazor application that let's you manage workflows through a UI. The application is essentially a SPA that connects to an Elsa Server as its back-end.
 
-## Setup﻿ <a href="#setup" id="setup"></a>
+## Setup <a href="#setup" id="setup"></a>
 
 To setup Elsa Studio, we'll go through the following steps:
 
@@ -19,14 +19,13 @@ To setup Elsa Studio, we'll go through the following steps:
     ```bash
     dotnet new blazorwasm -n "ElsaStudioBlazorWasm"
     ```
+
     {% hint style="warning" %}
     **Deprecation warning**
 
-    The `blazorwasm-empty` template is [dicontinued since .NET 8.0](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-sdk-templates).
+    The `blazorwasm-empty` template is [dicontinued since .NET 8.0](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-sdk-templates).\
     If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm-empty`.
     {% endhint %}
-
-    
 2.  **Add Elsa Studio Packages**
 
     Navigate to the root directory of your project and integrate the following Elsa Studio packages:
@@ -171,7 +170,7 @@ To setup Elsa Studio, we'll go through the following steps:
     </html>
     ```
 
-## Launch the Application﻿ <a href="#run-application" id="run-application"></a>
+## Launch the Application <a href="#run-application" id="run-application"></a>
 
 To see your application in action, execute the following command:
 
@@ -188,6 +187,6 @@ username: admin
 password: password
 ```
 
-## Source Code﻿ <a href="#source-code" id="source-code"></a>
+## Source Code <a href="#source-code" id="source-code"></a>
 
 The source code for this chapter can be found [here](https://github.com/elsa-workflows/elsa-guides/tree/main/src/installation/elsa-studio/ElsaStudioBlazorWasm)

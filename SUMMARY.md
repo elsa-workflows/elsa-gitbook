@@ -63,8 +63,8 @@
 
 ## Operate
 
-* [Variables](operate/variables.md)
-* [Activation Strategies](operate/activation-strategies.md)
+* [Variables](operate/workflow-instance-variables.md)
+* [Activation Strategies](operate/workflow-activation-strategies.md)
 * [Incidents](operate/incidents/README.md)
   * [Strategies](operate/incidents/strategies.md)
   * [Configuration](operate/incidents/configuration.md)

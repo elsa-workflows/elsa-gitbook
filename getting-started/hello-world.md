@@ -10,7 +10,7 @@ description: >-
 
 {% stepper %}
 {% step %}
-### Create Console App
+#### Create Console App
 
 Start by creating a new console application:
 
@@ -20,7 +20,7 @@ dotnet new console -n "ElsaConsole"
 {% endstep %}
 
 {% step %}
-### Add Packages
+#### Add Packages
 
 Navigate to your newly created project's root directory and add the following packages:
 
@@ -155,7 +155,7 @@ public class HttpHelloWorld : WorkflowBase
 {% endstep %}
 {% endstepper %}
 
-## Summary﻿ <a href="#summary" id="summary"></a>
+## Summary <a href="#summary" id="summary"></a>
 
 This document explains setting up Console and ASP.NET Core apps using Elsa workflows. For the Console app, we configured a service container, added Elsa, and ran a "Hello World" workflow. The ASP.NET Core app integrates Elsa with HTTP endpoints to process workflows. Follow the code samples for package additions and `Program.cs` configurations. Refer to source code links for further details.
 
