@@ -38,6 +38,10 @@ Open `Program.cs` and replace its contents with the following:
 ```csharp
 using Elsa.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Elsa.Extensions;
+using Elsa.Workflows.Activities;
+using Elsa.Workflows;
+using Microsoft.Extensions.DependencyInjection;
 
 // Setup service container.
 var services = new ServiceCollection();
@@ -49,7 +53,14 @@ services.AddElsa();
 var serviceProvider = services.BuildServiceProvider();
 
 // Instantiate an activity to run.
-var activity = new WriteLine("Hello World!");
+var activity = new Sequence
+{
+    Activities =
+    {
+        new WriteLine("Hello World!"),
+        new WriteLine("We can do more than a one-liner!")
+    }
+};
 
 // Resolve a workflow runner to execute the activity.
 var workflowRunner = serviceProvider.GetRequiredService<IWorkflowRunner>();
@@ -101,15 +112,23 @@ using ElsaWeb.Workflows;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers();
 builder.Services.AddElsa(elsa =>
 {
     elsa.AddWorkflow<HttpHelloWorld>();
-    elsa.UseHttp();
+    elsa.UseHttp(http => http.ConfigureHttpOptions = options =>
+    {
+        options.BaseUrl = new Uri("https://localhost:5001");
+        options.BasePath = "/workflows";
+    });
 });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
 app.UseWorkflows();
 app.Run();
 ```
@@ -126,7 +145,6 @@ Create a new directory called `Workflows` and add a new file to it called `HttpH
 using Elsa.Http;
 using Elsa.Workflows;
 using Elsa.Workflows.Activities;
-using Elsa.Workflows.Contracts;
 
 namespace ElsaWeb.Workflows;
 
@@ -134,6 +152,9 @@ public class HttpHelloWorld : WorkflowBase
 {
     protected override void Build(IWorkflowBuilder builder)
     {
+        var queryStringsVariable = builder.WithVariable<IDictionary<string, object>>();
+        var messageVariable = builder.WithVariable<string>();
+
         builder.Root = new Sequence
         {
             Activities =
@@ -141,11 +162,22 @@ public class HttpHelloWorld : WorkflowBase
                 new HttpEndpoint
                 {
                     Path = new("/hello-world"),
-                    CanStartWorkflow = true
+                    CanStartWorkflow = true,
+                    QueryStringData = new(queryStringsVariable)
+                },
+                new SetVariable
+                {
+                    Variable = messageVariable,
+                    Value = new(context =>
+                    {
+                        var queryStrings = queryStringsVariable.Get(context)!;
+                        var message = queryStrings.TryGetValue("message", out var messageValue) ? messageValue.ToString() : "Hello world of HTTP workflows!";
+                        return message;
+                    })
                 },
                 new WriteHttpResponse
                 {
-                    Content = new("Hello world of HTTP workflows!")
+                    Content = new(messageVariable)
                 }
             }
         };
