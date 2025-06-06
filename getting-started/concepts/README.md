@@ -38,9 +38,13 @@ This term describes the period during which the workflow runner actively execute
 
 A Correlation ID is a flexible identifier linking related workflows and external entities. It aids in tracing workflows in distributed, asynchronous, or hierarchical systems. Assigning a Correlation ID allows tracking of related workflows and ties them to specific business objects like documents, customers, or orders.
 
+Read more
+
 ## Outcome
 
 Activities in a flowchart are connected that defines the logic of the workflow. Each activity can have one ore more _potential_ results, which are referred to as _outcomes_. These outcomes are visually displayed as "ports" on the activity. For example, the `Decision` activity has two potential outcomes: `True` and `False`. When using the designer, the user can connect a subsequent activity to these outcomes. This powerful mechanism simplifies workflows by eliminating the need for separate decision activities to evaluate an activity's result.
+
+[Read more](outcomes.md)
 
 ## Input
 
@@ -71,6 +75,6 @@ An incident is an error event that occurred in the workflow. For example, if an 
 
 ## Alteration
 
-An alteration represents a change that can be applied to a given [workflow instance](concepts.md#workflow-instance).
+An alteration represents a change that can be applied to a given [workflow instance](./#workflow-instance).
 
 Using alterations, you can modify a workflow instance's state, schedule activities, and more.

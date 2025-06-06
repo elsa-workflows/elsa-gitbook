@@ -4,7 +4,9 @@
 
 ## Getting Started
 
-* [Concepts](getting-started/concepts.md)
+* [Concepts](getting-started/concepts/README.md)
+  * [Outcomes](getting-started/concepts/outcomes.md)
+  * [Correlation ID](getting-started/concepts/correlation-id.md)
 * [Hello World](getting-started/hello-world.md)
 * [Prerequisites](getting-started/prerequisites.md)
 * [Packages](getting-started/packages.md)

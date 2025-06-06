@@ -1,6 +1,6 @@
 # Alterations
 
-An [alteration](../../getting-started/concepts.md#alteration) represents a change that can be applied to a given [workflow instance](../../getting-started/concepts.md#workflow-instance).
+An [alteration](../../getting-started/concepts/#alteration) represents a change that can be applied to a given [workflow instance](../../getting-started/concepts/#workflow-instance).
 
 Using alterations, you can modify a workflow instance's state, schedule activities, and more.
 
