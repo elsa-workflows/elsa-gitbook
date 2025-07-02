@@ -164,7 +164,7 @@ Configure the activities as follows:
 | Property    | Value                 | Syntax     |
 | ----------- | --------------------- | ---------- |
 | Status Code | `OK`                  | Default    |
-| Content     | variables.`User.data` | JavaScript |
+| Content     | `variables.User.data` | JavaScript |
 
 
 {% endtab %}
