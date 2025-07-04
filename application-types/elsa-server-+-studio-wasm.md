@@ -284,7 +284,7 @@ Next, we will modify the client project.
     ```
 3.  **Modify MainLayout.razor**
 
-    Update `MainLayout.razor` with the following code listing:
+    Update `Layout/MainLayout.razor` with the following code listing:
 
     **MainLayout.razor**
 
