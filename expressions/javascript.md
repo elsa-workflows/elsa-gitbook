@@ -84,6 +84,8 @@ The following functions and objects are available as globals to all JavaScript e
 * [bytesFromBase64](javascript.md#bytesfrombase64)
 * [stringToBase64](javascript.md#stringtobase64)
 * [stringFromBase64](javascript.md#stringfrombase64)
+* [streamToBytes](javascript.md#streamToBytes)
+* [streamToBase64](javascript.md#streamToBase64)
 * get{InputName}
 * get{VariableName}
 * set{VariableName}
@@ -294,4 +296,20 @@ Converts a base64 string to a string.
 
 ```javascript
 stringFromBase64(base64: string): string;
+```
+
+### streamToBytes
+
+Converts a stream string to a byte array.
+
+```javascript
+streamToBytes(value: Stream): byte[];
+```
+
+### streamToBase64
+
+Converts a stream to a base64 string.
+
+```javascript
+streamToBase64(value: Stream): string;
 ```
