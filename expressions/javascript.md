@@ -303,7 +303,7 @@ stringFromBase64(base64: string): string;
 Converts a stream string to a byte array.
 
 ```javascript
-streamToBytes(value: Stream): string;
+streamToBytes(value: Stream): byte[];
 ```
 
 ### streamToBase64
