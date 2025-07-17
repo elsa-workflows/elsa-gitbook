@@ -295,3 +295,19 @@ Converts a base64 string to a string.
 ```javascript
 stringFromBase64(base64: string): string;
 ```
+
+### streamToBytes
+
+Converts a stream string to a byte array.
+
+```javascript
+streamToBytes(value: Stream): string;
+```
+
+### streamToBase64
+
+Converts a stream to a base64 string.
+
+```javascript
+streamToBase64(value: Stream): string;
+```
