@@ -84,6 +84,8 @@ The following functions and objects are available as globals to all JavaScript e
 * [bytesFromBase64](javascript.md#bytesfrombase64)
 * [stringToBase64](javascript.md#stringtobase64)
 * [stringFromBase64](javascript.md#stringfrombase64)
+* [streamToBytes](javascript.md#streamToBytes)
+* [streamToBase64](javascript.md#streamToBase64)
 * get{InputName}
 * get{VariableName}
 * set{VariableName}
