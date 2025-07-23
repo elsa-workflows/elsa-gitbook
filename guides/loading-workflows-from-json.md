@@ -14,7 +14,7 @@ The most straightforward way to load workflows from JSON files is to simply load
 dotnet new console -n "ElsaConsole" -f net8.0
 cd ElsaConsole
 dotnet add package Elsa
-dotnet add package Elsa.Testing.Shared
+dotnet add package Elsa.Testing.Shared.Integration
 ```
 {% endstep %}
 
