@@ -692,7 +692,7 @@ This provider leverages a simple array of fruit names as its source, generating 
 To register this provider, utilise the `AddActivityProvider<T>` extension method:
 
 ```
-services.AddActivityProvider<FruitsActivityProvider>();
+services.AddActivityProvider<FruitActivityProvider>();
 ```
 
 {% hint style="info" %}
