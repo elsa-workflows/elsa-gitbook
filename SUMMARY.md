@@ -56,7 +56,7 @@
 
 ***
 
-* [Reusable Triggers (3.5-preview)](reusable-triggers-3.5-preview.md)
+* [Reusable Triggers](reusable-triggers-3.5-preview.md)
 
 ## Multitenancy
 
