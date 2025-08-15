@@ -96,3 +96,7 @@
   * [Content Visualisers (3.6-preview)](studio/workflow-editor/content-visualisers-3.6-preview.md)
   * [Field Extensions](studio/workflow-editor/field-extensions.md)
 * [Localization](studio/localization.md)
+
+## Authentication
+
+* [Authentication](authentication/authentication.md)
