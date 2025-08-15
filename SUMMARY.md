@@ -38,6 +38,7 @@
 
 ## Activities
 
+* [Common Properties](activities/common-properties.md)
 * [Control Flow](activities/control-flow/README.md)
   * [Decision](activities/control-flow/decision.md)
 * [MassTransit](activities/masstransit/README.md)
