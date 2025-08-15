@@ -85,3 +85,14 @@
 ## Hosting
 
 * [Distributed Hosting](hosting/distributed-hosting.md)
+
+## Studio
+
+* [Design](studio/design/README.md)
+  * [Workflow Editor (3.5-preview)](studio/design/workflow-editor-3.5-preview.md)
+  * [Activity Pickers (3.7-preview)](studio/design/activity-pickers-3.7-preview.md)
+* [Workflow Editor](studio/workflow-editor/README.md)
+  * [UI Hints](studio/workflow-editor/ui-hints.md)
+  * [Content Visualisers (3.6-preview)](studio/workflow-editor/content-visualisers-3.6-preview.md)
+  * [Field Extensions](studio/workflow-editor/field-extensions.md)
+* [Localization](studio/localization.md)

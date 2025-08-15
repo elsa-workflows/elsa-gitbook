@@ -2,13 +2,13 @@
 
 Loading workflows from JSON is a great way to store workflows in a database or file system. This guide will show you how to load workflows from JSON files.
 
-## Console application﻿ <a href="#console-application" id="console-application"></a>
+## Console application <a href="#console-application" id="console-application"></a>
 
 The most straightforward way to load workflows from JSON files is to simply load the contents of a JSON file, deserialise it and then execute the deserialised workflow.
 
 {% stepper %}
 {% step %}
-### Create Console Project
+#### Create Console Project
 
 ```bash
 dotnet new console -n "ElsaConsole" -f net8.0
@@ -19,7 +19,7 @@ dotnet add package Elsa.Testing.Shared.Integration
 {% endstep %}
 
 {% step %}
-### Update Program.cs
+#### Update Program.cs
 
 Here's a complete Program.cs file that demonstrates how to load a workflow from a JSON file and execute it:
 
@@ -67,9 +67,9 @@ await workflowRunner.RunAsync(workflow);
 {% endstep %}
 
 {% step %}
-### Create Workflow JSON file
+#### Create Workflow JSON file
 
-Create a new file called HelloWorld.json in the root of the project and make sure it is configured to be copied to the output directory.&#x20;
+Create a new file called HelloWorld.json in the root of the project and make sure it is configured to be copied to the output directory.
 
 {% code title="HelloWorld.json" %}
 ```json
@@ -99,12 +99,10 @@ Create a new file called HelloWorld.json in the root of the project and make sur
 }
 ```
 {% endcode %}
-
-
 {% endstep %}
 
 {% step %}
-### Run the Program
+#### Run the Program
 
 Run the program:
 
@@ -130,21 +128,21 @@ Let's try it out:
 
 {% stepper %}
 {% step %}
-### Setup Elsa Server
+#### Setup Elsa Server
 
 Setup an [Elsa Server](../application-types/elsa-server.md) project.
 {% endstep %}
 
 {% step %}
-### Create Workflows Folder
+#### Create Workflows Folder
 
 Create a new folder called _Workflows_.
 {% endstep %}
 
 {% step %}
-### Create Workflow JSON File
+#### Create Workflow JSON File
 
-Create a new file called _HelloWorld.json_ in the root of the project and make sure it is configured to be copied to the output directory.&#x20;
+Create a new file called _HelloWorld.json_ in the root of the project and make sure it is configured to be copied to the output directory.
 
 {% code title="HelloWorld.json" %}
 ```json
@@ -177,7 +175,7 @@ Create a new file called _HelloWorld.json_ in the root of the project and make s
 {% endstep %}
 
 {% step %}
-### Run the Program
+#### Run the Program
 
 Run the program:
 
@@ -187,7 +185,7 @@ dotnet run --urls "https://localhost:5001"
 {% endstep %}
 
 {% step %}
-### Run the Workflow
+#### Run the Workflow
 
 Run the workflow using the following curl:
 
@@ -200,7 +198,6 @@ Alternatively, [start an Elsa Studio container](../getting-started/containers/do
 {% endstep %}
 {% endstepper %}
 
-## Summary﻿ <a href="#summary" id="summary"></a>
+## Summary <a href="#summary" id="summary"></a>
 
 In this guide, we've demonstrated configuring an Elsa Server to host workflows from JSON files. We covered loading a JSON file, deserialising it into the `Workflow` class, and executing the workflow.
-

@@ -1,6 +1,6 @@
 # Designer
 
-## Before you start﻿ <a href="#before-you-start" id="before-you-start"></a>
+## Before you start <a href="#before-you-start" id="before-you-start"></a>
 
 For this guide, we will need the following:
 
@@ -11,8 +11,6 @@ For this guide, we will need the following:
     docker pull elsaworkflows/elsa-studio-v3:latest
     docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e ELSASERVER__URL=https://localhost:5001/elsa/api -p 14000:8080 elsaworkflows/elsa-studio-v3:latest
     ```
-
-
 
 {% hint style="info" %}
 **Port Numbers**
@@ -26,7 +24,7 @@ For example, if Elsa Server runs on https://localhost:5001, the Docker command s
 
 Please return here when you are ready.
 
-## Workflow Overview﻿ <a href="#workflow-overview" id="workflow-overview"></a>
+## Workflow Overview <a href="#workflow-overview" id="workflow-overview"></a>
 
 We will define a new workflow called `GetUser`. The purpose of the workflow is to handle inbound HTTP requests by fetching a user by a given user ID from a backend API and writing them back to the client in JSON format.
 
@@ -56,21 +54,19 @@ The response should look similar to this:
 
 Our workflow will essentially be a proxy sitting in front of the reqres API and return a portion of the response.
 
-## Designing the Workflow﻿ <a href="#create-workflow-using-designer" id="create-workflow-using-designer"></a>
+## Designing the Workflow <a href="#create-workflow-using-designer" id="create-workflow-using-designer"></a>
 
 Follow these steps to create the workflow using Elsa Studio.
 
-
-
 {% stepper %}
 {% step %}
-### Create Get User Workflow
+#### Create Get User Workflow
 
 Create a new workflow called Get User
 {% endstep %}
 
 {% step %}
-### Add Activities
+#### Add Activities
 
 Add and connect the following activities to the design surface:
 
@@ -82,7 +78,7 @@ Add and connect the following activities to the design surface:
 {% endstep %}
 
 {% step %}
-### Create Variables
+#### Create Variables
 
 Create the following variables:
 
@@ -91,12 +87,10 @@ Create the following variables:
 | RouteData | ObjectDictionary | Workflow Instance |
 | UserId    | string           | Workflow Instance |
 | User      | Object           | Workflow Instance |
-
-
 {% endstep %}
 
 {% step %}
-### Configure Activities
+#### Configure Activities
 
 Configure the activities as follows:
 
@@ -108,24 +102,18 @@ Configure the activities as follows:
 | ----------------- | ---------------- | ------- |
 | Path              | `users/{userid}` | Default |
 | Supported Methods | `Get`            | Default |
-
-
 {% endtab %}
 
 {% tab title="Output" %}
 | Property   | Value     |
 | ---------- | --------- |
 | Route Data | RouteData |
-
-
 {% endtab %}
 
 {% tab title="Common" %}
 | Property         | Value   |
 | ---------------- | ------- |
 | Trigger Workflow | Checked |
-
-
 {% endtab %}
 {% endtabs %}
 
@@ -134,8 +122,6 @@ Configure the activities as follows:
 {% tabs %}
 {% tab title="Input" %}
 <table><thead><tr><th width="132">Property</th><th width="423">Value</th><th>Syntax</th></tr></thead><tbody><tr><td>Variable</td><td><code>UserId</code></td><td>Default</td></tr><tr><td>Value</td><td><code>return Variables.RouteData["userid"];</code></td><td>C#</td></tr></tbody></table>
-
-
 {% endtab %}
 {% endtabs %}
 
@@ -144,16 +130,12 @@ Configure the activities as follows:
 {% tabs %}
 {% tab title="Input" %}
 <table><thead><tr><th width="100">Property</th><th width="458">Value</th><th width="100">Syntax</th></tr></thead><tbody><tr><td>Expected Status Codes</td><td><code>200, 404</code></td><td>Default</td></tr><tr><td>Url</td><td><code>return $"https://reqres.in/api/users/{Variables.UserId}";</code></td><td>C#</td></tr><tr><td>Method</td><td><code>GET</code></td><td>Default</td></tr></tbody></table>
-
-
 {% endtab %}
 
 {% tab title="Output" %}
 | Property       | Value  |
 | -------------- | ------ |
 | Parsed Content | `User` |
-
-
 {% endtab %}
 {% endtabs %}
 
@@ -165,8 +147,6 @@ Configure the activities as follows:
 | ----------- | --------------------- | ---------- |
 | Status Code | `OK`                  | Default    |
 | Content     | `variables.User.data` | JavaScript |
-
-
 {% endtab %}
 {% endtabs %}
 
@@ -178,22 +158,18 @@ Configure the activities as follows:
 | ----------- | ---------------- | ------- |
 | Status Code | `NotFound`       | Default |
 | Content     | `User not found` | Default |
-
-
 {% endtab %}
 {% endtabs %}
-
-
 {% endstep %}
 
 {% step %}
-### Connect Activities
+#### Connect Activities
 
 Connect each activity to the next. Ensure that you connect the `200` and `404` outcomes of the HTTP Request (flow) activity to the appropriate HTTP Response activity.
 {% endstep %}
 
 {% step %}
-### Publish
+#### Publish
 
 Publish the workflow.
 {% endstep %}
@@ -232,4 +208,3 @@ The workflow is able to read route parameters and store it in a variable, which 
 We have also seen how to handle various responses from reqres: 200 OK and 404 Not Found
 
 The workflow created in this guide can be found [here](https://raw.githubusercontent.com/elsa-workflows/elsa-guides/main/src/guides/http-workflows/Workflows/get-user.json).
-

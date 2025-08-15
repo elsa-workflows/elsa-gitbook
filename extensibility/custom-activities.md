@@ -69,7 +69,7 @@ The `ActivityAttribute` can be used to give user-friendly details to your custom
 using Elsa.Workflows;
 using Elsa.Workflows.Attributes;
 
-[Activity("MyCompany", "Print a message to the console")]
+[Activity("MyCompany", "MyPlatform/MyFunctions", "Print a message to the console")]
 public class PrintMessage : CodeActivity
 {
     protected override void Execute(ActivityExecutionContext context)
@@ -79,7 +79,9 @@ public class PrintMessage : CodeActivity
 }
 ```
 
-In this example, the activity is annotated with a namespace of `"MyCompany"` and a description for clarity.
+In this example, the activity is annotated with a namespace of `"MyCompany"` , a category of  `"MyPlatform/MyFunctions"` and a description for clarity.&#x20;
+
+The Treeview activity picker in Elsa Studio supports nested categories within the tree. Simply use the `/` character to separate categories. More detials can be found [here](../studio/design/activity-pickers-3.7-preview.md).
 
 ## Composition﻿ <a href="#composite-activities" id="composite-activities"></a>
 
