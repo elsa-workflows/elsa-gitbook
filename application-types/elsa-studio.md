@@ -78,6 +78,7 @@ To setup Elsa Studio, we'll go through the following steps:
     builder.Services.AddShell();
     builder.Services.AddRemoteBackend(backendApiConfig);
     builder.Services.AddLoginModule();
+    builder.Services.UseElsaIdentity();
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
 
