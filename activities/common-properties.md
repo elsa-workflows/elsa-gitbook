@@ -58,6 +58,6 @@ For some scenarios however, this may be an issue. For example, the **Send HTTP R
 
 A better configuration is to change the workflow storage provider to **Transient** or **Blob Storage**, depending on whether or not you need access to the file later on from the workflow.
 
-An example when **Transient** might be appropriate is when you immediately (within the current burst of execution) send the downloaded file via email as an attachment. The **Blob Storage** provider might be appropriate if you need access to the file later one.
+An example when **Transient** might be appropriate is when you immediately (within the current burst of execution) send the downloaded file via email as an attachment. The **Blob Storage** provider might be appropriate if you need access to the file later on.
 
 For most scenarios, you don't need to configure the storage provider for a given activity's property, but you can if you want to.
