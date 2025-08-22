@@ -38,7 +38,7 @@ This term describes the period during which the workflow runner actively execute
 
 A Correlation ID is a flexible identifier linking related workflows and external entities. It aids in tracing workflows in distributed, asynchronous, or hierarchical systems. Assigning a Correlation ID allows tracking of related workflows and ties them to specific business objects like documents, customers, or orders.
 
-Read more
+[Read more](correlation-id.md)
 
 ## Outcome
 
