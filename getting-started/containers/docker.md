@@ -14,7 +14,7 @@ This image hosts an ASP.NET Core application that runs both as an Elsa Server as
 
 ```bash
 docker pull elsaworkflows/elsa-server-and-studio-v3-5-0:latest
-docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e HTTP__BASEURL=http://localhost:13000 -p 13000:8080 elsaworkflows/elsa-server-and-studio-v3-5-0:latest
+docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e HOSTING__BASEURL=http://localhost:13000 -p 13000:8080 elsaworkflows/elsa-server-and-studio-v3-5-0:latest
 ```
 
 When the container has started, open a web browser and navigate to [http://localhost:13000](http://localhost:13000/). On the login screen, enter the following credentials:
