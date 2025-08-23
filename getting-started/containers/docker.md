@@ -14,7 +14,7 @@ This image hosts an ASP.NET Core application that runs both as an Elsa Server as
 
 ```bash
 docker pull elsaworkflows/elsa-server-and-studio-v3-5-0:latest
-docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e HTTP__BASEURL=http://localhost:13000 -p 13000:8080 elsaworkflows/elsa-server-and-studio-v3-4-0-preview:latest
+docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e HTTP__BASEURL=http://localhost:13000 -p 13000:8080 elsaworkflows/elsa-server-and-studio-v3-5-0:latest
 ```
 
 When the container has started, open a web browser and navigate to [http://localhost:13000](http://localhost:13000/). On the login screen, enter the following credentials:
@@ -30,7 +30,7 @@ This image hosts an ASP.NET Core application that runs as an Elsa Server. To run
 
 ```bash
 docker pull elsaworkflows/elsa-server-v3-5-0:latest
-docker run -t -i -e ASPNETCORE_ENVIRONMENT=Development -e HTTP_PORTS=8080 -e HTTP__BASEURL=http://localhost:13000 -p 13000:8080 elsaworkflows/elsa-server-v3-4-0-preview:latest
+docker run -t -i -e ASPNETCORE_ENVIRONMENT=Development -e HTTP_PORTS=8080 -e HTTP__BASEURL=http://localhost:13000 -p 13000:8080 elsaworkflows/elsa-server-v3-5-0:latest
 ```
 
 When the container has started, open a web browser and navigate to [http://localhost:13000](http://localhost:13000/).
@@ -43,7 +43,7 @@ This image hosts an ASP.NET Core application that runs Elsa Studio. To run the c
 
 ```bash
 docker pull elsaworkflows/elsa-studio-v3-5-0:latest
-docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e ELSASERVER__URL=http://localhost:13000/elsa/api -p 14000:8080 elsaworkflows/elsa-studio-v3-4-0-preview:latest
+docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e ELSASERVER__URL=http://localhost:13000/elsa/api -p 14000:8080 elsaworkflows/elsa-studio-v3-5-0:latest
 ```
 
 {% hint style="warning" %}
