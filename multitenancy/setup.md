@@ -23,7 +23,7 @@ services.AddElsa(elsa =>
             options.TenantResolverPipelineBuilder.Append<ClaimsTenantResolver>();
         });
 
-        // Install the configuration-based tenanta provider.
+        // Install the configuration-based tenant provider.
         tenants.UseConfigurationBasedTenantsProvider(options => configuration.GetSection("Multitenancy").Bind(options));
 });
 ```
@@ -37,7 +37,7 @@ The _appsettings.json_ file would look like this:
   "Multitenancy": {
       "Tenants": [
         {
-          "Id": "tenant-1,
+          "Id": "tenant-1",
           "Name": "Tenant 1"
         },
         {
