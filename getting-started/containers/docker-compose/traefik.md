@@ -30,7 +30,7 @@ services:
 
     # Elsa Server and Studio behind Traefik and configured with PostgreSQL.
     elsa-server-and-studio:
-        image: elsaworkflows/elsa-server-and-studio-v3-4-0-preview:latest
+        image: elsaworkflows/elsa-server-and-studio-v3-5-0:latest
         pull_policy: always
         environment:
             ASPNETCORE_ENVIRONMENT: Development
