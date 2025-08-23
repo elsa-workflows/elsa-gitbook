@@ -43,6 +43,8 @@
   * [Decision](activities/control-flow/decision.md)
 * [MassTransit](activities/masstransit/README.md)
   * [Tutorial](activities/masstransit/tutorial.md)
+* [Diagnostics](activities/diagnostics/README.md)
+  * [Log](activities/diagnostics/log.md)
 
 ## Expressions
 
@@ -54,10 +56,7 @@
 ## Extensibility
 
 * [Custom Activities](extensibility/custom-activities.md)
-
-***
-
-* [Reusable Triggers](reusable-triggers-3.5-preview.md)
+* [Reusable Triggers](extensibility/reusable-triggers-3.5-preview.md)
 
 ## Multitenancy
 
@@ -71,12 +70,6 @@
 * [Incidents](operate/incidents/README.md)
   * [Strategies](operate/incidents/strategies.md)
   * [Configuration](operate/incidents/configuration.md)
-* [Alterations](operate/alterations/README.md)
-  * [Alteration Plans](operate/alterations/alteration-plans/README.md)
-    * [REST API](operate/alterations/alteration-plans/rest-api.md)
-  * [Applying Alterations](operate/alterations/applying-alterations/README.md)
-    * [REST API](operate/alterations/applying-alterations/rest-api.md)
-    * [Extensibility](operate/alterations/applying-alterations/extensibility.md)
 
 ## Optimize
 
@@ -101,3 +94,13 @@
 ## Authentication
 
 * [Authentication](authentication/authentication.md)
+
+## Features
+
+* [Alterations](features/alterations/README.md)
+  * [Alteration Plans](features/alterations/alteration-plans/README.md)
+    * [REST API](features/alterations/alteration-plans/rest-api.md)
+  * [Applying Alterations](features/alterations/applying-alterations/README.md)
+    * [REST API](features/alterations/applying-alterations/rest-api.md)
+    * [Extensibility](features/alterations/applying-alterations/extensibility.md)
+* [Logging Framework](features/logging-framework.md)
