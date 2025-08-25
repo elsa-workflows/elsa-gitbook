@@ -30,7 +30,7 @@ Host: localhost:5001
 
 Notice that the JSON structure is exactly the same as when submitting a plan. The only difference is that the request is sent to the `/alterations/run` endpoint instead of the `/alteration/submit` endpoint.
 
-The response will include the execution results:
+The response wil include the execution results:
 
 ```json
 {
