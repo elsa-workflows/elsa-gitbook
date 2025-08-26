@@ -103,7 +103,15 @@ elsa.UseScheduling(scheduling =>
 elsa.UseQuartz(quartz =>
 {
    // This extension enables cluster mode automatically.
-   quartz.UsePostgreSql(postgresConnectionString);
+   quartz.ConfigureQuartz = config =>
+   {
+       config.UsePersistentStore(store => {
+           store.UsePostgres(pg =>
+           {
+               pg.ConnectionString = postgresConnectionString;
+           });
+       });
+   };
 });
 ```
 
