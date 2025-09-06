@@ -38,6 +38,7 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
     dotnet add package Elsa.Scheduling
     dotnet add package Elsa.Workflows.Api
     dotnet add package Elsa.CSharp
+    dotnet add package Elsa.Http
     dotnet add package Elsa.JavaScript
     dotnet add package Elsa.Liquid
     ```
