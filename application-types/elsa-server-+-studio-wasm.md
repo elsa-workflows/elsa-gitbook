@@ -266,6 +266,8 @@ Next, we will modify the client project.
     builder.Services.AddLoginModule();
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
+    builder.Services.UseElsaIdentity();
+
 
     // Build the application.
     var app = builder.Build();
