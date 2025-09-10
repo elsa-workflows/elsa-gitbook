@@ -16,13 +16,12 @@ You can use the `IWorkflowInstanceVariableManager` service to retrieve all varia
 
 ```csharp
 var workflowInstanceId = "some-workflow-instance-id";
-var variables = await _workflowInstanceVariableManager.GetVariablesAsync(workflowInstanceId,
-cancellationToken);
+var variables = await _workflowInstanceVariableManager.GetVariablesAsync(workflowInstanceId, null, cancellationToken);
 
 // Print each variable.
 foreach (var variable in variables)
 {
-    Console.WriteLine($"Id: {variable.Id}, Name: {variable.Name}, Value: {variable.Value}");
+    Console.WriteLine($"Id: {variable.Variable.Id}, Name: {variable.Variable.Name}, Value: {variable.Value}");
 }
 ```
 
@@ -49,7 +48,7 @@ var variables = await _workflowInstanceVariableManager.SetVariablesAsync(workflo
 // Print each variable.
 foreach (var variable in variables)
 {
-    Console.WriteLine($"Id: {variable.Id}, Name: {variable.Name}, Value: {variable.Value}");
+    Console.WriteLine($"Id: {variable.Variable.Id}, Name: {variable.Variable.Name}, Value: {variable.Value}");
 }
 ```
 
