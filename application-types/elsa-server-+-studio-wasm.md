@@ -56,6 +56,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     dotnet add package Elsa
     dotnet add package Elsa.EntityFrameworkCore
     dotnet add package Elsa.EntityFrameworkCore.Sqlite
+    dotnet add package Elsa.Http
     dotnet add package Elsa.Identity
     dotnet add package Elsa.Scheduling
     dotnet add package Elsa.Workflows.Api
@@ -236,6 +237,7 @@ Next, we will modify the client project.
     using Elsa.Studio.Dashboard.Extensions;
     using Elsa.Studio.Extensions;
     using Elsa.Studio.Login.BlazorWasm.Extensions;
+    using Elsa.Studio.Login.Extensions;
     using Elsa.Studio.Login.HttpMessageHandlers;
     using Elsa.Studio.Options;
     using Elsa.Studio.Shell;
@@ -262,7 +264,10 @@ Next, we will modify the client project.
     {
         ConfigureHttpClientBuilder = options => options.AuthenticationHandler = typeof(AuthenticatingApiHttpMessageHandler)
     });
-    builder.Services.AddLoginModule();
+    builder.Services
+        .AddLoginModule()
+        .UseElsaIdentity();
+
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
 

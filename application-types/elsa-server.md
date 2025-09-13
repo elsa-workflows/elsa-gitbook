@@ -34,6 +34,7 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
     dotnet add package Elsa
     dotnet add package Elsa.EntityFrameworkCore
     dotnet add package Elsa.EntityFrameworkCore.Sqlite
+    dotnet add package Elsa.Http
     dotnet add package Elsa.Identity
     dotnet add package Elsa.Scheduling
     dotnet add package Elsa.Workflows.Api
@@ -74,20 +75,30 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
         // Expose Elsa API endpoints.
         elsa.UseWorkflowsApi();
 
-        // Enable JavaScript workflow expressions.
-        elsa.UseJavaScript();
+        // Setup a SignalR hub for real-time updates from the server.
+        elsa.UseRealTimeWorkflows();
 
-        // Enable C# workflow expressions.
+        // Enable C# workflow expressions
         elsa.UseCSharp();
-
-        // Enable Liquid workflow expressions.
-        elsa.UseLiquid();
+        
+        // Enable JavaScript workflow expressions
+        elsa.UseJavaScript(options => options.AllowClrAccess = true);
 
         // Enable HTTP activities.
-        elsa.UseHttp();
+        elsa.UseHttp(options => options.ConfigureHttpOptions = httpOptions => httpOptions.BaseUrl = new("https://localhost:5001"));
 
         // Use timer activities.
         elsa.UseScheduling();
+
+        // Use email activities.
+        elsa.UseEmail(email =>
+        {
+            email.ConfigureOptions = options =>
+            {
+                options.Host = "localhost";
+                options.Port = 2525;
+            };
+        });
 
         // Register custom activities from the application, if any.
         elsa.AddActivitiesFrom<Program>();
@@ -112,10 +123,12 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
 
     // Configure web application's middleware pipeline.
     app.UseCors();
+    app.UseRouting(); // Required for SignalR.
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseWorkflowsApi(); // Use Elsa API endpoints.
     app.UseWorkflows(); // Use Elsa middleware to handle HTTP requests mapped to HTTP Endpoint activities.
+    app.UseWorkflowsSignalRHubs(); // Optional SignalR integration. Elsa Studio uses SignalR to receive real-time updates from the server. 
 
     app.Run();
     ```
