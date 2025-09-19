@@ -90,16 +90,6 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
         // Use timer activities.
         elsa.UseScheduling();
 
-        // Use email activities.
-        elsa.UseEmail(email =>
-        {
-            email.ConfigureOptions = options =>
-            {
-                options.Host = "localhost";
-                options.Port = 2525;
-            };
-        });
-
         // Register custom activities from the application, if any.
         elsa.AddActivitiesFrom<Program>();
 
