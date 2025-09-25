@@ -63,6 +63,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     dotnet add package Elsa.CSharp
     dotnet add package Elsa.JavaScript
     dotnet add package Elsa.Liquid
+    dotnet add package Elsa.Http
     dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server
     ```
 2.  **Update Program.cs**
@@ -270,6 +271,8 @@ Next, we will modify the client project.
 
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
+    builder.Services.UseElsaIdentity();
+
 
     // Build the application.
     var app = builder.Build();

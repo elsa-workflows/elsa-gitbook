@@ -85,6 +85,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
 
+
     // Build the application.
     var app = builder.Build();
 
