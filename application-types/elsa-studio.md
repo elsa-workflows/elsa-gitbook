@@ -81,7 +81,6 @@ To setup Elsa Studio, we'll go through the following steps:
     builder.Services.UseElsaIdentity();
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
-    builder.Services.UseElsaIdentity();
 
 
     // Build the application.
