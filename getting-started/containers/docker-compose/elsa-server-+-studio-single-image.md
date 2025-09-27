@@ -15,7 +15,7 @@ services:
 
     # Elsa Studio and Server from a single image.
     elsa-server-and-studio:
-        image: elsaworkflows/elsa-server-and-studio-v3-5-0:latest
+        image: elsaworkflows/elsa-server-and-studio-v3-5:latest
         pull_policy: always
         environment:
             ASPNETCORE_ENVIRONMENT: Development
