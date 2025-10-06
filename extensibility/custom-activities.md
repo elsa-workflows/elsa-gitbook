@@ -10,7 +10,7 @@ To unlock Elsa's full potential, create activities specific to your needs. Custo
 
 Learn how to create custom activities to enhance Elsa's features, with easy steps to integrate these solutions into your domain.
 
-## Creating Custom Activities﻿ <a href="#creating-custom-activities" id="creating-custom-activities"></a>
+## Creating Custom Activities <a href="#creating-custom-activities" id="creating-custom-activities"></a>
 
 To create a custom activity, start by defining a new class that implements the `IActivity` interface or inherits from a base class that does. Examples include `Activity` or `CodeActivity`.
 
@@ -43,7 +43,7 @@ Let's dissect the sample `PrintMessage` activity.
 * `ExecuteAsync` is where the main action happens. For example, `Console.WriteLine("Hello world!");` prints a message to the console. In real-world cases, this section would handle core tasks like data processing or connecting to other systems.
 * Using `await context.CompleteActivityAsync();` means the activity is done. Completing an activity is key to moving the workflow.
 
-## Activity vs CodeActivity﻿ <a href="#activity-vs-code-activity" id="activity-vs-code-activity"></a>
+## Activity vs CodeActivity <a href="#activity-vs-code-activity" id="activity-vs-code-activity"></a>
 
 If your custom activity has a simple workflow and ends right after finishing its task, using `CodeActivity` makes things easier. This base class automatically marks the activity as complete once it's done, so you don't need to write any additional completion code.
 
@@ -61,7 +61,7 @@ public class PrintMessage : CodeActivity
 }
 ```
 
-## Metadata﻿ <a href="#activity-metadata" id="activity-metadata"></a>
+## Metadata <a href="#activity-metadata" id="activity-metadata"></a>
 
 The `ActivityAttribute` can be used to give user-friendly details to your custom activity, such as its display name and description. Here's an example using `ActivityAttribute` with the `PrintMessage` activity. This is useful in tools like Elsa Studio.
 
@@ -79,11 +79,11 @@ public class PrintMessage : CodeActivity
 }
 ```
 
-In this example, the activity is annotated with a namespace of `"MyCompany"` , a category of  `"MyPlatform/MyFunctions"` and a description for clarity.&#x20;
+In this example, the activity is annotated with a namespace of `"MyCompany"` , a category of `"MyPlatform/MyFunctions"` and a description for clarity.
 
 The Treeview activity picker in Elsa Studio supports nested categories within the tree. Simply use the `/` character to separate categories. More detials can be found [here](../studio/design/activity-pickers-3.7-preview.md).
 
-## Composition﻿ <a href="#composite-activities" id="composite-activities"></a>
+## Composition <a href="#composite-activities" id="composite-activities"></a>
 
 Composite activities merge several tasks into one, enabling complex processes with conditions and branches. This is shown in the `If` activity example below:
 
@@ -141,7 +141,7 @@ public class IfWorkflow : WorkflowBase
 }
 ```
 
-## Outcomes﻿ <a href="#activity-outcomes" id="activity-outcomes"></a>
+## Outcomes <a href="#activity-outcomes" id="activity-outcomes"></a>
 
 Setting custom outcomes for activities gives precise control over what happens based on certain conditions. You can declare potential outcomes by using the `FlowNodeAttribute` on the activity class. For example:
 
@@ -169,7 +169,7 @@ public class PerformTask : Activity
 
 In this example, the defined outcomes guide the flow of execution within flowcharts, enabling conditional progression based on the result of the activity. This mechanism enhances the flexibility and decision-making capabilities within workflows, allowing for dynamic responses to activity results.
 
-## Input﻿ <a href="#activity-input" id="activity-input"></a>
+## Input <a href="#activity-input" id="activity-input"></a>
 
 Similar to C# methods accepting arguments and returning results, activities can accept input and produce output.
 
@@ -290,7 +290,7 @@ public class PrintMessageWorkflow : WorkflowBase
 }
 ```
 
-## Output﻿ <a href="#activity-output" id="activity-output"></a>
+## Output <a href="#activity-output" id="activity-output"></a>
 
 Activities can generate outputs. To do so, implement properties typed as `Output<T>`.
 
@@ -480,7 +480,7 @@ Choosing Service Location over Constructor Injection
 Elsa prefers to use service location over constructor dependency injection to make it easier to create activity instances in workflow definitions. Using constructor-based DI would make it harder to build and change workflow graphs programmatically.
 {% endhint %}
 
-## Blocking Activities﻿ <a href="#blocking-activities" id="blocking-activities"></a>
+## Blocking Activities <a href="#blocking-activities" id="blocking-activities"></a>
 
 Blocking activities represent an important concept in workflow design, enabling a workflow to pause its execution until a specified external event occurs. Instead of completing immediately, these activities generate a bookmark—a placeholder of sorts—that allows the workflow to resume from the same point once the required conditions are met. This mechanism is particularly useful for orchestrating asynchronous operations or waiting for external inputs. Examples of blocking activities include the `Event` and `Delay` activities.
 
@@ -525,19 +525,19 @@ To pick up a workflow from a bookmark, the system needs certain information:
 * The type of activity that initiated the bookmark
 * The bookmark payload, which was generated by the activity
 
-How to Resume a Workflow Using `IWorkflowRuntime`:
+How to resume a workflow Using `IStimulusSender`:
 
-Follow these steps to restart a workflow using the bookmark payload from the blocking activity, by using `IWorkflowRuntime`:
+Follow these steps to restart a workflow using the bookmark payload as stimulus from the blocking activity, by using `IStimulusSender`:
 
 ```csharp
-var bookmarkPayload = "MyEvent";
+var stimulus = "MyEvent";
 var activityTypeName = ActivityTypeNameHelper.GenerateTypeName<MyEvent>();
-await _workflowRuntime.TriggerWorkflowsAsync(activityTypeName, bookmarkPayload);
+await _stimulusSender.SendAsync(activityTypeName, stimulus);
 ```
 
 This method can be easily added to an API controller to resume workflows when external events happen.
 
-## Triggers﻿ <a href="#activity-triggers" id="activity-triggers"></a>
+## Triggers <a href="#activity-triggers" id="activity-triggers"></a>
 
 Triggers serve as specialised activities designed to initiate workflows in reaction to specific external events, such as HTTP requests or messages from a message queue. This capability allows workflows to dynamically respond to outside stimuli, making them highly versatile in various automated processes.
 
@@ -597,17 +597,17 @@ public class MyEventWorkflow : WorkflowBase
 
 Set the `CanStartWorkflow` property to `true` on the trigger activity. This allows the activity to start the workflow, making it essential for activating workflow triggers.
 
-To programmatically trigger workflows using the `MyEvent` trigger, apply the same code used for resuming a bookmark with `IWorkflowRuntime`.
+To programmatically trigger workflows using the `MyEvent` trigger, apply the same code used for resuming a bookmark with `IStimulusSender`.
 
 ```csharp
-var bookmarkPayload = "MyEvent";
+var stimulus = "MyEvent";
 var activityTypeName = ActivityTypeNameHelper.GenerateTypeName<MyEvent>();
-await _workflowRuntime.TriggerWorkflowsAsync(activityTypeName, bookmarkPayload);
+await _stimulusSender.SendAsync(activityTypeName, stimulus);
 ```
 
-The `IWorkflowRuntime` service is a helpful service for handling workflow processes, like starting new workflows or resuming suspended ones. It allows developers to easily create workflows that adapt to different events, improving how interactive and responsive their applications are.
+The `IStimulusSender` service is a helpful service for delivering stimuli to workflows that will cause workflows to be started and suspended workflows to be resumed. It allows developers to easily create workflows that adapt to different events, improving how interactive and responsive their applications are.
 
-## Registering Activities﻿ <a href="#registering-activities" id="registering-activities"></a>
+## Registering Activities <a href="#registering-activities" id="registering-activities"></a>
 
 Register activities in the Activity Registry before using them in workflows.
 
@@ -629,7 +629,7 @@ services.AddElsa(elsa => elsa
 
 This approach registers all activities discovered within the assembly containing the specified type. The marker type can be any class within the assembly, not necessarily an activity.
 
-## Activity Providers﻿ <a href="#activity-providers" id="activity-providers"></a>
+## Activity Providers <a href="#activity-providers" id="activity-providers"></a>
 
 Activities can be provided to the system in various ways. The type of an activity is fundamentally represented by an **Activity Descriptor**.
 
@@ -705,6 +705,6 @@ Currently, dynamically provided activities cannot be used within programmatic wo
 An open issue exists for this functionality: [https://github.com/elsa-workflows/elsa-core/issues/5162](https://github.com/elsa-workflows/elsa-core/issues/5162)
 {% endhint %}
 
-## Summary﻿ <a href="#summary" id="summary"></a>
+## Summary <a href="#summary" id="summary"></a>
 
 In this topic, we explored the creation, registration, and utilisation of custom activities. These are crucial in workflow development as they allow for the inclusion of domain-specific actions within a workflow.
