@@ -13,6 +13,7 @@
 * [Containers](getting-started/containers/README.md)
   * [Docker](getting-started/containers/docker.md)
   * [Docker Compose](getting-started/containers/docker-compose/README.md)
+    * [Docker Quickstart](getting-started/containers/docker-compose/docker-quickstart.md)
     * [Elsa Server + Studio](getting-started/containers/docker-compose/elsa-server-+-studio.md)
     * [Elsa Server + Studio - Single Image](getting-started/containers/docker-compose/elsa-server-+-studio-single-image.md)
     * [Persistent Database](getting-started/containers/docker-compose/persistent-database.md)
