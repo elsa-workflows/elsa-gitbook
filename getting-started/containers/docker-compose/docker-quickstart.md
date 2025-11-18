@@ -443,7 +443,6 @@ secrets:
 1. **Volume Backups**: Regularly backup Docker volumes
    ```bash
    docker run --rm -v postgres-data:/data -v $(pwd):/backup alpine tar czf /backup/postgres-data-backup.tar.gz -C /data .
-   ```
 
 2. **Retention Policies**: Configure workflow and log retention
 3. **Archival Strategy**: Move old workflows to cold storage
