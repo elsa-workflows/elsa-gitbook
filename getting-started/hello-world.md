@@ -37,8 +37,8 @@ Open `Program.cs` and replace its contents with the following:
 
 ```csharp
 using Elsa.Extensions;
-using Elsa.Workflows;
 using Elsa.Workflows.Activities;
+using Elsa.Workflows.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 // Setup service container.
@@ -143,6 +143,7 @@ Create a new directory called `Workflows` and add a new file to it called `HttpH
 using Elsa.Http;
 using Elsa.Workflows;
 using Elsa.Workflows.Activities;
+using Elsa.Workflows.Contracts;
 
 namespace ElsaWeb.Workflows;
 
