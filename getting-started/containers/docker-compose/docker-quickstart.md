@@ -42,11 +42,11 @@ services:
       HTTP_PORTS: 8080
       HTTP__BASEURL: http://localhost:14000
       DATABASEPROVIDER: Sqlite
-      CONNECTIONSTRINGS__SQLITE: Data Source=/app/elsa.db;Cache=Shared
+      CONNECTIONSTRINGS__SQLITE: Data Source=/data/elsa.db;Cache=Shared
     ports:
       - "14000:8080"
     volumes:
-      - elsa-data:/app
+      - elsa-data:/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
