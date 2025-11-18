@@ -315,7 +315,7 @@ cd ../ElsaServer
 Then execute the following command:
 
 ```bash
-dotnet run --urls https://locahost:5001
+dotnet run --urls https://localhost:5001
 ```
 
 Your application is now accessible at [https://localhost:5001](https://localhost:5001/).
