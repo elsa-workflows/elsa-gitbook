@@ -28,31 +28,41 @@ Please return here when you are ready.
 
 We will define a new workflow called `GetUser`. The purpose of the workflow is to handle inbound HTTP requests by fetching a user by a given user ID from a backend API and writing them back to the client in JSON format.
 
-For the backend API, we will use [reqres.in](https://reqres.in/), which returns fake data using real HTTP responses.
+For the backend API, we will use [JSONPlaceholder](https://jsonplaceholder.typicode.com/), which returns fake data using real HTTP responses.
 
-Our workflow will parse the inbound HTTP request by getting the desired user ID from a route parameter and use that value to make an API call to reqres.
+Our workflow will parse the inbound HTTP request by getting the desired user ID from a route parameter and use that value to make an API call to JSONPlaceholder.
 
-The following is an example of such an HTTP request that you can try right now from your browser: [https://reqres.in/api/users/2](https://reqres.in/api/users/2)
+The following is an example of such an HTTP request that you can try right now from your browser: [https://jsonplaceholder.typicode.com/users/2](https://jsonplaceholder.typicode.com/users/2)
 
 The response should look similar to this:
 
 ```json
 {
-    "data": {
-        "id": 2,
-        "email": "janet.weaver@reqres.in",
-        "first_name": "Janet",
-        "last_name": "Weaver",
-        "avatar": "https://reqres.in/img/faces/2-image.jpg"
-    },
-    "support": {
-        "url": "https://reqres.in/#support-heading",
-        "text": "To keep ReqRes free, contributions towards server costs are appreciated!"
+  "id": 2,
+  "name": "Ervin Howell",
+  "username": "Antonette",
+  "email": "Shanna@melissa.tv",
+  "address": {
+    "street": "Victor Plains",
+    "suite": "Suite 879",
+    "city": "Wisokyburgh",
+    "zipcode": "90566-7771",
+    "geo": {
+      "lat": "-43.9509",
+      "lng": "-34.4618"
     }
+  },
+  "phone": "010-692-6593 x09125",
+  "website": "anastasia.net",
+  "company": {
+    "name": "Deckow-Crist",
+    "catchPhrase": "Proactive didactic contingency",
+    "bs": "synergize scalable supply-chains"
+  }
 }
 ```
 
-Our workflow will essentially be a proxy sitting in front of the reqres API and return a portion of the response.
+Our workflow will essentially be a proxy sitting in front of the JSONPlaceholder API and return the response.
 
 ## Designing the Workflow <a href="#create-workflow-using-designer" id="create-workflow-using-designer"></a>
 
@@ -121,7 +131,7 @@ Configure the activities as follows:
 
 {% tabs %}
 {% tab title="Input" %}
-<table><thead><tr><th width="132">Property</th><th width="423">Value</th><th>Syntax</th></tr></thead><tbody><tr><td>Variable</td><td><code>UserId</code></td><td>Default</td></tr><tr><td>Value</td><td><code>return Variables.RouteData["userid"];</code></td><td>C#</td></tr></tbody></table>
+<table><thead><tr><th width="132">Property</th><th width="423">Value</th><th>Syntax</th></tr></thead><tbody><tr><td>Variable</td><td><code>UserId</code></td><td>Default</td></tr><tr><td>Value</td><td><code>{{ Variables.RouteData.userid }}</code></td><td>Liquid</td></tr></tbody></table>
 {% endtab %}
 {% endtabs %}
 
@@ -129,7 +139,7 @@ Configure the activities as follows:
 
 {% tabs %}
 {% tab title="Input" %}
-<table><thead><tr><th width="100">Property</th><th width="458">Value</th><th width="100">Syntax</th></tr></thead><tbody><tr><td>Expected Status Codes</td><td><code>200, 404</code></td><td>Default</td></tr><tr><td>Url</td><td><code>return $"https://reqres.in/api/users/{Variables.UserId}";</code></td><td>C#</td></tr><tr><td>Method</td><td><code>GET</code></td><td>Default</td></tr></tbody></table>
+<table><thead><tr><th width="100">Property</th><th width="458">Value</th><th width="100">Syntax</th></tr></thead><tbody><tr><td>Expected Status Codes</td><td><code>200, 404</code></td><td>Default</td></tr><tr><td>Url</td><td><code>return $"https://jsonplaceholder.typicode.com/users/{Variables.UserId}";</code></td><td>C#</td></tr><tr><td>Method</td><td><code>GET</code></td><td>Default</td></tr></tbody></table>
 {% endtab %}
 
 {% tab title="Output" %}
@@ -143,10 +153,10 @@ Configure the activities as follows:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property    | Value                 | Syntax     |
-| ----------- | --------------------- | ---------- |
-| Status Code | `OK`                  | Default    |
-| Content     | `variables.User.data` | JavaScript |
+| Property    | Value            | Syntax     |
+| ----------- | ---------------- | ---------- |
+| Status Code | `OK`             | Default    |
+| Content     | `variables.User` | JavaScript |
 {% endtab %}
 {% endtabs %}
 
@@ -181,19 +191,35 @@ The final result should look like this:
 
 ## Running the Workflow
 
-Since the workflow uses the HTTP Endpoint activity, it will trigger when we send an HTTP request to the /api/workflows/users/{userId} path.
+Since the workflow uses the HTTP Endpoint activity, it will trigger when we send an HTTP request to the /workflows/users/{userId} path.
 
-Try it out by navigating to [http://localhost:13000/api/workflows/users/2](http://localhost:13000/api/workflows/users/2).
+Try it out by navigating to [https://localhost:5001/workflows/users/2](https://localhost:5001/workflows/users/2).
 
 The response should look similar to this:
 
 ```json
 {
-    "id": 2,
-    "email": "janet.weaver@reqres.in",
-    "first_name": "Janet",
-    "last_name": "Weaver",
-    "avatar": "https://reqres.in/img/faces/2-image.jpg"
+  "id": 2,
+  "name": "Ervin Howell",
+  "username": "Antonette",
+  "email": "Shanna@melissa.tv",
+  "address": {
+    "street": "Victor Plains",
+    "suite": "Suite 879",
+    "city": "Wisokyburgh",
+    "zipcode": "90566-7771",
+    "geo": {
+      "lat": "-43.9509",
+      "lng": "-34.4618"
+    }
+  },
+  "phone": "010-692-6593 x09125",
+  "website": "anastasia.net",
+  "company": {
+    "name": "Deckow-Crist",
+    "catchPhrase": "Proactive didactic contingency",
+    "bs": "synergize scalable supply-chains"
+  }
 }
 ```
 
@@ -203,8 +229,8 @@ In this guide, we learned how to design a workflow using Elsa Studio.
 
 We leveraged the `HttpEndpoint` activity and used is as a trigger to start the workflow.
 
-The workflow is able to read route parameters and store it in a variable, which we then used as an input to send an API call to the reqres API that in turn returns the requested user.
+The workflow is able to read route parameters and store it in a variable, which we then used as an input to send an API call to the JSONPlaceholder API that in turn returns the requested user.
 
-We have also seen how to handle various responses from reqres: 200 OK and 404 Not Found
+We have also seen how to handle various responses from JSONPlaceholder: 200 OK and 404 Not Found
 
 The workflow created in this guide can be found [here](https://raw.githubusercontent.com/elsa-workflows/elsa-guides/main/src/guides/http-workflows/Workflows/get-user.json).
