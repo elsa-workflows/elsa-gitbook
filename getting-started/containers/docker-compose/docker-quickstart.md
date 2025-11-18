@@ -410,10 +410,10 @@ secrets:
 ### Reliability
 
 1. **Regular Backups**: Implement automated database backups
+   > **Note:** The following command uses Unix/Linux shell syntax. For Windows users, see the PowerShell alternative below.
    ```bash
-   # PostgreSQL backup example
+   # PostgreSQL backup example (Unix/Linux/macOS)
    docker-compose exec postgres pg_dump -U elsa elsa > backup_$(date +%Y%m%d).sql
-   ```
 
 2. **Monitoring**: Integrate with monitoring solutions (Prometheus, Grafana, etc.)
 3. **Logging**: Configure centralized logging (ELK stack, Loki, etc.)
