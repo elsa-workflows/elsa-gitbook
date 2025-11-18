@@ -109,7 +109,7 @@ services:
       HTTP_PORTS: 8080
       HTTP__BASEURL: http://localhost:14000
       DATABASEPROVIDER: PostgreSql
-      CONNECTIONSTRINGS__POSTGRESQL: "Server=postgres;Username=elsa;Database=elsa;Port=5432;Password=elsa_password_change_me;SSLMode=Prefer;MaxPoolSize=2000;Timeout=60"
+      CONNECTIONSTRINGS__POSTGRESQL: "Server=postgres;Username=elsa;Database=elsa;Port=5432;Password=elsa_password_change_me;SSLMode=Prefer;MaxPoolSize=100;Timeout=60"
     ports:
       - "14000:8080"
     depends_on:
