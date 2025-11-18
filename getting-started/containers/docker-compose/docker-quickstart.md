@@ -84,7 +84,7 @@ For production-like evaluation with a robust database, use PostgreSQL:
 services:
   postgres:
     image: postgres:16-alpine
-    command: -c 'max_connections=2000'
+    command: -c 'max_connections=200'
     environment:
       POSTGRES_USER: elsa
       POSTGRES_PASSWORD: elsa_password_change_me
