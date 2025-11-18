@@ -62,7 +62,7 @@ volumes:
 Start the services:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Wait a few seconds for the services to start, then access Elsa Studio at [http://localhost:14000](http://localhost:14000/).
