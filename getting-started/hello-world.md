@@ -37,10 +37,8 @@ Open `Program.cs` and replace its contents with the following:
 
 ```csharp
 using Elsa.Extensions;
-using Microsoft.Extensions.DependencyInjection;
-using Elsa.Extensions;
-using Elsa.Workflows.Activities;
 using Elsa.Workflows;
+using Elsa.Workflows.Activities;
 using Microsoft.Extensions.DependencyInjection;
 
 // Setup service container.
