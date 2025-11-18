@@ -95,7 +95,7 @@ Triggers define conditions or events that can start a workflow automatically:
 - **IWorkflowActivationStrategiesApi** (`Elsa.Api.Client.Resources.WorkflowActivationStrategies.Contracts`) - Represents a client for the variable types API.
 - **IWorkflowActivationStrategy** (`Elsa.Workflows`) - A workflow activation validator controls whether new instances are allowed to be created given certain conditions.
 - **IWorkflowActivationStrategyEvaluator** (`Elsa.Workflows.Runtime`)
-- **IWorkflowBuilder** (`Elsa.Workflows`) - A workflow pipelineBuilder collects information about a workflow to be built programmatically.
+- **IWorkflowBuilder** (`Elsa.Workflows`) - A workflow builder collects information about a workflow to be built programmatically.
 - **IWorkflowBuilderFactory** (`Elsa.Workflows`) - A factory of workflow builders.
 - **IWorkflowCanceler** (`Elsa.Workflows.Runtime`) - Represents a workflow canceler.
 - **IWorkflowCancellationDispatcher** (`Elsa.Workflows.Runtime`) - Posts a message to a topic to cancel a specified set of workflows.
