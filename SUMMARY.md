@@ -28,6 +28,7 @@
 
 ## Guides
 
+* [Authentication & Authorization](guides/authentication.md)
 * [HTTP Workflows](guides/http-workflows/README.md)
   * [Programmatic](guides/http-workflows/programmatic.md)
   * [Designer](guides/http-workflows/designer.md)
