@@ -10,6 +10,7 @@
 * [Hello World](getting-started/hello-world.md)
 * [Prerequisites](getting-started/prerequisites.md)
 * [Packages](getting-started/packages.md)
+* [Database Configuration](getting-started/database-configuration.md)
 * [Containers](getting-started/containers/README.md)
   * [Docker](getting-started/containers/docker.md)
   * [Docker Compose](getting-started/containers/docker-compose/README.md)
