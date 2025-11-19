@@ -757,24 +757,40 @@ public class ProcessOrder : CodeActivity
 Use `GetService<T>()` instead of `GetRequiredService<T>()` when a service is optional:
 
 ```csharp
-protected override async ValueTask ExecuteAsync(ActivityExecutionContext context)
+using Elsa.Workflows;
+using Elsa.Workflows.Models;
+
+public class GetDataActivity : CodeActivity
 {
-    // Optional service - returns null if not registered
-    var cacheService = context.GetService<ICacheService>();
-    
-    if (cacheService != null)
+    [Input(Description = "Data key")]
+    public Input<string> Key { get; set; } = default!;
+
+    [Output(Description = "Retrieved data")]
+    public Output<string> Data { get; set; } = default!;
+
+    protected override async ValueTask ExecuteAsync(ActivityExecutionContext context)
     {
-        // Use cache if available
-        var cachedData = await cacheService.GetAsync(key);
-        if (cachedData != null)
+        var key = Key.Get(context);
+        
+        // Optional service - returns null if not registered
+        var cacheService = context.GetService<ICacheService>();
+        
+        if (cacheService != null)
         {
-            return cachedData;
+            // Use cache if available
+            var cachedData = await cacheService.GetAsync(key);
+            if (cachedData != null)
+            {
+                Data.Set(context, cachedData);
+                return;
+            }
         }
+        
+        // Fallback to direct data access
+        var dataService = context.GetRequiredService<IDataService>();
+        var data = await dataService.GetAsync(key);
+        Data.Set(context, data);
     }
-    
-    // Fallback to direct data access
-    var dataService = context.GetRequiredService<IDataService>();
-    return await dataService.GetAsync(key);
 }
 ```
 
@@ -1062,6 +1078,7 @@ public class OrderEventWorkflow : WorkflowBase
             {
                 new CustomEventTrigger
                 {
+                    Id = "CustomEventTrigger1",
                     EventName = new("OrderPlaced"),
                     CanStartWorkflow = true  // Critical: enables trigger functionality
                 },
@@ -1134,6 +1151,7 @@ using Elsa.Extensions;
 using Elsa.Workflows;
 using Elsa.Workflows.Attributes;
 using Elsa.Workflows.Models;
+using Elsa.Workflows.UIHints;
 
 [Activity("MyCompany", "HTTP", "Wait for incoming webhook")]
 public class WebhookTrigger : Trigger
@@ -1488,7 +1506,7 @@ public class OpenApiActivityProvider : IActivityProvider
                     Description = operation.Value.Description,
                     Constructor = context =>
                     {
-                        var activity = _activityFactory.Create<HttpRequestActivity>(context);
+                        var activity = _activityFactory.Create<SendHttpRequest>(context);
                         activity.Method = new(operation.Key.ToString());
                         activity.Url = new(path.Key);
                         activity.Type = typeName;
@@ -1514,8 +1532,11 @@ builder.Services.AddElsa(elsa =>
 {
     // Register the activity provider
     elsa.AddActivityProvider<ProductActivityProvider>();
-    
-    // Or register multiple providers
+});
+
+// Or register multiple providers
+builder.Services.AddElsa(elsa =>
+{
     elsa.AddActivityProvider<ProductActivityProvider>();
     elsa.AddActivityProvider<OpenApiActivityProvider>();
 });
