@@ -11,7 +11,7 @@ Together, the two applications implement an employee onboarding process. The rol
 
 These tasks will be completed by a human user. As a task is marked as completed, a signal in the form of an HTTP request is sent back to the workflow server, which then proceeds to the next step in the process.
 
-## Before you start﻿ <a href="#before-you-start" id="before-you-start"></a>
+## Before you start <a href="#before-you-start" id="before-you-start"></a>
 
 For this guide, we will need the following:
 
@@ -20,15 +20,15 @@ For this guide, we will need the following:
 
 Please return here when you are ready.
 
-## Elsa Server﻿ <a href="#elsa-server" id="elsa-server"></a>
+## Elsa Server <a href="#elsa-server" id="elsa-server"></a>
 
 We will start by configuring the Elsa Server project with the ability to send webhook events.
 
-### Configuring Webhooks﻿ <a href="#webhooks" id="webhooks"></a>
+### Configuring Webhooks <a href="#webhooks" id="webhooks"></a>
 
 {% stepper %}
 {% step %}
-### Add Webhooks Package
+#### Add Webhooks Package
 
 Add the following package to ElsaServer.csproj:
 
@@ -38,7 +38,7 @@ dotnet add package Elsa.Webhooks
 {% endstep %}
 
 {% step %}
-### Update Program.cs
+#### Update Program.cs
 
 To enable webhooks, update `Program.cs` by adding the following code to the Elsa builder delegate:
 
@@ -55,7 +55,7 @@ This will add webhook definitions from `appsettings.json`, which we configure ne
 {% endstep %}
 
 {% step %}
-### Update appsettings.json
+#### Update appsettings.json
 
 Update `appsettings.json` by adding the following section:
 
@@ -380,13 +380,13 @@ Although this step is optional, it is generally a good idea to be explicit and s
 {% endstep %}
 
 {% step %}
-### Connect Activities
+#### Connect Activities
 
 Now that we have all the pieces on the board, let's connect them together as shown in the [above visual](external-application-interaction.md#designer).
 {% endstep %}
 
 {% step %}
-### Publish the Workflow
+#### Publish the Workflow
 
 Before we can invoke the workflow, we need to publish our changes by clicking the **Publish** button.
 {% endstep %}
@@ -439,7 +439,7 @@ dotnet add package Elsa.EntityFrameworkCore.Sqlite
 {% endstep %}
 
 {% step %}
-### Create OnboardingTask Entity
+#### Create OnboardingTask Entity
 
 For this application, we'll use Entity Framework Core to store the onboarding tasks in a SQLite database. First, let's model the onboarding task by creating a new class called `OnboardingTask`:
 
@@ -539,7 +539,7 @@ builder.Services.AddDbContextFactory<OnboardingDbContext>(options => options.Use
 {% endstep %}
 
 {% step %}
-### Create Migrations
+#### Create Migrations
 
 In order to have the application generate the necessary database structure automatically for us, we need to generate migration classes.
 
@@ -551,7 +551,7 @@ dotnet ef migrations add Initial
 {% endstep %}
 
 {% step %}
-### Apply Migrations
+#### Apply Migrations
 
 Run the following command to apply the migrations:
 
@@ -891,7 +891,7 @@ public record Employee(string Name, string Email);
 {% endstep %}
 {% endstepper %}
 
-## Running the Onboarding Process﻿ <a href="#running-the-onboarding-process" id="running-the-onboarding-process"></a>
+## Running the Onboarding Process <a href="#running-the-onboarding-process" id="running-the-onboarding-process"></a>
 
 Now that we have both the Elsa Server and Onboarding applications ready, let's try it out.
 
@@ -935,11 +935,11 @@ Make sure to replace `{workflow_definition_id}` with the actual workflow definit
 
 The effect of the above request is that a new task will be created in the database, which will be displayed in the web application:
 
-<figure><img src="../.gitbook/assets/onboarding-task-list-view.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/onboarding-task-list (1).png" alt=""><figcaption></figcaption></figure>
 {% endstep %}
 
 {% step %}
-### Complete Tasks
+#### Complete Tasks
 
 When you click the Complete button, the task will be marked as completed in the database and the workflow will continue. When you refresh the Task list page, the task will be gone, but 3 new tasks will be created in the database:
 
@@ -947,7 +947,7 @@ When you click the Complete button, the task will be marked as completed in the 
 {% endstep %}
 
 {% step %}
-### Workflow Completed
+#### Workflow Completed
 
 Once you complete all tasks, the workflow will be completed:
 
@@ -955,7 +955,7 @@ Once you complete all tasks, the workflow will be completed:
 {% endstep %}
 {% endstepper %}
 
-## Summary﻿ <a href="#summary" id="summary"></a>
+## Summary <a href="#summary" id="summary"></a>
 
 In this guide, we have seen how to set up an Elsa Server project and configure it to send webhook events to the **Onboarding** application.
 
@@ -963,6 +963,6 @@ We have seen how to leverage the **Run Task** activity that generates Run Task w
 
 From the Onboarding app, we leveraged an Elsa REST API to report a given task as completed, which causes the workflow to resume,
 
-## Source Code﻿ <a href="#source-code" id="source-code"></a>
+## Source Code <a href="#source-code" id="source-code"></a>
 
 The completed code for this guide can be found [here](https://github.com/elsa-workflows/elsa-guides/tree/main/src/guides/external-app-interaction).

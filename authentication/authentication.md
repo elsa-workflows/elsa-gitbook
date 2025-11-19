@@ -30,11 +30,7 @@ builder.Services.AddShell(x => x.DisableAuthorization = true);
 
 Use Elsa's built-in identity system for authentication.
 
-
-
 ### Using OIDC (OpenID Connect)
-
-
 
 * **Description**: Integrate with an OIDC provider for authentication.
 *   **Configuration Steps**:
@@ -44,7 +40,7 @@ Use Elsa's built-in identity system for authentication.
     * Update API configuration with OIDC provider details.
     * Ensure redirect URIs are correctly set up.
 
-    ### Conclusion
+    #### Conclusion
 
     Choose the appropriate authentication mode based on your security requirements and follow the above steps to configure it.
 * Install and configure `Elsa.Identity` package.

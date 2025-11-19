@@ -1,9 +1,10 @@
 ---
 description: >-
-  Learn how to configure Elsa Workflows to use different database providers for persistence, including SQL Server, PostgreSQL, and MongoDB.
+  Learn how to configure Elsa Workflows to use different database providers for
+  persistence, including SQL Server, PostgreSQL, and MongoDB.
 ---
 
-# Database Configuration Guide
+# Database Configuration
 
 This guide explains how to configure Elsa Workflows to use different database providers for storing workflow definitions, instances, and execution data. Elsa supports multiple database backends through Entity Framework Core (EF Core) and MongoDB.
 
@@ -11,17 +12,17 @@ This guide explains how to configure Elsa Workflows to use different database pr
 
 Elsa supports the following database providers:
 
-- **SQL Server** (recommended for production on Windows environments)
-- **PostgreSQL** (recommended for production on Linux/Unix environments)
-- **SQLite** (default, suitable for development and single-instance deployments)
-- **MySQL/MariaDB** (supported but less commonly used)
-- **MongoDB** (document database for specific use cases)
+* **SQL Server** (recommended for production on Windows environments)
+* **PostgreSQL** (recommended for production on Linux/Unix environments)
+* **SQLite** (default, suitable for development and single-instance deployments)
+* **MySQL/MariaDB** (supported but less commonly used)
+* **MongoDB** (document database for specific use cases)
 
 ## Prerequisites
 
-- Elsa Server project (see [Server Setup Guide](../application-types/elsa-server.md))
-- Database server (local or remote)
-- Appropriate NuGet packages installed
+* Elsa Server project (see [Server Setup Guide](../application-types/elsa-server.md))
+* Database server (local or remote)
+* Appropriate NuGet packages installed
 
 ## Configuring SQL Server
 
@@ -182,9 +183,9 @@ builder.Services.AddElsa(elsa =>
 
 ### Benefits
 
-- Scale management and runtime independently
-- Use different database technologies for each
-- Isolate sensitive runtime data
+* Scale management and runtime independently
+* Use different database technologies for each
+* Isolate sensitive runtime data
 
 ## Troubleshooting
 
@@ -195,6 +196,7 @@ builder.Services.AddElsa(elsa =>
 **Error:** "The term 'dotnet-ef' is not recognized"
 
 **Solution:** Ensure EF Core tools are installed globally:
+
 ```bash
 dotnet tool install --global dotnet-ef
 ```
@@ -204,27 +206,30 @@ dotnet tool install --global dotnet-ef
 **Error:** "Timeout expired"
 
 **Solutions:**
-- Increase connection timeout in connection string: `;Timeout=60`
-- Check database server availability
-- Verify firewall settings
+
+* Increase connection timeout in connection string: `;Timeout=60`
+* Check database server availability
+* Verify firewall settings
 
 #### 3. Permission Denied
 
 **Error:** "Login failed for user"
 
 **Solutions:**
-- Verify username/password
-- Check user permissions on database
-- Ensure database exists
+
+* Verify username/password
+* Check user permissions on database
+* Ensure database exists
 
 #### 4. MongoDB Connection Issues
 
 **Error:** "Unable to connect to server"
 
 **Solutions:**
-- Ensure MongoDB is running
-- Check connection string format
-- Verify authentication if enabled
+
+* Ensure MongoDB is running
+* Check connection string format
+* Verify authentication if enabled
 
 ### Logging
 
@@ -241,35 +246,32 @@ builder.Services.AddDbContext<ManagementDbContext>(options =>
 
 ### Performance Tuning
 
-- Use connection pooling
-- Configure appropriate connection limits
-- Monitor query performance
-- Consider database indexing
+* Use connection pooling
+* Configure appropriate connection limits
+* Monitor query performance
+* Consider database indexing
 
 ### Security
 
-- Use strong passwords
-- Enable SSL/TLS encryption
-- Restrict database access to application servers
-- Rotate credentials regularly
+* Use strong passwords
+* Enable SSL/TLS encryption
+* Restrict database access to application servers
+* Rotate credentials regularly
 
 ### Backup and Recovery
 
-- Implement regular database backups
-- Test restore procedures
-- Plan for database failover scenarios
+* Implement regular database backups
+* Test restore procedures
+* Plan for database failover scenarios
 
 ### Monitoring
 
-- Monitor database performance metrics
-- Set up alerts for connection issues
-- Log database operations for auditing
+* Monitor database performance metrics
+* Set up alerts for connection issues
+* Log database operations for auditing
 
 ## Next Steps
 
-- [Docker Deployment](../getting-started/containers/docker-compose/persistent-database.md)
-- [Authentication Setup](../guides/authentication.md)
-- [Workflow Persistence](../guides/workflow-persistence.md)
-```
-
-If you'd like me to modify this content or create the PR manually once the agent issues are resolved, let me know! Otherwise, proceed to the next work item.
+* [Docker Deployment](containers/docker-compose/persistent-database.md)
+* [Authentication Setup](../guides/authentication.md)
+* [Workflow Persistence](../guides/workflow-persistence.md)
