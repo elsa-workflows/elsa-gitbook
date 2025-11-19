@@ -1366,80 +1366,213 @@ public class DiagnosticsController : ControllerBase
 
 ## Activity Providers <a href="#activity-providers" id="activity-providers"></a>
 
-Activities can be provided to the system in various ways. The type of an activity is fundamentally represented by an **Activity Descriptor**.
+Activity Providers enable advanced scenarios where activities are generated dynamically at runtime rather than being statically defined as .NET types. This powerful abstraction allows you to create activities from external sources such as APIs, databases, or configuration files.
 
-Activity Descriptors are provided by **Activity Providers.** Out of the box, Elsa ships with one such implementation being the `TypedActivityProvider`. This provider generates activity descriptors based on the .NET types implementing the `IActivity` interface.
+### **Understanding Activity Descriptors**﻿
 
-This abstraction layer enables sophisticated scenarios where activity descriptors' sources can be dynamic.
+In Elsa, activities are represented by **Activity Descriptors**, which contain metadata about an activity including its name, category, inputs, outputs, and how to construct instances. 
 
-Consider a scenario where you generate activities from an Open API specification. Each resource operation is automatically represented as an activity, rather than using the `SendHttpRequest` activity directly.
+By default, Elsa uses the `TypedActivityProvider` which creates descriptors from .NET types implementing `IActivity`. However, you can create custom providers to generate activities from any source.
 
-To develop custom activity providers, follow these steps:
+### **Use Cases for Custom Activity Providers**﻿
 
-1. Implement the `Elsa.Workflows.Contracts.IActivityProvider` .
-2. Register your custom activity provider with the system.
+- **API Integration**: Generate activities from OpenAPI/Swagger specifications
+- **Database-Driven**: Load activity definitions from a database
+- **Dynamic Configuration**: Create activities based on configuration files
+- **Multi-Tenancy**: Provide different activities for different tenants
+- **Plugin Systems**: Load activities from external plugins or modules
 
-Below is a sample implementation of an activity provider that dynamically produces activities based on a list of fruits.
+### **Creating a Custom Activity Provider**﻿
+
+Here's an example that generates activities dynamically from a simple list:
 
 ```csharp
 using Elsa.Extensions;
 using Elsa.Workflows.Contracts;
 using Elsa.Workflows.Models;
 
-namespace Elsa.Server.Web.Activities;
+namespace MyCompany.Activities;
 
-public class FruitActivityProvider(IActivityFactory activityFactory) : IActivityProvider
+public class ProductActivityProvider : IActivityProvider
 {
-    public ValueTask<IEnumerable<ActivityDescriptor>> GetDescriptorsAsync(CancellationToken cancellationToken = default)
+    private readonly IActivityFactory _activityFactory;
+
+    public ProductActivityProvider(IActivityFactory activityFactory)
     {
-        var fruits = new[]
+        _activityFactory = activityFactory;
+    }
+
+    public ValueTask<IEnumerable<ActivityDescriptor>> GetDescriptorsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var products = new[]
         {
-            "Apples", "Bananas", "Cherries",
+            new { Name = "Laptop", Category = "Electronics" },
+            new { Name = "Desk", Category = "Furniture" },
+            new { Name = "Coffee", Category = "Beverages" }
         };
 
-        var activities = fruits.Select(x =>
+        var descriptors = products.Select(product =>
         {
-            var fullTypeName = $"Demo.Buy{x}";
+            var typeName = $"MyCompany.Order{product.Name}";
+            
             return new ActivityDescriptor
             {
-                TypeName = fullTypeName,
-                Name = $"Buy{x}",
-                Namespace = "Demo",
-                DisplayName = $"Buy {x}",
-                Category = "Fruits",
-                Description = $"Buy {x} from the store.",
+                TypeName = typeName,
+                Name = $"Order{product.Name}",
+                Namespace = "MyCompany.Orders",
+                DisplayName = $"Order {product.Name}",
+                Category = $"Orders/{product.Category}",
+                Description = $"Place an order for {product.Name}",
                 Constructor = context =>
                 {
-                    var activity = activityFactory.Create<PrintMessage>(context);
-
-                    activity.Message = new($"Buying {x}...");
-                    activity.Type = fullTypeName;
+                    // Create a base activity and configure it
+                    var activity = _activityFactory.Create<PrintMessage>(context);
+                    activity.Message = new($"Ordering {product.Name}...");
+                    activity.Type = typeName;
                     return activity;
                 }
             };
         }).ToList();
 
-        return new(activities);
+        return new ValueTask<IEnumerable<ActivityDescriptor>>(descriptors);
     }
 }
 ```
 
-This provider leverages a simple array of fruit names as its source, generating an activity descriptor for each fruit, symbolising a "Buy (fruit)" activity.
+### **Advanced Example: OpenAPI Activity Provider**﻿
 
-To register this provider, utilise the `AddActivityProvider<T>` extension method:
+Here's a more sophisticated example that could generate activities from an OpenAPI specification:
 
+```csharp
+using Elsa.Extensions;
+using Elsa.Workflows;
+using Elsa.Workflows.Attributes;
+using Elsa.Workflows.Contracts;
+using Elsa.Workflows.Models;
+
+namespace MyCompany.Activities;
+
+public class OpenApiActivityProvider : IActivityProvider
+{
+    private readonly IActivityFactory _activityFactory;
+    private readonly IOpenApiService _openApiService;
+
+    public OpenApiActivityProvider(
+        IActivityFactory activityFactory,
+        IOpenApiService openApiService)
+    {
+        _activityFactory = activityFactory;
+        _openApiService = openApiService;
+    }
+
+    public async ValueTask<IEnumerable<ActivityDescriptor>> GetDescriptorsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var spec = await _openApiService.LoadSpecificationAsync(cancellationToken);
+        var descriptors = new List<ActivityDescriptor>();
+
+        foreach (var path in spec.Paths)
+        {
+            foreach (var operation in path.Value.Operations)
+            {
+                var typeName = $"OpenApi.{operation.Value.OperationId}";
+                
+                var descriptor = new ActivityDescriptor
+                {
+                    TypeName = typeName,
+                    Name = operation.Value.OperationId,
+                    Namespace = "OpenApi",
+                    DisplayName = operation.Value.Summary ?? operation.Value.OperationId,
+                    Category = "OpenApi",
+                    Description = operation.Value.Description,
+                    Constructor = context =>
+                    {
+                        var activity = _activityFactory.Create<HttpRequestActivity>(context);
+                        activity.Method = new(operation.Key.ToString());
+                        activity.Url = new(path.Key);
+                        activity.Type = typeName;
+                        return activity;
+                    }
+                };
+                
+                descriptors.Add(descriptor);
+            }
+        }
+
+        return descriptors;
+    }
+}
 ```
-services.AddActivityProvider<FruitActivityProvider>();
+
+### **Registering Activity Providers**﻿
+
+Register your custom activity provider in `Program.cs`:
+
+```csharp
+builder.Services.AddElsa(elsa =>
+{
+    // Register the activity provider
+    elsa.AddActivityProvider<ProductActivityProvider>();
+    
+    // Or register multiple providers
+    elsa.AddActivityProvider<ProductActivityProvider>();
+    elsa.AddActivityProvider<OpenApiActivityProvider>();
+});
+
+// Register any dependencies
+builder.Services.AddSingleton<IOpenApiService, OpenApiService>();
 ```
 
 {% hint style="info" %}
 **Programmatic Workflows and Dynamic Activities**
 
-Currently, dynamically provided activities cannot be used within programmatic workflows.
+Currently, dynamically provided activities cannot be used within programmatic workflows defined in C#. They are only available in workflows created through Elsa Studio or JSON definitions.
 
 An open issue exists for this functionality: [https://github.com/elsa-workflows/elsa-core/issues/5162](https://github.com/elsa-workflows/elsa-core/issues/5162)
 {% endhint %}
 
+### **Activity Provider Best Practices**﻿
+
+1. **Cache Descriptors**: Consider caching activity descriptors to avoid regenerating them on every request
+2. **Async Loading**: Use async/await for loading activity definitions from external sources
+3. **Error Handling**: Implement proper error handling for external data sources
+4. **Unique Type Names**: Ensure generated type names are unique and stable
+5. **Performance**: Be mindful of performance when generating large numbers of activities
+
 ## Summary <a href="#summary" id="summary"></a>
 
-In this topic, we explored the creation, registration, and utilisation of custom activities. These are crucial in workflow development as they allow for the inclusion of domain-specific actions within a workflow.
+Custom activities are the foundation of extending Elsa Workflows to meet your specific business needs. This guide covered everything you need to create powerful, reusable workflow activities in Elsa V3:
+
+### **What You Learned**
+
+- **Basic Activities**: Creating simple activities using `Activity` and `CodeActivity` base classes
+- **Inputs and Outputs**: Defining activity parameters with `Input<T>` and `Output<T>`, including metadata with attributes
+- **UI Hints**: Controlling how inputs are displayed in Elsa Studio with various UI hint options
+- **Expressions**: Supporting dynamic values through C#, JavaScript, and other expression providers
+- **Metadata**: Using `ActivityAttribute`, `InputAttribute`, and `OutputAttribute` to enhance the designer experience
+- **Composite Activities**: Building complex activities that compose other activities
+- **Custom Outcomes**: Defining multiple execution paths using the `FlowNode` attribute
+- **Dependency Injection**: Accessing services through the activity execution context
+- **Blocking Activities**: Creating activities that pause workflow execution until external events occur
+- **Triggers**: Building activities that can both start new workflows and resume existing ones
+- **Registration**: Various patterns for registering activities with Elsa
+- **Activity Providers**: Dynamically generating activities from external sources
+
+### **Next Steps**
+
+Now that you understand custom activities, consider:
+
+1. **Explore Built-in Activities**: Study Elsa's built-in activities for patterns and best practices
+2. **Create Domain Activities**: Build activity libraries specific to your business domain
+3. **Share Activities**: Package your activities as NuGet packages for reuse across projects
+4. **Advanced Topics**: Learn about custom UI components, field extensions, and Studio customization
+
+### **Additional Resources**
+
+- [Elsa Core Source Code](https://github.com/elsa-workflows/elsa-core) - Reference implementation of built-in activities
+- [UI Hints Documentation](../studio/workflow-editor/ui-hints.md) - Complete guide to UI hints
+- [Reusable Triggers](reusable-triggers-3.5-preview.md) - Advanced trigger patterns (v3.5+)
+- [Logging Framework](../features/logging-framework.md) - Integrate logging in your activities
+
+Custom activities unlock the full potential of Elsa Workflows, enabling you to create sophisticated, domain-specific workflow solutions that perfectly fit your requirements.
