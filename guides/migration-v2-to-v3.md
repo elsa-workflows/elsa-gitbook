@@ -1285,7 +1285,9 @@ public class MyTrigger : Trigger
            .BuildServiceProvider();
        
        var serializer = services.GetRequiredService<IActivitySerializer>();
-       var workflow = serializer.Deserialize<Workflow>(json);
+       var workflowDefinitionModel = serializer.Deserialize<WorkflowDefinitionModel>(json);
+       var workflowDefinitionMapper = services.GetRequiredService<WorkflowDefinitionMapper>();
+       var workflow = workflowDefinitionMapper.Map(workflowDefinitionModel);
        
        var runner = services.GetRequiredService<IWorkflowRunner>();
        var result = await runner.RunAsync(workflow);
