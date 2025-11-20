@@ -3005,8 +3005,11 @@ velero schedule create elsa-daily \
   --schedule="0 2 * * *" \
   --include-namespaces elsa-workflows
 
-# Restore from backup
-velero restore create --from-backup elsa-daily-20240120020000
+# List available backups
+velero backup get
+
+# Restore from a specific backup
+velero restore create --from-backup <backup-name>
 ```
 
 ### Monitoring and Alerting
