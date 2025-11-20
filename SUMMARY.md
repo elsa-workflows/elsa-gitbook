@@ -31,6 +31,7 @@
 
 * [V2 to V3 Migration Guide](guides/migration-v2-to-v3.md)
 * [Authentication & Authorization](guides/authentication.md)
+* [Kubernetes Deployment](guides/kubernetes-deployment.md)
 * [HTTP Workflows](guides/http-workflows/README.md)
   * [Programmatic](guides/http-workflows/programmatic.md)
   * [Designer](guides/http-workflows/designer.md)
