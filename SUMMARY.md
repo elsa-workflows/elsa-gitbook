@@ -7,6 +7,7 @@
 * [Concepts](getting-started/concepts/README.md)
   * [Outcomes](getting-started/concepts/outcomes.md)
   * [Correlation ID](getting-started/concepts/correlation-id.md)
+* [Architecture Overview](getting-started/architecture-overview.md)
 * [Hello World](getting-started/hello-world.md)
 * [Prerequisites](getting-started/prerequisites.md)
 * [Packages](getting-started/packages.md)
