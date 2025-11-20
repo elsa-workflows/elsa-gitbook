@@ -2228,6 +2228,7 @@ Configure distributed workflow runtime in your Elsa Server:
 // Program.cs or Startup.cs
 using Elsa.Extensions;
 using Elsa.DistributedLocking.Extensions;
+using Medallion.Threading.Postgres;
 
 var builder = WebApplication.CreateBuilder(args);
 
