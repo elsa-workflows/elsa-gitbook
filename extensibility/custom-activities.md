@@ -758,6 +758,7 @@ Use `GetService<T>()` instead of `GetRequiredService<T>()` when a service is opt
 
 ```csharp
 using Elsa.Workflows;
+using Elsa.Workflows.Attributes;
 using Elsa.Workflows.Models;
 
 public class GetDataActivity : CodeActivity
