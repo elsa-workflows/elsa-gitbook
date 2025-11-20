@@ -411,12 +411,11 @@ helm repo update
 kubectl create namespace elsa-workflows
 
 # Install Elsa Workflows
+# Store passwords in a secure values file (e.g., secrets.yaml) and never commit it to source control.
 helm install elsa-workflows ./elsa-workflows \
   --namespace elsa-workflows \
   --values values.yaml \
-  --set postgresql.auth.password=YOUR_DB_PASSWORD \
-  --set redis.auth.password=YOUR_REDIS_PASSWORD \
-  --set rabbitmq.auth.password=YOUR_RABBITMQ_PASSWORD
+  --values secrets.yaml  # Contains sensitive values, never committed
 ```
 
 ### Step 5: Verify Deployment
