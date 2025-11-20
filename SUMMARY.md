@@ -88,6 +88,7 @@
 
 ## Studio
 
+* [Studio Tour & Troubleshooting](studio/studio-tour-troubleshooting.md)
 * [Design](studio/design/README.md)
   * [Workflow Editor (3.5-preview)](studio/design/workflow-editor-3.5-preview.md)
   * [Activity Pickers (3.7-preview)](studio/design/activity-pickers-3.7-preview.md)
