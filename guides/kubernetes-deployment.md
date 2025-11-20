@@ -383,10 +383,13 @@ networkPolicy:
 Create a Kubernetes secret for sensitive configuration:
 
 ```bash
+export DB_PASSWORD='<your_postgres_password>'
+export REDIS_PASSWORD='<your_redis_password>'
+export RABBITMQ_PASSWORD='<your_rabbitmq_password>'
 kubectl create secret generic elsa-secrets \
-  --from-literal=postgresql-connection-string='Server=elsa-postgresql;Username=elsa;Database=elsa;Port=5432;Password=YOUR_PASSWORD;SSLMode=Require;MaxPoolSize=100' \
-  --from-literal=redis-connection-string='elsa-redis-master:6379,password=YOUR_REDIS_PASSWORD,ssl=False,abortConnect=False' \
-  --from-literal=rabbitmq-connection-string='amqp://elsa:YOUR_RABBITMQ_PASSWORD@elsa-rabbitmq:5672/' \
+  --from-literal=postgresql-connection-string="Server=elsa-postgresql;Username=elsa;Database=elsa;Port=5432;Password=${DB_PASSWORD};SSLMode=Require;MaxPoolSize=100" \
+  --from-literal=redis-connection-string="elsa-redis-master:6379,password=${REDIS_PASSWORD},ssl=False,abortConnect=False" \
+  --from-literal=rabbitmq-connection-string="amqp://elsa:${RABBITMQ_PASSWORD}@elsa-rabbitmq:5672/" \
   --namespace elsa-workflows
 ```
 
