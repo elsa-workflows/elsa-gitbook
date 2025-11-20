@@ -462,11 +462,13 @@ Variables.User.Email  // User is null
 
 **Example HTTP Request Configuration:**
 
-```javascript
-// URL (C#)
+**URL (C#):**
+```csharp
 return $"https://api.example.com/users/{Variables.UserId}";
+```
 
-// Headers (JavaScript)
+**Headers (JavaScript):**
+```javascript
 {
   "Authorization": `Bearer ${variables.ApiToken}`,
   "Content-Type": "application/json"
