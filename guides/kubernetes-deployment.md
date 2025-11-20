@@ -664,7 +664,11 @@ spec:
             capabilities:
               drop:
                 - ALL
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: false  # Set to true if application supports it
+            # If readOnlyRootFilesystem: true, mount volumes for writable paths:
+            # volumeMounts:
+            #   - name: tmp
+            #     mountPath: /tmp
 ```
 
 ### Elsa Server Service
@@ -2242,7 +2246,7 @@ builder.Services.AddElsa(elsa =>
         // Configure distributed locking with PostgreSQL
         runtime.DistributedLockProvider = serviceProvider => 
             new PostgresDistributedSynchronizationProvider(
-                configuration.GetConnectionString("PostgreSql"),
+                builder.Configuration.GetConnectionString("PostgreSql"),
                 options =>
                 {
                     options.KeepaliveCadence(TimeSpan.FromMinutes(5));
@@ -2260,7 +2264,7 @@ builder.Services.AddElsa(elsa =>
     elsa.UseMassTransit(massTransit =>
     {
         massTransit.UseRabbitMq(
-            configuration.GetConnectionString("RabbitMq"),
+            builder.Configuration.GetConnectionString("RabbitMq"),
             rabbit =>
             {
                 rabbit.ConfigureTransportBus = (context, bus) =>
@@ -2283,7 +2287,7 @@ builder.Services.AddElsa(elsa =>
 // Configure Quartz with persistent store
 builder.Services.AddQuartz(quartz =>
 {
-    quartz.UsePostgreSql(configuration.GetConnectionString("PostgreSql"));
+    quartz.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql"));
 });
 
 var app = builder.Build();
@@ -3175,7 +3179,7 @@ Always refer to the [official releases](https://github.com/elsa-workflows/elsa-c
 
 ---
 
-**Last Updated**: 2024-11-20
+**Last Updated**: 2025-11-20
 
 **Acceptance Criteria Checklist** (DOC-009):
 - ✅ K8s manifests/Helm charts
