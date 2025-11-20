@@ -746,8 +746,14 @@ variables.Debug === true
    ```csharp
    // In Elsa Server configuration
    services.AddElsa(elsa => elsa
-       .UseWorkflowManagement(management => management
-           .SetWorkflowInstanceRetention(TimeSpan.FromDays(30))));
+       .UseRetention(r =>
+       {
+           r.SweepInterval = TimeSpan.FromDays(1);
+           r.AddDeletePolicy("Delete old workflows", _ => new RetentionWorkflowInstanceFilter()
+           {
+               FinishedBefore = DateTime.UtcNow.AddDays(-30)
+           });
+       }));
    ```
 
 2. **Disable Activity State Persistence** (when not needed)
