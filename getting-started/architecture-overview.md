@@ -90,7 +90,7 @@ builder.Services.AddElsa(elsa =>
 
 ### 2. Elsa Studio
 
-**Elsa Studio** is a Blazor WebAssembly application that provides a visual designer for creating and managing workflows through a browser-based interface.
+**Elsa Studio** is a Blazor application built as a Razor Class Library (RCL) that provides a visual designer for creating and managing workflows through a browser-based interface. It can be hosted using any Blazor hosting model, including Blazor WebAssembly, Blazor Server, or embedded in other Blazor applications.
 
 **Key Features:**
 - **Visual Workflow Designer**: Drag-and-drop interface for building workflows
@@ -350,12 +350,13 @@ These three concepts work together to enable event-driven, long-running workflow
 ```csharp
 public class WaitForApprovalActivity : Activity
 {
-    protected override void Execute(ActivityExecutionContext context)
+    protected override async ValueTask ExecuteAsync(ActivityExecutionContext context)
     {
         // Create a bookmark with a payload
         context.CreateBookmark(
             new Bookmark("approval-required", 
                          payload: new { ApprovalId = "12345" }));
+        await Task.CompletedTask;
     }
 }
 ```
@@ -662,7 +663,7 @@ public class MyCustomActivity : CodeActivity
         ActivityExecutionContext context)
     {
         var input = context.Get(InputValue);
-        var result = await ProcessAsync(input);
+        var result = await Task.FromResult(input.ToUpper());
         context.Set(OutputValue, result);
     }
 }
@@ -1057,7 +1058,7 @@ public class CustomTenantResolver : ITenantResolver
 elsa.UseIdentity(identity =>
 {
     identity.TokenOptions = options => 
-        options.SigningKey = "your-signing-key";
+        options.SigningKey = builder.Configuration["Jwt:SigningKey"]; // Use secure key storage in production
     identity.UseAdminUserProvider();
 });
 
