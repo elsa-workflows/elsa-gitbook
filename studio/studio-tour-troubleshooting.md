@@ -6,6 +6,10 @@ This comprehensive guide provides a complete tour of Elsa Studio's interface, st
 
 Elsa Studio is a web-based designer that allows you to visually create, edit, and manage workflows. Whether you're new to Elsa or looking to master the designer, this guide will help you navigate the interface efficiently and troubleshoot common issues.
 
+{% hint style="info" %}
+**Note**: This guide includes screenshots of key Elsa Studio features. The exact appearance may vary slightly depending on your version and configuration.
+{% endhint %}
+
 ### What You'll Learn
 
 - Navigate the Elsa Studio interface
@@ -28,6 +32,8 @@ Before you begin, ensure you have:
 ### Dashboard/Home Screen
 
 When you first log into Elsa Studio, you're greeted with the Dashboard. This is your command center for workflow management.
+
+<figure><img src="../.gitbook/assets/run-workflow-using-elsa-studio-1.png" alt="Elsa Studio Interface"><figcaption><p>Elsa Studio workflow designer interface</p></figcaption></figure>
 
 **Key Elements:**
 
@@ -70,6 +76,8 @@ The Workflows section displays all your workflow definitions. This is where you 
 ### Workflow Editor Interface
 
 The workflow editor is the heart of Elsa Studio. This is where you design your automation logic.
+
+<figure><img src="../.gitbook/assets/sample-workflow-hello-world.png" alt="Workflow Editor Canvas"><figcaption><p>Example workflow in the visual designer</p></figcaption></figure>
 
 **Main Areas:**
 
