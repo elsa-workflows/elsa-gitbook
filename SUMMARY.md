@@ -33,6 +33,7 @@
 * [Authentication & Authorization](guides/authentication.md)
 * [Kubernetes Deployment](guides/kubernetes-deployment.md)
 * [HTTP Workflows](guides/http-workflows/README.md)
+  * [Tutorial](guides/http-workflows/tutorial.md)
   * [Programmatic](guides/http-workflows/programmatic.md)
   * [Designer](guides/http-workflows/designer.md)
 * [External Application Interaction](guides/external-application-interaction.md)
