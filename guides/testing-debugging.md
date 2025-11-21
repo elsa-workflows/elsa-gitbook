@@ -88,10 +88,10 @@ public abstract class WorkflowTestBase : IAsyncLifetime
         return Task.CompletedTask;
     }
     
-    protected async Task<WorkflowState> RunWorkflowAsync(Workflow workflow, IDictionary<string, object>? input = null)
+    protected async Task<WorkflowState> RunWorkflowAsync(Workflow workflow, IDictionary<string, object>? input = null, CancellationToken cancellationToken = default)
     {
         var workflowRunner = Services.GetRequiredService<IWorkflowRunner>();
-        var result = await workflowRunner.RunAsync(workflow, input);
+        var result = await workflowRunner.RunAsync(workflow, input, cancellationToken);
         return result;
     }
 }
@@ -163,7 +163,7 @@ public class UserValidationWorkflowTests : WorkflowTestBase
     [Theory]
     [InlineData("")]
     [InlineData("invalid-email")]
-    [InlineData("@example.com")]
+    [InlineData("exampledotcom")]
     public async Task InvalidEmail_ShouldTakeElseBranch(string email)
     {
         // Arrange
@@ -359,6 +359,160 @@ public class WorkflowInputOutputTests : WorkflowTestBase
 }
 ```
 {% endcode %}
+
+### Using Elsa's Official Testing Helpers <a href="#elsa-testing-helpers" id="elsa-testing-helpers"></a>
+
+Elsa provides official testing helper packages that simplify test setup and execution. These are the recommended approaches used in the elsa-core repository.
+
+#### ActivityTestFixture for Unit Testing Activities <a href="#activity-test-fixture" id="activity-test-fixture"></a>
+
+The `ActivityTestFixture` from `Elsa.Testing.Shared` package is the recommended way to unit test individual activities:
+
+{% code title="UsingActivityTestFixture.cs" %}
+```csharp
+using Elsa.Testing.Shared;
+using Xunit;
+
+namespace MyWorkflows.Tests;
+
+public class MyActivityUnitTests
+{
+    [Fact]
+    public async Task MyActivity_Executes_Successfully()
+    {
+        // Arrange
+        var activity = new MyCustomActivity
+        {
+            InputProperty = new Input<string>("test value")
+        };
+
+        // Act - ActivityTestFixture handles all setup
+        var fixture = new ActivityTestFixture(activity);
+        var context = await fixture.ExecuteAsync();
+
+        // Assert - Check activity behavior in isolation
+        Assert.Equal(ActivityStatus.Completed, context.Status);
+    }
+}
+```
+{% endcode %}
+
+#### WorkflowTestFixture for Integration Testing <a href="#workflow-test-fixture" id="workflow-test-fixture"></a>
+
+The `WorkflowTestFixture` from `Elsa.Testing.Shared.Integration` provides a complete test infrastructure with proper service setup:
+
+{% code title="UsingWorkflowTestFixture.cs" %}
+```csharp
+using Elsa.Testing.Shared.Integration;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace MyWorkflows.Tests.Integration;
+
+public class MyActivityIntegrationTests
+{
+    private readonly WorkflowTestFixture _fixture;
+
+    public MyActivityIntegrationTests(ITestOutputHelper testOutputHelper)
+    {
+        _fixture = new WorkflowTestFixture(testOutputHelper);
+    }
+
+    [Fact]
+    public async Task Activity_Completes_Successfully()
+    {
+        // Arrange
+        var activity = new MyActivity { Input = new("test") };
+
+        // Act - Runs activity in a complete workflow context
+        var result = await _fixture.RunActivityAsync(activity);
+
+        // Assert
+        Assert.Equal(WorkflowStatus.Finished, result.WorkflowState.Status);
+        
+        // Check specific activity status
+        var activityStatus = _fixture.GetActivityStatus(result, activity);
+        Assert.Equal(ActivityStatus.Completed, activityStatus);
+    }
+}
+```
+{% endcode %}
+
+#### Creating Execution Contexts <a href="#execution-contexts" id="execution-contexts"></a>
+
+`WorkflowTestFixture` provides methods to create execution contexts at different levels:
+
+{% code title="CreatingExecutionContexts.cs" %}
+```csharp
+// Create a workflow execution context
+var workflowContext = await _fixture.CreateWorkflowExecutionContextAsync(
+    variables: new[]
+    {
+        new Variable<int>("Counter", 0)
+    });
+
+// Create an activity execution context
+var activityContext = await _fixture.CreateActivityExecutionContextAsync(
+    activity: myActivity,
+    variables: new[] { new Variable<string>("MyVar", "value") }
+);
+
+// Create an expression execution context for testing expressions
+var expressionContext = await _fixture.CreateExpressionExecutionContextAsync(new[]
+{
+    new Variable<string>("MyVariable", "test value")
+});
+
+// Variables are accessible via dynamic accessors (e.g., getMyVariable(), setMyVariable())
+var evaluator = _fixture.Services.GetRequiredService<IJavaScriptEvaluator>();
+var script = @"
+    setMyVariable('updated value');
+    return getMyVariable();
+";
+var result = await evaluator.EvaluateAsync(script, typeof(string), expressionContext);
+```
+{% endcode %}
+
+#### Testing Async Workflows <a href="#async-workflows" id="async-workflows"></a>
+
+For workflows that complete asynchronously (with timers, external triggers, etc.), use `AsyncWorkflowRunner`:
+
+{% code title="TestingAsyncWorkflows.cs" %}
+```csharp
+using Elsa.Workflows.ComponentTests.Helpers.Services;
+using Xunit;
+using Xunit.Abstractions;
+
+public class AsyncWorkflowTests
+{
+    private readonly ITestOutputHelper _testOutput;
+    
+    public AsyncWorkflowTests(ITestOutputHelper testOutput)
+    {
+        _testOutput = testOutput;
+    }
+
+    [Fact]
+    public async Task AsyncWorkflow_Completes_Successfully()
+    {
+        // Arrange
+        var sp = new TestApplicationBuilder(_testOutput).Build();
+        var runner = sp.GetRequiredService<AsyncWorkflowRunner>();
+
+        // Act - Waits for workflow completion with timeout
+        var result = await runner.RunAndAwaitWorkflowCompletionAsync(
+            WorkflowDefinitionHandle.ByDefinitionId(workflowId, VersionOptions.Published)
+        );
+
+        // Assert
+        result.WorkflowExecutionContext.Status.Should().Be(WorkflowStatus.Finished);
+        result.ActivityExecutionRecords.Should().HaveCount(expectedCount);
+    }
+}
+```
+{% endcode %}
+
+`AsyncWorkflowRunner` tracks activity execution records and properly awaits workflow completion signals, making it ideal for deterministic testing of asynchronous workflow behavior.
 
 ## Integration Testing <a href="#integration-testing" id="integration-testing"></a>
 
@@ -988,6 +1142,70 @@ public static async Task DebugFailedWorkflow(IServiceProvider services)
 ```
 {% endcode %}
 
+### Testing Faulted Workflows <a href="#testing-faulted" id="testing-faulted"></a>
+
+When testing error scenarios, verify that workflows and activities fault correctly:
+
+{% code title="TestingFaultedWorkflows.cs" %}
+```csharp
+using Elsa.Testing.Shared.Integration;
+using Xunit;
+
+public class FaultHandlingTests
+{
+    private readonly WorkflowTestFixture _fixture;
+
+    public FaultHandlingTests(ITestOutputHelper testOutputHelper)
+    {
+        _fixture = new WorkflowTestFixture(testOutputHelper);
+    }
+
+    [Fact]
+    public async Task Activity_That_Throws_Should_Fault()
+    {
+        // Arrange
+        var activity = new ActivityThatThrows();
+
+        // Act
+        var result = await _fixture.RunActivityAsync(activity);
+
+        // Assert - Check specific activity status, not just workflow status
+        var activityStatus = _fixture.GetActivityStatus(result, activity);
+        Assert.Equal(ActivityStatus.Faulted, activityStatus);
+    }
+
+    [Fact]
+    public async Task Workflow_With_Fault_Should_Have_Incidents()
+    {
+        // Arrange
+        var workflow = new Workflow
+        {
+            Root = new Sequence
+            {
+                Activities =
+                {
+                    new WriteLine { Text = new Input<string>("Before fault") },
+                    new Fault { Message = new Input<string>("Intentional failure") }
+                }
+            }
+        };
+
+        // Act
+        var result = await _fixture.RunWorkflowAsync(workflow);
+
+        // Assert
+        Assert.Equal(WorkflowStatus.Faulted, result.WorkflowState.Status);
+        Assert.NotEmpty(result.WorkflowState.Incidents);
+        
+        var incident = result.WorkflowState.Incidents.First();
+        Assert.Contains("Intentional failure", incident.Message);
+    }
+}
+```
+{% endcode %}
+
+When testing fault scenarios, prefer using `_fixture.GetActivityStatus(result, activity)` to check if a specific activity faulted, rather than only checking the workflow-level status. This provides more granular test assertions.
+
 ## Test Data Management <a href="#test-data-management" id="test-data-management"></a>
 
 Effective test data management ensures reliable and maintainable tests.
@@ -1181,6 +1399,41 @@ public class CalculationWorkflowTests : WorkflowTestBase
         
         // Assert
         result.Output["sum"].Should().Be(expected);
+    }
+    
+    private Workflow CreateAdditionWorkflow()
+    {
+        return new Workflow
+        {
+            Root = new Sequence
+            {
+                Activities =
+                {
+                    new SetVariable
+                    {
+                        Variable = new Variable<int>("A"),
+                        Value = new Input<int>(context => context.GetInput<int>("a"))
+                    },
+                    new SetVariable
+                    {
+                        Variable = new Variable<int>("B"),
+                        Value = new Input<int>(context => context.GetInput<int>("b"))
+                    },
+                    new SetVariable
+                    {
+                        Variable = new Variable<int>("Sum"),
+                        Value = new Input<int>(context => 
+                            context.GetVariable<int>("A") + context.GetVariable<int>("B"))
+                    },
+                    new SetOutput
+                    {
+                        OutputName = "sum",
+                        OutputValue = new Input<object?>(context => 
+                            context.GetVariable<int>("Sum"))
+                    }
+                }
+            }
+        };
     }
     
     [Theory]
@@ -1801,21 +2054,33 @@ public async Task ComplexBusinessRule_ShouldBeEnforced()
 
 Testing and debugging workflows is essential for building reliable workflow-based applications. This guide covered:
 
-- **Unit Testing**: Testing workflows and activities in isolation with xUnit and Elsa.Testing
-- **Integration Testing**: Using TestContainers and in-memory databases for integration tests
+- **Unit Testing**: Testing workflows and activities in isolation with xUnit and Elsa.Testing, including ActivityTestFixture for activity unit tests
+- **Integration Testing**: Using WorkflowTestFixture, TestContainers, and in-memory databases for integration tests
+- **Async Testing**: Using AsyncWorkflowRunner for testing workflows with timers and external triggers
 - **Debugging**: Techniques including execution journals, logging, breakpoints, and state inspection
 - **Test Data Management**: Builders, fixtures, and parameterized tests
 - **CI/CD Integration**: Automating tests in GitHub Actions and Azure DevOps
 - **Common Pitfalls**: Solutions to frequent testing challenges
 - **Best Practices**: Proven patterns for maintainable and effective workflow tests
 
-By following these practices and patterns, you'll build a robust test suite that gives you confidence in your workflows and enables rapid, safe iteration on your workflow-based applications.
+By following these practices and patterns, along with the official Elsa testing helpers (ActivityTestFixture, WorkflowTestFixture, AsyncWorkflowRunner), you'll build a robust test suite that gives you confidence in your workflows and enables rapid, safe iteration on your workflow-based applications.
 
 ## Additional Resources <a href="#additional-resources" id="additional-resources"></a>
 
-- [Elsa Core Test Examples](https://github.com/elsa-workflows/elsa-core/tree/main/test)
+### Elsa Core Repository Examples
+
+- [Elsa Core Test Guidelines](https://github.com/elsa-workflows/elsa-core/blob/main/doc/qa/test-guidelines.md) - Official testing guidelines from the elsa-core repository
+- [Unit Test Examples](https://github.com/elsa-workflows/elsa-core/tree/main/test/unit) - Unit test examples using ActivityTestFixture
+- [Integration Test Examples](https://github.com/elsa-workflows/elsa-core/tree/main/test/integration) - Integration tests with WorkflowTestFixture
+- [Component Test Examples](https://github.com/elsa-workflows/elsa-core/tree/main/test/component) - Component tests with AsyncWorkflowRunner
+
+### Testing Frameworks & Tools
+
 - [xUnit Documentation](https://xunit.net/)
 - [TestContainers Documentation](https://dotnet.testcontainers.org/)
 - [FluentAssertions Documentation](https://fluentassertions.com/)
+
+### Related Guides
+
 - [Custom Activities Guide](../extensibility/custom-activities.md)
 - [Logging Framework](../features/logging-framework.md)
