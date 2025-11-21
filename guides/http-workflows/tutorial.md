@@ -488,13 +488,18 @@ For the "True" outcome, add a Set Variable activity:
 C# Expression:
 ```csharp
 var body = (dynamic)Variables.RequestBody;
+
+// For demonstration: simple sequential ID
+// In production, use:
+// - Database auto-increment IDs for sequential IDs
+// - Guid.NewGuid() for globally unique identifiers  
+// - Snowflake IDs for distributed systems
+// - ID generation service for complex requirements
+var demoId = DateTime.UtcNow.Ticks % 100000; // Demo: timestamp-based ID
+
 return new
 {
-    // For demonstration purposes only. In production, use:
-    // - Database auto-increment IDs
-    // - Guid.NewGuid() for globally unique identifiers
-    // - Or a proper ID generation service
-    Id = Guid.NewGuid().GetHashCode() & 0x7FFFFFFF, // Simple demo ID
+    Id = (int)demoId,
     Title = body.Title.ToString(),
     Status = body.Status.ToString().ToLower(),
     Priority = body.Priority?.ToString()?.ToLower() ?? "medium",
@@ -1131,15 +1136,29 @@ var acceptHeader = headers.ContainsKey("Accept") ? headers["Accept"].ToString() 
 
 if (acceptHeader.Contains("application/xml"))
 {
-    // Concept: Convert to XML using your preferred serialization method
-    // Example: Use XmlSerializer or create XML manually
-    return new { ContentType = "application/xml", Body = "<!-- Implement XML serialization -->" };
+    // Pseudo-code: XML serialization pattern
+    var task = (dynamic)Variables.Task;
+    var xml = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<task>
+    <id>{task.Id}</id>
+    <title>{task.Title}</title>
+    <status>{task.Status}</status>
+</task>";
+    // In production, use System.Xml.Serialization.XmlSerializer
+    // or System.Xml.Linq.XDocument for proper serialization
+    return new { ContentType = "application/xml", Body = xml };
 }
 else if (acceptHeader.Contains("text/csv"))
 {
-    // Concept: Convert to CSV using your preferred method
-    // Example: Use CsvHelper library or build CSV string manually
-    return new { ContentType = "text/csv", Body = "Id,Title,Status\n1,Task,active" };
+    // Pseudo-code: CSV serialization pattern
+    var tasks = (System.Collections.IEnumerable)Variables.Tasks;
+    var csv = "Id,Title,Status\n";
+    foreach (dynamic task in tasks)
+    {
+        csv += $"{task.Id},{task.Title},{task.Status}\n";
+    }
+    // In production, use CsvHelper library for robust CSV generation
+    return new { ContentType = "text/csv", Body = csv };
 }
 else
 {
@@ -1223,16 +1242,24 @@ return new
 
 Track and limit request rates per client:
 
-{% hint style="info" %}
-**Conceptual Example**
+{% hint style="warning" %}
+**Rate Limiting Considerations**
 
-Rate limiting in production requires external infrastructure. Consider:
-- Using API Gateway features (Azure API Management, AWS API Gateway, Kong)
-- Implementing with distributed cache (Redis, Memcached)
-- Using ASP.NET Core Rate Limiting middleware
-- Leveraging third-party services (Cloudflare, etc.)
+Rate limiting in production requires careful implementation:
 
-The example below demonstrates the concept but requires cache implementation.
+**Infrastructure:**
+- Use API Gateway features (Azure API Management, AWS API Gateway, Kong)
+- Implement with distributed cache (Redis, Memcached)
+- Use ASP.NET Core Rate Limiting middleware
+- Leverage CDN/WAF services (Cloudflare, etc.)
+
+**Client Identification:**
+- ⚠️ **Avoid IP-based limiting alone**: IPs can be shared (NAT, proxies, mobile networks)
+- ✅ **Prefer authenticated identifiers**: User IDs, API keys, OAuth tokens
+- ✅ **Validate proxy headers**: Only trust X-Forwarded-For from known proxies
+- ✅ **Combine methods**: Use both authentication and IP for better accuracy
+
+The example below demonstrates the concept but requires proper implementation.
 {% endhint %}
 
 ```csharp
@@ -1334,17 +1361,19 @@ curl -v -X GET https://localhost:5001/workflows/tasks/1
 
 ### Using HTTP Files (REST Client)
 
-Create a `.http` file for testing:
+Create a `.http` file for testing (replace `{{baseUrl}}` with your server URL):
 
 ```http
+@baseUrl = https://localhost:5001
+
 ### List all tasks
-GET https://localhost:5001/workflows/tasks
+GET {{baseUrl}}/workflows/tasks
 
 ### Get specific task
-GET https://localhost:5001/workflows/tasks/1
+GET {{baseUrl}}/workflows/tasks/1
 
 ### Create task
-POST https://localhost:5001/workflows/tasks
+POST {{baseUrl}}/workflows/tasks
 Content-Type: application/json
 
 {
@@ -1354,7 +1383,7 @@ Content-Type: application/json
 }
 
 ### Update task
-PUT https://localhost:5001/workflows/tasks/1
+PUT {{baseUrl}}/workflows/tasks/1
 Content-Type: application/json
 
 {
@@ -1363,8 +1392,17 @@ Content-Type: application/json
 }
 
 ### Delete task
-DELETE https://localhost:5001/workflows/tasks/1
+DELETE {{baseUrl}}/workflows/tasks/1
 ```
+
+{% hint style="info" %}
+**Environment Variables**
+
+Use variables in `.http` files to easily switch between environments:
+- Development: `@baseUrl = https://localhost:5001`
+- Staging: `@baseUrl = https://staging.example.com`
+- Production: `@baseUrl = https://api.example.com`
+{% endhint %}
 
 ### Automated Testing with xUnit
 
