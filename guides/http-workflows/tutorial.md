@@ -1116,23 +1116,34 @@ Use appropriate HTTP status codes for different error scenarios:
 
 Handle different content types based on request headers:
 
+{% hint style="info" %}
+**Conceptual Example**
+
+The following demonstrates the concept of content negotiation. In a real implementation, you would need to:
+- Implement XML/CSV serialization methods based on your needs
+- Use libraries like System.Xml.Serialization or CsvHelper
+- Configure appropriate Content-Type headers in Write HTTP Response activity
+{% endhint %}
+
 ```csharp
 var headers = Variables.Headers;
 var acceptHeader = headers.ContainsKey("Accept") ? headers["Accept"].ToString() : "application/json";
 
 if (acceptHeader.Contains("application/xml"))
 {
-    // Return XML response
-    return new { ContentType = "application/xml", Body = ConvertToXml(Variables.Task) };
+    // Concept: Convert to XML using your preferred serialization method
+    // Example: Use XmlSerializer or create XML manually
+    return new { ContentType = "application/xml", Body = "<!-- Implement XML serialization -->" };
 }
 else if (acceptHeader.Contains("text/csv"))
 {
-    // Return CSV response
-    return new { ContentType = "text/csv", Body = ConvertToCsv(Variables.Tasks) };
+    // Concept: Convert to CSV using your preferred method
+    // Example: Use CsvHelper library or build CSV string manually
+    return new { ContentType = "text/csv", Body = "Id,Title,Status\n1,Task,active" };
 }
 else
 {
-    // Default to JSON
+    // Default to JSON (handled automatically by Elsa)
     return new { ContentType = "application/json", Body = Variables.Task };
 }
 ```
@@ -1173,7 +1184,18 @@ var pageSize = queryData.ContainsKey("pageSize") ? int.Parse(queryData["pageSize
 // Limit page size
 pageSize = Math.Min(pageSize, 100);
 
-var allTasks = GetAllTasks(); // Your data source
+// Replace this with your actual data source:
+// - Database query with Skip/Take
+// - API call to backend service
+// - Workflow variable containing your data collection
+var allTasks = new[]
+{
+    new { Id = 1, Title = "Task 1", Status = "active" },
+    new { Id = 2, Title = "Task 2", Status = "pending" },
+    new { Id = 3, Title = "Task 3", Status = "completed" },
+    // ... more tasks
+}.AsQueryable();
+
 var totalCount = allTasks.Count();
 var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
@@ -1201,25 +1223,35 @@ return new
 
 Track and limit request rates per client:
 
+{% hint style="info" %}
+**Conceptual Example**
+
+Rate limiting in production requires external infrastructure. Consider:
+- Using API Gateway features (Azure API Management, AWS API Gateway, Kong)
+- Implementing with distributed cache (Redis, Memcached)
+- Using ASP.NET Core Rate Limiting middleware
+- Leveraging third-party services (Cloudflare, etc.)
+
+The example below demonstrates the concept but requires cache implementation.
+{% endhint %}
+
 ```csharp
-// Simple demonstration of rate limiting concept
-// For production, use:
-// - Distributed cache (Redis, Memcached)
-// - API Gateway rate limiting
-// - Dedicated rate limiting middleware
-// - Authentication-based limits (user ID, API key)
+// Conceptual demonstration of rate limiting logic
+// In production, implement caching with Redis or similar:
+// - IDistributedCache for ASP.NET Core
+// - StackExchange.Redis for direct Redis access
+// - Built-in ASP.NET Core rate limiting middleware
 
-// Note: X-Forwarded-For can be spoofed. In production:
-// - Use authenticated user IDs when possible
-// - Validate X-Forwarded-For against trusted proxies
-// - Combine multiple identification methods
-// - Consider using RemoteIpAddress from the connection
-var clientId = "demo-client"; // In production, use authenticated user ID or validated IP
-
+var clientId = "demo-client"; // Replace with: authenticated user ID, API key, or validated IP
 var requestKey = $"rate_limit:{clientId}";
-var requestCount = GetFromCache(requestKey) ?? 0;
 var maxRequests = 100; // per hour
 var windowSeconds = 3600;
+
+// Pseudo-code: Implement these with your caching solution
+// Example with IDistributedCache:
+// var cacheValue = await _cache.GetStringAsync(requestKey);
+// var requestCount = string.IsNullOrEmpty(cacheValue) ? 0 : int.Parse(cacheValue);
+var requestCount = 0; // Placeholder: retrieve from your cache
 
 if (requestCount >= maxRequests)
 {
@@ -1233,7 +1265,9 @@ if (requestCount >= maxRequests)
     };
 }
 
-IncrementCache(requestKey, windowSeconds);
+// Pseudo-code: Implement cache increment
+// Example: await _cache.SetStringAsync(requestKey, (requestCount + 1).ToString(), 
+//              new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(windowSeconds) });
 
 return new
 {
