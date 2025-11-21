@@ -187,6 +187,35 @@ Configure the Write HTTP Response activity:
    * `GET https://localhost:5001/workflows/tasks?status=active` - Returns only active tasks
    * `GET https://localhost:5001/workflows/tasks?status=completed` - Returns completed tasks
 
+{% hint style="success" %}
+**Expected Response**
+
+When you make a request to `https://localhost:5001/workflows/tasks?status=active`, you should receive a JSON response containing only the active tasks:
+
+```json
+[
+  {
+    "Id": 1,
+    "Title": "Complete documentation",
+    "Status": "active",
+    "Priority": "high"
+  },
+  {
+    "Id": 2,
+    "Title": "Review pull requests",
+    "Status": "active",
+    "Priority": "medium"
+  },
+  {
+    "Id": 4,
+    "Title": "Fix critical bug",
+    "Status": "active",
+    "Priority": "high"
+  }
+]
+```
+{% endhint %}
+
 {% endstep %}
 {% endstepper %}
 
@@ -461,7 +490,11 @@ C# Expression:
 var body = (dynamic)Variables.RequestBody;
 return new
 {
-    Id = new Random().Next(1000, 9999), // In production, use proper ID generation
+    // For demonstration purposes only. In production, use:
+    // - Database auto-increment IDs
+    // - Guid.NewGuid() for globally unique identifiers
+    // - Or a proper ID generation service
+    Id = Guid.NewGuid().GetHashCode() & 0x7FFFFFFF, // Simple demo ID
     Title = body.Title.ToString(),
     Status = body.Status.ToString().ToLower(),
     Priority = body.Priority?.ToString()?.ToLower() ?? "medium",
@@ -485,7 +518,13 @@ Then add a Write HTTP Response activity:
 {% tab title="Headers" %}
 Add a custom header:
 * **Name**: `Location`
-* **Value**: `https://localhost:5001/workflows/tasks/{{Variables.NewTask.Id}}` (Liquid)
+* **Value**: `/workflows/tasks/{{Variables.NewTask.Id}}` (Liquid)
+
+{% hint style="info" %}
+**Location Header**
+
+In production, build the full URL dynamically using the request's base URL. The relative path shown here works for most scenarios and avoids hardcoding domain names.
+{% endhint %}
 {% endtab %}
 {% endtabs %}
 
@@ -1106,12 +1145,21 @@ Enable Cross-Origin Resource Sharing (CORS) for browser-based clients:
 {% tab title="Response Headers" %}
 | Name | Value |
 | --- | --- |
-| Access-Control-Allow-Origin | `*` (or specific domain) |
+| Access-Control-Allow-Origin | `https://yourdomain.com` |
 | Access-Control-Allow-Methods | `GET, POST, PUT, DELETE, OPTIONS` |
 | Access-Control-Allow-Headers | `Content-Type, Authorization` |
 | Access-Control-Max-Age | `3600` |
 {% endtab %}
 {% endtabs %}
+
+{% hint style="warning" %}
+**CORS Security**
+
+- Never use `*` for `Access-Control-Allow-Origin` in production, especially with credentials
+- Always specify the exact allowed origin domain(s)
+- For multiple domains, implement logic to validate and return the requesting origin
+- Consider security implications before enabling CORS
+{% endhint %}
 
 ### Pagination
 
@@ -1154,12 +1202,21 @@ return new
 Track and limit request rates per client:
 
 ```csharp
-// Simple in-memory rate limiting (for production, use distributed cache)
-var clientIp = Variables.Headers.ContainsKey("X-Forwarded-For") 
-    ? Variables.Headers["X-Forwarded-For"].ToString()
-    : "unknown";
+// Simple demonstration of rate limiting concept
+// For production, use:
+// - Distributed cache (Redis, Memcached)
+// - API Gateway rate limiting
+// - Dedicated rate limiting middleware
+// - Authentication-based limits (user ID, API key)
 
-var requestKey = $"rate_limit:{clientIp}";
+// Note: X-Forwarded-For can be spoofed. In production:
+// - Use authenticated user IDs when possible
+// - Validate X-Forwarded-For against trusted proxies
+// - Combine multiple identification methods
+// - Consider using RemoteIpAddress from the connection
+var clientId = "demo-client"; // In production, use authenticated user ID or validated IP
+
+var requestKey = $"rate_limit:{clientId}";
 var requestCount = GetFromCache(requestKey) ?? 0;
 var maxRequests = 100; // per hour
 var windowSeconds = 3600;
@@ -1380,16 +1437,20 @@ public class TaskWorkflowTests : IClassFixture<WebApplicationFactory<Program>>
 * Handle OPTIONS preflight requests
 * Configure Elsa Server CORS policy
 
-Example CORS workflow:
+Example CORS workflow configuration:
 
+**HTTP Endpoint Activity:**
 ```csharp
-// In HTTP Endpoint, add support for OPTIONS method
-SupportedMethods = new(new[] { HttpMethods.Get, HttpMethods.Post, HttpMethods.Options })
+// Add support for OPTIONS method for CORS preflight
+SupportedMethods = new[] { HttpMethods.Get, HttpMethods.Post, HttpMethods.Options }
+```
 
-// In Write HTTP Response, always include CORS headers
+**Write HTTP Response Activity:**
+```csharp
+// Always include CORS headers in production (with proper origin validation)
 Headers = new Dictionary<string, string>
 {
-    ["Access-Control-Allow-Origin"] = "*",
+    ["Access-Control-Allow-Origin"] = "https://yourdomain.com",
     ["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS",
     ["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
 }
