@@ -29,7 +29,7 @@ Unit testing workflows involves testing individual workflows or activities in is
 Create a new xUnit test project and add the necessary packages:
 
 ```bash
-dotnet new xunit -n "MyWorkflows.Tests" -f net8.0
+dotnet new xunit -n "MyWorkflows.Tests"
 cd MyWorkflows.Tests
 dotnet add package Elsa
 dotnet add package Elsa.Testing.Shared
