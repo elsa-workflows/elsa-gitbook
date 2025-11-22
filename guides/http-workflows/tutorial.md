@@ -1713,7 +1713,6 @@ Now that you've mastered HTTP workflows, explore these advanced topics:
 ### Resources
 
 * [Elsa Workflows Documentation](../../README.md)
-* [HTTP Activities Reference](../../activities/control-flow/README.md)
 * [Expression Languages](../../expressions/c.md)
 * [Elsa GitHub Repository](https://github.com/elsa-workflows/elsa-core)
 * [Community Discord](https://discord.gg/hhChk5H472)
