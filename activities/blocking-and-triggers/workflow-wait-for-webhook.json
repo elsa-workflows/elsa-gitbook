@@ -1,0 +1,284 @@
+{
+  "$id": "1",
+  "id": "order-workflow-with-webhook",
+  "definitionId": "order-workflow-webhook",
+  "name": "Order Workflow with Webhook Wait",
+  "description": "Demonstrates creating an order, waiting for a webhook callback with correlation ID, and handling timeout scenarios",
+  "version": 1,
+  "variables": [],
+  "inputs": [
+    {
+      "name": "ProductId",
+      "typeName": "String",
+      "description": "The product ID for the order"
+    },
+    {
+      "name": "Quantity",
+      "typeName": "Int32",
+      "description": "The quantity to order"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "OrderResult",
+      "typeName": "Object",
+      "description": "The final order result"
+    },
+    {
+      "name": "Status",
+      "typeName": "String",
+      "description": "Success, Timeout, or Error"
+    }
+  ],
+  "root": {
+    "$type": "Elsa.Workflows.Activities.Sequence, Elsa.Workflows.Core",
+    "id": "sequence-root",
+    "activities": [
+      {
+        "$type": "Elsa.Workflows.Activities.SetVariable, Elsa.Workflows.Core",
+        "id": "set-correlation-id",
+        "name": "GenerateCorrelationId",
+        "variable": {
+          "name": "CorrelationId",
+          "typeName": "String"
+        },
+        "value": {
+          "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+          "expression": "return $\"order-{Guid.NewGuid().ToString()}\";"
+        }
+      },
+      {
+        "$type": "Elsa.Workflows.Activities.SetVariable, Elsa.Workflows.Core",
+        "id": "set-order-data",
+        "name": "PrepareOrderData",
+        "variable": {
+          "name": "OrderData",
+          "typeName": "Object"
+        },
+        "value": {
+          "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+          "expression": "return new { ProductId = input.ProductId, Quantity = input.Quantity, CorrelationId = Variables.CorrelationId, CallbackUrl = $\"https://your-app.com/api/callbacks/resume\" };"
+        }
+      },
+      {
+        "$type": "Elsa.Http.Activities.SendHttpRequest, Elsa.Http",
+        "id": "send-order-to-external-system",
+        "name": "SubmitOrderToExternalSystem",
+        "url": {
+          "$type": "Elsa.Workflows.Core.Expressions.LiteralExpression",
+          "value": "https://external-system.example.com/api/orders"
+        },
+        "method": "POST",
+        "content": {
+          "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+          "expression": "return Variables.OrderData;"
+        },
+        "contentType": "application/json",
+        "parsedContent": {
+          "name": "ExternalOrderResponse",
+          "typeName": "Object"
+        }
+      },
+      {
+        "$type": "Elsa.Workflows.Activities.WriteLine, Elsa.Workflows.Core",
+        "id": "log-waiting",
+        "name": "LogWaitingForCallback",
+        "text": {
+          "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+          "expression": "return $\"Waiting for webhook callback. CorrelationId: {Variables.CorrelationId}\";"
+        }
+      },
+      {
+        "$type": "Elsa.Workflows.Activities.Fork, Elsa.Workflows.Core",
+        "id": "fork-webhook-or-timeout",
+        "name": "WaitForWebhookOrTimeout",
+        "joinMode": "WaitAny",
+        "branches": [
+          {
+            "$type": "Elsa.Workflows.Activities.Sequence, Elsa.Workflows.Core",
+            "id": "webhook-branch",
+            "name": "WebhookBranch",
+            "activities": [
+              {
+                "$type": "Elsa.Http.Activities.HttpEndpoint, Elsa.Http",
+                "id": "wait-for-webhook",
+                "name": "WaitForOrderConfirmationWebhook",
+                "path": "/api/callbacks/resume",
+                "supportedMethods": ["POST"],
+                "canStartWorkflow": false,
+                "parsedContent": {
+                  "name": "WebhookPayload",
+                  "typeName": "Object"
+                }
+              },
+              {
+                "$type": "Elsa.Workflows.Activities.SetVariable, Elsa.Workflows.Core",
+                "id": "set-webhook-received",
+                "name": "MarkWebhookReceived",
+                "variable": {
+                  "name": "WebhookReceived",
+                  "typeName": "Boolean"
+                },
+                "value": {
+                  "$type": "Elsa.Workflows.Core.Expressions.LiteralExpression",
+                  "value": true
+                }
+              }
+            ]
+          },
+          {
+            "$type": "Elsa.Workflows.Activities.Sequence, Elsa.Workflows.Core",
+            "id": "timeout-branch",
+            "name": "TimeoutBranch",
+            "activities": [
+              {
+                "$type": "Elsa.Workflows.Activities.Delay, Elsa.Workflows.Core",
+                "id": "timeout-delay",
+                "name": "TimeoutAfter1Hour",
+                "duration": {
+                  "$type": "Elsa.Workflows.Core.Expressions.LiteralExpression",
+                  "value": "01:00:00"
+                }
+              },
+              {
+                "$type": "Elsa.Workflows.Activities.SetVariable, Elsa.Workflows.Core",
+                "id": "set-timeout-occurred",
+                "name": "MarkTimeoutOccurred",
+                "variable": {
+                  "name": "TimeoutOccurred",
+                  "typeName": "Boolean"
+                },
+                "value": {
+                  "$type": "Elsa.Workflows.Core.Expressions.LiteralExpression",
+                  "value": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$type": "Elsa.Workflows.Activities.If, Elsa.Workflows.Core",
+        "id": "check-webhook-or-timeout",
+        "name": "CheckWebhookOrTimeout",
+        "condition": {
+          "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+          "expression": "return Variables.WebhookReceived == true;"
+        },
+        "then": {
+          "$type": "Elsa.Workflows.Activities.Sequence, Elsa.Workflows.Core",
+          "id": "success-sequence",
+          "name": "SuccessPath",
+          "activities": [
+            {
+              "$type": "Elsa.Workflows.Activities.WriteLine, Elsa.Workflows.Core",
+              "id": "log-success",
+              "name": "LogSuccessfulCallback",
+              "text": {
+                "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+                "expression": "return $\"Webhook received successfully for CorrelationId: {Variables.CorrelationId}\";"
+              }
+            },
+            {
+              "$type": "Elsa.Workflows.Activities.SetVariable, Elsa.Workflows.Core",
+              "id": "set-order-result",
+              "name": "SetOrderResult",
+              "variable": {
+                "name": "OrderResult",
+                "typeName": "Object"
+              },
+              "value": {
+                "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+                "expression": "return Variables.WebhookPayload;"
+              }
+            },
+            {
+              "$type": "Elsa.Workflows.Activities.SetVariable, Elsa.Workflows.Core",
+              "id": "set-status-success",
+              "name": "SetStatusSuccess",
+              "variable": {
+                "name": "Status",
+                "typeName": "String"
+              },
+              "value": {
+                "$type": "Elsa.Workflows.Core.Expressions.LiteralExpression",
+                "value": "Success"
+              }
+            },
+            {
+              "$type": "Elsa.Http.Activities.WriteHttpResponse, Elsa.Http",
+              "id": "write-success-response",
+              "name": "WriteSuccessResponse",
+              "statusCode": 200,
+              "content": {
+                "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+                "expression": "return new { status = \"success\", correlationId = Variables.CorrelationId, result = Variables.OrderResult };"
+              },
+              "contentType": "application/json"
+            }
+          ]
+        },
+        "else": {
+          "$type": "Elsa.Workflows.Activities.Sequence, Elsa.Workflows.Core",
+          "id": "timeout-sequence",
+          "name": "TimeoutPath",
+          "activities": [
+            {
+              "$type": "Elsa.Workflows.Activities.WriteLine, Elsa.Workflows.Core",
+              "id": "log-timeout",
+              "name": "LogTimeout",
+              "text": {
+                "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+                "expression": "return $\"Timeout occurred waiting for webhook. CorrelationId: {Variables.CorrelationId}\";"
+              }
+            },
+            {
+              "$type": "Elsa.Workflows.Activities.SetVariable, Elsa.Workflows.Core",
+              "id": "set-status-timeout",
+              "name": "SetStatusTimeout",
+              "variable": {
+                "name": "Status",
+                "typeName": "String"
+              },
+              "value": {
+                "$type": "Elsa.Workflows.Core.Expressions.LiteralExpression",
+                "value": "Timeout"
+              }
+            },
+            {
+              "$type": "Elsa.Http.Activities.SendHttpRequest, Elsa.Http",
+              "id": "cancel-external-order",
+              "name": "CancelExternalOrder",
+              "url": {
+                "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+                "expression": "return $\"https://external-system.example.com/api/orders/{Variables.CorrelationId}/cancel\";"
+              },
+              "method": "POST",
+              "contentType": "application/json"
+            },
+            {
+              "$type": "Elsa.Http.Activities.WriteHttpResponse, Elsa.Http",
+              "id": "write-timeout-response",
+              "name": "WriteTimeoutResponse",
+              "statusCode": 408,
+              "content": {
+                "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+                "expression": "return new { status = \"timeout\", correlationId = Variables.CorrelationId, message = \"Order processing timed out\" };"
+              },
+              "contentType": "application/json"
+            }
+          ]
+        }
+      },
+      {
+        "$type": "Elsa.Workflows.Activities.WriteLine, Elsa.Workflows.Core",
+        "id": "log-completion",
+        "name": "LogWorkflowCompletion",
+        "text": {
+          "$type": "Elsa.Workflows.Core.Expressions.DelegateExpression",
+          "expression": "return $\"Workflow completed with status: {Variables.Status}\";"
+        }
+      }
+    ]
+  }
+}
