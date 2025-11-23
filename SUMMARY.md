@@ -47,6 +47,7 @@
 ## Activities
 
 * [Common Properties](activities/common-properties.md)
+* [Blocking & Trigger Activities](activities/blocking-and-triggers/README.md)
 * [Control Flow](activities/control-flow/README.md)
   * [Decision](activities/control-flow/decision.md)
 * [MassTransit](activities/masstransit/README.md)

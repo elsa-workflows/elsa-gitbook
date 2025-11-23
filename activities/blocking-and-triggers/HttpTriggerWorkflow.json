@@ -1,0 +1,216 @@
+{
+  "id": "order-approval-workflow",
+  "definitionId": "OrderApprovalWorkflow",
+  "name": "Order Approval Workflow",
+  "description": "Demonstrates HTTP trigger that waits for approval callback",
+  "version": 1,
+  "variables": [
+    {
+      "id": "orderId",
+      "name": "OrderId",
+      "typeName": "System.String",
+      "isArray": false,
+      "value": null
+    },
+    {
+      "id": "amount",
+      "name": "Amount",
+      "typeName": "System.Decimal",
+      "isArray": false,
+      "value": null
+    },
+    {
+      "id": "approvalToken",
+      "name": "ApprovalToken",
+      "typeName": "System.String",
+      "isArray": false,
+      "value": null
+    }
+  ],
+  "inputs": [],
+  "outputs": [],
+  "outcomes": [
+    "Done"
+  ],
+  "root": {
+    "id": "root-sequence",
+    "type": "Elsa.Sequence",
+    "version": 1,
+    "activities": [
+      {
+        "id": "http-receive-order",
+        "type": "Elsa.HttpEndpoint",
+        "version": 1,
+        "name": "Receive Order",
+        "displayName": "Receive Order",
+        "description": "Receives order submission via HTTP POST",
+        "canStartWorkflow": true,
+        "path": {
+          "expression": {
+            "type": "Literal",
+            "value": "/api/orders/submit"
+          }
+        },
+        "supportedMethods": {
+          "expression": {
+            "type": "Literal",
+            "value": [
+              "POST"
+            ]
+          }
+        },
+        "parsedContent": {
+          "expression": {
+            "type": "Literal",
+            "value": true
+          }
+        },
+        "authorize": {
+          "expression": {
+            "type": "Literal",
+            "value": false
+          }
+        }
+      },
+      {
+        "id": "set-order-id",
+        "type": "Elsa.SetVariable",
+        "version": 1,
+        "name": "Set Order ID",
+        "variable": {
+          "id": "orderId"
+        },
+        "value": {
+          "expression": {
+            "type": "JavaScript",
+            "value": "getInput('Body').orderId"
+          }
+        }
+      },
+      {
+        "id": "set-amount",
+        "type": "Elsa.SetVariable",
+        "version": 1,
+        "name": "Set Amount",
+        "variable": {
+          "id": "amount"
+        },
+        "value": {
+          "expression": {
+            "type": "JavaScript",
+            "value": "getInput('Body').amount"
+          }
+        }
+      },
+      {
+        "id": "generate-approval-token",
+        "type": "Elsa.SetVariable",
+        "version": 1,
+        "name": "Generate Approval Token",
+        "variable": {
+          "id": "approvalToken"
+        },
+        "value": {
+          "expression": {
+            "type": "JavaScript",
+            "value": "getGuid()"
+          }
+        }
+      },
+      {
+        "id": "write-response-accepted",
+        "type": "Elsa.WriteHttpResponse",
+        "version": 1,
+        "name": "Send Acceptance Response",
+        "statusCode": {
+          "expression": {
+            "type": "Literal",
+            "value": 202
+          }
+        },
+        "content": {
+          "expression": {
+            "type": "JavaScript",
+            "value": "`Order ${getVariable('OrderId')} submitted. Approval token: ${getVariable('ApprovalToken')}`"
+          }
+        },
+        "contentType": {
+          "expression": {
+            "type": "Literal",
+            "value": "text/plain"
+          }
+        }
+      },
+      {
+        "id": "http-wait-approval",
+        "type": "Elsa.HttpEndpoint",
+        "version": 1,
+        "name": "Wait for Approval",
+        "displayName": "Wait for Approval",
+        "description": "Waits for approval via HTTP POST to approval endpoint",
+        "canStartWorkflow": false,
+        "path": {
+          "expression": {
+            "type": "JavaScript",
+            "value": "`/api/orders/approve/${getVariable('ApprovalToken')}`"
+          }
+        },
+        "supportedMethods": {
+          "expression": {
+            "type": "Literal",
+            "value": [
+              "POST"
+            ]
+          }
+        },
+        "parsedContent": {
+          "expression": {
+            "type": "Literal",
+            "value": true
+          }
+        }
+      },
+      {
+        "id": "log-approval",
+        "type": "Elsa.WriteLine",
+        "version": 1,
+        "name": "Log Approval",
+        "text": {
+          "expression": {
+            "type": "JavaScript",
+            "value": "`Order ${getVariable('OrderId')} approved!`"
+          }
+        }
+      },
+      {
+        "id": "write-response-approved",
+        "type": "Elsa.WriteHttpResponse",
+        "version": 1,
+        "name": "Send Approval Confirmation",
+        "statusCode": {
+          "expression": {
+            "type": "Literal",
+            "value": 200
+          }
+        },
+        "content": {
+          "expression": {
+            "type": "JavaScript",
+            "value": "`Order ${getVariable('OrderId')} has been approved`"
+          }
+        },
+        "contentType": {
+          "expression": {
+            "type": "Literal",
+            "value": "text/plain"
+          }
+        }
+      }
+    ],
+    "metadata": {}
+  },
+  "customProperties": {},
+  "isLatest": true,
+  "isPublished": true,
+  "createdAt": "2024-01-01T00:00:00Z"
+}
