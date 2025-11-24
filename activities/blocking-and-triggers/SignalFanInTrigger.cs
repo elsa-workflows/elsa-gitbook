@@ -208,7 +208,8 @@ public class SignalFanInTrigger : Trigger
                 // Callback invoked when a matching signal is received
                 Callback = OnSignalReceivedAsync,
                 
-                // Auto-burn the bookmark - we will explicitly recreate it as needed
+                // Auto-burn the bookmark - it will be consumed when resumed.
+                // The callback (OnSignalReceivedAsync) will recreate it if more signals are needed.
                 AutoBurn = true
             });
 
@@ -261,8 +262,9 @@ public class SignalFanInTrigger : Trigger
         }
         else
         {
-            // Re-create the bookmark for the next signal
-            // This is necessary because we're not using AutoBurn
+            // Re-create the bookmark for the next signal by calling ExecuteAsync.
+            // Since AutoBurn = true, the bookmark was consumed when this callback was invoked,
+            // so we need to explicitly create a new one to wait for the next signal.
             await ExecuteAsync(context);
         }
     }

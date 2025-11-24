@@ -313,9 +313,21 @@
  * 
  * Note: The ResumeUrl is stored in the workflow variable "ResumeUrl" and can be accessed
  * by querying the workflow instance. In a real scenario, you would:
- * - Query the workflow instance to get the ResumeUrl variable
- * - Send it via email, SMS, or other notification mechanism
- * - The approver clicks the link to approve/reject
+ * 
+ * Example - Query workflow instance for ResumeUrl:
+ * ```csharp
+ * var workflowInstance = await workflowInstanceStore.FindAsync(workflowInstanceId);
+ * var resumeUrl = workflowInstance.Variables.TryGetValue("ResumeUrl", out var value)
+ *     ? value?.ToString()
+ *     : null;
+ * // Send resumeUrl via email, SMS, or other notification
+ * ```
+ * 
+ * Or use the IWorkflowInstanceVariableReader service:
+ * ```csharp
+ * var resumeUrl = await variableReader.GetVariableAsync<string>(
+ *     workflowInstanceId, "ResumeUrl");
+ * ```
  * 
  * For timeout handling, see the README.md for examples using Fork/WaitAny patterns.
  * 
