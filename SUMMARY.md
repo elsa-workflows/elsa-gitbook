@@ -33,6 +33,7 @@
 * [Authentication & Authorization](guides/authentication.md)
 * [Kubernetes Deployment](guides/kubernetes-deployment.md)
 * [Clustering](guides/clustering/README.md)
+* [Monitoring & Observability](guides/monitoring/README.md)
 * [HTTP Workflows](guides/http-workflows/README.md)
   * [Tutorial](guides/http-workflows/tutorial.md)
   * [Programmatic](guides/http-workflows/programmatic.md)
