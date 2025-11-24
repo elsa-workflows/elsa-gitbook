@@ -116,6 +116,9 @@ public class WaitForApprovalActivity : Activity
         // Set the resume URL as output so it can be used by subsequent activities
         // (e.g., SendEmail activity to notify approvers)
         context.Set(ResumeUrl, resumeUrl);
+        
+        // Also set as a workflow variable so it can be accessed via getVariable() in expressions
+        context.SetVariable("ResumeUrl", resumeUrl);
 
         // Add execution log for debugging and auditing
         context.AddExecutionLogEntry(

@@ -14,7 +14,9 @@ namespace CustomActivities;
 /// Key Concepts:
 /// - Inherits from Trigger base class (Elsa.Workflows.Trigger)
 /// - Implements GetTriggerPayloads for trigger indexing
-/// - Creates bookmarks to wait for signals
+/// - Uses IsTriggerOfWorkflow to handle two modes:
+///   * When starting a workflow: completes immediately with the triggering signal
+///   * When used mid-workflow: creates bookmarks to wait for signals
 /// - Aggregates signals using an aggregation key
 /// - Completes when the required number of signals is received
 /// 
@@ -130,11 +132,41 @@ public class SignalFanInTrigger : Trigger
     /// <summary>
     /// ExecuteAsync is called when the trigger is activated.
     /// This can happen when:
-    /// 1. The workflow is started and this is the first activity
-    /// 2. A matching signal is received and resumes this trigger
+    /// 1. The workflow is started by this trigger (IsTriggerOfWorkflow returns true)
+    /// 2. The trigger is used mid-workflow and a matching signal is received
     /// </summary>
     protected override async ValueTask ExecuteAsync(ActivityExecutionContext context)
     {
+        // Check if this trigger started the workflow
+        if (context.IsTriggerOfWorkflow())
+        {
+            // The workflow was started by an external signal matching this trigger.
+            // Extract the signal data from workflow input and complete immediately.
+            var signalData = context.WorkflowInput.TryGetValue("SignalData", out var data)
+                ? data as SignalData
+                : null;
+
+            if (signalData != null)
+            {
+                // Initialize the received signals list with the first signal
+                var receivedSignals = new List<SignalData> { signalData };
+                context.SetVariable("ReceivedSignals", receivedSignals);
+                context.Set(ReceivedSignals, receivedSignals);
+                
+                context.AddExecutionLogEntry(
+                    "Info",
+                    $"Workflow started by signal from {signalData.Source}. " +
+                    $"Total: {receivedSignals.Count}/{context.Get(RequiredCount)}");
+            }
+
+            // Complete immediately when starting workflow
+            await context.CompleteActivityAsync();
+            return;
+        }
+
+        // If we reach here, this trigger is being used mid-workflow (not as a workflow starter).
+        // We need to create a bookmark to wait for signals.
+
         // Get the configured values
         var signalName = context.Get(SignalName);
         var aggregationKey = context.Get(AggregationKey);
@@ -176,8 +208,8 @@ public class SignalFanInTrigger : Trigger
                 // Callback invoked when a matching signal is received
                 Callback = OnSignalReceivedAsync,
                 
-                // Don't auto-burn the bookmark - we need to receive multiple signals
-                AutoBurn = false
+                // Auto-burn the bookmark - we will explicitly recreate it as needed
+                AutoBurn = true
             });
 
             context.AddExecutionLogEntry(
@@ -303,6 +335,8 @@ public record SignalData
  * USAGE IN WORKFLOW
  * =================
  * 
+ * As a workflow starter (trigger):
+ * 
  * public class OrderProcessingWorkflow : WorkflowBase
  * {
  *     protected override void Build(IWorkflowBuilder builder)
@@ -311,7 +345,8 @@ public record SignalData
  *         {
  *             SignalName = new("OrderProcessed"),
  *             AggregationKey = new("Order-12345"),
- *             RequiredCount = new(3) // Wait for payment, inventory, and shipping
+ *             RequiredCount = new(3), // Wait for payment, inventory, and shipping
+ *             CanStartWorkflow = true  // Important: allows this trigger to start workflows
  *         };
  *         
  *         var complete = new WriteLine("All order processing steps completed!");
@@ -319,6 +354,30 @@ public record SignalData
  *         builder.Root = new Sequence
  *         {
  *             Activities = { fanIn, complete }
+ *         };
+ *     }
+ * }
+ * 
+ * As a mid-workflow activity (bookmark):
+ * 
+ * public class OrderWorkflow : WorkflowBase
+ * {
+ *     protected override void Build(IWorkflowBuilder builder)
+ *     {
+ *         builder.Root = new Sequence
+ *         {
+ *             Activities =
+ *             {
+ *                 new WriteLine("Starting order processing..."),
+ *                 new SignalFanInTrigger
+ *                 {
+ *                     SignalName = new("OrderProcessed"),
+ *                     AggregationKey = new("Order-12345"),
+ *                     RequiredCount = new(3)
+ *                     // CanStartWorkflow not needed here - used mid-workflow
+ *                 },
+ *                 new WriteLine("All signals received!")
+ *             }
  *         };
  *     }
  * }

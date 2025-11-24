@@ -81,10 +81,6 @@
         "joinMode": "WaitAny",
         "branches": [
           {
-            "id": "branch-wait",
-            "activities": ["wait-approval"]
-          },
-          {
             "id": "branch-timeout",
             "activities": ["timeout-delay"]
           }
@@ -189,23 +185,13 @@
           "port": "Done"
         },
         "target": {
-          "activity": "send-notification",
+          "activity": "wait-approval",
           "port": "In"
         }
       },
       {
         "source": {
-          "activity": "send-notification",
-          "port": "Done"
-        },
-        "target": {
-          "activity": "fork-approval-timeout",
-          "port": "In"
-        }
-      },
-      {
-        "source": {
-          "activity": "fork-approval-timeout",
+          "activity": "wait-approval",
           "port": "Done"
         },
         "target": {
@@ -316,34 +302,37 @@
  * WORKFLOW STRUCTURE
  * ==================
  * 
- * This workflow demonstrates a common approval pattern with timeout:
+ * This workflow demonstrates a simple approval pattern:
  * 
  * 1. Start: Log workflow start
- * 2. Send Notification: Would send email with approval link (shown as WriteLine for demo)
- * 3. Fork (WaitAny): Race between approval and timeout
- *    - Branch 1: Wait for approval (creates bookmark)
- *    - Branch 2: Delay for 7 days (timeout)
- * 4. Decision: Route based on outcome (Approved, Rejected, or TimedOut)
+ * 2. WaitForApproval: Creates bookmark and sets ResumeUrl variable, workflow suspends
+ * 3. [Workflow suspended - external system sends notification using ResumeUrl from workflow variable]
+ * 4. Decision: Route based on outcome (Approved or Rejected)
  * 5. Actions: Execute appropriate action based on decision
  * 6. Complete: Log completion
+ * 
+ * Note: The ResumeUrl is stored in the workflow variable "ResumeUrl" and can be accessed
+ * by querying the workflow instance. In a real scenario, you would:
+ * - Query the workflow instance to get the ResumeUrl variable
+ * - Send it via email, SMS, or other notification mechanism
+ * - The approver clicks the link to approve/reject
+ * 
+ * For timeout handling, see the README.md for examples using Fork/WaitAny patterns.
  * 
  * 
  * WORKFLOW EXECUTION FLOW
  * =======================
  * 
  * Normal Approval Flow:
- * Start → SendNotification → Fork (creates bookmark) → [suspended]
- *   → [external POST to resume URL or IWorkflowResumer.ResumeAsync]
+ * Start → WaitForApproval (creates bookmark, sets ResumeUrl variable) → [suspended]
+ *   → [external: notification sent with ResumeUrl]
+ *   → [external: POST to resume URL or IWorkflowResumer.ResumeAsync]
  *   → Decision (Approved) → ApprovedAction → Complete
  * 
  * Rejection Flow:
- * Start → SendNotification → Fork (creates bookmark) → [suspended]
+ * Start → WaitForApproval (creates bookmark) → [suspended]
  *   → [external rejection]
  *   → Decision (Rejected) → RejectedAction → Complete
- * 
- * Timeout Flow:
- * Start → SendNotification → Fork (creates bookmark) → [suspended for 7 days]
- *   → TimeoutDelay completes → Decision (TimedOut) → TimeoutAction → Complete
  * 
  * 
  * TESTING THIS WORKFLOW
@@ -384,9 +373,9 @@
  * 
  * You can customize this workflow to fit your needs:
  * 
- * - Change the timeout duration (currently 7 days)
+ * - Add timeout handling using Fork/WaitAny patterns (see README.md)
  * - Add more complex routing logic in the decision
- * - Add email/SMS activities to send notifications
+ * - Add email/SMS activities to send notifications  (access ResumeUrl via workflow variable)
  * - Add data persistence activities to store approval results
  * - Add parallel approval requirements (multiple approvers)
  * - Add escalation logic (notify manager after X days)
@@ -399,41 +388,34 @@
  *     │  Start  │
  *     └────┬────┘
  *          │
- *     ┌────▼────────────┐
- *     │ SendNotification│
- *     └────┬────────────┘
+ *   ┌──────▼──────────┐
+ *   │ WaitForApproval │ ← Creates bookmark, sets ResumeUrl variable
+ *   │   (suspended)   │   Workflow suspends here
+ *   └──────┬──────────┘
  *          │
- *     ┌────▼────────────┐
- *     │  Fork (WaitAny) │
- *     └────┬────────────┘
- *          ├─────────────────────┐
- *          │                     │
- *   ┌──────▼──────┐      ┌──────▼──────┐
- *   │WaitForApproval│     │TimeoutDelay │
- *   │  (bookmark)  │      │   (7 days)  │
- *   └──────┬───────┘      └──────┬──────┘
- *          └─────────┬────────────┘
- *                    │
- *              ┌─────▼─────┐
- *              │  Decision  │
- *              └─────┬──────┘
- *         ┌──────────┼──────────┐
- *         │          │          │
- *    ┌────▼───┐ ┌───▼────┐ ┌──▼────┐
- *    │Approved│ │Rejected│ │TimedOut│
- *    └────┬───┘ └───┬────┘ └──┬────┘
- *         └─────────┼─────────┘
- *                   │
- *              ┌────▼────┐
- *              │Complete │
- *              └─────────┘
+ *          │ [External: notification sent, approval received]
+ *          │
+ *     ┌────▼─────┐
+ *     │ Decision │
+ *     └────┬─────┘
+ *          │
+ *    ┌─────┴─────┐
+ *    │           │
+ * ┌──▼────┐ ┌───▼────┐
+ * │Approved│ │Rejected│
+ * └──┬────┘ └───┬────┘
+ *    └─────┬────┘
+ *          │
+ *     ┌────▼────┐
+ *     │Complete │
+ *     └─────────┘
  * 
  * 
  * ALTERNATIVE WORKFLOW STRUCTURES
  * ===============================
  * 
- * Simple Approval (no timeout):
- * Start → WaitForApproval → Decision → Approved/Rejected → Complete
+ * Approval with Timeout (using Fork/WaitAny):
+ * Start → Fork(WaitAny) → [WaitForApproval, Delay(7days)] → Decision → Actions → Complete
  * 
  * Parallel Approvals (all required):
  * Start → Fork(WaitAll) → [Approval1, Approval2, Approval3] → Decision → Complete
