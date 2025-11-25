@@ -44,6 +44,7 @@
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)
   * [Using a Trigger](guides/running-workflows/using-a-trigger.md)
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
+* [Troubleshooting](guides/troubleshooting/README.md)
 
 ## Activities
 
