@@ -732,5 +732,5 @@ See [Testing & Debugging](../testing-debugging.md) for comprehensive debugging g
 - ✅ Covers idempotency strategies
 - ✅ Explains scheduling in clustered deployments
 - ✅ Addresses security for human approvals (tokenized URLs)
-- ✅ References DOC-013, DOC-015, DOC-016, DOC-017
+- ✅ References DOC-013, DOC-015, DOC-017
 - ✅ Includes code/JSON snippets for fan-out, fan-in, and timeout patterns
