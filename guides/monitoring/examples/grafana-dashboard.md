@@ -140,6 +140,8 @@ A comprehensive Elsa monitoring dashboard should include:
 
 ### 7. Active Workflows (Gauge)
 
+> **Note**: This metric requires implementing an ObservableGauge as shown in the [main Monitoring guide](../README.md#optional-observable-gauge-for-active-workflows).
+
 ```json
 {
   "title": "Active Workflows",

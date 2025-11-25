@@ -83,12 +83,14 @@ builder.Services.AddOpenTelemetry()
 
 Alternatively, send metrics directly to DogStatsD:
 
+> **Tip**: For production, configure these values via `appsettings.json` or environment variables rather than hardcoding them.
+
 ```csharp
 // Using StatsdClient
 var dogstatsdConfig = new StatsdConfig
 {
-    StatsdServerName = "127.0.0.1",
-    StatsdPort = 8125,
+    StatsdServerName = configuration["Datadog:StatsdHost"] ?? "127.0.0.1",
+    StatsdPort = int.Parse(configuration["Datadog:StatsdPort"] ?? "8125"),
     Prefix = "elsa"
 };
 

@@ -149,7 +149,7 @@ Use the decorator pattern to wrap `IWorkflowRunner` and record metrics:
 
 ```csharp
 using System.Diagnostics;
-using Elsa.Workflows.Runtime;
+using Elsa.Workflows;
 using Elsa.Workflows.Runtime.Contracts;
 using Elsa.Workflows.Runtime.Options;
 using Elsa.Workflows.Runtime.Results;
