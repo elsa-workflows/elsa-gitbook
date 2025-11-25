@@ -39,6 +39,7 @@
   * [Designer](guides/http-workflows/designer.md)
 * [External Application Interaction](guides/external-application-interaction.md)
 * [Loading Workflows from JSON](guides/loading-workflows-from-json.md)
+* [Plugins & Modules](guides/plugins-modules/README.md)
 * [Testing & Debugging Workflows](guides/testing-debugging.md)
 * [Running Workflows](guides/running-workflows/README.md)
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)
