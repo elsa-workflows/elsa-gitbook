@@ -55,8 +55,8 @@ A compact, copyable checklist for diagnosing common Elsa Workflows issues. Use t
 
 ## Stuck/Running Workflows
 
-- [ ] Check for long-running workflows: `SELECT * FROM workflow_instances WHERE status = 'Running' AND updated_at < NOW() - INTERVAL '1 hour'`
-- [ ] Check for incidents: `SELECT * FROM workflow_incidents WHERE workflow_instance_id = '<id>'`
+- [ ] Check for long-running workflows: `SELECT * FROM elsa.workflow_instances WHERE status = 'Running' AND updated_at < NOW() - INTERVAL '1 hour'`
+- [ ] Check for incidents: `SELECT * FROM elsa.workflow_incidents WHERE workflow_instance_id = '<id>'`
 - [ ] Check for orphaned locks (should auto-expire with TTL)
 - [ ] Background job queue is processing (check job provider logs)
 - [ ] No exceptions in logs around the time workflow became stuck
