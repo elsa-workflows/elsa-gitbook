@@ -44,6 +44,11 @@
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)
   * [Using a Trigger](guides/running-workflows/using-a-trigger.md)
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
+* [Monitoring & Observability](guides/monitoring/README.md)
+  * [OpenTelemetry Setup](guides/monitoring/examples/otel-setup.md)
+  * [Prometheus Metrics](guides/monitoring/examples/prometheus-metrics.md)
+  * [Grafana Dashboard](guides/monitoring/examples/grafana-dashboard.md)
+  * [Datadog Notes](guides/monitoring/examples/datadog-notes.md)
 
 ## Activities
 
