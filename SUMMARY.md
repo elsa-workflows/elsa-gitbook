@@ -45,6 +45,7 @@
   * [Using a Trigger](guides/running-workflows/using-a-trigger.md)
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
 * [Workflow Patterns](guides/patterns/README.md)
+* [Troubleshooting](guides/troubleshooting/README.md)
 
 ## Activities
 
