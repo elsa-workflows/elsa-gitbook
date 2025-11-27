@@ -113,17 +113,21 @@ builder.Services.AddElsa(elsa =>
 
 ```csharp
 // Programmatic workflow with bounded parallelism
+// Note: This is a conceptual example showing the pattern
 public class DynamicFanOutWorkflow : WorkflowBase
 {
     protected override void Build(IWorkflowBuilder builder)
     {
-        var items = builder.WithVariable<List<OrderItem>>();
+        // Define a variable to hold the items to process
+        var items = builder.WithVariable<List<string>>();
         
         builder
             .StartWith<SetVariable>(setup =>
             {
                 setup.Set(x => x.Variable, items);
-                setup.Set(x => x.Value, new Elsa.Expressions.Models.Literal(GetOrderItems()));
+                // In practice, items would come from workflow input or previous activity
+                setup.Set(x => x.Value, new Elsa.Expressions.Models.Literal(
+                    new List<string> { "item1", "item2", "item3", "item4" }));
             })
             .Then<ForEach>(forEach =>
             {
