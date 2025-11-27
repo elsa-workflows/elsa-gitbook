@@ -34,6 +34,7 @@
 * [Security & Authentication](guides/security/README.md)
 * [Kubernetes Deployment](guides/kubernetes-deployment.md)
 * [Clustering](guides/clustering/README.md)
+* [Performance & Scaling](guides/performance/README.md)
 * [HTTP Workflows](guides/http-workflows/README.md)
   * [Tutorial](guides/http-workflows/tutorial.md)
   * [Programmatic](guides/http-workflows/programmatic.md)
