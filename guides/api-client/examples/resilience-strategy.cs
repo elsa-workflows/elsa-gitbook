@@ -35,7 +35,8 @@ public static class ResilienceStrategyExamples
 
         // Configure resilience strategy for transient failure handling
         // Note: The exact API depends on your elsa-api-client version.
-        // This example uses CustomProperties as a conceptual approach.
+        // WARNING: The following code is a conceptual/proposed pattern and may not reflect the actual Elsa API.
+        // You MUST consult the Elsa documentation and source code for the correct way to configure resilience strategies.
         
         activity.CustomProperties[ResiliencePropertyKey] = new ResilienceConfiguration
         {
