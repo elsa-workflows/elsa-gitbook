@@ -256,6 +256,7 @@ public class LockMetrics
 Optimize database connection pooling for high concurrency:
 
 ```csharp
+using Npgsql;
 // PostgreSQL connection string with optimized pool settings
 var connectionString = new NpgsqlConnectionStringBuilder
 {
