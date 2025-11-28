@@ -259,7 +259,8 @@ Control how new workflow instances are created:
 | `Default` | Each trigger creates a new instance |
 | `Singleton` | Only one running instance per definition |
 
-See [Activation Strategies](../../operate/workflow-activation-strategies.md) for detailed guidance.
+<!-- The original link was broken. If the documentation exists elsewhere, update the path below. Otherwise, provide a brief summary or remove the link. -->
+See the documentation on Activation Strategies in the main Elsa docs for detailed guidance. <!-- TODO: Update with correct link if available -->
 
 **Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/WorkflowOptions.cs` — `ActivationStrategyType` property.
 
