@@ -195,5 +195,5 @@ public enum WorkflowStatus
 // ResilienceStrategyExamples.HandleActivityIncidents(instance);
 //
 // See also:
-// - Incidents documentation: operate/incidents/README.md
-// - Incident strategies: operate/incidents/strategies.md
+// - Elsa documentation: https://elsa-workflows.github.io/elsa-core/docs/next/guides/incidents/
+// - Incident strategies: See Elsa documentation for handling workflow incidents and strategies.
