@@ -570,7 +570,7 @@ if (instance.Status == WorkflowStatus.Faulted)
 }
 ```
 
-For incident configuration and strategies, see [Incidents](../../operate/incidents/README.md).
+For incident configuration and strategies, see the main documentation on incidents in the [Operate Guide](../operate/incidents.md).
 
 ---
 
