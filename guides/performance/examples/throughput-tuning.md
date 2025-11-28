@@ -116,6 +116,7 @@ public class PaymentWorkflow : WorkflowBase
         {
             Activities =
             {
+                // The following are placeholder custom activities. Implement these in your project.
                 new ValidatePayment(),
                 new ChargeCard(),
                 new SendReceipt()
