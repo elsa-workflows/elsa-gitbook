@@ -315,7 +315,7 @@ elsa.UseRetention(retention =>
     retention.AddDeletePolicy("Delete old completed workflows", sp =>
     {
         var clock = sp.GetRequiredService<ISystemClock>();
-        var threshold = clock.UtcNow.Subtract(TimeSpan.FromDays(30));
+        var threshold = clock.UtcNow.AddDays(-30);
         
         return new RetentionWorkflowInstanceFilter
         {
@@ -336,7 +336,7 @@ elsa.UseRetention(retention =>
     retention.AddDeletePolicy("Delete old faulted workflows", sp =>
     {
         var clock = sp.GetRequiredService<ISystemClock>();
-        var threshold = clock.UtcNow.Subtract(TimeSpan.FromDays(90));
+        var threshold = clock.UtcNow.AddDays(-90);
         
         return new RetentionWorkflowInstanceFilter
         {

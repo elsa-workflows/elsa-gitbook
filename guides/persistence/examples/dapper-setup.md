@@ -271,49 +271,37 @@ CREATE INDEX idx_execution_logs_workflow_instance ON elsa.workflow_execution_log
 CREATE INDEX idx_inbox_hash ON elsa.workflow_inbox_messages(hash);
 ```
 
-### SQL Server Schema
+### SQL Server and Other Databases
 
-```sql
--- Create schema
-IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'elsa')
-    EXEC('CREATE SCHEMA elsa');
-GO
+For SQL Server and other databases, use the official Elsa Dapper migrations package which provides complete schema management:
 
--- Workflow Definitions
-CREATE TABLE elsa.workflow_definitions (
-    id NVARCHAR(255) PRIMARY KEY,
-    definition_id NVARCHAR(255) NOT NULL,
-    name NVARCHAR(500),
-    description NVARCHAR(MAX),
-    version INT NOT NULL DEFAULT 1,
-    is_published BIT NOT NULL DEFAULT 0,
-    is_latest BIT NOT NULL DEFAULT 0,
-    is_readonly BIT NOT NULL DEFAULT 0,
-    is_system BIT NOT NULL DEFAULT 0,
-    materialized_name NVARCHAR(500),
-    provider_name NVARCHAR(255),
-    custom_properties NVARCHAR(MAX),
-    variables NVARCHAR(MAX),
-    inputs NVARCHAR(MAX),
-    outputs NVARCHAR(MAX),
-    outcomes NVARCHAR(MAX),
-    root NVARCHAR(MAX),
-    options NVARCHAR(MAX),
-    use_activity_id_as_node_id BIT NOT NULL DEFAULT 0,
-    created_at DATETIMEOFFSET NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT uq_definition_version UNIQUE (definition_id, version)
-);
+**Repository:** [elsa-extensions/Elsa.Persistence.Dapper.Migrations](https://github.com/elsa-workflows/elsa-extensions/tree/main/src/modules/persistence/Elsa.Persistence.Dapper.Migrations)
 
--- Workflow Instances (similar structure with NVARCHAR and BIT types)
--- ... (full schema available in schema scripts)
-
--- Create indexes
-CREATE INDEX idx_workflow_instances_correlation_id ON elsa.workflow_instances(correlation_id);
-CREATE INDEX idx_workflow_instances_status ON elsa.workflow_instances(status);
-CREATE INDEX idx_bookmarks_hash ON elsa.bookmarks(hash);
+**Installation:**
+```bash
+dotnet add package Elsa.Persistence.Dapper.Migrations
 ```
 
-> **Note:** For complete SQL Server schema scripts, refer to the Elsa repository or generate from EF Core migrations.
+**Usage:**
+```csharp
+using Elsa.Persistence.Dapper.Migrations;
+
+builder.Services.AddElsa(elsa =>
+{
+    elsa.UseWorkflowManagement(management =>
+    {
+        management.UseDapper(dapper =>
+        {
+            dapper.ConnectionFactory = () => new SqlConnection(connectionString);
+            dapper.UseMigrations();  // Enable automatic migrations
+        });
+    });
+});
+```
+
+The migrations package handles schema creation and versioning for supported databases including SQL Server, PostgreSQL, and MySQL.
+
+> **Note:** For custom schema requirements or unsupported databases, you can use the PostgreSQL schema above as a reference and adapt it to your database's SQL dialect.
 
 ## Transactions
 
