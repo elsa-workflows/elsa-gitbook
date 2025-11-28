@@ -161,14 +161,10 @@ builder.Services.AddElsa(elsa =>
 // Configure Quartz with high-throughput settings
 builder.Services.Configure<QuartzOptions>(options =>
 {
-    options.SchedulingOptions.SchedulerFactory.Properties.Add(
-        "quartz.threadPool.threadCount", "20");  // Increase thread pool
-    options.SchedulingOptions.SchedulerFactory.Properties.Add(
-        "quartz.jobStore.misfireThreshold", "60000");  // 1 minute misfire threshold
-    options.SchedulingOptions.SchedulerFactory.Properties.Add(
-        "quartz.jobStore.clustered", "true");
-    options.SchedulingOptions.SchedulerFactory.Properties.Add(
-        "quartz.jobStore.clusterCheckinInterval", "15000");  // 15 second check-in
+    options["quartz.threadPool.threadCount"] = "20";  // Increase thread pool
+    options["quartz.jobStore.misfireThreshold"] = "60000";  // 1 minute misfire threshold
+    options["quartz.jobStore.clustered"] = "true";
+    options["quartz.jobStore.clusterCheckinInterval"] = "15000";  // 15 second check-in
 });
 
 var app = builder.Build();
