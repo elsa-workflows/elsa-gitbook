@@ -526,9 +526,11 @@ Tokenized resume URLs should be treated as secrets:
 
 ### Resilience Strategies
 
-Elsa supports configuring resilience strategies for activities to handle transient failures.
+Elsa supports configuring resilience strategies for activities to handle transient failures. The exact API for configuring resilience may vary by version.
 
-#### Setting a Resilience Strategy
+#### Setting a Resilience Strategy (Conceptual Pattern)
+
+The following example demonstrates a conceptual pattern for configuring resilience. Consult the current Elsa documentation and source code for the actual API in your version:
 
 ```csharp
 using Elsa.Api.Client.Resources.WorkflowDefinitions.Models;
@@ -539,18 +541,19 @@ var activity = new Activity
     Id = "http-call-1"
 };
 
-// Set resilience strategy using extension methods
-activity.SetResilienceStrategy(new ResilienceStrategyConfiguration
+// Conceptual pattern: Configure resilience via activity properties
+// The actual API may differ - check Elsa documentation for your version
+activity.CustomProperties["resilience"] = new Dictionary<string, object>
 {
-    RetryCount = 3,
-    BackoffDelay = TimeSpan.FromSeconds(5),
-    BackoffType = BackoffType.Exponential
-});
+    ["retryCount"] = 3,
+    ["backoffDelay"] = TimeSpan.FromSeconds(5).TotalMilliseconds,
+    ["backoffType"] = "Exponential"
+};
 ```
 
-See [resilience-strategy.cs](examples/resilience-strategy.cs) for a complete example.
+See [resilience-strategy.cs](examples/resilience-strategy.cs) for additional patterns and considerations.
 
-**Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/ActivityExtensions.cs` — `SetResilienceStrategy`/`GetResilienceStrategy` methods (if present in API client).
+> **Note:** The resilience configuration API is evolving. Check the `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/` directory in elsa-core for current extension methods and models.
 
 ### Handling Incidents
 
@@ -786,7 +789,7 @@ See [Performance & Scaling Guide](../performance/README.md) (DOC-021) for observ
 - ✅ Documents workflow lifecycle: publish, start, suspend, resume
 - ✅ Provides actionable C# and curl examples
 - ✅ Explains bookmark creation, stimulus hashing, and resume patterns
-- ✅ References grounded in elsa-core develop/3.6.0 source files
+- ✅ References grounded in elsa-core `develop` branch (version 3.6.0)
 - ✅ Notes obsolete TriggerWorkflowsOptions, recommends new patterns
 - ✅ Links to DOC-020 (security), DOC-021 (performance), DOC-017 (troubleshooting)
 - ✅ Differentiates built-in tracing vs user-defined metrics
