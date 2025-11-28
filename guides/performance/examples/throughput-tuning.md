@@ -192,14 +192,14 @@ builder.Services.AddElsa(elsa =>
         runtime.DistributedLockProvider = sp =>
         {
             var redis = sp.GetRequiredService<IConnectionMultiplexer>();
+            var options = new RedisDistributedSynchronizationProviderOptions
+            {
+                Expiry = TimeSpan.FromSeconds(15),
+                MinimumDatabaseExpiry = TimeSpan.FromSeconds(5)
+            };
             return new RedisDistributedSynchronizationProvider(
                 redis.GetDatabase(),
-                options =>
-                {
-                    // Shorter lock expiry for higher throughput
-                    options.Expiry(TimeSpan.FromSeconds(15));
-                    options.MinimumDatabaseExpiry(TimeSpan.FromSeconds(5));
-                });
+                options);
         };
     });
 });
