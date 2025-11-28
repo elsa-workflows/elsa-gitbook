@@ -137,7 +137,8 @@ public class ResilienceConfiguration
 
 /// <summary>
 /// Constants for common activity type names.
-/// Using constants improves maintainability and prevents typos.
+/// Note: Each example file includes its own constants for self-contained usage.
+/// In a real project, define these once in a shared location.
 /// </summary>
 public static class ActivityTypes
 {

@@ -119,6 +119,8 @@ public class WorkflowPublishingService
 
 /// <summary>
 /// Constants for common activity type names.
+/// Note: Each example file includes its own constants for self-contained usage.
+/// In a real project, define these once in a shared location.
 /// </summary>
 public static class ActivityTypes
 {
