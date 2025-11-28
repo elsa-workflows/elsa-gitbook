@@ -127,7 +127,7 @@ Tokens become invalid when:
 - The workflow instance is cancelled
 - The workflow instance is deleted
 
-See [Security & Authentication Guide](../../security/README.md) (DOC-020) for token security best practices.
+See [Security & Authentication Guide](../security/README.md) (DOC-020) for token security best practices.
 
 ### Rate Limiting
 
