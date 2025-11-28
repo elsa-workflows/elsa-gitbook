@@ -1,21 +1,26 @@
 // resilience-strategy.cs
 // Example: Configuring resilience strategies for activities
 //
-// This example demonstrates setting resilience strategies for activities
-// to handle transient failures with retry and backoff.
+// This example demonstrates conceptual patterns for setting resilience strategies
+// for activities to handle transient failures with retry and backoff.
 //
-// Code Reference: src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/ActivityExtensions.cs
-// Note: The exact API may vary. Check the current elsa-api-client version for available methods.
+// IMPORTANT: The exact API depends on your elsa-api-client version.
+// Check the Elsa documentation and API client source for current methods.
+// Reference: src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/
 
 using Elsa.Api.Client.Resources.WorkflowDefinitions.Models;
 
 namespace Elsa.Examples.ApiClient;
 
 /// <summary>
-/// Examples of configuring resilience strategies for workflow activities.
+/// Demonstrates conceptual patterns for configuring resilience strategies.
+/// The exact API may vary by version - consult current elsa-api-client documentation.
 /// </summary>
 public static class ResilienceStrategyExamples
 {
+    // Property key for resilience configuration in CustomProperties
+    private const string ResiliencePropertyKey = "resilience";
+    
     /// <summary>
     /// Creates an HTTP activity with a resilience strategy configured.
     /// </summary>
@@ -24,16 +29,15 @@ public static class ResilienceStrategyExamples
     {
         var activity = new Activity
         {
-            Type = "Elsa.SendHttpRequest",
+            Type = ActivityTypes.SendHttpRequest,
             Id = "http-call-with-retry"
         };
 
         // Configure resilience strategy for transient failure handling
         // Note: The exact API depends on your elsa-api-client version.
-        // Check ActivityExtensions for SetResilienceStrategy/GetResilienceStrategy methods.
+        // This example uses CustomProperties as a conceptual approach.
         
-        // Example using custom properties approach:
-        activity.CustomProperties["resilience"] = new ResilienceConfiguration
+        activity.CustomProperties[ResiliencePropertyKey] = new ResilienceConfiguration
         {
             // Number of retry attempts
             RetryCount = 3,
@@ -63,7 +67,7 @@ public static class ResilienceStrategyExamples
         // Sequence with multiple HTTP calls, each with different resilience needs
         return new Activity
         {
-            Type = "Elsa.Sequence",
+            Type = ActivityTypes.Sequence,
             Id = "root-sequence",
             // Child activities would be configured here based on your workflow
         };
@@ -131,19 +135,31 @@ public class ResilienceConfiguration
     public bool JitterEnabled { get; set; } = true;
 }
 
+/// <summary>
+/// Constants for common activity type names.
+/// Using constants improves maintainability and prevents typos.
+/// </summary>
+public static class ActivityTypes
+{
+    public const string Sequence = "Elsa.Sequence";
+    public const string SendHttpRequest = "Elsa.SendHttpRequest";
+    public const string WriteLine = "Elsa.WriteLine";
+    public const string HttpEndpoint = "Elsa.HttpEndpoint";
+}
+
 // Placeholder types for compilation reference
 // In actual usage, these come from Elsa.Api.Client
 public class WorkflowInstance
 {
-    public string Id { get; set; } = default!;
+    public required string Id { get; set; }
     public WorkflowStatus Status { get; set; }
     public List<Fault>? Faults { get; set; }
 }
 
 public class Fault
 {
-    public string ActivityId { get; set; } = default!;
-    public string Message { get; set; } = default!;
+    public required string ActivityId { get; set; }
+    public required string Message { get; set; }
     public string? ExceptionType { get; set; }
 }
 

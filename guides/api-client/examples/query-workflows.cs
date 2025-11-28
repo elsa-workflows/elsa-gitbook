@@ -22,6 +22,7 @@ namespace Elsa.Examples.ApiClient;
 /// </summary>
 public class WorkflowQueryService
 {
+    private const int MaxPageSize = 100;
     private readonly IWorkflowInstancesApi _workflowInstancesApi;
 
     public WorkflowQueryService(IWorkflowInstancesApi workflowInstancesApi)
@@ -51,9 +52,9 @@ public class WorkflowQueryService
             // Optional status filter
             Status = status,
             
-            // Pagination
+            // Pagination - API supports max 100 results per page
             Page = page,
-            PageSize = Math.Min(pageSize, 100) // Enforce max limit
+            PageSize = Math.Min(pageSize, MaxPageSize)
         };
 
         return await _workflowInstancesApi.ListAsync(request);

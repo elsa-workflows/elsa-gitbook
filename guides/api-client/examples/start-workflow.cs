@@ -127,8 +127,15 @@ public class WorkflowStarterService
 /// </summary>
 public class StartWorkflowResult
 {
-    public string WorkflowInstanceId { get; set; } = default!;
-    public string Status { get; set; } = default!;
+    /// <summary>
+    /// The ID of the created workflow instance.
+    /// </summary>
+    public required string WorkflowInstanceId { get; set; }
+    
+    /// <summary>
+    /// The status of the workflow after starting (e.g., "Running", "Suspended").
+    /// </summary>
+    public required string Status { get; set; }
 }
 
 // Usage Example:

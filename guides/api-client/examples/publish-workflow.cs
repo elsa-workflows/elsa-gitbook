@@ -106,14 +106,24 @@ public class WorkflowPublishingService
     private static Activity BuildRootActivity()
     {
         // Create a sequence activity as the root
+        // Using type constants prevents typos and improves maintainability
         return new Activity
         {
-            Type = "Elsa.Sequence",
+            Type = ActivityTypes.Sequence,
             Id = "root-sequence",
             // Activities within the sequence would be configured here
             // based on your workflow requirements
         };
     }
+}
+
+/// <summary>
+/// Constants for common activity type names.
+/// </summary>
+public static class ActivityTypes
+{
+    public const string Sequence = "Elsa.Sequence";
+    public const string WriteLine = "Elsa.WriteLine";
 }
 
 // Usage Example:
