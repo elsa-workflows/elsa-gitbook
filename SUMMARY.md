@@ -36,6 +36,7 @@
 * [Clustering](guides/clustering/README.md)
 * [Performance & Scaling](guides/performance/README.md)
   * [Throughput Tuning](guides/performance/examples/throughput-tuning.md)
+* [API & Client](guides/api-client/README.md)
 * [Persistence](guides/persistence/README.md)
   * [EF Core Setup](guides/persistence/examples/efcore-setup.md)
   * [MongoDB Setup](guides/persistence/examples/mongodb-setup.md)
