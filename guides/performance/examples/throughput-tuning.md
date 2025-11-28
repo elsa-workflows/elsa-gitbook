@@ -98,7 +98,7 @@ public class BatchProcessingWorkflow : WorkflowBase
                 {
                     // TODO: Implement GetBatchItems() to return your batch data
                     Items = new(context => GetBatchItems()),
-                    Body = new ProcessItem()
+                    Body = new ProcessItem() // Custom activity placeholder
                 }
             }
         };
