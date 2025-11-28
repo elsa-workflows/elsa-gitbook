@@ -148,7 +148,7 @@ db.WorkflowExecutionLogRecords.createIndex({ "Timestamp": -1 });
 // Workflow Inbox Messages
 db.WorkflowInboxMessages.createIndex({ "Hash": 1 });
 db.WorkflowInboxMessages.createIndex({ "CorrelationId": 1 });
-db.WorkflowInboxMessages.createIndex({ "CreatedAt": 1 }, { expireAfterSeconds: 604800 });  // TTL: 7 days
+db.WorkflowInboxMessages.createIndex({ "CreatedAt": 1 }, { expireAfterSeconds: 604800 });  // TTL: 7 days (7 * 24 * 60 * 60 = 604800 seconds)
 
 print("Indexes created successfully");
 ```
