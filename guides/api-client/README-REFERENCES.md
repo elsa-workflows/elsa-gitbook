@@ -5,7 +5,7 @@ description: >-
 
 # Source File References
 
-This document provides exact source file references in the elsa-core repository that underpin the API & Client Guide documentation. These references are grounded in the elsa-core `develop` branch (version 3.6.0).
+This document provides exact source file references in the elsa-core repository that underpin the API & Client Guide documentation. These references are grounded in the elsa-core `main` branch.
 
 ## API Client Library
 
@@ -25,7 +25,7 @@ This document provides exact source file references in the elsa-core repository 
 - Versioning & Publishing Semantics section
 - Commit Strategies section
 
-**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/develop/src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/WorkflowOptions.cs
+**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/main/src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/WorkflowOptions.cs
 
 ---
 
@@ -44,7 +44,7 @@ This document provides exact source file references in the elsa-core repository 
 - Publishing Workflow Definitions section
 - Example: publish-workflow.cs
 
-**Permalink (Directory):** https://github.com/elsa-workflows/elsa-core/tree/develop/src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions
+**Permalink (Directory):** https://github.com/elsa-workflows/elsa-core/tree/main/src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions
 
 ---
 
@@ -63,7 +63,7 @@ This document provides exact source file references in the elsa-core repository 
 - Querying Workflow Definitions & Instances section
 - Examples: start-workflow.cs, query-workflows.cs
 
-**Permalink (Directory):** https://github.com/elsa-workflows/elsa-core/tree/develop/src/clients/Elsa.Api.Client/Resources/WorkflowInstances
+**Permalink (Directory):** https://github.com/elsa-workflows/elsa-core/tree/main/src/clients/Elsa.Api.Client/Resources/WorkflowInstances
 
 ---
 
@@ -101,7 +101,7 @@ This document provides exact source file references in the elsa-core repository 
 - Versioning & Publishing Semantics section
 - Commit Strategies section
 
-**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/develop/src/modules/Elsa.Workflows.Core/Models/WorkflowOptions.cs
+**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/main/src/modules/Elsa.Workflows.Core/Models/WorkflowOptions.cs
 
 ---
 
@@ -122,7 +122,7 @@ This document provides exact source file references in the elsa-core repository 
 - Bookmarks & Resuming section
 - How Bookmarks Work subsection
 
-**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/develop/src/modules/Elsa.Workflows.Core/Contexts/ActivityExecutionContext.cs
+**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/main/src/modules/Elsa.Workflows.Core/Contexts/ActivityExecutionContext.cs
 
 ---
 
@@ -139,7 +139,7 @@ This document provides exact source file references in the elsa-core repository 
 - Bookmarks & Resuming section
 - Token-based resume examples
 
-**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/develop/src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs
+**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/main/src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs
 
 ---
 
@@ -160,7 +160,7 @@ This document provides exact source file references in the elsa-core repository 
 - Bookmarks & Resuming section
 - Resume Flow & Locking subsection
 
-**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/develop/src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs
+**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/main/src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs
 
 ---
 
@@ -179,7 +179,7 @@ This document provides exact source file references in the elsa-core repository 
 - Stimulus Hashing subsection
 - Bookmark matching explanation
 
-**Permalink (Directory):** https://github.com/elsa-workflows/elsa-core/tree/develop/src/modules/Elsa.Workflows.Core/Bookmarks
+**Permalink (Directory):** https://github.com/elsa-workflows/elsa-core/tree/main/src/modules/Elsa.Workflows.Core/Bookmarks
 
 ---
 
@@ -195,7 +195,7 @@ This document provides exact source file references in the elsa-core repository 
 - Commit Strategies section
 - Cross-reference to DOC-021 (Performance Guide)
 
-**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/develop/src/modules/Elsa.Workflows.Core/CommitStates/CommitStrategiesFeature.cs
+**Permalink (GitHub):** https://github.com/elsa-workflows/elsa-core/blob/main/src/modules/Elsa.Workflows.Core/CommitStates/CommitStrategiesFeature.cs
 
 ---
 
@@ -224,7 +224,7 @@ For detailed commit strategy guidance:
 ## Version Information
 
 These references are based on:
-- **elsa-core:** `develop` branch (version 3.6.0)
+- **elsa-core:** `main` branch
 
 > **Note:** Source paths may change between versions. Verify paths against the specific Elsa version you're using.
 
@@ -242,14 +242,14 @@ These references are based on:
 To verify these references are still valid:
 
 1. Clone elsa-core repository
-2. Checkout the `develop` branch
+2. Checkout the `main` branch
 3. Verify each file path exists
 4. Check that the documented APIs match the actual implementation
 
 ```bash
 git clone https://github.com/elsa-workflows/elsa-core.git
 cd elsa-core
-git checkout develop
+git checkout main
 
 # Verify API client models
 ls -la src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/
@@ -268,4 +268,4 @@ cat src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs
 
 **Last Updated:** 2025-11-28
 
-**Branch Reference:** `develop` (version 3.6.0)
+**Branch Reference:** `main`

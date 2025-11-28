@@ -789,7 +789,7 @@ See [Performance & Scaling Guide](../performance/README.md) (DOC-021) for observ
 - ✅ Documents workflow lifecycle: publish, start, suspend, resume
 - ✅ Provides actionable C# and curl examples
 - ✅ Explains bookmark creation, stimulus hashing, and resume patterns
-- ✅ References grounded in elsa-core `develop` branch (version 3.6.0)
+- ✅ References grounded in elsa-core `main` branch
 - ✅ Notes obsolete TriggerWorkflowsOptions, recommends new patterns
 - ✅ Links to DOC-020 (security), DOC-021 (performance), DOC-017 (troubleshooting)
 - ✅ Differentiates built-in tracing vs user-defined metrics
