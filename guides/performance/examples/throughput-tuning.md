@@ -287,6 +287,9 @@ builder.Services.AddElsa(elsa =>
 For bulk workflow operations, use batch APIs:
 
 ```csharp
+using Elsa.Workflows.Management;
+using Elsa.Workflows.Management.Filters;
+
 // Example: Bulk delete completed workflows
 public class WorkflowCleanupJob
 {

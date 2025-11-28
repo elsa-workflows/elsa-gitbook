@@ -184,15 +184,16 @@ builder.Services.AddElsa(elsa =>
     {
         workflows.UseCommitStrategies(strategies =>
         {
-            // Register custom strategy
-            strategies.Add<CommitEveryNActivitiesStrategy>(
+            // Register custom strategy using the AddStrategy extension method
+            // The factory pattern allows for dependency injection
+            strategies.AddStrategy<CommitEveryNActivitiesStrategy>(
                 sp => new CommitEveryNActivitiesStrategy(10)); // Commit every 10 activities
         });
     });
 });
 ```
 
-> **Note:** This is a simplified outline. A production implementation should handle edge cases like workflow completion, suspension, and error states.
+> **Note:** This is a simplified outline. The `AddStrategy<T>` method registers a custom `IWorkflowCommitStrategy` with the DI container. A production implementation should handle edge cases like workflow completion, suspension, and error states.
 
 ## Observability and Monitoring
 
@@ -245,6 +246,7 @@ app.Run();
 For custom performance metrics beyond built-in tracing, you can implement your own metrics collection:
 
 ```csharp
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using Elsa.Workflows.Pipelines.ActivityExecution;
 
