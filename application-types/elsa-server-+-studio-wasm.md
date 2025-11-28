@@ -6,7 +6,7 @@ description: >-
 
 # Elsa Server + Studio (WASM)
 
-Instead of running Elsa Server and Elsa Stusio as separate ASP.NET Core applications, you can also setup an ASP.NET Core application that hosts both the workflow server and the UI. The UI will still make HTTP calls to the backend as if they were hosted separately, but the difference is that they are now served from the same application and therefore deployable as a single unit.
+Instead of running Elsa Server and Elsa Studio as separate ASP.NET Core applications, you can also setup an ASP.NET Core application that hosts both the workflow server and the UI. The UI will still make HTTP calls to the backend as if they were hosted separately, but the difference is that they are now served from the same application and therefore deployable as a single unit.
 
 For Elsa Studio, we will setup the Blazor parts using Blazor WebAssembly, which static files will be served from the ASP.NET Core host application.
 
