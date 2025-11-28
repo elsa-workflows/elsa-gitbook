@@ -96,6 +96,7 @@ public class BatchProcessingWorkflow : WorkflowBase
             {
                 new ForEach<string>
                 {
+                    // TODO: Implement GetBatchItems() to return your batch data
                     Items = new(context => GetBatchItems()),
                     Body = new ProcessItem()
                 }
