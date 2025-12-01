@@ -69,6 +69,10 @@ In workflows, activities can produce _output_ data for later steps. Outputs pass
 
 Variables can be set at the workflow level to store data. Use dynamic expressions to set or retrieve these variables. Activity outputs can update a variable automatically, allowing them to be used by the next activities. This makes it easy to transfer and store data for activities.
 
+{% hint style="info" %}
+**In Elsa Studio**: Learn how to reference variables in expressions using JavaScript and C# in the [Expressions guide](../../guides/studio/expressions.md).
+{% endhint %}
+
 ## Incident
 
 An incident is an error event that occurred in the workflow. For example, if an activity faults, an incident is recorded as part of the workflow execution.
