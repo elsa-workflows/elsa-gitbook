@@ -463,6 +463,8 @@ For other deployment scenarios, see:
 
 * [Elsa Server + Studio (Separate Images)](elsa-server-+-studio.md) - Run as separate containers
 * [Persistent Database](persistent-database.md) - More database configuration examples
+* [Database Configuration](../../database-configuration.md) - Complete database setup guide
+* [Persistence Guide](../../../guides/persistence/README.md) - Comprehensive persistence provider documentation
 * [Traefik Integration](traefik.md) - Reverse proxy setup
 * [Distributed Hosting](../../../hosting/distributed-hosting.md) - Multi-instance deployments
 
