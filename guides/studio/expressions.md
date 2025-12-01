@@ -270,6 +270,10 @@ Variable.Get<dynamic>("variable1").data.id
 If you need to ensure the result is a string, you can add `.ToString()` at the end, but it's often not necessary if the property is already a string.
 {% endhint %}
 
+{% hint style="warning" %}
+**Dynamic vs Strongly-Typed**: Using `dynamic` bypasses compile-time type checking, which means potential errors won't be caught until runtime. Use dynamic access when the variable structure is truly unknown at design time, but prefer strongly-typed access (with `Variable.Get<T>()` and specific types) when you know the structure for better safety and IntelliSense support.
+{% endhint %}
+
 ### Solution with C# (Dictionary Access)
 
 If you need more control over type handling, use dictionary access:
@@ -283,12 +287,16 @@ If you need more control over type handling, use dictionary access:
 ```csharp
 var variable1 = Variable.Get<Dictionary<string, object>>("variable1");
 var data = variable1["data"] as Dictionary<string, object>;
-var id = data["id"] as string;
-return id;
+var id = data?["id"] as string;
+return id ?? string.Empty;
 ```
 
 {% hint style="info" %}
 **Note**: The multi-line approach shown above is recommended for clarity and maintainability. While it's possible to write this as a complex single-line expression, the multi-line version is easier to read and debug.
+{% endhint %}
+
+{% hint style="warning" %}
+**Null Safety**: When using the `as` operator for casting, always check for null values. The example above uses the null-conditional operator (`?.`) and null-coalescing operator (`??`) to safely handle cases where the cast might fail or values might be missing. Without these checks, you risk `NullReferenceException` at runtime.
 {% endhint %}
 
 {% hint style="warning" %}
