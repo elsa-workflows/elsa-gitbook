@@ -38,6 +38,8 @@
   * [Throughput Tuning](guides/performance/examples/throughput-tuning.md)
 * [API & Client](guides/api-client/README.md)
 * [Persistence](guides/persistence/README.md)
+  * [SQL Server](guides/persistence/sql-server.md)
+  * [EF Core Migrations](guides/persistence/ef-migrations.md)
   * [EF Core Setup](guides/persistence/examples/efcore-setup.md)
   * [MongoDB Setup](guides/persistence/examples/mongodb-setup.md)
   * [Dapper Setup](guides/persistence/examples/dapper-setup.md)

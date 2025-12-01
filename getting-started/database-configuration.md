@@ -60,7 +60,7 @@ builder.Services.AddElsa(elsa =>
 }
 ```
 
-For more detailed information about persistence strategies, connection pooling, and advanced database configurations, see the [Persistence Guide](../guides/persistence/README.md).
+For more detailed information about persistence strategies, connection pooling, and advanced database configurations, see the [Persistence Guide](../guides/persistence/README.md). For a comprehensive SQL Server configuration guide including production considerations, troubleshooting, and migration strategies, see the [SQL Server Guide](../guides/persistence/sql-server.md).
 
 ## Configuring SQL Server
 
@@ -180,7 +180,7 @@ CONNECTIONSTRINGS__MONGODB=mongodb://.../...
 
 ## Running Migrations
 
-For EF Core-based providers (SQL Server, PostgreSQL, SQLite), you need to run migrations:
+For EF Core-based providers (SQL Server, PostgreSQL, SQLite), you need to run migrations. For detailed information about working with EF Core migrations, including custom entities and migration strategies, see the [EF Core Migrations Guide](../guides/persistence/ef-migrations.md).
 
 ### 1. Install EF Core Tools
 

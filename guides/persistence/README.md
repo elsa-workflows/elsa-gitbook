@@ -62,7 +62,10 @@ Elsa supports three primary persistence providers:
 - Teams familiar with EF Core and relational databases
 - Scenarios requiring transactional consistency
 
-See [EF Core Setup Example](examples/efcore-setup.md) for configuration details.
+**Documentation:**
+- [SQL Server Guide](sql-server.md) - Comprehensive SQL Server setup and configuration
+- [EF Core Migrations Guide](ef-migrations.md) - Working with migrations and custom entities
+- [EF Core Setup Example](examples/efcore-setup.md) - Basic configuration patterns
 
 ### MongoDB
 
@@ -202,6 +205,8 @@ dotnet ef database update --context ManagementElsaDbContext
 - Use a staging database identical to production for migration testing
 - Consider blue-green deployments for zero-downtime migrations
 - Keep migration scripts in source control
+
+For detailed information on working with EF Core migrations, adding custom entities, and migration strategies, see the [EF Core Migrations Guide](ef-migrations.md).
 
 ### MongoDB Configuration
 
@@ -644,6 +649,8 @@ var connectionString = "Host=localhost;Database=elsa;Username=elsa;Password=...;
 
 ## Related Documentation
 
+- [SQL Server Guide](sql-server.md) — Complete SQL Server configuration and troubleshooting
+- [EF Core Migrations Guide](ef-migrations.md) — Working with migrations and custom entities
 - [Clustering Guide](../clustering/README.md) — Distributed deployment and distributed locking (DOC-015)
 - [Troubleshooting Guide](../troubleshooting/README.md) — Diagnosing common issues (DOC-017)
 - [Performance & Scaling Guide](../performance/README.md) — Commit strategies and observability (DOC-021)
