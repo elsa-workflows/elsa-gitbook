@@ -8,6 +8,10 @@ description: >-
 
 Manipulating workflow instance variables is crucial for correcting defects in workflows or variable values. This ability allows quick fixes without restarting processes, minimizing downtime, and ensuring consistent operations. It enables dynamic adjustments for unexpected changes, enhancing system robustness and efficiency.
 
+{% hint style="info" %}
+**Using Variables in Elsa Studio**: If you're working with variables in the Elsa Studio designer, see the [Expressions guide](../guides/studio/expressions.md) to learn how to reference and manipulate variables using JavaScript and C# expressions in activities like SetVariable.
+{% endhint %}
+
 ## Programmatic Access﻿ <a href="#programmatic-access" id="programmatic-access"></a>
 
 ### Listing﻿ <a href="#list-variables" id="list-variables"></a>
