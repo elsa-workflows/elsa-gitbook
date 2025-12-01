@@ -24,6 +24,44 @@ Elsa supports the following database providers:
 * Database server (local or remote)
 * Appropriate NuGet packages installed
 
+## Using SQL Server instead of SQLite
+
+By default, Elsa uses SQLite for development scenarios. For production deployments, especially on Windows environments, SQL Server is recommended. The migration is straightforward:
+
+1. **Install SQL Server packages:**
+
+```bash
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+dotnet add package Elsa.EntityFrameworkCore.SqlServer
+```
+
+2. **Replace `UseSqlite()` with `UseSqlServer()`** in your `Program.cs`:
+
+```csharp
+builder.Services.AddElsa(elsa =>
+{
+    // Before: ef.UseSqlite()
+    // After: ef.UseSqlServer() with connection string
+    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
+    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
+    elsa.UseWorkflowsApi();
+});
+```
+
+3. **Update connection string** in `appsettings.json`:
+
+```json
+{
+  "ConnectionStrings": {
+    "SqlServer": "Server=localhost;Database=Elsa;User Id=sa;Password=YourPassword123;TrustServerCertificate=true"
+  }
+}
+```
+
+For more detailed information about persistence strategies, connection pooling, and advanced database configurations, see the [Persistence Guide](../guides/persistence/README.md).
+
 ## Configuring SQL Server
 
 ### 1. Install NuGet Packages
@@ -40,8 +78,10 @@ In `Program.cs`, add the following:
 ```csharp
 builder.Services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseSqlServer()));
-    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UseSqlServer()));
+    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
+    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
     elsa.UseWorkflowsApi();
 });
 ```
@@ -74,8 +114,10 @@ In `Program.cs`:
 ```csharp
 builder.Services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseNpgsql()));
-    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UseNpgsql()));
+    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => 
+        ef.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")!)));
+    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => 
+        ef.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")!)));
     elsa.UseWorkflowsApi();
 });
 ```
