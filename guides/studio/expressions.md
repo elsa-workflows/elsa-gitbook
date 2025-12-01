@@ -39,7 +39,7 @@ A **Literal** expression is a static value that doesn't change. Use this when yo
 
 **Liquid** is a template language that's useful for generating text with embedded variables.
 
-**Example**: `Hello, {{ variables.CustomerName }}!`
+**Example**: `Hello, {{ Variables.CustomerName }}!`
 
 ### Other Expression Types
 
