@@ -29,7 +29,7 @@ A **Literal** expression is a static value that doesn't change. Use this when yo
 
 **C#** expressions let you write C# code with full access to .NET types and methods. Use this when you need strong typing, complex logic, or access to .NET libraries.
 
-**Example**: `Variable.Get<Guid>("OrderId")` or `variables.OrderId`
+**Example**: `Variable.Get<Guid>("OrderId")` or `Variable.OrderId`
 
 ### JSON
 
