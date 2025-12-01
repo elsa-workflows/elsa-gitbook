@@ -198,6 +198,18 @@ Alternatively, [start an Elsa Studio container](../getting-started/containers/do
 {% endstep %}
 {% endstepper %}
 
+## Loading Workflows from Blob Storage
+
+If you need to load workflows from cloud blob storage (Azure Blob Storage, AWS S3, etc.), Elsa provides a dedicated workflow provider package:
+
+```bash
+dotnet add package Elsa.WorkflowProviders.BlobStorage
+```
+
+> **Note:** Earlier documentation may have incorrectly referenced `Elsa.WorkflowProviders.FluentStorage`. The correct package name is `Elsa.WorkflowProviders.BlobStorage`.
+
+For detailed configuration and usage of blob storage providers, please refer to the Elsa Core repository documentation.
+
 ## Summary <a href="#summary" id="summary"></a>
 
 In this guide, we've demonstrated configuring an Elsa Server to host workflows from JSON files. We covered loading a JSON file, deserialising it into the `Workflow` class, and executing the workflow.

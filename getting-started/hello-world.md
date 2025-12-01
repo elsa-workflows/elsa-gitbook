@@ -37,8 +37,8 @@ Open `Program.cs` and replace its contents with the following:
 
 ```csharp
 using Elsa.Extensions;
+using Elsa.Workflows;
 using Elsa.Workflows.Activities;
-using Elsa.Workflows.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 // Setup service container.
@@ -50,8 +50,8 @@ services.AddElsa();
 // Build the service container.
 var serviceProvider = services.BuildServiceProvider();
 
-// Instantiate an activity to run.
-var activity = new Sequence
+// Define a simple workflow with multiple activities.
+var workflow = new Sequence
 {
     Activities =
     {
@@ -60,11 +60,11 @@ var activity = new Sequence
     }
 };
 
-// Resolve a workflow runner to execute the activity.
+// Resolve a workflow runner to execute the workflow.
 var workflowRunner = serviceProvider.GetRequiredService<IWorkflowRunner>();
 
-// Execute the activity.
-await workflowRunner.RunAsync(activity);
+// Run the workflow.
+await workflowRunner.RunAsync(workflow);
 ```
 
 This code sets up a service container and adds Elsa services to it. The `serviceProvider` can be used to resolve Elsa services and run workflows.
@@ -72,6 +72,8 @@ This code sets up a service container and adds Elsa services to it. The `service
 {% endstepper %}
 
 ## ASP.NET Core
+
+> **Note:** The ASP.NET Core sample below may require updates to work with the latest Elsa 3.2+/3.3 versions. For a fully working sample compatible with the current version of Elsa, please refer to the [Elsa Samples repository](https://github.com/elsa-workflows/elsa-samples).
 
 {% stepper %}
 {% step %}
