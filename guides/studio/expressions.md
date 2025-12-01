@@ -263,8 +263,12 @@ Using the `Get<T>()` method with type casting:
    - **Expression**:
 
 ```csharp
-Variable.Get<dynamic>("variable1").data.id.ToString()
+Variable.Get<dynamic>("variable1").data.id
 ```
+
+{% hint style="info" %}
+If you need to ensure the result is a string, you can add `.ToString()` at the end, but it's often not necessary if the property is already a string.
+{% endhint %}
 
 ### Solution with C# (Dictionary Access)
 
@@ -283,11 +287,9 @@ var id = data["id"] as string;
 return id;
 ```
 
-For a single-line expression:
-
-```csharp
-((Dictionary<string, object>)Variable.Get<Dictionary<string, object>>("variable1")["data"])["id"]
-```
+{% hint style="info" %}
+**Note**: The multi-line approach shown above is recommended for clarity and maintainability. While it's possible to write this as a complex single-line expression, the multi-line version is easier to read and debug.
+{% endhint %}
 
 {% hint style="warning" %}
 When using dynamic access or dictionaries, you may need to cast values to the appropriate type. The exact approach depends on how your variable was created and what type of data it contains.
