@@ -399,15 +399,24 @@ External Event → Stimulus → Trigger Matcher → Start Workflow
                          ↘ Bookmark Matcher → Resume Workflow
 ```
 
-**Example - Resume via Stimulus:**
+**Example - Resume via Stimulus (New Client API):**
 ```csharp
+using Elsa.Workflows.Runtime;
+using Elsa.Workflows.Runtime.Messages;
+
 var workflowRuntime = serviceProvider.GetRequiredService<IWorkflowRuntime>();
 
-// Resume a workflow waiting for approval
-await workflowRuntime.ResumeWorkflowAsync(
-    workflowInstanceId,
-    bookmark: new Bookmark("approval-required"),
-    input: new { Approved = true });
+// Create a workflow client for the specific instance
+var client = await workflowRuntime.CreateClientAsync(workflowInstanceId);
+
+// Resume the workflow by running the instance with input
+await client.RunInstanceAsync(new RunWorkflowInstanceRequest
+{
+    Input = new Dictionary<string, object>
+    {
+        ["Approved"] = true
+    }
+});
 ```
 
 ### Workflow Execution Internals
