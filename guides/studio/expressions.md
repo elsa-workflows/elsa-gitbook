@@ -252,23 +252,9 @@ variables.variable1.data.id
 
 This reads the `id` property from the nested `data` object within `variable1` and assigns it to `extractedId`.
 
-### Solution with C# (Strongly-Typed)
+### Solution with C# (Using Get Method)
 
-If `variable1` is defined as a workflow variable with a known type:
-
-1. Add a `SetVariable` activity
-2. Configure the activity:
-   - **Variable Name**: `extractedId` (Literal)
-   - **Value**: Choose **C#** as the expression type
-   - **Expression**:
-
-```csharp
-Variable.variable1.data.id
-```
-
-### Solution with C# (Dynamic)
-
-If `variable1` structure is dynamic or unknown at design time:
+Using the `Get<T>()` method with type casting:
 
 1. Add a `SetVariable` activity
 2. Configure the activity:
@@ -280,10 +266,27 @@ If `variable1` structure is dynamic or unknown at design time:
 Variable.Get<dynamic>("variable1").data.id.ToString()
 ```
 
-Or using dictionary access:
+### Solution with C# (Dictionary Access)
+
+If you need more control over type handling, use dictionary access:
+
+1. Add a `SetVariable` activity
+2. Configure the activity:
+   - **Variable Name**: `extractedId` (Literal)
+   - **Value**: Choose **C#** as the expression type
+   - **Expression**:
 
 ```csharp
-((Dictionary<string, object>)Variable.Get<dynamic>("variable1")["data"])["id"]
+var variable1 = Variable.Get<Dictionary<string, object>>("variable1");
+var data = variable1["data"] as Dictionary<string, object>;
+var id = data["id"] as string;
+return id;
+```
+
+For a single-line expression:
+
+```csharp
+((Dictionary<string, object>)Variable.Get<Dictionary<string, object>>("variable1")["data"])["id"]
 ```
 
 {% hint style="warning" %}
