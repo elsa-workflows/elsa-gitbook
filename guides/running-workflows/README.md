@@ -112,7 +112,7 @@ var workflow = new Sequence
     }
 };
 
-// Get the workflow runner
+// Get the workflow runner (IWorkflowRunner is in Elsa.Workflows namespace)
 var workflowRunner = serviceProvider.GetRequiredService<IWorkflowRunner>();
 
 // Execute the workflow

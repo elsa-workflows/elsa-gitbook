@@ -41,9 +41,11 @@ dotnet add package Elsa.EntityFrameworkCore.SqlServer
 builder.Services.AddElsa(elsa =>
 {
     // Before: ef.UseSqlite()
-    // After: ef.UseSqlServer()
-    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseSqlServer()));
-    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UseSqlServer()));
+    // After: ef.UseSqlServer() with connection string
+    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
+    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
     elsa.UseWorkflowsApi();
 });
 ```
@@ -76,8 +78,10 @@ In `Program.cs`, add the following:
 ```csharp
 builder.Services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseSqlServer()));
-    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UseSqlServer()));
+    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
+    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => 
+        ef.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")!)));
     elsa.UseWorkflowsApi();
 });
 ```
@@ -110,8 +114,10 @@ In `Program.cs`:
 ```csharp
 builder.Services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseNpgsql()));
-    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UseNpgsql()));
+    elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => 
+        ef.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")!)));
+    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => 
+        ef.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")!)));
     elsa.UseWorkflowsApi();
 });
 ```

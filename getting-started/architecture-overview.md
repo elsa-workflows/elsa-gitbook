@@ -406,10 +406,10 @@ using Elsa.Workflows.Runtime.Messages;
 
 var workflowRuntime = serviceProvider.GetRequiredService<IWorkflowRuntime>();
 
-// Create a workflow client for the specific instance
+// Create a workflow client for the specific suspended instance
 var client = await workflowRuntime.CreateClientAsync(workflowInstanceId);
 
-// Resume the workflow by running the instance with input
+// Resume the workflow by running the instance with input that matches the bookmark
 await client.RunInstanceAsync(new RunWorkflowInstanceRequest
 {
     Input = new Dictionary<string, object>
