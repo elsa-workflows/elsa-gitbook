@@ -281,7 +281,7 @@ elsa.UseWorkflowManagement(management =>
                 maxRetryDelay: TimeSpan.FromSeconds(30),
                 errorNumbersToAdd: null);
             
-            sqlOptions.CommandTimeout(60); // 60 seconds
+            sqlOptions.CommandTimeout = 60; // 60 seconds
         });
     });
 });
