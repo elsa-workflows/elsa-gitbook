@@ -558,6 +558,10 @@ public class QueueBasedWorkflowDispatcher : IWorkflowDispatcher
         };
     }
 
+    // NOTE: The following methods are intentionally incomplete example code.
+    // They demonstrate the pattern for querying workflow definitions and bookmarks
+    // but should be implemented based on your specific storage configuration.
+    
     private async Task<List<WorkflowDefinition>> FindMatchingTriggersAsync(
         DispatchTriggerWorkflowsRequest request,
         CancellationToken cancellationToken)
