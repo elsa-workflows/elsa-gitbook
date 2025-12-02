@@ -347,9 +347,9 @@ Align your EF Core versions with Elsa's requirements:
   <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
   <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
   
-  <!-- Elsa packages -->
-  <PackageReference Include="Elsa" Version="3.3.0" />
-  <PackageReference Include="Elsa.EntityFrameworkCore.PostgreSql" Version="3.3.0" />
+  <!-- Elsa packages (replace x.y.z with the latest version from NuGet) -->
+  <PackageReference Include="Elsa" Version="x.y.z" />
+  <PackageReference Include="Elsa.EntityFrameworkCore.PostgreSql" Version="x.y.z" />
 </ItemGroup>
 ```
 
