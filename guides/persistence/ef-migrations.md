@@ -233,7 +233,7 @@ namespace MyApp
             
             // Use a connection string for design-time operations
             // This is ONLY used by 'dotnet ef' commands, not runtime
-            var connectionString = "Server=localhost;Database=Elsa;User Id=sa;Password=YourPassword123;TrustServerCertificate=true";
+            var connectionString = "Server=localhost;Database=Elsa;User Id=sa;Password=YourPassword123;Encrypt=true";
             optionsBuilder.UseSqlServer(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);
