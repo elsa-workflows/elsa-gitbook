@@ -72,3 +72,11 @@ docker-compose up
 ```
 
 Once the services are running, you can access Elsa Studio by navigating to [http://localhost:14000](http://localhost:14000/).
+
+## See Also
+
+For more detailed information about database configuration and persistence providers:
+
+- [Database Configuration](../../database-configuration.md) - Complete database setup guide
+- [Persistence Guide](../../../guides/persistence/README.md) - Comprehensive persistence provider overview
+- [SQL Server Guide](../../../guides/persistence/sql-server.md) - SQL Server-specific configuration (if using SQL Server instead of PostgreSQL)
