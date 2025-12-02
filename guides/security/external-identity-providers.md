@@ -365,7 +365,7 @@ builder.Services
         options.GetClaimsFromUserInfoEndpoint = true;
         
         // Add custom scopes
-        foreach (var scope in builder.Configuration.GetSection("OIDC:Scopes").Get<string[]>())
+        foreach (var scope in builder.Configuration.GetSection("OIDC:Scopes").Get<string[]>() ?? Array.Empty<string>())
         {
             options.Scope.Add(scope);
         }
