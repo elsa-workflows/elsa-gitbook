@@ -418,6 +418,7 @@ The default dispatcher (`DefaultWorkflowDispatcher`) executes workflows immediat
 ````csharp
 using Elsa.Workflows.Runtime;
 using Elsa.Workflows.Runtime.Messages;
+using System.Text.Json;
 
 public class QueueBasedWorkflowDispatcher : IWorkflowDispatcher
 {
