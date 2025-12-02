@@ -30,6 +30,7 @@
 ## Guides
 
 * [V2 to V3 Migration Guide](guides/migration-v2-to-v3.md)
+* [Workflow Dispatcher Architecture](guides/architecture/workflow-dispatcher.md)
 * [Authentication & Authorization](guides/authentication.md)
 * [Security & Authentication](guides/security/README.md)
 * [Kubernetes Deployment](guides/kubernetes-deployment.md)
@@ -67,6 +68,7 @@
 * [Blocking Activities & Triggers](activities/blocking-and-triggers/README.md)
 * [Control Flow](activities/control-flow/README.md)
   * [Decision](activities/control-flow/decision.md)
+* [Parallel Execution](activities/parallel-execution.md)
 * [MassTransit](activities/masstransit/README.md)
   * [Tutorial](activities/masstransit/tutorial.md)
 * [Diagnostics](activities/diagnostics/README.md)
