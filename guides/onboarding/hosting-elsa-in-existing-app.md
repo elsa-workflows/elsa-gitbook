@@ -274,7 +274,7 @@ dotnet ef database update --context RuntimeElsaDbContext
 
 Based on community feedback (issue #6), here are the most common integration challenges and how to solve them:
 
-### 1. DbContextOptions\<T\> Registration Issue
+### 1. DbContextOptions<T> Registration Issue
 
 **Problem:** When you have your own `AppDbContext` that requires `DbContextOptions<AppDbContext>`, you may encounter conflicts with Elsa's internal DbContext registration.
 

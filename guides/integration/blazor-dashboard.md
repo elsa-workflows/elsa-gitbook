@@ -603,20 +603,35 @@ builder.Services.AddElsaStudio(studio =>
         
         if (httpContext != null)
         {
-            // Forward authorization header
+            // Forward authorization header (preferred for API calls)
             var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
             if (!string.IsNullOrEmpty(authHeader))
             {
                 client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authHeader);
             }
             
-            // Forward cookies
+            // Forward authentication cookies only to trusted Elsa Server
+            // Note: Only forward to the same domain or explicitly trusted domains
             var cookies = httpContext.Request.Headers["Cookie"].FirstOrDefault();
-            if (!string.IsNullOrEmpty(cookies))
+            if (!string.IsNullOrEmpty(cookies) && IsElsaServerTrusted(client.BaseAddress))
             {
+                // Filter to only authentication-related cookies if needed
                 client.DefaultRequestHeaders.TryAddWithoutValidation("Cookie", cookies);
             }
         }
+    });
+});
+
+// Helper method to validate Elsa Server is trusted
+bool IsElsaServerTrusted(Uri baseAddress)
+{
+    // Only forward cookies to same origin or explicitly configured trusted domains
+    var trustedDomains = builder.Configuration.GetSection("ElsaServer:TrustedDomains").Get<string[]>() 
+        ?? Array.Empty<string>();
+    
+    return trustedDomains.Contains(baseAddress.Host, StringComparer.OrdinalIgnoreCase)
+        || baseAddress.Host == "localhost"
+        || baseAddress.Host == "127.0.0.1";
     });
 });
 ```

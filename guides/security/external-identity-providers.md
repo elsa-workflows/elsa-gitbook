@@ -145,7 +145,11 @@ Microsoft Azure Active Directory (now called Microsoft Entra ID) is Microsoft's 
    - Ensure same tenant and client ID
    - Configure token forwarding to Elsa Server API
 
-**Configuration Example (Conceptual):**
+**Configuration Example:**
+
+{% hint style="info" %}
+**Note:** The following example shows the essential configuration structure. Replace placeholders (`{tenant-id}`, `{client-id}`, `{client-secret}`) with your actual Azure AD values. For production deployments, store secrets in environment variables or a secure key vault.
+{% endhint %}
 
 ```csharp
 // Program.cs
@@ -219,7 +223,11 @@ Auth0 is a cloud-based authentication and authorization platform with extensive 
    - Configure OIDC with Auth0 settings
    - Validate access tokens using Auth0 audience
 
-**Configuration Example (Conceptual):**
+**Configuration Example:**
+
+{% hint style="info" %}
+Replace `{your-domain}` with your Auth0 domain (e.g., `mycompany.auth0.com`) and `{api-identifier}` with your API identifier from the Auth0 dashboard.
+{% endhint %}
 
 ```csharp
 builder.Services
@@ -286,7 +294,11 @@ Keycloak is an open-source identity and access management solution that can be s
    - Configure OIDC with Keycloak endpoint
    - Map Keycloak roles to ASP.NET Core claims
 
-**Configuration Example (Conceptual):**
+**Configuration Example:**
+
+{% hint style="info" %}
+Replace `{realm-name}`, `{client-id}`, and `{client-secret}` with values from your Keycloak configuration. The authority URL should point to your Keycloak instance and realm.
+{% endhint %}
 
 ```csharp
 builder.Services

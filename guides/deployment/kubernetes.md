@@ -198,7 +198,7 @@ kind: Deployment
 metadata:
   name: elsa-server
 spec:
-  replicas: 3
+  replicas: 1  # Start with 1, scale to 3+ for production
   selector:
     matchLabels:
       app: elsa-server
