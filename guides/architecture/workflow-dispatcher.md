@@ -5,6 +5,10 @@ description: >-
 
 # Workflow Dispatcher Architecture
 
+{% hint style="info" %}
+**Note**: This guide provides a deep dive into workflow dispatching. For a broader understanding of Elsa's architecture and how dispatching fits into the overall system, see the [Architecture Overview](README.md).
+{% endhint %}
+
 ## Overview
 
 The `IWorkflowDispatcher` is Elsa's core abstraction for **enqueuing and dispatching** workflows for execution. It provides a flexible mechanism to start, resume, and trigger workflows, with support for both in-process and distributed execution scenarios.
