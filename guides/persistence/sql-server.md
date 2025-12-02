@@ -104,7 +104,7 @@ Add your SQL Server connection string to `appsettings.json`:
 ```json
 {
   "ConnectionStrings": {
-    "Elsa": "Server=localhost;Database=Elsa;User Id=sa;Password=YourPassword123;TrustServerCertificate=true;MultipleActiveResultSets=true"
+    "Elsa": "Server=localhost;Database=Elsa;User Id=sa;Password=YourPassword123;Encrypt=true;MultipleActiveResultSets=true"
   }
 }
 ```
