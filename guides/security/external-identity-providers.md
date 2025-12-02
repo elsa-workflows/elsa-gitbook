@@ -1,6 +1,6 @@
 ---
 description: >-
-  Guide to integrating Elsa Server with external identity providers including Azure AD, Auth0, Keycloak, and other OpenID Connect / OAuth2 providers.
+  Guide to integrating Elsa Server with external identity providers including Microsoft Entra ID, Auth0, Keycloak, and other OpenID Connect / OAuth2 providers.
 ---
 
 # External Identity Providers
@@ -17,7 +17,7 @@ Elsa Server supports integration with any identity provider that implements stan
 
 ### Supported Identity Providers
 
-- **Microsoft Azure AD / Entra ID**: Microsoft's cloud identity service
+- **Microsoft Entra ID (Azure AD)**: Microsoft's cloud identity service
 - **Auth0**: Cloud-based authentication and authorization platform
 - **Keycloak**: Open-source identity and access management
 - **Okta**: Cloud-based identity management
@@ -37,7 +37,7 @@ Elsa Server supports integration with any identity provider that implements stan
 - **Enterprise features**: Conditional access, risk-based authentication, identity governance
 
 **Use Cases:**
-- **Enterprise deployments**: Integrate with corporate identity systems (Azure AD, Okta)
+- **Enterprise deployments**: Integrate with corporate identity systems (Microsoft Entra ID, Okta)
 - **Multi-tenant SaaS**: Per-tenant identity provider configuration
 - **B2B integrations**: Allow partner organizations to use their own identity providers
 - **Compliance requirements**: Meet security standards requiring MFA and audit trails
@@ -112,9 +112,13 @@ Regardless of the specific provider, the general pattern for integrating Elsa wi
 
 ## Provider-Specific Integration Guides
 
-### Azure AD / Entra ID
+### Microsoft Entra ID (Azure AD)
 
-Microsoft Azure Active Directory (now called Microsoft Entra ID) is Microsoft's cloud-based identity and access management service.
+Microsoft Entra ID (formerly Azure Active Directory) is Microsoft's cloud-based identity and access management service.
+
+{% hint style="info" %}
+**Note:** Azure Active Directory was rebranded as Microsoft Entra ID in 2023. Both names refer to the same service. This guide uses "Microsoft Entra ID" but you may see "Azure AD" in older documentation and code examples.
+{% endhint %}
 
 **Key Features:**
 - Integration with Microsoft 365 and Azure services
@@ -187,8 +191,8 @@ builder.Services.AddElsa(elsa =>
 ```
 
 **Further Reading:**
-- [Microsoft Identity Platform Documentation](https://learn.microsoft.com/en-us/azure/active-directory/develop/)
-- [ASP.NET Core with Azure AD](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/azure-active-directory/)
+- [Microsoft Identity Platform Documentation](https://learn.microsoft.com/en-us/entra/identity-platform/)
+- [ASP.NET Core with Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-web-app-aspnet-core-sign-in)
 
 ### Auth0
 
