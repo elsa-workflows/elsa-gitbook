@@ -445,6 +445,11 @@ spec:
         # ... main container config ...
 ```
 
+{% hint style="warning" %}
+**Important:** The above init container example assumes the Elsa Server image includes the EF Core tooling (`dotnet-ef`). Most production images do **not** include this tool for security and size reasons.  
+- To run migrations reliably, use a dedicated migration image that includes `dotnet-ef`, or build a custom image for this purpose.  
+- Alternatively, ensure your main image has the necessary tooling, but this is **not recommended** for production.
+{% endhint %}
 ### Option 2: Auto-Migration on Startup
 
 Enable auto-migration in the application (simpler but not ideal for production):
