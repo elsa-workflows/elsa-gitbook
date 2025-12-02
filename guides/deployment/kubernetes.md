@@ -1,6 +1,6 @@
 ---
 description: >-
-  Quick-start guide for deploying Elsa Workflows to Kubernetes with PostgreSQL persistence, including configuration, troubleshooting, and production best practices.
+  Quick start guide for deploying Elsa Workflows to Kubernetes with PostgreSQL persistence, including configuration, troubleshooting, and production best practices.
 ---
 
 # Kubernetes Deployment Basics
