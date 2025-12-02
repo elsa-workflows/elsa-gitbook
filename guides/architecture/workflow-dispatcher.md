@@ -563,14 +563,21 @@ public class QueueBasedWorkflowDispatcher : IWorkflowDispatcher
         CancellationToken cancellationToken)
     {
         // Query your workflow definition store for definitions with triggers matching the request.
-        // Example implementation:
-        // 1. Query definitions where IsPublished = true
-        // 2. Filter by definitions containing trigger activities matching request.ActivityTypeName
-        // 3. Match bookmark payload hash with trigger configuration
+        // Recommended implementation using Elsa's built-in services:
+        // 
+        // 1. Inject IWorkflowDefinitionStore from Elsa.Workflows.Management namespace
+        // 2. Use FindManyAsync with a filter:
+        //    - IsPublished = true
+        //    - Filter by definitions containing trigger activities matching request.ActivityTypeName
+        // 3. For each definition, check if trigger payload hash matches request.BookmarkPayload
         // 4. Return list of matching WorkflowDefinition objects
+        //
+        // Example:
+        // var filter = new WorkflowDefinitionFilter { IsPublished = true };
+        // var definitions = await _workflowDefinitionStore.FindManyAsync(filter, cancellationToken);
+        // return definitions.Where(def => HasMatchingTrigger(def, request)).ToList();
         
-        // This is typically implemented using IWorkflowDefinitionStore from Elsa.Workflows.Management
-        throw new NotImplementedException("Implement based on your workflow definition storage");
+        throw new NotImplementedException("Implement using IWorkflowDefinitionStore from Elsa.Workflows.Management");
     }
 
     private async Task<List<Bookmark>> FindMatchingBookmarksAsync(
@@ -578,14 +585,26 @@ public class QueueBasedWorkflowDispatcher : IWorkflowDispatcher
         CancellationToken cancellationToken)
     {
         // Query your bookmark store for bookmarks matching the request.
-        // Example implementation:
-        // 1. Query bookmarks by ActivityTypeName
-        // 2. Match bookmark payload hash with request.BookmarkPayload
-        // 3. Optionally filter by CorrelationId or WorkflowInstanceId if provided
-        // 4. Return list of matching Bookmark objects
+        // Recommended implementation using Elsa's built-in services:
+        //
+        // 1. Inject IBookmarkStore from Elsa.Workflows.Runtime namespace
+        // 2. Use FindManyAsync with a BookmarkFilter:
+        //    - ActivityTypeName = request.ActivityTypeName
+        //    - Hash = compute hash from request.BookmarkPayload
+        //    - Optionally: CorrelationId, WorkflowInstanceId
+        // 3. Return list of matching Bookmark objects
+        //
+        // Example:
+        // var filter = new BookmarkFilter
+        // {
+        //     ActivityTypeName = request.ActivityTypeName,
+        //     Hash = _hasher.Hash(request.BookmarkPayload),
+        //     CorrelationId = request.CorrelationId,
+        //     WorkflowInstanceId = request.WorkflowInstanceId
+        // };
+        // return await _bookmarkStore.FindManyAsync(filter, cancellationToken);
         
-        // This is typically implemented using IBookmarkStore from Elsa.Workflows.Runtime
-        throw new NotImplementedException("Implement based on your bookmark storage");
+        throw new NotImplementedException("Implement using IBookmarkStore from Elsa.Workflows.Runtime");
     }
 }
 ````
