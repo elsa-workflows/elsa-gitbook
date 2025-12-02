@@ -472,13 +472,19 @@ For production authentication options, see:
 
 **Cause:** Studio authorization is still enabled.
 
-**Fix:** Disable Studio authorization:
+**Fix:** Ensure Studio is configured without authentication requirements:
 ```csharp
 builder.Services.AddElsaStudio(studio =>
 {
-    studio.DisableAuthorization = true;  // Development only
+    studio.ConfigureHttpClient(options =>
+    {
+        options.BaseAddress = new Uri("https://localhost:5001");
+        // No authentication configuration - allows anonymous access
+    });
 });
 ```
+
+Also verify that Elsa Server has disabled security (see Method 1 above).
 
 ### API Returns 401 Unauthorized
 

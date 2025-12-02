@@ -505,6 +505,12 @@ spec:
       restartPolicy: OnFailure
 ```
 
+{% hint style="warning" %}
+**Important:** Similar to the init container example, this Job assumes the Elsa Server image includes the EF Core tooling (`dotnet-ef`). Most production images do **not** include this tool for security and size reasons.
+- To run migrations reliably, use a dedicated migration image that includes `dotnet-ef`, or build a custom image for this purpose.
+- Alternatively, ensure your main image has the necessary tooling, but this is **not recommended** for production.
+{% endhint %}
+
 Run the job before deploying Elsa Server:
 ```bash
 kubectl apply -f elsa-migration-job.yaml

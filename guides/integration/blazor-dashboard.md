@@ -632,8 +632,7 @@ bool IsElsaServerTrusted(Uri baseAddress)
     return trustedDomains.Contains(baseAddress.Host, StringComparer.OrdinalIgnoreCase)
         || baseAddress.Host == "localhost"
         || baseAddress.Host == "127.0.0.1";
-    });
-});
+}
 ```
 
 ## Minimal Conceptual Example
