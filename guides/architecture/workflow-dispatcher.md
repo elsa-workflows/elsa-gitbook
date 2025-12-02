@@ -562,18 +562,30 @@ public class QueueBasedWorkflowDispatcher : IWorkflowDispatcher
         DispatchTriggerWorkflowsRequest request,
         CancellationToken cancellationToken)
     {
-        // Implementation: Query your workflow definition store
-        // for definitions with triggers matching the request
-        throw new NotImplementedException();
+        // Query your workflow definition store for definitions with triggers matching the request.
+        // Example implementation:
+        // 1. Query definitions where IsPublished = true
+        // 2. Filter by definitions containing trigger activities matching request.ActivityTypeName
+        // 3. Match bookmark payload hash with trigger configuration
+        // 4. Return list of matching WorkflowDefinition objects
+        
+        // This is typically implemented using IWorkflowDefinitionStore from Elsa.Workflows.Management
+        throw new NotImplementedException("Implement based on your workflow definition storage");
     }
 
     private async Task<List<Bookmark>> FindMatchingBookmarksAsync(
         DispatchResumeWorkflowsRequest request,
         CancellationToken cancellationToken)
     {
-        // Implementation: Query your bookmark store
-        // for bookmarks matching the request
-        throw new NotImplementedException();
+        // Query your bookmark store for bookmarks matching the request.
+        // Example implementation:
+        // 1. Query bookmarks by ActivityTypeName
+        // 2. Match bookmark payload hash with request.BookmarkPayload
+        // 3. Optionally filter by CorrelationId or WorkflowInstanceId if provided
+        // 4. Return list of matching Bookmark objects
+        
+        // This is typically implemented using IBookmarkStore from Elsa.Workflows.Runtime
+        throw new NotImplementedException("Implement based on your bookmark storage");
     }
 }
 ````
