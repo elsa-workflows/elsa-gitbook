@@ -420,6 +420,12 @@ using Elsa.Workflows.Runtime;
 using Elsa.Workflows.Runtime.Messages;
 using System.Text.Json;
 
+// NOTE: This example uses placeholder types (IMessageQueue and WorkflowDispatchMessage)
+// for demonstration purposes. Replace these with your actual message queue infrastructure:
+// - For RabbitMQ: Use MassTransit.IBus or RabbitMQ.Client
+// - For Azure Service Bus: Use Azure.Messaging.ServiceBus.ServiceBusClient
+// - For AWS SQS: Use Amazon.SQS.IAmazonSQS
+// - For Kafka: Use Confluent.Kafka.IProducer
 public class QueueBasedWorkflowDispatcher : IWorkflowDispatcher
 {
     private readonly IMessageQueue _messageQueue;
