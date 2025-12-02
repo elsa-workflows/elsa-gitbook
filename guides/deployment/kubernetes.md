@@ -198,7 +198,7 @@ kind: Deployment
 metadata:
   name: elsa-server
 spec:
-  replicas: 1  # Start with 1, scale to 3+ for production
+  replicas: 1  # Start with 1 for testing. Production: 3+ for HA and rolling updates
   selector:
     matchLabels:
       app: elsa-server
@@ -862,6 +862,29 @@ resources:
     memory: "2Gi"
     cpu: "1000m"
 ```
+
+### 7. Production Scaling Considerations
+
+For production deployments, run at least 3 replicas:
+
+```yaml
+spec:
+  replicas: 3  # Minimum for production
+```
+
+**Why 3+ replicas?**
+- **High Availability**: If one pod fails, others continue serving traffic
+- **Rolling Updates**: Allows zero-downtime deployments (update one pod at a time)
+- **Load Distribution**: Better distribution of workflow execution across pods
+- **Pod Disruption Budget**: Can configure PDB to maintain minimum available pods
+
+**Scaling Strategy:**
+- **Development/Staging**: 1-2 replicas
+- **Production (low traffic)**: 3 replicas
+- **Production (high traffic)**: 5-10+ replicas with HPA
+- **Enterprise**: 10+ replicas with node affinity and pod anti-affinity rules
+
+For automatic scaling based on CPU/memory usage, see the [Full Kubernetes Deployment Guide](../kubernetes-deployment.md#horizontal-pod-autoscaling).
 
 ## Next Steps
 
