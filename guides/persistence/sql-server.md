@@ -145,14 +145,14 @@ For containerized deployments, use environment variables:
 
 ```bash
 # Linux/Docker
-export ConnectionStrings__Elsa="Server=sql-server;Database=Elsa;User Id=sa;Password=YourPassword123;TrustServerCertificate=true"
+export ConnectionStrings__Elsa="Server=sql-server;Database=Elsa;User Id=sa;Password=YourPassword123;Encrypt=true"
 
 # Windows PowerShell
-$env:ConnectionStrings__Elsa="Server=localhost;Database=Elsa;Integrated Security=true;TrustServerCertificate=true"
+$env:ConnectionStrings__Elsa="Server=localhost;Database=Elsa;Integrated Security=true;Encrypt=true"
 
 # Docker Compose
 environment:
-  - ConnectionStrings__Elsa=Server=sql-server;Database=Elsa;User Id=sa;Password=YourPassword123;TrustServerCertificate=true
+  - ConnectionStrings__Elsa=Server=sql-server;Database=Elsa;User Id=sa;Password=YourPassword123;Encrypt=true
 ```
 
 ## Database Migrations
@@ -291,6 +291,8 @@ elsa.UseWorkflowManagement(management =>
 
 **Connection Pool Settings:**
 ```csharp
+using Microsoft.Data.SqlClient;
+
 var connectionString = new SqlConnectionStringBuilder
 {
     DataSource = "localhost",
