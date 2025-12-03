@@ -619,17 +619,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 ```
 
 **Client-Side Token Passing:**
-```typescript
-// Studio extension: inject token into API requests
-const token = localStorage.getItem('auth_token');
-
-fetch('https://api.example.com/api/workflows', {
-  headers: {
-    'Authorization': `Bearer ${token}`
-  }
-});
-```
-
+> ⚠️ **Security Warning:**  
+> Do **not** store authentication tokens in `localStorage` or `sessionStorage`, as they are accessible to JavaScript and vulnerable to XSS attacks.  
+>
+> **Recommended approaches:**  
+> - Use HttpOnly, Secure cookies for authentication/session tokens.  
+> - For OAuth2/OIDC, use the Authorization Code flow with PKCE and keep tokens only in memory.  
+> - If using cookies, ensure CSRF protections are in place.  
+>
+> For more information, see [OWASP SPA Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SPA_Authentication_Cheat_Sheet.html).
 ## Production Deployment Patterns
 
 ### Docker Compose
