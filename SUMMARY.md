@@ -30,7 +30,8 @@
 ## Guides
 
 * [V2 to V3 Migration Guide](guides/migration-v2-to-v3.md)
-* [Workflow Dispatcher Architecture](guides/architecture/workflow-dispatcher.md)
+* [Architecture](guides/architecture/README.md)
+  * [Workflow Dispatcher Architecture](guides/architecture/workflow-dispatcher.md)
 * [Onboarding](guides/onboarding/README.md)
   * [Hosting Elsa in an Existing App](guides/onboarding/hosting-elsa-in-existing-app.md)
 * [Authentication & Authorization](guides/authentication.md)
@@ -60,6 +61,7 @@
 * [External Application Interaction](guides/external-application-interaction.md)
 * [Loading Workflows from JSON](guides/loading-workflows-from-json.md)
 * [Plugins & Modules](guides/plugins-modules/README.md)
+* [Extensibility](guides/extensibility/modules-and-plugins.md)
 * [Testing & Debugging Workflows](guides/testing-debugging.md)
 * [Running Workflows](guides/running-workflows/README.md)
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)
@@ -67,6 +69,8 @@
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
 * [Studio User Guide](guides/studio/README.md)
   * [Expressions](guides/studio/expressions.md)
+  * [Custom UI Components](guides/studio/custom-ui-components.md)
+  * [Integration](guides/studio/integration/README.md)
 * [Workflow Patterns](guides/patterns/README.md)
 * [Troubleshooting](guides/troubleshooting/README.md)
 

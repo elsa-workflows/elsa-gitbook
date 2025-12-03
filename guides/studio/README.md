@@ -126,6 +126,8 @@ To start working with Elsa Studio:
 Explore these guides to learn more about using Elsa Studio effectively:
 
 - **[Expressions](expressions.md)**: Learn how to use JavaScript and C# expressions to reference variables and create dynamic workflows
+- **[Custom UI Components](custom-ui-components.md)**: Create custom property editors for activity inputs
+- **[Integration](integration/README.md)**: Integrate Elsa Studio into React, Angular, Blazor, or MVC applications
 - **[Studio Tour & Troubleshooting](../../studio/studio-tour-troubleshooting.md)**: Detailed walkthrough of the Studio interface with troubleshooting tips
 - **[Workflow Editor](../../studio/workflow-editor/README.md)**: Advanced features of the workflow editor
 - **[Running Workflows](../running-workflows/using-elsa-studio.md)**: How to execute and test your workflows
@@ -150,4 +152,8 @@ Explore these guides to learn more about using Elsa Studio effectively:
 
 ## Next Steps
 
-Ready to dive deeper? Start with the [Expressions guide](expressions.md) to learn how to work with variables and create dynamic workflows using JavaScript and C# expressions.
+Ready to dive deeper? Here are some recommended paths:
+
+- **[Expressions guide](expressions.md)** - Learn how to work with variables and create dynamic workflows using JavaScript and C# expressions
+- **[Custom UI Components](custom-ui-components.md)** - Learn how to create custom property editors for specialized activity inputs
+- **[Integration guide](integration/README.md)** - Discover how to integrate Elsa Studio into your existing React, Angular, Blazor, or MVC application
