@@ -246,10 +246,7 @@ Elsa Workflows v3
 | **Elsa.Workflows.Runtime**   | Runtime services for execution, persistence, and management |
 | **Elsa**                     | Meta-package that includes commonly needed packages         |
 | **Elsa.EntityFrameworkCore** | EF Core persistence providers                               |
-| **Elsa.MongoDb**             | MongoDB persistence provider                                |
-| **Elsa.Dapper**              | Dapper-based persistence (lightweight SQL)                  |
 | **Elsa.Http**                | HTTP activities and triggers                                |
-| **Elsa.Email**               | Email sending activities                                    |
 | **Elsa.MassTransit**         | Message bus integration                                     |
 | **Elsa.JavaScript**          | JavaScript expression evaluator                             |
 | **Elsa.CSharp**              | C# expression evaluator                                     |
