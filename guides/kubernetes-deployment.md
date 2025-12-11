@@ -1,9 +1,11 @@
 ---
 description: >-
-  Complete Kubernetes deployment guide for Elsa Workflows including Helm charts, deployment configurations, ingress setup, autoscaling, monitoring, service mesh integration, and production best practices.
+  Complete Kubernetes deployment guide for Elsa Workflows including Helm charts,
+  deployment configurations, ingress setup, autoscaling, monitoring, service
+  mesh integration, and production best practice
 ---
 
-# Kubernetes Deployment Guide
+# Kubernetes Deployment
 
 This comprehensive guide covers deploying Elsa Workflows to Kubernetes in production environments. Whether you're using managed Kubernetes services (EKS, AKS, GKE) or self-hosted clusters, this guide provides everything you need for a reliable, scalable deployment.
 
@@ -11,34 +13,34 @@ This comprehensive guide covers deploying Elsa Workflows to Kubernetes in produc
 
 Elsa Workflows can be deployed to Kubernetes using either:
 
-- **Helm Charts** (Recommended) - Simplified deployment and management
-- **Raw Kubernetes Manifests** - Full control over configuration
+* **Helm Charts** (Recommended) - Simplified deployment and management
+* **Raw Kubernetes Manifests** - Full control over configuration
 
 This guide covers both approaches and includes:
 
-- Elsa Server and Studio deployments
-- Database integration and persistence
-- Ingress configuration for external access
-- Horizontal Pod Autoscaling (HPA)
-- Monitoring with Prometheus and Grafana
-- Service mesh integration (Istio/Linkerd)
-- Production best practices and troubleshooting
+* Elsa Server and Studio deployments
+* Database integration and persistence
+* Ingress configuration for external access
+* Horizontal Pod Autoscaling (HPA)
+* Monitoring with Prometheus and Grafana
+* Service mesh integration (Istio/Linkerd)
+* Production best practices and troubleshooting
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Architecture Overview](#architecture-overview)
-- [Helm Chart Deployment](#helm-chart-deployment)
-- [Kubernetes Manifest Deployment](#kubernetes-manifest-deployment)
-- [Database Configuration](#database-configuration)
-- [Ingress Setup](#ingress-setup)
-- [Horizontal Pod Autoscaling](#horizontal-pod-autoscaling)
-- [Persistent Storage](#persistent-storage)
-- [Monitoring with Prometheus & Grafana](#monitoring-with-prometheus--grafana)
-- [Service Mesh Integration](#service-mesh-integration)
-- [Distributed Configuration](#distributed-configuration)
-- [Troubleshooting](#troubleshooting)
-- [Production Best Practices](#production-best-practices)
+* [Prerequisites](kubernetes-deployment.md#prerequisites)
+* [Architecture Overview](kubernetes-deployment.md#architecture-overview)
+* [Helm Chart Deployment](kubernetes-deployment.md#helm-chart-deployment)
+* [Kubernetes Manifest Deployment](kubernetes-deployment.md#kubernetes-manifest-deployment)
+* [Database Configuration](kubernetes-deployment.md#database-configuration)
+* [Ingress Setup](kubernetes-deployment.md#ingress-setup)
+* [Horizontal Pod Autoscaling](kubernetes-deployment.md#horizontal-pod-autoscaling)
+* [Persistent Storage](kubernetes-deployment.md#persistent-storage)
+* [Monitoring with Prometheus & Grafana](kubernetes-deployment.md#monitoring-with-prometheus--grafana)
+* [Service Mesh Integration](kubernetes-deployment.md#service-mesh-integration)
+* [Distributed Configuration](kubernetes-deployment.md#distributed-configuration)
+* [Troubleshooting](kubernetes-deployment.md#troubleshooting)
+* [Production Best Practices](kubernetes-deployment.md#production-best-practices)
 
 ## Prerequisites
 
@@ -46,24 +48,24 @@ Before deploying to Kubernetes, ensure you have:
 
 ### Required Tools
 
-- **kubectl** v1.28+ - Kubernetes command-line tool
-- **Helm** v3.12+ - Kubernetes package manager (if using Helm charts)
-- **Docker** - For building custom images (optional)
-- Access to a Kubernetes cluster (v1.28+)
+* **kubectl** v1.28+ - Kubernetes command-line tool
+* **Helm** v3.12+ - Kubernetes package manager (if using Helm charts)
+* **Docker** - For building custom images (optional)
+* Access to a Kubernetes cluster (v1.28+)
 
 ### Cluster Requirements
 
-- **Minimum**: 2 nodes with 4GB RAM and 2 CPU cores each
-- **Recommended**: 3+ nodes with 8GB RAM and 4 CPU cores each
-- **Storage**: Dynamic volume provisioning support (for databases)
-- **Ingress Controller**: NGINX, Traefik, or cloud provider load balancer
+* **Minimum**: 2 nodes with 4GB RAM and 2 CPU cores each
+* **Recommended**: 3+ nodes with 8GB RAM and 4 CPU cores each
+* **Storage**: Dynamic volume provisioning support (for databases)
+* **Ingress Controller**: NGINX, Traefik, or cloud provider load balancer
 
 ### Knowledge Requirements
 
-- Basic Kubernetes concepts (Pods, Services, Deployments)
-- Understanding of Elsa architecture (see [Architecture Overview](../getting-started/architecture-overview.md))
-- Familiarity with database configuration
-- Basic YAML syntax
+* Basic Kubernetes concepts (Pods, Services, Deployments)
+* Understanding of Elsa architecture (see [Architecture Overview](../getting-started/architecture-overview.md))
+* Familiarity with database configuration
+* Basic YAML syntax
 
 {% hint style="info" %}
 **New to Kubernetes?**
@@ -105,7 +107,6 @@ A typical Elsa Workflows Kubernetes deployment consists of:
 5. **RabbitMQ**: Message broker for distributed cache invalidation (via MassTransit)
 6. **Ingress**: External access routing
 7. **Monitoring**: Prometheus metrics and Grafana dashboards
-
 
 ## Helm Chart Deployment
 
@@ -397,10 +398,11 @@ kubectl create secret generic elsa-secrets \
 **Security Best Practice**
 
 Never commit secrets to version control. Use external secret management tools like:
-- Sealed Secrets
-- External Secrets Operator
-- HashiCorp Vault
-- Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
+
+* Sealed Secrets
+* External Secrets Operator
+* HashiCorp Vault
+* Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
 {% endhint %}
 
 ### Step 4: Install with Helm
@@ -456,7 +458,6 @@ kubectl rollout status deployment/elsa-server -n elsa-workflows
 ```bash
 helm uninstall elsa-workflows --namespace elsa-workflows
 ```
-
 
 ## Kubernetes Manifest Deployment
 
@@ -822,7 +823,6 @@ kubectl apply -f k8s/elsa-studio/
 kubectl apply -f k8s/ingress.yaml
 ```
 
-
 ## Database Configuration
 
 Proper database configuration is crucial for production Kubernetes deployments. This section covers PostgreSQL, SQL Server, and MySQL configurations.
@@ -1158,7 +1158,6 @@ spec:
   source:
     persistentVolumeClaimName: postgresql-data-pvc
 ```
-
 
 ## Ingress Setup
 
@@ -1553,7 +1552,6 @@ while true; do wget -q -O- http://elsa-server.elsa-workflows.svc.cluster.local; 
 kubectl get pods -n elsa-workflows --watch
 ```
 
-
 ## Monitoring with Prometheus & Grafana
 
 Comprehensive monitoring is essential for production Kubernetes deployments. This section covers Prometheus metrics collection and Grafana dashboards.
@@ -1841,18 +1839,17 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 
 ### Key Metrics to Monitor
 
-| Metric | Description | Alert Threshold |
-|--------|-------------|----------------|
-| `http_requests_total` | Total HTTP requests | - |
-| `http_request_duration_seconds` | Request latency | P95 > 2s |
-| `elsa_workflow_executions_total` | Workflow executions | - |
-| `elsa_workflow_execution_failed_total` | Failed workflows | Rate > 0.5/s |
-| `elsa_active_workflows_total` | Currently active workflows | - |
-| `elsa_database_connections_active` | Active DB connections | > 90% of pool |
-| `container_cpu_usage_seconds_total` | CPU usage | > 80% |
-| `container_memory_working_set_bytes` | Memory usage | > 90% of limit |
-| `kube_pod_container_status_restarts_total` | Pod restarts | > 0 in 15min |
-
+| Metric                                     | Description                | Alert Threshold |
+| ------------------------------------------ | -------------------------- | --------------- |
+| `http_requests_total`                      | Total HTTP requests        | -               |
+| `http_request_duration_seconds`            | Request latency            | P95 > 2s        |
+| `elsa_workflow_executions_total`           | Workflow executions        | -               |
+| `elsa_workflow_execution_failed_total`     | Failed workflows           | Rate > 0.5/s    |
+| `elsa_active_workflows_total`              | Currently active workflows | -               |
+| `elsa_database_connections_active`         | Active DB connections      | > 90% of pool   |
+| `container_cpu_usage_seconds_total`        | CPU usage                  | > 80%           |
+| `container_memory_working_set_bytes`       | Memory usage               | > 90% of limit  |
+| `kube_pod_container_status_restarts_total` | Pod restarts               | > 0 in 15min    |
 
 ## Service Mesh Integration
 
@@ -2197,28 +2194,27 @@ linkerd viz tap deploy/elsa-server -n elsa-workflows
 
 ### Comparison: Istio vs Linkerd
 
-| Feature | Istio | Linkerd |
-|---------|-------|---------|
-| **Learning Curve** | Steep | Gentle |
-| **Resource Usage** | Higher (Envoy proxy) | Lower (Linkerd2-proxy) |
-| **Features** | Comprehensive | Focused |
-| **Traffic Management** | Advanced | Basic |
-| **Security** | mTLS, AuthZ policies | mTLS, policy |
-| **Observability** | Prometheus, Jaeger, Kiali | Prometheus, built-in viz |
-| **Performance** | Good | Excellent |
-| **Best For** | Complex environments | Simplicity, performance |
+| Feature                | Istio                     | Linkerd                  |
+| ---------------------- | ------------------------- | ------------------------ |
+| **Learning Curve**     | Steep                     | Gentle                   |
+| **Resource Usage**     | Higher (Envoy proxy)      | Lower (Linkerd2-proxy)   |
+| **Features**           | Comprehensive             | Focused                  |
+| **Traffic Management** | Advanced                  | Basic                    |
+| **Security**           | mTLS, AuthZ policies      | mTLS, policy             |
+| **Observability**      | Prometheus, Jaeger, Kiali | Prometheus, built-in viz |
+| **Performance**        | Good                      | Excellent                |
+| **Best For**           | Complex environments      | Simplicity, performance  |
 
 ### Service Mesh Best Practices
 
 1. **Start Simple**: Begin without a service mesh and add it when needed
-2. **Resource Planning**: Allocate extra resources for sidecar proxies (~50-100Mi RAM, 0.1 CPU per pod)
+2. **Resource Planning**: Allocate extra resources for sidecar proxies (\~50-100Mi RAM, 0.1 CPU per pod)
 3. **Gradual Rollout**: Enable mesh incrementally, namespace by namespace
 4. **Monitor Performance**: Watch for latency increases due to proxy overhead
 5. **Use mTLS**: Enable mutual TLS for secure pod-to-pod communication
 6. **Circuit Breaking**: Configure circuit breakers to prevent cascade failures
 7. **Observability**: Leverage built-in tracing and metrics
 8. **Test Thoroughly**: Test failure scenarios with chaos engineering
-
 
 ## Distributed Configuration
 
@@ -2414,6 +2410,7 @@ kubectl describe pod <pod-name> -n elsa-workflows
 ```
 
 **Solution 1: Insufficient Resources**
+
 ```bash
 # Check node resources
 kubectl top nodes
@@ -2425,6 +2422,7 @@ kubectl describe node <node-name>
 ```
 
 **Solution 2: Image Pull Issues**
+
 ```bash
 # Check image pull secrets
 kubectl get secrets -n elsa-workflows
@@ -2460,6 +2458,7 @@ kubectl get events -n elsa-workflows --sort-by='.lastTimestamp'
 **Common Causes:**
 
 1. **Database Connection Issues**
+
 ```bash
 # Test database connectivity
 kubectl run -it --rm debug --image=postgres:16-alpine --restart=Never -- \
@@ -2470,6 +2469,7 @@ kubectl get secret elsa-secrets -n elsa-workflows -o jsonpath='{.data.postgresql
 ```
 
 2. **Missing Dependencies**
+
 ```bash
 # Check if Redis/RabbitMQ are running
 kubectl get pods -n elsa-workflows
@@ -2479,6 +2479,7 @@ kubectl get endpoints -n elsa-workflows
 ```
 
 3. **Configuration Errors**
+
 ```bash
 # Validate ConfigMaps and Secrets
 kubectl get configmap elsa-config -n elsa-workflows -o yaml
@@ -2562,6 +2563,7 @@ kubectl run -it --rm debug --image=curlimages/curl --restart=Never -- \
 ```
 
 **Solution: DNS Issues**
+
 ```bash
 # Test DNS resolution
 kubectl run -it --rm debug --image=busybox --restart=Never -- \
@@ -2605,10 +2607,11 @@ kubectl describe hpa elsa-server-hpa -n elsa-workflows
 ```
 
 **Solutions:**
-- Increase replica count
-- Optimize database queries
-- Add caching layer
-- Review resource limits
+
+* Increase replica count
+* Optimize database queries
+* Add caching layer
+* Review resource limits
 
 #### Memory Leaks
 
@@ -2686,7 +2689,6 @@ kubectl apply --dry-run=client -f deployment.yaml
 # Explain resource fields
 kubectl explain deployment.spec.template.spec.containers
 ```
-
 
 ## Production Best Practices
 
@@ -2942,9 +2944,9 @@ resources:
 
 #### 2. Quality of Service Classes
 
-- **Guaranteed**: requests == limits (highest priority)
-- **Burstable**: requests < limits (medium priority)
-- **BestEffort**: no requests/limits (lowest priority)
+* **Guaranteed**: requests == limits (highest priority)
+* **Burstable**: requests < limits (medium priority)
+* **BestEffort**: no requests/limits (lowest priority)
 
 #### 3. Limit Ranges
 
@@ -3020,12 +3022,12 @@ velero restore create --from-backup <backup-name>
 
 #### 1. Define SLIs/SLOs
 
-| Service | SLI | SLO |
-|---------|-----|-----|
-| Elsa Server | Request Success Rate | > 99.9% |
-| Elsa Server | P95 Latency | < 500ms |
-| Elsa Server | Availability | > 99.95% |
-| Database | Connection Success | > 99.99% |
+| Service     | SLI                  | SLO      |
+| ----------- | -------------------- | -------- |
+| Elsa Server | Request Success Rate | > 99.9%  |
+| Elsa Server | P95 Latency          | < 500ms  |
+| Elsa Server | Availability         | > 99.95% |
+| Database    | Connection Success   | > 99.99% |
 
 #### 2. Alert on SLO Violations
 
@@ -3151,43 +3153,44 @@ After deploying Elsa Workflows to Kubernetes:
 
 ## Related Resources
 
-- [Distributed Hosting Guide](../hosting/distributed-hosting.md) - Configure distributed runtime
-- [Database Configuration](../getting-started/database-configuration.md) - Database setup details
-- [Authentication Guide](authentication.md) - Secure your deployment
-- [Docker Compose Guide](../getting-started/containers/docker-compose/docker-quickstart.md) - Local testing
-- [Elsa Server Application Type](../application-types/elsa-server.md) - Server configuration
-- [Elsa Studio Application Type](../application-types/elsa-studio.md) - Studio configuration
+* [Distributed Hosting Guide](../hosting/distributed-hosting.md) - Configure distributed runtime
+* [Database Configuration](../getting-started/database-configuration.md) - Database setup details
+* [Authentication Guide](authentication.md) - Secure your deployment
+* [Docker Compose Guide](../getting-started/containers/docker-compose/docker-quickstart.md) - Local testing
+* [Elsa Server Application Type](../application-types/elsa-server.md) - Server configuration
+* [Elsa Studio Application Type](../application-types/elsa-studio.md) - Studio configuration
 
 ## Community and Support
 
-- [Elsa Workflows GitHub](https://github.com/elsa-workflows/elsa-core)
-- [GitHub Discussions](https://github.com/elsa-workflows/elsa-core/discussions)
-- [GitHub Issues](https://github.com/elsa-workflows/elsa-core/issues)
-- Join the community on Discord or Slack
+* [Elsa Workflows GitHub](https://github.com/elsa-workflows/elsa-core)
+* [GitHub Discussions](https://github.com/elsa-workflows/elsa-core/discussions)
+* [GitHub Issues](https://github.com/elsa-workflows/elsa-core/issues)
+* Join the community on Discord or Slack
 
 ## Version Information
 
 This guide is written for:
-- **Elsa Workflows**: v3.5+
-- **Kubernetes**: v1.28+
-- **Helm**: v3.12+
-- **PostgreSQL**: 16+
-- **Redis**: 7+
-- **RabbitMQ**: 3.12+
+
+* **Elsa Workflows**: v3.5+
+* **Kubernetes**: v1.28+
+* **Helm**: v3.12+
+* **PostgreSQL**: 16+
+* **Redis**: 7+
+* **RabbitMQ**: 3.12+
 
 Always refer to the [official releases](https://github.com/elsa-workflows/elsa-core/releases) for the latest version compatibility information.
 
----
+***
 
 **Last Updated**: 2025-11-20
 
 **Acceptance Criteria Checklist** (DOC-009):
-- ✅ K8s manifests/Helm charts
-- ✅ Horizontal scaling configuration
-- ✅ Distributed locking setup
-- ✅ Database integration
-- ✅ Secrets management
-- ✅ Health checks & readiness probes
-- ✅ Monitoring integration
-- ✅ Troubleshooting guide
 
+* ✅ K8s manifests/Helm charts
+* ✅ Horizontal scaling configuration
+* ✅ Distributed locking setup
+* ✅ Database integration
+* ✅ Secrets management
+* ✅ Health checks & readiness probes
+* ✅ Monitoring integration
+* ✅ Troubleshooting guide

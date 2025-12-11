@@ -1,38 +1,41 @@
 ---
 description: >-
-  A practical, pattern-based guide to designing and implementing common workflow patterns with Elsa Workflows v3. Each pattern provides grounded guidance, code snippets, pitfalls, and references to elsa-core and elsa-extensions.
+  A practical, pattern-based guide to designing and implementing common workflow
+  patterns with Elsa Workflows v3. Each pattern provides grounded guidance, code
+  snippets, pitfalls, and references to elsa
 ---
 
-# Workflow Patterns Guide
+# Workflow Patterns
 
 ## Overview
 
 This guide covers common workflow patterns you'll encounter when building workflow-driven applications with Elsa v3. Each pattern includes:
 
-- **When to use it**: Scenarios and use cases
-- **Elsa-centric approach**: How Elsa supports the pattern
-- **Minimal snippets**: Code and JSON examples
-- **Pitfalls**: Common mistakes and how to avoid them
-- **References**: Links to elsa-core/elsa-extensions source files
+* **When to use it**: Scenarios and use cases
+* **Elsa-centric approach**: How Elsa supports the pattern
+* **Minimal snippets**: Code and JSON examples
+* **Pitfalls**: Common mistakes and how to avoid them
+* **References**: Links to elsa-core/elsa-extensions source files
 
 For deeper topics, refer to:
-- [Blocking Activities & Triggers](../../activities/blocking-and-triggers/README.md) (DOC-013) for bookmark and trigger fundamentals
-- [Clustering Guide](../clustering/README.md) (DOC-015) for distributed deployments
-- [Testing & Debugging](../testing-debugging.md) (DOC-017) for troubleshooting workflows
+
+* [Blocking Activities & Triggers](../../activities/blocking-and-triggers/) (DOC-013) for bookmark and trigger fundamentals
+* [Clustering Guide](../clustering/) (DOC-015) for distributed deployments
+* [Testing & Debugging](../testing-debugging.md) (DOC-017) for troubleshooting workflows
 
 ## Table of Contents
 
-- [Human-in-the-Loop Approval](#human-in-the-loop-approval)
-- [Event-Driven Correlation](#event-driven-correlation)
-- [Fan-Out / Fan-In](#fan-out--fan-in)
-- [Timeout / Escalation](#timeout--escalation)
-- [Compensation / Saga-Lite](#compensation--saga-lite)
-- [Idempotent External Calls](#idempotent-external-calls)
-- [Long-Running Workflows](#long-running-workflows)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
+* [Human-in-the-Loop Approval](./#human-in-the-loop-approval)
+* [Event-Driven Correlation](./#event-driven-correlation)
+* [Fan-Out / Fan-In](./#fan-out--fan-in)
+* [Timeout / Escalation](./#timeout--escalation)
+* [Compensation / Saga-Lite](./#compensation--saga-lite)
+* [Idempotent External Calls](./#idempotent-external-calls)
+* [Long-Running Workflows](./#long-running-workflows)
+* [Best Practices](./#best-practices)
+* [Troubleshooting](./#troubleshooting)
 
----
+***
 
 ## Human-in-the-Loop Approval
 
@@ -40,10 +43,10 @@ For deeper topics, refer to:
 
 Use this pattern when a workflow needs to pause and wait for a human decision before continuing, such as:
 
-- Expense approvals
-- Document reviews
-- Manual quality gates
-- Escalation decisions
+* Expense approvals
+* Document reviews
+* Manual quality gates
+* Escalation decisions
 
 ### Elsa-Centric Approach
 
@@ -51,11 +54,11 @@ Elsa implements human approvals using **blocking activities** that create **book
 
 **Key APIs from elsa-core:**
 
-| API | File Reference | Purpose |
-|-----|----------------|---------|
-| `CreateBookmark(CreateBookmarkArgs)` | `src/modules/Elsa.Workflows.Core/Contexts/ActivityExecutionContext.cs` | Creates a bookmark with payload, callback, and options |
-| `GenerateBookmarkTriggerUrl(bookmarkId)` | `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs` | Generates a tokenized HTTP URL for resuming |
-| `IWorkflowResumer.ResumeAsync(stimulus, input)` | `src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs` | Resumes workflows matching a stimulus |
+| API                                             | File Reference                                                           | Purpose                                                |
+| ----------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------ |
+| `CreateBookmark(CreateBookmarkArgs)`            | `src/modules/Elsa.Workflows.Core/Contexts/ActivityExecutionContext.cs`   | Creates a bookmark with payload, callback, and options |
+| `GenerateBookmarkTriggerUrl(bookmarkId)`        | `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs` | Generates a tokenized HTTP URL for resuming            |
+| `IWorkflowResumer.ResumeAsync(stimulus, input)` | `src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs`         | Resumes workflows matching a stimulus                  |
 
 ### Minimal Snippet
 
@@ -87,24 +90,24 @@ private async ValueTask OnApprovalReceivedAsync(ActivityExecutionContext context
 }
 ```
 
-See the complete `WaitForApprovalActivity` example in [Blocking Activities & Triggers](../../activities/blocking-and-triggers/README.md).
+See the complete `WaitForApprovalActivity` example in [Blocking Activities & Triggers](../../activities/blocking-and-triggers/).
 
 ### Pitfalls
 
-| Pitfall | Solution |
-|---------|----------|
+| Pitfall                                   | Solution                                                                              |
+| ----------------------------------------- | ------------------------------------------------------------------------------------- |
 | Resume URL exposed without authentication | Use tokenized URLs with short expiration; validate user permissions in resume handler |
-| Bookmark not found on resume | Ensure payload hash matches exactly; verify `AutoBurn` setting |
-| Multiple approvers racing to respond | Set `AutoBurn = true` so only the first response is processed |
+| Bookmark not found on resume              | Ensure payload hash matches exactly; verify `AutoBurn` setting                        |
+| Multiple approvers racing to respond      | Set `AutoBurn = true` so only the first response is processed                         |
 
 ### Troubleshooting
 
-- **Symptom**: Resume returns "Bookmark not found"
-  - Check that the payload structure matches what was used during `CreateBookmark`
-  - Verify the workflow instance still exists (not deleted by retention policies)
-  - See [Troubleshooting](../testing-debugging.md) for diagnostic queries
+* **Symptom**: Resume returns "Bookmark not found"
+  * Check that the payload structure matches what was used during `CreateBookmark`
+  * Verify the workflow instance still exists (not deleted by retention policies)
+  * See [Troubleshooting](../testing-debugging.md) for diagnostic queries
 
----
+***
 
 ## Event-Driven Correlation
 
@@ -112,19 +115,20 @@ See the complete `WaitForApprovalActivity` example in [Blocking Activities & Tri
 
 Use this pattern when workflows must react to events identified by a correlation key, such as:
 
-- Order events keyed by `OrderId`
-- Customer events keyed by `CustomerId`
-- Multi-step processes with external callbacks
+* Order events keyed by `OrderId`
+* Customer events keyed by `CustomerId`
+* Multi-step processes with external callbacks
 
 ### Elsa-Centric Approach
 
 Elsa uses **stimulus hashing** to match incoming events to waiting bookmarks. When you create a bookmark with a payload, Elsa computes a deterministic hash. When resuming, the same payload structure must be provided so the hash matches.
 
 **BookmarkFilter** allows you to query bookmarks by:
-- `BookmarkName`: Logical grouping
-- `ActivityTypeName`: The activity type that created it
-- `CorrelationId`: Workflow-level correlation
-- `Hash`: Computed from payload
+
+* `BookmarkName`: Logical grouping
+* `ActivityTypeName`: The activity type that created it
+* `CorrelationId`: Workflow-level correlation
+* `Hash`: Computed from payload
 
 ### Minimal Snippet
 
@@ -176,13 +180,13 @@ public async Task HandleOrderEvent(string orderId, string eventType, object even
 
 ### Pitfalls
 
-| Pitfall | Solution |
-|---------|----------|
-| Hash mismatch due to payload structure differences | Use a shared payload class/record for both create and resume |
-| Stale correlations accumulating | Configure retention policies; use bookmark expiration |
-| Correlation collision (same ID used for different purposes) | Include discriminator fields (e.g., `EventType`) in payload |
+| Pitfall                                                     | Solution                                                     |
+| ----------------------------------------------------------- | ------------------------------------------------------------ |
+| Hash mismatch due to payload structure differences          | Use a shared payload class/record for both create and resume |
+| Stale correlations accumulating                             | Configure retention policies; use bookmark expiration        |
+| Correlation collision (same ID used for different purposes) | Include discriminator fields (e.g., `EventType`) in payload  |
 
----
+***
 
 ## Fan-Out / Fan-In
 
@@ -191,9 +195,10 @@ public async Task HandleOrderEvent(string orderId, string eventType, object even
 Use **fan-out** to execute multiple branches or tasks in parallel, and **fan-in** to wait for all (or some) branches to complete before continuing.
 
 Examples:
-- Processing multiple order items in parallel
-- Sending notifications to multiple channels
-- Waiting for approvals from multiple approvers
+
+* Processing multiple order items in parallel
+* Sending notifications to multiple channels
+* Waiting for approvals from multiple approvers
 
 ### Elsa-Centric Approach
 
@@ -281,13 +286,13 @@ See the full `SignalFanInTrigger` implementation in [Blocking Activities & Trigg
 
 ### Pitfalls
 
-| Pitfall | Solution |
-|---------|----------|
-| Fan-in never completes | Ensure all branches signal completion; add timeout pattern |
-| Duplicate signals processed | Track received signals by source; use idempotency keys |
-| Aggregation key collision | Use workflow instance ID or correlation ID as part of the key |
+| Pitfall                     | Solution                                                      |
+| --------------------------- | ------------------------------------------------------------- |
+| Fan-in never completes      | Ensure all branches signal completion; add timeout pattern    |
+| Duplicate signals processed | Track received signals by source; use idempotency keys        |
+| Aggregation key collision   | Use workflow instance ID or correlation ID as part of the key |
 
----
+***
 
 ## Timeout / Escalation
 
@@ -295,10 +300,10 @@ See the full `SignalFanInTrigger` implementation in [Blocking Activities & Trigg
 
 Use this pattern to handle time-sensitive operations:
 
-- Approval deadlines
-- SLA enforcement
-- Escalation to supervisors
-- Retry with backoff
+* Approval deadlines
+* SLA enforcement
+* Escalation to supervisors
+* Retry with backoff
 
 ### Elsa-Centric Approach
 
@@ -306,16 +311,16 @@ Combine a blocking activity with a timer using a Fork/Join pattern. The first to
 
 **Timer Options:**
 
-| Activity | Use Case |
-|----------|----------|
-| `Delay` | Wait for a fixed duration |
-| `Timer` | Wait until a specific time |
-| `Cron` | Recurring schedules |
+| Activity | Use Case                   |
+| -------- | -------------------------- |
+| `Delay`  | Wait for a fixed duration  |
+| `Timer`  | Wait until a specific time |
+| `Cron`   | Recurring schedules        |
 
 **Scheduling Infrastructure:**
 
-- **DefaultBookmarkScheduler** (`src/modules/Elsa.Scheduling/Services/DefaultBookmarkScheduler.cs`): Enqueues bookmark resume tasks
-- **ResumeWorkflowTask** (`src/modules/Elsa.Scheduling/Tasks/ResumeWorkflowTask.cs`): Quartz job that resumes workflows at scheduled time
+* **DefaultBookmarkScheduler** (`src/modules/Elsa.Scheduling/Services/DefaultBookmarkScheduler.cs`): Enqueues bookmark resume tasks
+* **ResumeWorkflowTask** (`src/modules/Elsa.Scheduling/Tasks/ResumeWorkflowTask.cs`): Quartz job that resumes workflows at scheduled time
 
 ### Minimal Snippet (JSON)
 
@@ -363,17 +368,17 @@ Quartz uses database locks to ensure only one node executes a scheduled task.
 
 Designate one node as the scheduler; other nodes handle HTTP requests only.
 
-See [Clustering Guide](../clustering/README.md) for detailed configuration.
+See [Clustering Guide](../clustering/) for detailed configuration.
 
 ### Pitfalls
 
-| Pitfall | Solution |
-|---------|----------|
-| Timeout fires multiple times | Use Quartz clustering; configure `AutoBurn = true` |
-| Race between approval and timeout | Design outcome handling to be idempotent |
-| Timezone issues | Store all times in UTC; convert to local only for display |
+| Pitfall                           | Solution                                                  |
+| --------------------------------- | --------------------------------------------------------- |
+| Timeout fires multiple times      | Use Quartz clustering; configure `AutoBurn = true`        |
+| Race between approval and timeout | Design outcome handling to be idempotent                  |
+| Timezone issues                   | Store all times in UTC; convert to local only for display |
 
----
+***
 
 ## Compensation / Saga-Lite
 
@@ -381,9 +386,9 @@ See [Clustering Guide](../clustering/README.md) for detailed configuration.
 
 Use compensation when a long-running workflow fails after partial completion and you need to undo or mitigate previous steps:
 
-- Cancel hotel booking if flight booking fails
-- Refund payment if order fulfillment fails
-- Notify stakeholders of rollback
+* Cancel hotel booking if flight booking fails
+* Refund payment if order fulfillment fails
+* Notify stakeholders of rollback
 
 ### Elsa-Centric Approach
 
@@ -418,8 +423,9 @@ context.SetVariable("CompensationSteps", new List<string> { "CancelFlight" });
 ```
 
 On failure, either:
-- Execute compensation in the same workflow's catch branch
-- Dispatch a compensation workflow with the stored state
+
+* Execute compensation in the same workflow's catch branch
+* Dispatch a compensation workflow with the stored state
 
 ### Resilience Strategy (elsa-api-client)
 
@@ -448,17 +454,17 @@ Elsa tracks failures via the **Incident** model. When an activity faults:
 2. The workflow enters a faulted state
 3. You can configure incident strategies (Fault, ContinueWithIncident, etc.)
 
-See [Incidents](../../operate/incidents/README.md) for configuration options.
+See [Incidents](../../operate/incidents/) for configuration options.
 
 ### Pitfalls
 
-| Pitfall | Solution |
-|---------|----------|
-| Compensation fails | Design compensations to be idempotent and resilient |
+| Pitfall                  | Solution                                                        |
+| ------------------------ | --------------------------------------------------------------- |
+| Compensation fails       | Design compensations to be idempotent and resilient             |
 | State lost between steps | Store compensation data in workflow variables or external store |
-| Partial compensation | Track which compensations have executed |
+| Partial compensation     | Track which compensations have executed                         |
 
----
+***
 
 ## Idempotent External Calls
 
@@ -466,9 +472,9 @@ See [Incidents](../../operate/incidents/README.md) for configuration options.
 
 Ensure external calls are idempotent when:
 
-- Network failures may cause retries
-- Workflows may be resumed multiple times
-- Distributed systems may deliver duplicate messages
+* Network failures may cause retries
+* Workflows may be resumed multiple times
+* Distributed systems may deliver duplicate messages
 
 ### Elsa-Centric Approach
 
@@ -522,13 +528,13 @@ protected override async ValueTask ExecuteAsync(ActivityExecutionContext context
 
 ### Pitfalls
 
-| Pitfall | Solution |
-|---------|----------|
-| Resume handler not idempotent | Store and check completion state before executing |
-| External API doesn't support idempotency | Implement check-then-act pattern |
-| Stale state on retry | Always reload current state before decisions |
+| Pitfall                                  | Solution                                          |
+| ---------------------------------------- | ------------------------------------------------- |
+| Resume handler not idempotent            | Store and check completion state before executing |
+| External API doesn't support idempotency | Implement check-then-act pattern                  |
+| Stale state on retry                     | Always reload current state before decisions      |
 
----
+***
 
 ## Long-Running Workflows
 
@@ -536,10 +542,10 @@ protected override async ValueTask ExecuteAsync(ActivityExecutionContext context
 
 For workflows that span hours, days, or weeks:
 
-- Multi-stage approval processes
-- Order fulfillment tracking
-- Subscription lifecycle management
-- Customer onboarding journeys
+* Multi-stage approval processes
+* Order fulfillment tracking
+* Subscription lifecycle management
+* Customer onboarding journeys
 
 ### Elsa-Centric Approach
 
@@ -552,9 +558,9 @@ Long-running workflows rely on:
 
 ### Bookmark + Persistence Guidance
 
-- **Persist State Immediately**: Elsa persists after bookmark creation
-- **Use Correlation IDs**: Set `CorrelationId` on the workflow instance for easy lookup
-- **Design for Resumption**: Activities should not assume in-memory state survives
+* **Persist State Immediately**: Elsa persists after bookmark creation
+* **Use Correlation IDs**: Set `CorrelationId` on the workflow instance for easy lookup
+* **Design for Resumption**: Activities should not assume in-memory state survives
 
 ### Safe Cancellation
 
@@ -568,6 +574,7 @@ await workflowInstanceManager.CancelAsync(workflowInstanceId);
 ```
 
 This:
+
 1. Marks the instance as cancelled
 2. Removes associated bookmarks
 3. Fires workflow cancelled events
@@ -594,40 +601,41 @@ See [Retention](../../optimize/retention.md) for detailed configuration.
 
 ### Pitfalls
 
-| Pitfall | Solution |
-|---------|----------|
+| Pitfall            | Solution                                                    |
+| ------------------ | ----------------------------------------------------------- |
 | Orphaned bookmarks | Configure retention; validate workflow exists before resume |
-| Database bloat | Set appropriate retention policies |
-| Version drift | Plan for workflow definition versioning |
+| Database bloat     | Set appropriate retention policies                          |
+| Version drift      | Plan for workflow definition versioning                     |
 
----
+***
 
 ## Best Practices
 
 ### Correlation Keys
 
-- **Stable**: Use business identifiers that don't change (`OrderId`, not timestamps)
-- **Low Cardinality**: Avoid overly specific keys that create too many unique values
-- **Documented**: Clearly specify the correlation contract between systems
+* **Stable**: Use business identifiers that don't change (`OrderId`, not timestamps)
+* **Low Cardinality**: Avoid overly specific keys that create too many unique values
+* **Documented**: Clearly specify the correlation contract between systems
 
 ### Idempotency & Distributed Locking
 
-- **WorkflowResumer Locking**: Elsa's resumer acquires distributed locks automatically
-- **Activity-Level Idempotency**: Store receipts/state to guard against duplicates
-- **External Call Guards**: Use idempotency keys when calling external services
+* **WorkflowResumer Locking**: Elsa's resumer acquires distributed locks automatically
+* **Activity-Level Idempotency**: Store receipts/state to guard against duplicates
+* **External Call Guards**: Use idempotency keys when calling external services
 
 **Reference:** `WorkflowResumer.cs` - uses `IDistributedLockProvider` for lock acquisition
 
 ### Scheduling in Clusters
 
-- **Single Scheduler**: Use leader-election pattern OR
-- **Quartz Clustering**: All nodes participate with database coordination
+* **Single Scheduler**: Use leader-election pattern OR
+* **Quartz Clustering**: All nodes participate with database coordination
 
 **References:**
-- `DefaultBookmarkScheduler.cs`: Enqueues scheduled bookmark resume tasks
-- `ResumeWorkflowTask.cs`: Quartz job that triggers workflow resume
 
-See [Clustering Guide](../clustering/README.md) for configuration.
+* `DefaultBookmarkScheduler.cs`: Enqueues scheduled bookmark resume tasks
+* `ResumeWorkflowTask.cs`: Quartz job that triggers workflow resume
+
+See [Clustering Guide](../clustering/) for configuration.
 
 ### Security for Human Approvals
 
@@ -644,8 +652,8 @@ See [Clustering Guide](../clustering/README.md) for configuration.
 
 Elsa provides OpenTelemetry integration via `Elsa.OpenTelemetry`:
 
-- **ActivitySource**: Traces workflow and activity execution
-- **Middleware**: Adds tracing to HTTP endpoints
+* **ActivitySource**: Traces workflow and activity execution
+* **Middleware**: Adds tracing to HTTP endpoints
 
 **Reference:** `elsa-extensions` - `Elsa.OpenTelemetry` ActivitySource and tracing middleware
 
@@ -666,9 +674,9 @@ builder.Services.AddElsa(elsa =>
 
 Elsa does not emit built-in metrics; you must implement custom metrics based on your needs:
 
-- Count workflow completions by definition
-- Track average execution time
-- Monitor bookmark creation/consumption rates
+* Count workflow completions by definition
+* Track average execution time
+* Monitor bookmark creation/consumption rates
 
 Example with custom metrics:
 
@@ -680,21 +688,21 @@ counter.Add(1, new KeyValuePair<string, object?>("definition_id", workflowDefini
 
 See your observability platform's documentation for metric collection setup.
 
----
+***
 
 ## Troubleshooting
 
 ### Pattern-Specific Issues
 
-| Pattern | Common Issue | Quick Fix |
-|---------|--------------|-----------|
-| Human Approval | Resume URL not working | Verify Elsa.Http is configured with correct BaseUrl |
-| Event Correlation | Events not matching | Log both create and resume payloads; check hash |
-| Fan-In | Never completes | Add timeout branch; verify all sources signal |
-| Timeout | Fires multiple times | Enable Quartz clustering; check AutoBurn |
-| Compensation | State lost | Store compensation data before each step |
-| Idempotency | Duplicate processing | Check state before executing; use idempotency keys |
-| Long-Running | Database bloat | Configure retention policies |
+| Pattern           | Common Issue           | Quick Fix                                           |
+| ----------------- | ---------------------- | --------------------------------------------------- |
+| Human Approval    | Resume URL not working | Verify Elsa.Http is configured with correct BaseUrl |
+| Event Correlation | Events not matching    | Log both create and resume payloads; check hash     |
+| Fan-In            | Never completes        | Add timeout branch; verify all sources signal       |
+| Timeout           | Fires multiple times   | Enable Quartz clustering; check AutoBurn            |
+| Compensation      | State lost             | Store compensation data before each step            |
+| Idempotency       | Duplicate processing   | Check state before executing; use idempotency keys  |
+| Long-Running      | Database bloat         | Configure retention policies                        |
 
 ### General Debugging Steps
 
@@ -706,31 +714,32 @@ See your observability platform's documentation for metric collection setup.
 
 See [Testing & Debugging](../testing-debugging.md) for comprehensive debugging guidance.
 
----
+***
 
 ## References
 
-- [Blocking Activities & Triggers](../../activities/blocking-and-triggers/README.md) - Bookmark fundamentals and examples
-- [Clustering Guide](../clustering/README.md) - Distributed deployment configuration
-- [Testing & Debugging](../testing-debugging.md) - Troubleshooting and testing strategies
-- [README-REFERENCES.md](README-REFERENCES.md) - Complete list of elsa-core/elsa-extensions file references
+* [Blocking Activities & Triggers](../../activities/blocking-and-triggers/) - Bookmark fundamentals and examples
+* [Clustering Guide](../clustering/) - Distributed deployment configuration
+* [Testing & Debugging](../testing-debugging.md) - Troubleshooting and testing strategies
+* [README-REFERENCES.md](README-REFERENCES.md) - Complete list of elsa-core/elsa-extensions file references
 
 ## Example Files
 
-- [fanout-flowchart.json](examples/fanout-flowchart.json) - Minimal fan-out JSON example
-- [fanin-trigger.cs](examples/fanin-trigger.cs) - Fan-in trigger with aggregation
-- [timeout-approval.json](examples/timeout-approval.json) - Timeout pattern with approval
+* [fanout-flowchart.json](examples/fanout-flowchart.json) - Minimal fan-out JSON example
+* [fanin-trigger.cs](examples/fanin-trigger.cs) - Fan-in trigger with aggregation
+* [timeout-approval.json](examples/timeout-approval.json) - Timeout pattern with approval
 
----
+***
 
 **Last Updated:** 2024-11-25
 
 **Acceptance Criteria Checklist (DOC-018):**
-- ✅ Covers 7 workflow patterns with actionable, grounded guidance
-- ✅ References elsa-core files (WorkflowResumer, DefaultBookmarkScheduler, CreateBookmark, GenerateBookmarkTriggerUrl)
-- ✅ Explains correlation/resume semantics (stimulus hashing, BookmarkFilter)
-- ✅ Covers idempotency strategies
-- ✅ Explains scheduling in clustered deployments
-- ✅ Addresses security for human approvals (tokenized URLs)
-- ✅ References DOC-013, DOC-015, DOC-017
-- ✅ Includes code/JSON snippets for fan-out, fan-in, and timeout patterns
+
+* ✅ Covers 7 workflow patterns with actionable, grounded guidance
+* ✅ References elsa-core files (WorkflowResumer, DefaultBookmarkScheduler, CreateBookmark, GenerateBookmarkTriggerUrl)
+* ✅ Explains correlation/resume semantics (stimulus hashing, BookmarkFilter)
+* ✅ Covers idempotency strategies
+* ✅ Explains scheduling in clustered deployments
+* ✅ Addresses security for human approvals (tokenized URLs)
+* ✅ References DOC-013, DOC-015, DOC-017
+* ✅ Includes code/JSON snippets for fan-out, fan-in, and timeout patterns

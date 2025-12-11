@@ -54,6 +54,13 @@ elsa.UseWorkflowRuntime(runtime =>
 });
 ```
 
+{% hint style="warning" %}
+**Important: Choose a reliable distributed lock provider**\
+By default, Elsa’s distributed lock provider uses the local filesystem. This configuration is intended for development and single-node scenarios only. Filesystem-based locks (including locks on a shared network folder) are not reliable for distributed hosting and can lead to multiple nodes executing the same workflow instance concurrently.
+
+For production deployments with multiple nodes, configure a shared, robust lock provider such as a relational database (e.g. PostgreSQL), Redis, or a cloud blob storage service that supports leases.
+{% endhint %}
+
 ### 3. Distributed Caching
 
 Each node in the cluster maintains a local in-memory cache for workflow definitions and other critical data. To ensure consistency, cache invalidation must be propagated across all nodes when changes occur.

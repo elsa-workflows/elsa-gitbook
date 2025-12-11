@@ -1,33 +1,35 @@
 ---
 description: >-
-  Comprehensive guide to choosing, configuring, and tuning persistence providers for Elsa Workflows v3, covering EF Core, MongoDB, and Dapper, along with retention, migrations, and operational best practices.
+  Comprehensive guide to choosing, configuring, and tuning persistence providers
+  for Elsa Workflows v3, covering EF Core, MongoDB, and Dapper, along with
+  retention, migrations, and operational best prac
 ---
 
-# Persistence Guide
+# Persistence
 
 ## Executive Summary
 
 Elsa Workflows uses persistence providers to store workflow definitions, workflow instances, bookmarks, and execution logs. Choosing the right persistence strategy is critical for performance, scalability, and operational requirements. This guide covers:
 
-- **Provider selection** — When to choose EF Core, MongoDB, or Dapper
-- **Configuration patterns** — Connection strings, migrations, and store registration
-- **Indexing recommendations** — Essential indexes for common queries
-- **Retention & cleanup** — Managing completed workflows and bookmark cleanup
-- **Migrations & versioning** — Handling schema changes and rolling upgrades
-- **Observability** — Measuring persistence latency and tracing
+* **Provider selection** — When to choose EF Core, MongoDB, or Dapper
+* **Configuration patterns** — Connection strings, migrations, and store registration
+* **Indexing recommendations** — Essential indexes for common queries
+* **Retention & cleanup** — Managing completed workflows and bookmark cleanup
+* **Migrations & versioning** — Handling schema changes and rolling upgrades
+* **Observability** — Measuring persistence latency and tracing
 
 ## Persistence Stores Overview
 
 Elsa organizes persistence into logical stores, each responsible for a specific data type:
 
-| Store | Purpose | Typical Table/Collection |
-|-------|---------|--------------------------|
-| **Workflow Definition Store** | Stores published and draft workflow definitions | `WorkflowDefinitions` |
-| **Workflow Instance Store** | Stores workflow execution state and history | `WorkflowInstances` |
-| **Bookmark Store** | Stores suspension points for workflow resume | `Bookmarks` |
-| **Activity Execution Store** | Stores activity execution records | `ActivityExecutionRecords` |
-| **Workflow Execution Log Store** | Stores detailed execution logs | `WorkflowExecutionLogRecords` |
-| **Workflow Inbox Store** | Stores incoming messages for correlation | `WorkflowInboxMessages` |
+| Store                            | Purpose                                         | Typical Table/Collection      |
+| -------------------------------- | ----------------------------------------------- | ----------------------------- |
+| **Workflow Definition Store**    | Stores published and draft workflow definitions | `WorkflowDefinitions`         |
+| **Workflow Instance Store**      | Stores workflow execution state and history     | `WorkflowInstances`           |
+| **Bookmark Store**               | Stores suspension points for workflow resume    | `Bookmarks`                   |
+| **Activity Execution Store**     | Stores activity execution records               | `ActivityExecutionRecords`    |
+| **Workflow Execution Log Store** | Stores detailed execution logs                  | `WorkflowExecutionLogRecords` |
+| **Workflow Inbox Store**         | Stores incoming messages for correlation        | `WorkflowInboxMessages`       |
 
 **Code Reference:** `src/modules/Elsa.Workflows.Management/Features/WorkflowManagementFeature.cs` — Registers workflow definition and instance stores.
 
@@ -42,50 +44,58 @@ Elsa supports three primary persistence providers:
 **Best for:** General-purpose relational database persistence with migration support.
 
 **Supported Databases:**
-- SQL Server
-- PostgreSQL
-- SQLite
-- MySQL/MariaDB
+
+* SQL Server
+* PostgreSQL
+* SQLite
+* MySQL/MariaDB
 
 **Pros:**
-- ✅ Built-in migration support for schema versioning
-- ✅ Mature ecosystem with robust tooling
-- ✅ Transactional consistency across stores
-- ✅ Wide database support
+
+* ✅ Built-in migration support for schema versioning
+* ✅ Mature ecosystem with robust tooling
+* ✅ Transactional consistency across stores
+* ✅ Wide database support
 
 **Cons:**
-- ❌ May have higher overhead for extremely high-throughput scenarios
-- ❌ Requires migration management for schema changes
+
+* ❌ May have higher overhead for extremely high-throughput scenarios
+* ❌ Requires migration management for schema changes
 
 **When to Choose:**
-- Production deployments requiring schema versioning
-- Teams familiar with EF Core and relational databases
-- Scenarios requiring transactional consistency
+
+* Production deployments requiring schema versioning
+* Teams familiar with EF Core and relational databases
+* Scenarios requiring transactional consistency
 
 **Documentation:**
-- [SQL Server Guide](sql-server.md) - Comprehensive SQL Server setup and configuration
-- [EF Core Migrations Guide](ef-migrations.md) - Working with migrations and custom entities
-- [EF Core Setup Example](examples/efcore-setup.md) - Basic configuration patterns
+
+* [SQL Server Guide](sql-server.md) - Comprehensive SQL Server setup and configuration
+* [EF Core Migrations Guide](ef-migrations.md) - Working with migrations and custom entities
+* [EF Core Setup Example](examples/efcore-setup.md) - Basic configuration patterns
 
 ### MongoDB
 
 **Best for:** Document-oriented persistence with flexible schemas.
 
 **Pros:**
-- ✅ Flexible schema evolution without migrations
-- ✅ Native document storage suits workflow state
-- ✅ Horizontal scaling via sharding
-- ✅ Built-in replication for high availability
+
+* ✅ Flexible schema evolution without migrations
+* ✅ Native document storage suits workflow state
+* ✅ Horizontal scaling via sharding
+* ✅ Built-in replication for high availability
 
 **Cons:**
-- ❌ No built-in migration tooling (schema changes require application logic)
-- ❌ Index creation must be managed manually
-- ❌ Different consistency model than relational databases
+
+* ❌ No built-in migration tooling (schema changes require application logic)
+* ❌ Index creation must be managed manually
+* ❌ Different consistency model than relational databases
 
 **When to Choose:**
-- Teams already using MongoDB
-- Scenarios requiring flexible schema evolution
-- High-volume workloads with horizontal scaling needs
+
+* Teams already using MongoDB
+* Scenarios requiring flexible schema evolution
+* High-volume workloads with horizontal scaling needs
 
 See [MongoDB Setup Example](examples/mongodb-setup.md) for configuration details.
 
@@ -94,19 +104,22 @@ See [MongoDB Setup Example](examples/mongodb-setup.md) for configuration details
 **Best for:** Performance-critical scenarios requiring fine-grained SQL control.
 
 **Pros:**
-- ✅ Minimal ORM overhead
-- ✅ Direct SQL control for optimization
-- ✅ Lower memory footprint
+
+* ✅ Minimal ORM overhead
+* ✅ Direct SQL control for optimization
+* ✅ Lower memory footprint
 
 **Cons:**
-- ❌ Manual schema management (no built-in migrations)
-- ❌ Requires SQL expertise for customization
-- ❌ Less abstraction than EF Core
+
+* ❌ Manual schema management (no built-in migrations)
+* ❌ Requires SQL expertise for customization
+* ❌ Less abstraction than EF Core
 
 **When to Choose:**
-- Extreme performance requirements
-- Teams with strong SQL expertise
-- Scenarios requiring custom query optimization
+
+* Extreme performance requirements
+* Teams with strong SQL expertise
+* Scenarios requiring custom query optimization
 
 See [Dapper Setup Example](examples/dapper-setup.md) for configuration details.
 
@@ -154,6 +167,7 @@ app.Run();
 ### Connection Strings
 
 **appsettings.json:**
+
 ```json
 {
   "ConnectionStrings": {
@@ -165,6 +179,7 @@ app.Run();
 ```
 
 **Environment Variables:**
+
 ```bash
 CONNECTIONSTRINGS__POSTGRESQL="Host=localhost;Database=elsa;..."
 CONNECTIONSTRINGS__MONGODB="mongodb://localhost:27017/elsa"
@@ -175,11 +190,13 @@ CONNECTIONSTRINGS__MONGODB="mongodb://localhost:27017/elsa"
 For EF Core providers, migrations manage schema changes:
 
 **1. Install EF Core Tools:**
+
 ```bash
 dotnet tool install --global dotnet-ef
 ```
 
 **2. Apply Migrations at Startup (Recommended for Development):**
+
 ```csharp
 elsa.UseWorkflowManagement(management =>
 {
@@ -192,6 +209,7 @@ elsa.UseWorkflowManagement(management =>
 ```
 
 **3. Apply Migrations via CLI (Recommended for Production):**
+
 ```bash
 # Generate migrations
 dotnet ef migrations add InitialCreate --context ManagementElsaDbContext
@@ -201,10 +219,11 @@ dotnet ef database update --context ManagementElsaDbContext
 ```
 
 **Schema Versioning Notes:**
-- Always test migrations in a non-production environment first
-- Use a staging database identical to production for migration testing
-- Consider blue-green deployments for zero-downtime migrations
-- Keep migration scripts in source control
+
+* Always test migrations in a non-production environment first
+* Use a staging database identical to production for migration testing
+* Consider blue-green deployments for zero-downtime migrations
+* Keep migration scripts in source control
 
 For detailed information on working with EF Core migrations, adding custom entities, and migration strategies, see the [EF Core Migrations Guide](ef-migrations.md).
 
@@ -223,13 +242,13 @@ elsa.UseWorkflowManagement(management =>
 });
 ```
 
-**Index Creation:**
-MongoDB requires manual index creation. See [Indexing Notes](examples/indexing-notes.md) for recommended indexes. Refer to [MongoDB Index Documentation](https://www.mongodb.com/docs/manual/indexes/) for detailed guidance.
+**Index Creation:** MongoDB requires manual index creation. See [Indexing Notes](examples/indexing-notes.md) for recommended indexes. Refer to [MongoDB Index Documentation](https://www.mongodb.com/docs/manual/indexes/) for detailed guidance.
 
 **Mapping Considerations:**
-- Elsa uses MongoDB driver's conventions for BSON serialization
-- Custom activity data must be serializable to BSON
-- Consider using `BsonIgnore` attribute for non-persisted properties
+
+* Elsa uses MongoDB driver's conventions for BSON serialization
+* Custom activity data must be serializable to BSON
+* Consider using `BsonIgnore` attribute for non-persisted properties
 
 ### Dapper Configuration
 
@@ -247,9 +266,10 @@ elsa.UseWorkflowManagement(management =>
 ```
 
 **Schema Responsibility:**
-- You are responsible for creating and maintaining the database schema
-- Use SQL scripts or a migration tool like FluentMigrator
-- See [Dapper Setup Example](examples/dapper-setup.md) for schema scripts
+
+* You are responsible for creating and maintaining the database schema
+* Use SQL scripts or a migration tool like FluentMigrator
+* See [Dapper Setup Example](examples/dapper-setup.md) for schema scripts
 
 ## Indexes & Queries
 
@@ -258,6 +278,7 @@ Proper indexing is essential for production performance. Create indexes for freq
 ### Recommended Indexes
 
 **Workflow Instances:**
+
 ```sql
 -- Query by instance ID (primary key in most providers)
 -- Query by correlation ID
@@ -277,6 +298,7 @@ CREATE INDEX idx_workflow_instances_status_definition ON workflow_instances(stat
 ```
 
 **Bookmarks:**
+
 ```sql
 -- Query by activity type + stimulus hash (primary lookup path)
 CREATE INDEX idx_bookmarks_activity_type_hash ON bookmarks(activity_type_name, hash);
@@ -289,6 +311,7 @@ CREATE INDEX idx_bookmarks_correlation_id ON bookmarks(correlation_id);
 ```
 
 **Incidents:**
+
 ```sql
 -- Query by workflow instance ID
 CREATE INDEX idx_incidents_workflow_instance_id ON incidents(workflow_instance_id);
@@ -420,16 +443,14 @@ WHERE workflow_instance_id NOT IN (SELECT id FROM workflow_instances);
 When backing up and restoring Elsa databases:
 
 1. **Version Alignment:** Ensure the Elsa version in your application matches the schema version in the database. Mismatched versions can cause runtime errors.
-
 2. **Consistent Backups:** For clustered deployments, quiesce the cluster or use database-native snapshot capabilities to ensure consistency.
-
 3. **Include All Stores:** If using separate databases for management and runtime stores, back up both.
-
 4. **Test Restores:** Regularly test restore procedures in a non-production environment.
 
 ### Backup Commands
 
 **PostgreSQL:**
+
 ```bash
 # Full backup
 pg_dump -h localhost -U elsa -d elsa -F c -f elsa_backup.dump
@@ -439,6 +460,7 @@ pg_restore -h localhost -U elsa -d elsa elsa_backup.dump
 ```
 
 **SQL Server:**
+
 ```sql
 BACKUP DATABASE [Elsa] TO DISK = 'C:\Backups\Elsa.bak';
 
@@ -446,6 +468,7 @@ RESTORE DATABASE [Elsa] FROM DISK = 'C:\Backups\Elsa.bak';
 ```
 
 **MongoDB:**
+
 ```bash
 # Backup
 mongodump --uri="mongodb://localhost:27017/elsa" --out=/backup/elsa
@@ -461,33 +484,32 @@ mongorestore --uri="mongodb://localhost:27017/elsa" /backup/elsa
 When Elsa releases a new version with schema changes:
 
 1. **Review Release Notes:** Check for migration steps or breaking changes.
-
 2. **Test in Staging:** Apply migrations to a staging environment first.
-
 3. **Rolling Upgrades:** For clustered deployments:
-   - Apply database migrations first (backward-compatible changes)
-   - Roll out new application version to nodes one at a time
-   - Monitor for errors during transition
-
+   * Apply database migrations first (backward-compatible changes)
+   * Roll out new application version to nodes one at a time
+   * Monitor for errors during transition
 4. **Rollback Plan:** Keep database backups and have a rollback strategy.
 
 ### EF Core Migration Steps
 
 **1. Update Elsa Packages:**
+
 ```bash
 dotnet add package Elsa --version 3.x.x
 dotnet add package Elsa.EntityFrameworkCore.PostgreSQL --version 3.x.x
 ```
 
 **2. Generate Migration:**
+
 ```bash
 dotnet ef migrations add UpdateToVersion3xx --context ManagementElsaDbContext
 ```
 
-**3. Review Migration:**
-Inspect the generated migration file for potentially destructive changes.
+**3. Review Migration:** Inspect the generated migration file for potentially destructive changes.
 
 **4. Apply Migration:**
+
 ```bash
 # Development
 dotnet ef database update --context ManagementElsaDbContext
@@ -498,10 +520,10 @@ dotnet ef migrations script --context ManagementElsaDbContext --idempotent
 
 ### Schema Versioning Best Practices
 
-- Keep migrations in source control alongside application code
-- Use semantic versioning to correlate Elsa versions with schema versions
-- Document any manual data transformations required between versions
-- Consider database branching strategies for team development
+* Keep migrations in source control alongside application code
+* Use semantic versioning to correlate Elsa versions with schema versions
+* Document any manual data transformations required between versions
+* Consider database branching strategies for team development
 
 ## Observability & Performance
 
@@ -525,12 +547,12 @@ builder.Services.AddOpenTelemetry()
 
 ### Key Metrics to Monitor
 
-| Metric | Description | Alert Threshold |
-|--------|-------------|-----------------|
-| `db.query.duration` | Database query execution time | P95 > 500ms |
-| `elsa.workflow_instance.save.duration` | Workflow state persistence time | P95 > 1000ms |
-| `elsa.bookmark.lookup.duration` | Bookmark query time | P95 > 100ms |
-| `db.connection.pool.active` | Active database connections | > 80% of max pool |
+| Metric                                 | Description                     | Alert Threshold   |
+| -------------------------------------- | ------------------------------- | ----------------- |
+| `db.query.duration`                    | Database query execution time   | P95 > 500ms       |
+| `elsa.workflow_instance.save.duration` | Workflow state persistence time | P95 > 1000ms      |
+| `elsa.bookmark.lookup.duration`        | Bookmark query time             | P95 > 100ms       |
+| `db.connection.pool.active`            | Active database connections     | > 80% of max pool |
 
 ### Tracing with Elsa.OpenTelemetry
 
@@ -552,7 +574,7 @@ builder.Services.AddOpenTelemetry()
     });
 ```
 
-See [Performance & Scaling Guide](../performance/README.md) for detailed observability configuration.
+See [Performance & Scaling Guide](../performance/) for detailed observability configuration.
 
 > **Note:** Elsa provides built-in tracing. Custom metrics (throughput, latency percentiles) are user-defined. See DOC-016 (Monitoring Guide) for implementation patterns.
 
@@ -563,28 +585,32 @@ See [Performance & Scaling Guide](../performance/README.md) for detailed observa
 **Problem:** Workflows with many activities in a single burst can hold database locks for extended periods.
 
 **Symptoms:**
-- Lock wait timeouts
-- Blocked queries
-- Degraded throughput under load
+
+* Lock wait timeouts
+* Blocked queries
+* Degraded throughput under load
 
 **Mitigation:**
-- Use commit strategies to limit transaction scope (see [Performance Guide](../performance/README.md))
-- Configure shorter lock timeouts
-- Consider breaking large workflows into smaller sub-workflows
+
+* Use commit strategies to limit transaction scope (see [Performance Guide](../performance/))
+* Configure shorter lock timeouts
+* Consider breaking large workflows into smaller sub-workflows
 
 ### 2. High-Cardinality Bookmarks
 
 **Problem:** Workflows creating many unique bookmarks (e.g., one per user or order) can overwhelm the bookmark index.
 
 **Symptoms:**
-- Slow bookmark lookups
-- Index bloat
-- Memory pressure
+
+* Slow bookmark lookups
+* Index bloat
+* Memory pressure
 
 **Mitigation:**
-- Limit bookmark cardinality by design
-- Use correlation IDs to group related bookmarks
-- Implement bookmark cleanup policies
+
+* Limit bookmark cardinality by design
+* Use correlation IDs to group related bookmarks
+* Implement bookmark cleanup policies
 
 **Code Reference:** `src/modules/Elsa.Workflows.Core/Bookmarks/*` — Understand bookmark hashing to design efficient bookmark strategies.
 
@@ -593,28 +619,32 @@ See [Performance & Scaling Guide](../performance/README.md) for detailed observa
 **Problem:** Production deployments without proper indexes suffer degraded query performance.
 
 **Symptoms:**
-- Full table scans in query plans
-- Slow workflow list/search operations
-- High database CPU
+
+* Full table scans in query plans
+* Slow workflow list/search operations
+* High database CPU
 
 **Mitigation:**
-- Apply recommended indexes (see [Indexing Notes](examples/indexing-notes.md))
-- Monitor slow query logs
-- Use database-native query analysis tools
+
+* Apply recommended indexes (see [Indexing Notes](examples/indexing-notes.md))
+* Monitor slow query logs
+* Use database-native query analysis tools
 
 ### 4. Noisy Logging of Large Payloads
 
 **Problem:** Logging workflow inputs/outputs can expose sensitive data and bloat logs.
 
 **Symptoms:**
-- Excessive log volume
-- Sensitive data in logs
-- Log aggregation costs
+
+* Excessive log volume
+* Sensitive data in logs
+* Log aggregation costs
 
 **Mitigation:**
-- Configure log levels appropriately for production
-- Use structured logging with field exclusions
-- Consider log retention policies
+
+* Configure log levels appropriately for production
+* Use structured logging with field exclusions
+* Consider log retention policies
 
 ```json
 {
@@ -633,14 +663,16 @@ See [Performance & Scaling Guide](../performance/README.md) for detailed observa
 **Problem:** High-concurrency workflows exhaust database connection pools.
 
 **Symptoms:**
-- Timeout waiting for connection
-- Intermittent failures under load
-- Degraded throughput
+
+* Timeout waiting for connection
+* Intermittent failures under load
+* Degraded throughput
 
 **Mitigation:**
-- Increase connection pool size appropriately
-- Monitor pool utilization metrics
-- Configure connection timeout and retry policies
+
+* Increase connection pool size appropriately
+* Monitor pool utilization metrics
+* Configure connection timeout and retry policies
 
 ```csharp
 // PostgreSQL example with pool settings
@@ -649,31 +681,32 @@ var connectionString = "Host=localhost;Database=elsa;Username=elsa;Password=...;
 
 ## Related Documentation
 
-- [SQL Server Guide](sql-server.md) — Complete SQL Server configuration and troubleshooting
-- [EF Core Migrations Guide](ef-migrations.md) — Working with migrations and custom entities
-- [Clustering Guide](../clustering/README.md) — Distributed deployment and distributed locking (DOC-015)
-- [Troubleshooting Guide](../troubleshooting/README.md) — Diagnosing common issues (DOC-017)
-- [Performance & Scaling Guide](../performance/README.md) — Commit strategies and observability (DOC-021)
-- [Database Configuration](../../getting-started/database-configuration.md) — Basic database setup
-- [Retention](../../optimize/retention.md) — Detailed retention configuration
-- [Log Persistence](../../optimize/log-persistence.md) — Activity log optimization
+* [SQL Server Guide](sql-server.md) — Complete SQL Server configuration and troubleshooting
+* [EF Core Migrations Guide](ef-migrations.md) — Working with migrations and custom entities
+* [Clustering Guide](../clustering/) — Distributed deployment and distributed locking (DOC-015)
+* [Troubleshooting Guide](../troubleshooting/) — Diagnosing common issues (DOC-017)
+* [Performance & Scaling Guide](../performance/) — Commit strategies and observability (DOC-021)
+* [Database Configuration](../../getting-started/database-configuration.md) — Basic database setup
+* [Retention](../../optimize/retention.md) — Detailed retention configuration
+* [Log Persistence](../../optimize/log-persistence.md) — Activity log optimization
 
 ## Example Files
 
-- [EF Core Setup Example](examples/efcore-setup.md)
-- [MongoDB Setup Example](examples/mongodb-setup.md)
-- [Dapper Setup Example](examples/dapper-setup.md)
-- [Indexing Notes](examples/indexing-notes.md)
-- [Source File References](README-REFERENCES.md)
+* [EF Core Setup Example](examples/efcore-setup.md)
+* [MongoDB Setup Example](examples/mongodb-setup.md)
+* [Dapper Setup Example](examples/dapper-setup.md)
+* [Indexing Notes](examples/indexing-notes.md)
+* [Source File References](README-REFERENCES.md)
 
----
+***
 
 **Last Updated:** 2025-11-28
 
 **Acceptance Criteria (DOC-022):**
-- ✅ Grounded, actionable setup guidance for EF Core, MongoDB, Dapper with concise examples
-- ✅ Clear indexing recommendations and retention/cleanup guidance
-- ✅ References to exact elsa-core files underpinning behavior
-- ✅ Cross-links to clustering (DOC-015), troubleshooting (DOC-017), performance (DOC-021) docs
-- ✅ Documentation-only changes
-- ✅ DB-specific tuning deferred to vendor docs
+
+* ✅ Grounded, actionable setup guidance for EF Core, MongoDB, Dapper with concise examples
+* ✅ Clear indexing recommendations and retention/cleanup guidance
+* ✅ References to exact elsa-core files underpinning behavior
+* ✅ Cross-links to clustering (DOC-015), troubleshooting (DOC-017), performance (DOC-021) docs
+* ✅ Documentation-only changes
+* ✅ DB-specific tuning deferred to vendor docs

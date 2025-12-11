@@ -1,4 +1,4 @@
-# HTTP Workflows Tutorial
+# Tutorial
 
 This comprehensive tutorial guides you through creating HTTP-based workflows in Elsa, covering all aspects of HTTP endpoint development from basic concepts to advanced patterns.
 
@@ -48,17 +48,16 @@ Let's start by creating a workflow that lists tasks with optional filtering via 
 
 {% stepper %}
 {% step %}
-### Create the List Tasks Workflow
+#### Create the List Tasks Workflow
 
 1. Open Elsa Studio and navigate to **Workflows**
 2. Click **Create Workflow**
 3. Name it `ListTasks`
 4. Set the workflow as **Published** when ready
-
 {% endstep %}
 
 {% step %}
-### Add Required Activities
+#### Add Required Activities
 
 Add the following activities to your workflow:
 
@@ -66,83 +65,80 @@ Add the following activities to your workflow:
 2. **Set Variable** - To extract query parameters
 3. **Set Variable** - To create a filtered task list
 4. **Write HTTP Response** - To return the results
-
 {% endstep %}
 
 {% step %}
-### Create Workflow Variables
+#### Create Workflow Variables
 
 Create the following variables:
 
-| Name | Type | Storage |
-| --- | --- | --- |
-| QueryData | ObjectDictionary | Workflow Instance |
-| StatusFilter | string | Workflow Instance |
-| Tasks | Object | Workflow Instance |
-
+| Name         | Type             | Storage           |
+| ------------ | ---------------- | ----------------- |
+| QueryData    | ObjectDictionary | Workflow Instance |
+| StatusFilter | string           | Workflow Instance |
+| Tasks        | Object           | Workflow Instance |
 {% endstep %}
 
 {% step %}
-### Configure HTTP Endpoint
+#### Configure HTTP Endpoint
 
 Configure the HTTP Endpoint activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Path | `tasks` | Default |
-| Supported Methods | `GET` | Default |
+| Property          | Value   | Syntax  |
+| ----------------- | ------- | ------- |
+| Path              | `tasks` | Default |
+| Supported Methods | `GET`   | Default |
 {% endtab %}
 
 {% tab title="Output" %}
-| Property | Value |
-| --- | --- |
+| Property          | Value     |
+| ----------------- | --------- |
 | Query String Data | QueryData |
 {% endtab %}
 
 {% tab title="Common" %}
-| Property | Value |
-| --- | --- |
+| Property         | Value   |
+| ---------------- | ------- |
 | Trigger Workflow | Checked |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Extract Query Parameters
+#### Extract Query Parameters
 
 Configure the first Set Variable activity to extract the status filter:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `StatusFilter` | Default |
-| Value | `{{ Variables.QueryData.status ?? "all" }}` | Liquid |
+| Property | Value                                       | Syntax  |
+| -------- | ------------------------------------------- | ------- |
+| Variable | `StatusFilter`                              | Default |
+| Value    | `{{ Variables.QueryData.status ?? "all" }}` | Liquid  |
 {% endtab %}
 {% endtabs %}
 
 This extracts the `status` query parameter (e.g., `?status=active`) or defaults to "all".
-
 {% endstep %}
 
 {% step %}
-### Create Mock Task Data
+#### Create Mock Task Data
 
 Configure the second Set Variable activity to create sample task data:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `Tasks` | Default |
-| Value | See code below | C# |
+| Property | Value          | Syntax  |
+| -------- | -------------- | ------- |
+| Variable | `Tasks`        | Default |
+| Value    | See code below | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 var allTasks = new[]
 {
@@ -158,28 +154,26 @@ return filter == "all"
     ? allTasks 
     : allTasks.Where(t => t.Status.ToLower() == filter).ToArray();
 ```
-
 {% endstep %}
 
 {% step %}
-### Return Response
+#### Return Response
 
 Configure the Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `OK` | Default |
-| Content | `Variables.Tasks` | JavaScript |
-| Content Type | `application/json` | Default |
+| Property     | Value              | Syntax     |
+| ------------ | ------------------ | ---------- |
+| Status Code  | `OK`               | Default    |
+| Content      | `Variables.Tasks`  | JavaScript |
+| Content Type | `application/json` | Default    |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Test the Workflow
+#### Test the Workflow
 
 1. **Publish** the workflow
 2. Test with different query parameters:
@@ -215,7 +209,6 @@ When you make a request to `https://localhost:5001/workflows/tasks?status=active
 ]
 ```
 {% endhint %}
-
 {% endstep %}
 {% endstepper %}
 
@@ -225,81 +218,78 @@ Now let's create a workflow that retrieves a specific task by ID using route par
 
 {% stepper %}
 {% step %}
-### Create the Get Task Workflow
+#### Create the Get Task Workflow
 
 1. Create a new workflow named `GetTask`
 2. This workflow will handle requests like `GET /workflows/tasks/1`
-
 {% endstep %}
 
 {% step %}
-### Create Variables
+#### Create Variables
 
-| Name | Type | Storage |
-| --- | --- | --- |
+| Name      | Type             | Storage           |
+| --------- | ---------------- | ----------------- |
 | RouteData | ObjectDictionary | Workflow Instance |
-| TaskId | string | Workflow Instance |
-| Task | Object | Workflow Instance |
-
+| TaskId    | string           | Workflow Instance |
+| Task      | Object           | Workflow Instance |
 {% endstep %}
 
 {% step %}
-### Configure HTTP Endpoint
+#### Configure HTTP Endpoint
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Path | `tasks/{id}` | Default |
-| Supported Methods | `GET` | Default |
+| Property          | Value        | Syntax  |
+| ----------------- | ------------ | ------- |
+| Path              | `tasks/{id}` | Default |
+| Supported Methods | `GET`        | Default |
 {% endtab %}
 
 {% tab title="Output" %}
-| Property | Value |
-| --- | --- |
+| Property   | Value     |
+| ---------- | --------- |
 | Route Data | RouteData |
 {% endtab %}
 
 {% tab title="Common" %}
-| Property | Value |
-| --- | --- |
+| Property         | Value   |
+| ---------------- | ------- |
 | Trigger Workflow | Checked |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Extract Task ID
+#### Extract Task ID
 
 Add a Set Variable activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `TaskId` | Default |
-| Value | `{{ Variables.RouteData.id }}` | Liquid |
+| Property | Value                          | Syntax  |
+| -------- | ------------------------------ | ------- |
+| Variable | `TaskId`                       | Default |
+| Value    | `{{ Variables.RouteData.id }}` | Liquid  |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Find Task
+#### Find Task
 
 Add another Set Variable activity with branching logic:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `Task` | Default |
-| Value | See code below | C# |
+| Property | Value          | Syntax  |
+| -------- | -------------- | ------- |
+| Variable | `Task`         | Default |
+| Value    | See code below | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 var tasks = new[]
 {
@@ -311,55 +301,55 @@ var tasks = new[]
 var taskId = int.Parse(Variables.TaskId);
 return tasks.FirstOrDefault(t => t.Id == taskId);
 ```
-
 {% endstep %}
 
 {% step %}
-### Add Conditional Response
+#### Add Conditional Response
 
 Add a **Decision** activity to check if the task was found:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Condition | `Variables.Task != null` | C# |
+| Property  | Value                    | Syntax |
+| --------- | ------------------------ | ------ |
+| Condition | `Variables.Task != null` | C#     |
 {% endtab %}
 {% endtabs %}
 
 Connect two Write HTTP Response activities to the Decision outcomes:
 
 **For "True" outcome (Task Found):**
+
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `OK` | Default |
-| Content | `Variables.Task` | JavaScript |
-| Content Type | `application/json` | Default |
+| Property     | Value              | Syntax     |
+| ------------ | ------------------ | ---------- |
+| Status Code  | `OK`               | Default    |
+| Content      | `Variables.Task`   | JavaScript |
+| Content Type | `application/json` | Default    |
 {% endtab %}
 {% endtabs %}
 
 **For "False" outcome (Task Not Found):**
+
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `NotFound` | Default |
-| Content | `{"error": "Task not found", "taskId": "{{Variables.TaskId}}"}` | Liquid |
-| Content Type | `application/json` | Default |
+| Property     | Value                                                           | Syntax  |
+| ------------ | --------------------------------------------------------------- | ------- |
+| Status Code  | `NotFound`                                                      | Default |
+| Content      | `{"error": "Task not found", "taskId": "{{Variables.TaskId}}"}` | Liquid  |
+| Content Type | `application/json`                                              | Default |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Test the Workflow
+#### Test the Workflow
 
 Test with different task IDs:
+
 * `GET https://localhost:5001/workflows/tasks/1` - Returns task details (200 OK)
 * `GET https://localhost:5001/workflows/tasks/999` - Returns error message (404 Not Found)
-
 {% endstep %}
 {% endstepper %}
 
@@ -369,66 +359,64 @@ Let's create a workflow that handles POST requests to create new tasks.
 
 {% stepper %}
 {% step %}
-### Create the Create Task Workflow
+#### Create the Create Task Workflow
 
 Create a new workflow named `CreateTask`
-
 {% endstep %}
 
 {% step %}
-### Create Variables
+#### Create Variables
 
-| Name | Type | Storage |
-| --- | --- | --- |
-| RequestBody | Object | Workflow Instance |
-| NewTask | Object | Workflow Instance |
+| Name             | Type   | Storage           |
+| ---------------- | ------ | ----------------- |
+| RequestBody      | Object | Workflow Instance |
+| NewTask          | Object | Workflow Instance |
 | ValidationErrors | Object | Workflow Instance |
-
 {% endstep %}
 
 {% step %}
-### Configure HTTP Endpoint
+#### Configure HTTP Endpoint
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Path | `tasks` | Default |
-| Supported Methods | `POST` | Default |
+| Property          | Value   | Syntax  |
+| ----------------- | ------- | ------- |
+| Path              | `tasks` | Default |
+| Supported Methods | `POST`  | Default |
 {% endtab %}
 
 {% tab title="Output" %}
-| Property | Value |
-| --- | --- |
+| Property       | Value       |
+| -------------- | ----------- |
 | Parsed Content | RequestBody |
 {% endtab %}
 
 {% tab title="Common" %}
-| Property | Value |
-| --- | --- |
+| Property         | Value   |
+| ---------------- | ------- |
 | Trigger Workflow | Checked |
 {% endtab %}
 {% endtabs %}
 
 The HTTP Endpoint automatically parses JSON request bodies into the `Parsed Content` output.
-
 {% endstep %}
 
 {% step %}
-### Validate Request Body
+#### Validate Request Body
 
 Add a Set Variable activity to validate the input:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
+| Property | Value              | Syntax  |
+| -------- | ------------------ | ------- |
 | Variable | `ValidationErrors` | Default |
-| Value | See code below | C# |
+| Value    | See code below     | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 var errors = new List<string>();
 var body = (dynamic)Variables.RequestBody;
@@ -453,39 +441,38 @@ else
 
 return errors.Any() ? new { Errors = errors } : null;
 ```
-
 {% endstep %}
 
 {% step %}
-### Add Validation Decision
+#### Add Validation Decision
 
 Add a **Decision** activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Condition | `Variables.ValidationErrors == null` | C# |
+| Property  | Value                                | Syntax |
+| --------- | ------------------------------------ | ------ |
+| Condition | `Variables.ValidationErrors == null` | C#     |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Create Task (Valid Input)
+#### Create Task (Valid Input)
 
 For the "True" outcome, add a Set Variable activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `NewTask` | Default |
-| Value | See code below | C# |
+| Property | Value          | Syntax  |
+| -------- | -------------- | ------- |
+| Variable | `NewTask`      | Default |
+| Value    | See code below | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 var body = (dynamic)Variables.RequestBody;
 
@@ -513,15 +500,16 @@ Then add a Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `Created` | Default |
-| Content | `Variables.NewTask` | JavaScript |
-| Content Type | `application/json` | Default |
+| Property     | Value               | Syntax     |
+| ------------ | ------------------- | ---------- |
+| Status Code  | `Created`           | Default    |
+| Content      | `Variables.NewTask` | JavaScript |
+| Content Type | `application/json`  | Default    |
 {% endtab %}
 
 {% tab title="Headers" %}
 Add a custom header:
+
 * **Name**: `Location`
 * **Value**: `/workflows/tasks/{{Variables.NewTask.Id}}` (Liquid)
 
@@ -532,30 +520,29 @@ In production, build the full URL dynamically using the request's base URL. The 
 {% endhint %}
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Return Validation Errors (Invalid Input)
+#### Return Validation Errors (Invalid Input)
 
 For the "False" outcome, add a Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `BadRequest` | Default |
-| Content | `Variables.ValidationErrors` | JavaScript |
-| Content Type | `application/json` | Default |
+| Property     | Value                        | Syntax     |
+| ------------ | ---------------------------- | ---------- |
+| Status Code  | `BadRequest`                 | Default    |
+| Content      | `Variables.ValidationErrors` | JavaScript |
+| Content Type | `application/json`           | Default    |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Test the Workflow
+#### Test the Workflow
 
 Test with valid data:
+
 ```bash
 curl -X POST https://localhost:5001/workflows/tasks \
   -H "Content-Type: application/json" \
@@ -568,6 +555,7 @@ curl -X POST https://localhost:5001/workflows/tasks \
 ```
 
 Test with invalid data:
+
 ```bash
 curl -X POST https://localhost:5001/workflows/tasks \
   -H "Content-Type: application/json" \
@@ -575,7 +563,6 @@ curl -X POST https://localhost:5001/workflows/tasks \
     "status": "invalid"
   }'
 ```
-
 {% endstep %}
 {% endstepper %}
 
@@ -585,83 +572,80 @@ Let's create a workflow that handles PUT requests to update existing tasks.
 
 {% stepper %}
 {% step %}
-### Create the Update Task Workflow
+#### Create the Update Task Workflow
 
 Create a new workflow named `UpdateTask`
-
 {% endstep %}
 
 {% step %}
-### Create Variables
+#### Create Variables
 
-| Name | Type | Storage |
-| --- | --- | --- |
-| RouteData | ObjectDictionary | Workflow Instance |
-| RequestBody | Object | Workflow Instance |
-| TaskId | string | Workflow Instance |
-| ExistingTask | Object | Workflow Instance |
-| UpdatedTask | Object | Workflow Instance |
-
+| Name         | Type             | Storage           |
+| ------------ | ---------------- | ----------------- |
+| RouteData    | ObjectDictionary | Workflow Instance |
+| RequestBody  | Object           | Workflow Instance |
+| TaskId       | string           | Workflow Instance |
+| ExistingTask | Object           | Workflow Instance |
+| UpdatedTask  | Object           | Workflow Instance |
 {% endstep %}
 
 {% step %}
-### Configure HTTP Endpoint
+#### Configure HTTP Endpoint
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Path | `tasks/{id}` | Default |
-| Supported Methods | `PUT` | Default |
+| Property          | Value        | Syntax  |
+| ----------------- | ------------ | ------- |
+| Path              | `tasks/{id}` | Default |
+| Supported Methods | `PUT`        | Default |
 {% endtab %}
 
 {% tab title="Output" %}
-| Property | Value |
-| --- | --- |
-| Route Data | RouteData |
+| Property       | Value       |
+| -------------- | ----------- |
+| Route Data     | RouteData   |
 | Parsed Content | RequestBody |
 {% endtab %}
 
 {% tab title="Common" %}
-| Property | Value |
-| --- | --- |
+| Property         | Value   |
+| ---------------- | ------- |
 | Trigger Workflow | Checked |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Extract Task ID
+#### Extract Task ID
 
 Add a Set Variable activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `TaskId` | Default |
-| Value | `{{ Variables.RouteData.id }}` | Liquid |
+| Property | Value                          | Syntax  |
+| -------- | ------------------------------ | ------- |
+| Variable | `TaskId`                       | Default |
+| Value    | `{{ Variables.RouteData.id }}` | Liquid  |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Find Existing Task
+#### Find Existing Task
 
 Add a Set Variable activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
+| Property | Value          | Syntax  |
+| -------- | -------------- | ------- |
 | Variable | `ExistingTask` | Default |
-| Value | See code below | C# |
+| Value    | See code below | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 var tasks = new[]
 {
@@ -672,39 +656,38 @@ var tasks = new[]
 var taskId = int.Parse(Variables.TaskId);
 return tasks.FirstOrDefault(t => t.Id == taskId);
 ```
-
 {% endstep %}
 
 {% step %}
-### Add Decision for Task Existence
+#### Add Decision for Task Existence
 
 Add a **Decision** activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Condition | `Variables.ExistingTask != null` | C# |
+| Property  | Value                            | Syntax |
+| --------- | -------------------------------- | ------ |
+| Condition | `Variables.ExistingTask != null` | C#     |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Update Task (If Found)
+#### Update Task (If Found)
 
 For the "True" outcome, add a Set Variable activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `UpdatedTask` | Default |
-| Value | See code below | C# |
+| Property | Value          | Syntax  |
+| -------- | -------------- | ------- |
+| Variable | `UpdatedTask`  | Default |
+| Value    | See code below | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 var existing = (dynamic)Variables.ExistingTask;
 var updates = (dynamic)Variables.RequestBody;
@@ -725,37 +708,36 @@ Then add a Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `OK` | Default |
-| Content | `Variables.UpdatedTask` | JavaScript |
-| Content Type | `application/json` | Default |
+| Property     | Value                   | Syntax     |
+| ------------ | ----------------------- | ---------- |
+| Status Code  | `OK`                    | Default    |
+| Content      | `Variables.UpdatedTask` | JavaScript |
+| Content Type | `application/json`      | Default    |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Return Not Found (If Task Doesn't Exist)
+#### Return Not Found (If Task Doesn't Exist)
 
 For the "False" outcome, add a Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `NotFound` | Default |
-| Content | `{"error": "Task not found", "taskId": "{{Variables.TaskId}}"}` | Liquid |
-| Content Type | `application/json` | Default |
+| Property     | Value                                                           | Syntax  |
+| ------------ | --------------------------------------------------------------- | ------- |
+| Status Code  | `NotFound`                                                      | Default |
+| Content      | `{"error": "Task not found", "taskId": "{{Variables.TaskId}}"}` | Liquid  |
+| Content Type | `application/json`                                              | Default |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Test the Workflow
+#### Test the Workflow
 
 Test updating an existing task:
+
 ```bash
 curl -X PUT https://localhost:5001/workflows/tasks/1 \
   -H "Content-Type: application/json" \
@@ -766,6 +748,7 @@ curl -X PUT https://localhost:5001/workflows/tasks/1 \
 ```
 
 Test updating a non-existent task:
+
 ```bash
 curl -X PUT https://localhost:5001/workflows/tasks/999 \
   -H "Content-Type: application/json" \
@@ -773,7 +756,6 @@ curl -X PUT https://localhost:5001/workflows/tasks/999 \
     "title": "Updated Task"
   }'
 ```
-
 {% endstep %}
 {% endstepper %}
 
@@ -783,60 +765,57 @@ Let's complete our CRUD operations with a DELETE endpoint.
 
 {% stepper %}
 {% step %}
-### Create the Delete Task Workflow
+#### Create the Delete Task Workflow
 
 Create a new workflow named `DeleteTask`
-
 {% endstep %}
 
 {% step %}
-### Create Variables
+#### Create Variables
 
-| Name | Type | Storage |
-| --- | --- | --- |
-| RouteData | ObjectDictionary | Workflow Instance |
-| TaskId | string | Workflow Instance |
-| TaskExists | bool | Workflow Instance |
-
+| Name       | Type             | Storage           |
+| ---------- | ---------------- | ----------------- |
+| RouteData  | ObjectDictionary | Workflow Instance |
+| TaskId     | string           | Workflow Instance |
+| TaskExists | bool             | Workflow Instance |
 {% endstep %}
 
 {% step %}
-### Configure HTTP Endpoint
+#### Configure HTTP Endpoint
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Path | `tasks/{id}` | Default |
-| Supported Methods | `DELETE` | Default |
+| Property          | Value        | Syntax  |
+| ----------------- | ------------ | ------- |
+| Path              | `tasks/{id}` | Default |
+| Supported Methods | `DELETE`     | Default |
 {% endtab %}
 
 {% tab title="Output" %}
-| Property | Value |
-| --- | --- |
+| Property   | Value     |
+| ---------- | --------- |
 | Route Data | RouteData |
 {% endtab %}
 
 {% tab title="Common" %}
-| Property | Value |
-| --- | --- |
+| Property         | Value   |
+| ---------------- | ------- |
 | Trigger Workflow | Checked |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Extract and Validate Task ID
+#### Extract and Validate Task ID
 
 Add a Set Variable activity to extract the ID:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `TaskId` | Default |
-| Value | `{{ Variables.RouteData.id }}` | Liquid |
+| Property | Value                          | Syntax  |
+| -------- | ------------------------------ | ------- |
+| Variable | `TaskId`                       | Default |
+| Value    | `{{ Variables.RouteData.id }}` | Liquid  |
 {% endtab %}
 {% endtabs %}
 
@@ -844,46 +823,45 @@ Then add another Set Variable activity to check if task exists:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `TaskExists` | Default |
-| Value | See code below | C# |
+| Property | Value          | Syntax  |
+| -------- | -------------- | ------- |
+| Variable | `TaskExists`   | Default |
+| Value    | See code below | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 var existingTaskIds = new[] { 1, 2, 3, 4, 5 };
 var taskId = int.Parse(Variables.TaskId);
 return existingTaskIds.Contains(taskId);
 ```
-
 {% endstep %}
 
 {% step %}
-### Add Decision
+#### Add Decision
 
 Add a **Decision** activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Condition | `Variables.TaskExists` | C# |
+| Property  | Value                  | Syntax |
+| --------- | ---------------------- | ------ |
+| Condition | `Variables.TaskExists` | C#     |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Return Success (If Deleted)
+#### Return Success (If Deleted)
 
 For the "True" outcome, add a Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
+| Property    | Value       | Syntax  |
+| ----------- | ----------- | ------- |
 | Status Code | `NoContent` | Default |
 {% endtab %}
 {% endtabs %}
@@ -893,39 +871,38 @@ For the "True" outcome, add a Write HTTP Response activity:
 
 The 204 status code indicates successful deletion without returning any content in the response body. This is the standard practice for DELETE operations.
 {% endhint %}
-
 {% endstep %}
 
 {% step %}
-### Return Not Found (If Task Doesn't Exist)
+#### Return Not Found (If Task Doesn't Exist)
 
 For the "False" outcome, add a Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `NotFound` | Default |
-| Content | `{"error": "Task not found", "taskId": "{{Variables.TaskId}}"}` | Liquid |
-| Content Type | `application/json` | Default |
+| Property     | Value                                                           | Syntax  |
+| ------------ | --------------------------------------------------------------- | ------- |
+| Status Code  | `NotFound`                                                      | Default |
+| Content      | `{"error": "Task not found", "taskId": "{{Variables.TaskId}}"}` | Liquid  |
+| Content Type | `application/json`                                              | Default |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Test the Workflow
+#### Test the Workflow
 
 Test deleting an existing task:
+
 ```bash
 curl -X DELETE https://localhost:5001/workflows/tasks/1
 ```
 
 Test deleting a non-existent task:
+
 ```bash
 curl -X DELETE https://localhost:5001/workflows/tasks/999
 ```
-
 {% endstep %}
 {% endstepper %}
 
@@ -939,54 +916,53 @@ To access request headers, use the HTTP Endpoint activity's **Headers** output:
 
 {% stepper %}
 {% step %}
-### Create Variables
+#### Create Variables
 
-| Name | Type | Storage |
-| --- | --- | --- |
-| Headers | ObjectDictionary | Workflow Instance |
-| AuthToken | string | Workflow Instance |
-| UserAgent | string | Workflow Instance |
-
+| Name      | Type             | Storage           |
+| --------- | ---------------- | ----------------- |
+| Headers   | ObjectDictionary | Workflow Instance |
+| AuthToken | string           | Workflow Instance |
+| UserAgent | string           | Workflow Instance |
 {% endstep %}
 
 {% step %}
-### Configure HTTP Endpoint
+#### Configure HTTP Endpoint
 
 {% tabs %}
 {% tab title="Output" %}
-| Property | Value |
-| --- | --- |
-| Headers | Headers |
+| Property | Value   |
+| -------- | ------- |
+| Headers  | Headers |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 
 {% step %}
-### Extract Header Values
+#### Extract Header Values
 
 Add Set Variable activities to extract specific headers:
 
 **For Authorization Header:**
+
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `AuthToken` | Default |
-| Value | `{{ Variables.Headers.Authorization ?? "No token provided" }}` | Liquid |
+| Property | Value                                                          | Syntax  |
+| -------- | -------------------------------------------------------------- | ------- |
+| Variable | `AuthToken`                                                    | Default |
+| Value    | `{{ Variables.Headers.Authorization ?? "No token provided" }}` | Liquid  |
 {% endtab %}
 {% endtabs %}
 
 **For User-Agent Header:**
+
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Variable | `UserAgent` | Default |
-| Value | `{{ Variables.Headers["User-Agent"] ?? "Unknown" }}` | Liquid |
+| Property | Value                                                | Syntax  |
+| -------- | ---------------------------------------------------- | ------- |
+| Variable | `UserAgent`                                          | Default |
+| Value    | `{{ Variables.Headers["User-Agent"] ?? "Unknown" }}` | Liquid  |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 {% endstepper %}
 
@@ -998,12 +974,12 @@ To set custom response headers, configure the Write HTTP Response activity:
 {% tab title="Headers" %}
 Add custom headers:
 
-| Name | Value | Syntax |
-| --- | --- | --- |
-| X-Request-Id | `{{guid()}}` | Liquid |
-| X-Response-Time | `{{now | date: "%Y-%m-%d %H:%M:%S"}}` | Liquid |
-| Cache-Control | `no-cache, no-store, must-revalidate` | Default |
-| X-Api-Version | `v3` | Default |
+| Name            | Value                                 | Syntax                         |
+| --------------- | ------------------------------------- | ------------------------------ |
+| X-Request-Id    | `{{guid()}}`                          | Liquid                         |
+| X-Response-Time | \`\{{now                              | date: "%Y-%m-%d %H:%M:%S"\}}\` |
+| Cache-Control   | `no-cache, no-store, must-revalidate` | Default                        |
+| X-Api-Version   | `v3`                                  | Default                        |
 {% endtab %}
 {% endtabs %}
 
@@ -1017,31 +993,31 @@ Create a workflow that handles exceptions gracefully:
 
 {% stepper %}
 {% step %}
-### Use Fault Activity
+#### Use Fault Activity
 
 Wrap risky operations in a **Fault** activity to catch exceptions:
 
 1. Add a **Fault** activity
 2. Inside the Fault activity, add activities that might fail (e.g., HTTP Request to external API)
 3. Connect the **Faulted** outcome to error handling logic
-
 {% endstep %}
 
 {% step %}
-### Handle Fault
+#### Handle Fault
 
 Create a Set Variable activity to process the error:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
+| Property | Value           | Syntax  |
+| -------- | --------------- | ------- |
 | Variable | `ErrorResponse` | Default |
-| Value | See code below | C# |
+| Value    | See code below  | C#      |
 {% endtab %}
 {% endtabs %}
 
 C# Expression:
+
 ```csharp
 return new
 {
@@ -1050,24 +1026,22 @@ return new
     RequestId = Guid.NewGuid().ToString()
 };
 ```
-
 {% endstep %}
 
 {% step %}
-### Return Error Response
+#### Return Error Response
 
 Add a Write HTTP Response activity:
 
 {% tabs %}
 {% tab title="Input" %}
-| Property | Value | Syntax |
-| --- | --- | --- |
-| Status Code | `InternalServerError` | Default |
-| Content | `Variables.ErrorResponse` | JavaScript |
-| Content Type | `application/json` | Default |
+| Property     | Value                     | Syntax     |
+| ------------ | ------------------------- | ---------- |
+| Status Code  | `InternalServerError`     | Default    |
+| Content      | `Variables.ErrorResponse` | JavaScript |
+| Content Type | `application/json`        | Default    |
 {% endtab %}
 {% endtabs %}
-
 {% endstep %}
 {% endstepper %}
 
@@ -1103,17 +1077,17 @@ return errors.Any() ? new { ValidationErrors = errors } : null;
 
 Use appropriate HTTP status codes for different error scenarios:
 
-| Status Code | Use Case | Example |
-| --- | --- | --- |
-| 400 Bad Request | Invalid input data | Missing required fields, invalid format |
-| 401 Unauthorized | Missing or invalid authentication | No auth token provided |
-| 403 Forbidden | Insufficient permissions | User not allowed to perform action |
-| 404 Not Found | Resource doesn't exist | Task ID not found |
-| 409 Conflict | Resource state conflict | Task already exists |
-| 422 Unprocessable Entity | Semantic validation errors | Valid format but business rule violation |
-| 429 Too Many Requests | Rate limit exceeded | Too many API calls |
-| 500 Internal Server Error | Unexpected server errors | Database connection failure |
-| 503 Service Unavailable | Temporary service issues | Downstream service unavailable |
+| Status Code               | Use Case                          | Example                                  |
+| ------------------------- | --------------------------------- | ---------------------------------------- |
+| 400 Bad Request           | Invalid input data                | Missing required fields, invalid format  |
+| 401 Unauthorized          | Missing or invalid authentication | No auth token provided                   |
+| 403 Forbidden             | Insufficient permissions          | User not allowed to perform action       |
+| 404 Not Found             | Resource doesn't exist            | Task ID not found                        |
+| 409 Conflict              | Resource state conflict           | Task already exists                      |
+| 422 Unprocessable Entity  | Semantic validation errors        | Valid format but business rule violation |
+| 429 Too Many Requests     | Rate limit exceeded               | Too many API calls                       |
+| 500 Internal Server Error | Unexpected server errors          | Database connection failure              |
+| 503 Service Unavailable   | Temporary service issues          | Downstream service unavailable           |
 
 ## Part 8: Advanced Request/Response Patterns
 
@@ -1125,9 +1099,10 @@ Handle different content types based on request headers:
 **Conceptual Example**
 
 The following demonstrates the concept of content negotiation. In a real implementation, you would need to:
-- Implement XML/CSV serialization methods based on your needs
-- Use libraries like System.Xml.Serialization or CsvHelper
-- Configure appropriate Content-Type headers in Write HTTP Response activity
+
+* Implement XML/CSV serialization methods based on your needs
+* Use libraries like System.Xml.Serialization or CsvHelper
+* Configure appropriate Content-Type headers in Write HTTP Response activity
 {% endhint %}
 
 ```csharp
@@ -1173,22 +1148,22 @@ Enable Cross-Origin Resource Sharing (CORS) for browser-based clients:
 
 {% tabs %}
 {% tab title="Response Headers" %}
-| Name | Value |
-| --- | --- |
-| Access-Control-Allow-Origin | `https://yourdomain.com` |
+| Name                         | Value                             |
+| ---------------------------- | --------------------------------- |
+| Access-Control-Allow-Origin  | `https://yourdomain.com`          |
 | Access-Control-Allow-Methods | `GET, POST, PUT, DELETE, OPTIONS` |
-| Access-Control-Allow-Headers | `Content-Type, Authorization` |
-| Access-Control-Max-Age | `3600` |
+| Access-Control-Allow-Headers | `Content-Type, Authorization`     |
+| Access-Control-Max-Age       | `3600`                            |
 {% endtab %}
 {% endtabs %}
 
 {% hint style="warning" %}
 **CORS Security**
 
-- Never use `*` for `Access-Control-Allow-Origin` in production, especially with credentials
-- Always specify the exact allowed origin domain(s)
-- For multiple domains, implement logic to validate and return the requesting origin
-- Consider security implications before enabling CORS
+* Never use `*` for `Access-Control-Allow-Origin` in production, especially with credentials
+* Always specify the exact allowed origin domain(s)
+* For multiple domains, implement logic to validate and return the requesting origin
+* Consider security implications before enabling CORS
 {% endhint %}
 
 ### Pagination
@@ -1248,16 +1223,18 @@ Track and limit request rates per client:
 Rate limiting in production requires careful implementation:
 
 **Infrastructure:**
-- Use API Gateway features (Azure API Management, AWS API Gateway, Kong)
-- Implement with distributed cache (Redis, Memcached)
-- Use ASP.NET Core Rate Limiting middleware
-- Leverage CDN/WAF services (Cloudflare, etc.)
+
+* Use API Gateway features (Azure API Management, AWS API Gateway, Kong)
+* Implement with distributed cache (Redis, Memcached)
+* Use ASP.NET Core Rate Limiting middleware
+* Leverage CDN/WAF services (Cloudflare, etc.)
 
 **Client Identification:**
-- ⚠️ **Avoid IP-based limiting alone**: IPs can be shared (NAT, proxies, mobile networks)
-- ✅ **Prefer authenticated identifiers**: User IDs, API keys, OAuth tokens
-- ✅ **Validate proxy headers**: Only trust X-Forwarded-For from known proxies
-- ✅ **Combine methods**: Use both authentication and IP for better accuracy
+
+* ⚠️ **Avoid IP-based limiting alone**: IPs can be shared (NAT, proxies, mobile networks)
+* ✅ **Prefer authenticated identifiers**: User IDs, API keys, OAuth tokens
+* ✅ **Validate proxy headers**: Only trust X-Forwarded-For from known proxies
+* ✅ **Combine methods**: Use both authentication and IP for better accuracy
 
 The example below demonstrates the concept but requires proper implementation.
 {% endhint %}
@@ -1313,6 +1290,7 @@ return new
 3. **Write Tests**: Add test scripts to validate responses
 
 Example Postman test script:
+
 ```javascript
 pm.test("Status code is 200", function () {
     pm.response.to.have.status(200);
@@ -1399,9 +1377,10 @@ DELETE {{baseUrl}}/workflows/tasks/1
 **Environment Variables**
 
 Use variables in `.http` files to easily switch between environments:
-- Development: `@baseUrl = https://localhost:5001`
-- Staging: `@baseUrl = https://staging.example.com`
-- Production: `@baseUrl = https://api.example.com`
+
+* Development: `@baseUrl = https://localhost:5001`
+* Staging: `@baseUrl = https://staging.example.com`
+* Production: `@baseUrl = https://api.example.com`
 {% endhint %}
 
 ### Automated Testing with xUnit
@@ -1476,6 +1455,7 @@ public class TaskWorkflowTests : IClassFixture<WebApplicationFactory<Program>>
 **Problem**: Workflow endpoint not responding
 
 **Solutions**:
+
 * Verify the workflow is **Published**
 * Check that "Trigger Workflow" is enabled on HTTP Endpoint
 * Ensure the path doesn't conflict with other routes
@@ -1486,6 +1466,7 @@ public class TaskWorkflowTests : IClassFixture<WebApplicationFactory<Program>>
 **Problem**: Cannot read POST/PUT request body
 
 **Solutions**:
+
 * Set `Content-Type: application/json` header
 * Ensure JSON is valid
 * Use HTTP Endpoint's "Parsed Content" output
@@ -1496,6 +1477,7 @@ public class TaskWorkflowTests : IClassFixture<WebApplicationFactory<Program>>
 **Problem**: Cannot read request headers
 
 **Solutions**:
+
 * Use HTTP Endpoint's "Headers" output variable
 * Check header names are case-insensitive
 * Verify headers are sent with the request
@@ -1505,6 +1487,7 @@ public class TaskWorkflowTests : IClassFixture<WebApplicationFactory<Program>>
 **Problem**: Browser blocks requests from different origin
 
 **Solutions**:
+
 * Add CORS headers to Write HTTP Response activity
 * Handle OPTIONS preflight requests
 * Configure Elsa Server CORS policy
@@ -1512,12 +1495,14 @@ public class TaskWorkflowTests : IClassFixture<WebApplicationFactory<Program>>
 Example CORS workflow configuration:
 
 **HTTP Endpoint Activity:**
+
 ```csharp
 // Add support for OPTIONS method for CORS preflight
 SupportedMethods = new[] { HttpMethods.Get, HttpMethods.Post, HttpMethods.Options }
 ```
 
 **Write HTTP Response Activity:**
+
 ```csharp
 // Always include CORS headers in production (with proper origin validation)
 Headers = new Dictionary<string, string>
@@ -1570,6 +1555,7 @@ Always return JSON in a consistent structure:
 ### 2. Validate All Inputs
 
 Never trust client input. Always validate:
+
 * Required fields are present
 * Data types are correct
 * Values are within expected ranges
@@ -1598,15 +1584,18 @@ Use semantic HTTP status codes to communicate results clearly.
 ### 6. Version Your APIs
 
 Include version in the path:
+
 * `/workflows/v1/tasks`
 * `/workflows/v2/tasks`
 
 Or use headers:
+
 * `Accept: application/vnd.myapi.v1+json`
 
 ### 7. Document Your Endpoints
 
 Provide clear documentation for each endpoint:
+
 * Purpose and description
 * Request format and parameters
 * Response format and status codes
@@ -1616,6 +1605,7 @@ Provide clear documentation for each endpoint:
 ### 8. Handle Timeouts
 
 For long-running operations:
+
 * Return 202 Accepted immediately
 * Process asynchronously
 * Provide status endpoint to check progress
@@ -1640,6 +1630,7 @@ Here's a complete workflow combining all the patterns we've learned:
 ### Workflow: Create Task with Full Validation
 
 This workflow demonstrates:
+
 * Request body parsing
 * Comprehensive validation
 * Authentication check
@@ -1648,6 +1639,7 @@ This workflow demonstrates:
 * Header management
 
 **Variables:**
+
 * `Headers` (ObjectDictionary)
 * `RequestBody` (Object)
 * `AuthToken` (string)
@@ -1659,28 +1651,22 @@ This workflow demonstrates:
 
 1. **HTTP Endpoint** (POST `/workflows/tasks`)
    * Outputs: Headers, RequestBody
-
 2. **Extract Auth Token**
    * `AuthToken = Headers.Authorization`
-
 3. **Validate Authentication**
    * Check if token is valid
    * Branch: Authenticated / Unauthorized
-
 4. **Validate Request Body** (if authenticated)
    * Check required fields
    * Validate formats
    * Check business rules
-
 5. **Decision: Valid Input?**
    * True: Create task
    * False: Return validation errors
-
 6. **Create Task** (if valid)
    * Generate ID
    * Set timestamps
    * Prepare response
-
 7. **Return Response**
    * 201 Created: With Location header
    * 400 Bad Request: With validation errors
@@ -1704,15 +1690,15 @@ Congratulations! You've completed the comprehensive HTTP Workflows tutorial. You
 
 Now that you've mastered HTTP workflows, explore these advanced topics:
 
-* **[External Application Interaction](../external-application-interaction.md)**: Integrate with external services
-* **[Custom Activities](../../extensibility/custom-activities.md)**: Create reusable workflow components
-* **[Authentication](../authentication.md)**: Secure your workflows
-* **[Testing & Debugging](../testing-debugging.md)**: Advanced debugging techniques
-* **[Distributed Hosting](../../hosting/distributed-hosting.md)**: Scale your workflows
+* [**External Application Interaction**](../external-application-interaction.md): Integrate with external services
+* [**Custom Activities**](../../extensibility/custom-activities.md): Create reusable workflow components
+* [**Authentication**](../authentication.md): Secure your workflows
+* [**Testing & Debugging**](../testing-debugging.md): Advanced debugging techniques
+* [**Distributed Hosting**](../../hosting/distributed-hosting.md): Scale your workflows
 
 ### Resources
 
-* [Elsa Workflows Documentation](../../README.md)
+* [Elsa Workflows Documentation](../../)
 * [Expression Languages](../../expressions/c.md)
 * [Elsa GitHub Repository](https://github.com/elsa-workflows/elsa-core)
 * [Community Discord](https://discord.gg/hhChk5H472)

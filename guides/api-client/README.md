@@ -1,9 +1,11 @@
 ---
 description: >-
-  Comprehensive guide to interacting with Elsa Server programmatically via HTTP APIs and the elsa-api-client library, covering workflow publishing, instance management, bookmarks, and resilience patterns.
+  Comprehensive guide to interacting with Elsa Server programmatically via HTTP
+  APIs and the elsa-api-client library, covering workflow publishing, instance
+  management, bookmarks, and resilience pattern
 ---
 
-# API & Client Guide
+# API & Client
 
 ## Executive Summary
 
@@ -14,16 +16,16 @@ This guide covers how to interact with Elsa Workflows programmatically using:
 
 ### When to Choose Direct HTTP vs Client Library
 
-| Approach | Best For | Pros | Cons |
-|----------|----------|------|------|
-| **Direct HTTP** | Polyglot teams, non-.NET clients, simple integrations | Language-agnostic, minimal dependencies | Manual serialization, no type safety |
-| **elsa-api-client** | .NET applications, complex workflows, production systems | Type-safe, automatic serialization, resilience patterns | .NET-only, additional dependency |
+| Approach            | Best For                                                 | Pros                                                    | Cons                                 |
+| ------------------- | -------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------ |
+| **Direct HTTP**     | Polyglot teams, non-.NET clients, simple integrations    | Language-agnostic, minimal dependencies                 | Manual serialization, no type safety |
+| **elsa-api-client** | .NET applications, complex workflows, production systems | Type-safe, automatic serialization, resilience patterns | .NET-only, additional dependency     |
 
 **Recommendation:** For .NET applications, prefer `elsa-api-client` for type safety and built-in conveniences. For non-.NET clients or simple webhook integrations, use direct HTTP calls.
 
 **Code Reference:** `src/clients/Elsa.Api.Client/` — Official API client implementation.
 
----
+***
 
 ## Architecture Overview
 
@@ -31,11 +33,11 @@ This guide covers how to interact with Elsa Workflows programmatically using:
 
 Elsa's API is organized around three primary entities:
 
-| Entity | Purpose | Key Endpoints |
-|--------|---------|---------------|
-| **Workflow Definitions** | Blueprint templates for workflows | `/api/workflow-definitions` |
-| **Workflow Instances** | Running or completed executions | `/api/workflow-instances` |
-| **Bookmarks** | Suspension points for workflow resume | `/api/bookmarks` |
+| Entity                   | Purpose                               | Key Endpoints               |
+| ------------------------ | ------------------------------------- | --------------------------- |
+| **Workflow Definitions** | Blueprint templates for workflows     | `/api/workflow-definitions` |
+| **Workflow Instances**   | Running or completed executions       | `/api/workflow-instances`   |
+| **Bookmarks**            | Suspension points for workflow resume | `/api/bookmarks`            |
 
 ### High-Level Workflow Lifecycle
 
@@ -63,11 +65,11 @@ Elsa's API is organized around three primary entities:
 
 **Code Reference:** `src/modules/Elsa.Workflows.Core/Contexts/ActivityExecutionContext.cs` — Contains `CreateBookmark()` for suspending workflows.
 
----
+***
 
 ## Authentication & Identity
 
-Elsa Server supports multiple authentication mechanisms. For comprehensive security guidance, see the [Security & Authentication Guide](../security/README.md) (DOC-020).
+Elsa Server supports multiple authentication mechanisms. For comprehensive security guidance, see the [Security & Authentication Guide](../security/) (DOC-020).
 
 ### Quick Reference
 
@@ -102,7 +104,7 @@ services.AddElsaClient(client =>
 
 **Code Reference:** `src/clients/Elsa.Api.Client/Extensions/ServiceCollectionExtensions.cs` — Client registration extensions.
 
----
+***
 
 ## Publishing Workflow Definitions
 
@@ -159,14 +161,14 @@ public class WorkflowPublisher
 
 **Key Properties:**
 
-| Property | Description |
-|----------|-------------|
-| `DefinitionId` | Unique identifier for the workflow definition |
-| `Version` | Version number (increments with each publish) |
-| `Root` | The root activity of the workflow |
-| `Options.CommitStrategyName` | How often workflow state is persisted (see DOC-021) |
-| `Options.ActivationStrategyType` | Controls how new instances are created (e.g., `Singleton`, `Default`) |
-| `Options.AutoUpdateConsumingWorkflows` | Whether to update workflows that reference this one |
+| Property                               | Description                                                           |
+| -------------------------------------- | --------------------------------------------------------------------- |
+| `DefinitionId`                         | Unique identifier for the workflow definition                         |
+| `Version`                              | Version number (increments with each publish)                         |
+| `Root`                                 | The root activity of the workflow                                     |
+| `Options.CommitStrategyName`           | How often workflow state is persisted (see DOC-021)                   |
+| `Options.ActivationStrategyType`       | Controls how new instances are created (e.g., `Singleton`, `Default`) |
+| `Options.AutoUpdateConsumingWorkflows` | Whether to update workflows that reference this one                   |
 
 **Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/WorkflowOptions.cs`
 
@@ -210,7 +212,7 @@ curl -X POST "https://your-elsa-server.com/elsa/api/workflow-definitions" \
 }
 ```
 
----
+***
 
 ## Versioning & Publishing Semantics
 
@@ -218,10 +220,10 @@ curl -X POST "https://your-elsa-server.com/elsa/api/workflow-definitions" \
 
 Workflow definitions have two states:
 
-| State | Description | Can Execute? |
-|-------|-------------|--------------|
-| **Draft** | Work-in-progress definition | No |
-| **Published** | Active, executable version | Yes |
+| State         | Description                 | Can Execute? |
+| ------------- | --------------------------- | ------------ |
+| **Draft**     | Work-in-progress definition | No           |
+| **Published** | Active, executable version  | Yes          |
 
 Multiple versions can exist, but only one version is the "latest published" version at any time.
 
@@ -254,17 +256,16 @@ Options = new WorkflowOptions
 
 Control how new workflow instances are created:
 
-| Strategy | Behavior |
-|----------|----------|
-| `Default` | Each trigger creates a new instance |
+| Strategy    | Behavior                                 |
+| ----------- | ---------------------------------------- |
+| `Default`   | Each trigger creates a new instance      |
 | `Singleton` | Only one running instance per definition |
 
-<!-- The original link was broken. If the documentation exists elsewhere, update the path below. Otherwise, provide a brief summary or remove the link. -->
-See the documentation on Activation Strategies in the main Elsa docs for detailed guidance. <!-- TODO: Update with correct link if available -->
+See the documentation on Activation Strategies in the main Elsa docs for detailed guidance.
 
 **Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/WorkflowOptions.cs` — `ActivationStrategyType` property.
 
----
+***
 
 ## Starting / Instantiating Workflows
 
@@ -330,18 +331,18 @@ curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances/start" \
 
 ### Key Parameters
 
-| Parameter | Description | Required |
-|-----------|-------------|----------|
-| `definitionId` | ID of the workflow definition to start | Yes |
-| `correlationId` | External identifier for correlation | No |
-| `input` | Dictionary of input values | No |
-| `versionOptions` | Which version to run (Latest, Published, Specific) | No |
+| Parameter        | Description                                        | Required |
+| ---------------- | -------------------------------------------------- | -------- |
+| `definitionId`   | ID of the workflow definition to start             | Yes      |
+| `correlationId`  | External identifier for correlation                | No       |
+| `input`          | Dictionary of input values                         | No       |
+| `versionOptions` | Which version to run (Latest, Published, Specific) | No       |
 
 > **Note:** `TriggerWorkflowsOptions` is obsolete. Use the `StartWorkflowRequest` pattern shown above for creating new workflow instances.
 
 **Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowInstances/` — Instance management models.
 
----
+***
 
 ## Querying Workflow Definitions & Instances
 
@@ -404,16 +405,16 @@ curl -X GET "https://your-elsa-server.com/elsa/api/workflow-instances?definition
 
 ### Query Parameters
 
-| Parameter | Description | Type |
-|-----------|-------------|------|
-| `status` | Filter by workflow status (Running, Suspended, Finished, Faulted) | Enum |
-| `correlationId` | Filter by correlation ID | String |
-| `definitionId` | Filter by workflow definition ID | String |
-| `version` | Filter by specific version | Integer |
-| `page` | Page number (0-indexed) | Integer |
-| `pageSize` | Number of results per page (default: 25, max: 100) | Integer |
+| Parameter       | Description                                                       | Type    |
+| --------------- | ----------------------------------------------------------------- | ------- |
+| `status`        | Filter by workflow status (Running, Suspended, Finished, Faulted) | Enum    |
+| `correlationId` | Filter by correlation ID                                          | String  |
+| `definitionId`  | Filter by workflow definition ID                                  | String  |
+| `version`       | Filter by specific version                                        | Integer |
+| `page`          | Page number (0-indexed)                                           | Integer |
+| `pageSize`      | Number of results per page (default: 25, max: 100)                | Integer |
 
----
+***
 
 ## Bookmarks & Resuming
 
@@ -439,8 +440,9 @@ var bookmark = context.CreateBookmark(
 ### Stimulus Hashing
 
 Bookmarks are matched using a deterministic hash based on:
-- Activity type name
-- Stimulus payload data
+
+* Activity type name
+* Stimulus payload data
 
 This allows the runtime to efficiently find matching bookmarks without knowing the instance ID.
 
@@ -505,6 +507,7 @@ await _instancesApi.ResumeAsync(new ResumeWorkflowRequest
 ### Resume Flow & Locking
 
 The `WorkflowResumer` service:
+
 1. Acquires a distributed lock on the workflow instance
 2. Loads the workflow state from the database
 3. Finds the matching bookmark
@@ -516,11 +519,12 @@ The `WorkflowResumer` service:
 ### Security Note
 
 Tokenized resume URLs should be treated as secrets:
-- Use HTTPS to prevent interception
-- Tokens expire when the bookmark is burned or workflow is cancelled
-- See [Security & Authentication Guide](../security/README.md) (DOC-020) for token security best practices
 
----
+* Use HTTPS to prevent interception
+* Tokens expire when the bookmark is burned or workflow is cancelled
+* See [Security & Authentication Guide](../security/) (DOC-020) for token security best practices
+
+***
 
 ## Incidents & Retry / Resilience
 
@@ -575,7 +579,7 @@ if (instance.Status == WorkflowStatus.Faulted)
 
 For incident configuration and strategies, see the main documentation on incidents in the [Operate Guide](../operate/incidents.md).
 
----
+***
 
 ## Commit Strategies
 
@@ -594,17 +598,17 @@ Options = new WorkflowOptions
 
 ### Available Strategies
 
-| Strategy | Behavior | Use Case |
-|----------|----------|----------|
+| Strategy           | Behavior                         | Use Case                         |
+| ------------------ | -------------------------------- | -------------------------------- |
 | `WorkflowExecuted` | Commits after workflow completes | High throughput, short workflows |
-| `ActivityExecuted` | Commits after each activity | Maximum durability |
-| `Periodic` | Commits at regular intervals | Long-running workflows |
+| `ActivityExecuted` | Commits after each activity      | Maximum durability               |
+| `Periodic`         | Commits at regular intervals     | Long-running workflows           |
 
-For detailed guidance on commit strategies and performance tuning, see [Performance & Scaling Guide](../performance/README.md) (DOC-021).
+For detailed guidance on commit strategies and performance tuning, see [Performance & Scaling Guide](../performance/) (DOC-021).
 
 **Code Reference:** `src/modules/Elsa.Workflows.Core/CommitStates/CommitStrategiesFeature.cs` — Strategy registration.
 
----
+***
 
 ## Pagination & Performance
 
@@ -612,10 +616,10 @@ For detailed guidance on commit strategies and performance tuning, see [Performa
 
 All list endpoints support pagination:
 
-| Parameter | Description | Default | Max |
-|-----------|-------------|---------|-----|
-| `page` | Zero-indexed page number | 0 | - |
-| `pageSize` | Results per page | 25 | 100 |
+| Parameter  | Description              | Default | Max |
+| ---------- | ------------------------ | ------- | --- |
+| `page`     | Zero-indexed page number | 0       | -   |
+| `pageSize` | Results per page         | 25      | 100 |
 
 ### Example with Pagination
 
@@ -629,40 +633,33 @@ curl "https://your-elsa-server.com/elsa/api/workflow-instances?page=1&pageSize=5
 
 ### Performance Recommendations
 
-1. **Use Server-Side Filtering:**
-   Always filter on the server rather than fetching all results and filtering client-side.
+1.  **Use Server-Side Filtering:** Always filter on the server rather than fetching all results and filtering client-side.
 
-   ```bash
-   # Good: Server-side filtering
-   curl "https://your-elsa-server.com/elsa/api/workflow-instances?status=Running&correlationId=order-123"
-   
-   # Avoid: Fetching all and filtering client-side
-   ```
+    ```bash
+    # Good: Server-side filtering
+    curl "https://your-elsa-server.com/elsa/api/workflow-instances?status=Running&correlationId=order-123"
 
-2. **Limit Page Size:**
-   Use the smallest page size that meets your needs to reduce response time and memory usage.
+    # Avoid: Fetching all and filtering client-side
+    ```
+2. **Limit Page Size:** Use the smallest page size that meets your needs to reduce response time and memory usage.
+3. **Avoid Large Instance Graphs:** When querying instances, request only summary data unless you need the full execution history.
+4. **Consider Field Selection (Future):** Future versions may support field selection to reduce payload size. Check release notes for updates.
 
-3. **Avoid Large Instance Graphs:**
-   When querying instances, request only summary data unless you need the full execution history.
-
-4. **Consider Field Selection (Future):**
-   Future versions may support field selection to reduce payload size. Check release notes for updates.
-
----
+***
 
 ## Error Handling & Troubleshooting
 
 ### Common HTTP Status Codes
 
-| Status | Meaning | Common Cause |
-|--------|---------|--------------|
-| **200 OK** | Success | - |
-| **201 Created** | Resource created | - |
-| **400 Bad Request** | Validation error | Missing required field (e.g., `root` activity), malformed JSON |
-| **401 Unauthorized** | Authentication failed | Invalid or expired token |
-| **404 Not Found** | Resource not found | Definition ID doesn't exist |
-| **409 Conflict** | Publish conflict | Version conflict during concurrent publish |
-| **410 Gone** | Resource expired | Bookmark already consumed or expired |
+| Status               | Meaning               | Common Cause                                                   |
+| -------------------- | --------------------- | -------------------------------------------------------------- |
+| **200 OK**           | Success               | -                                                              |
+| **201 Created**      | Resource created      | -                                                              |
+| **400 Bad Request**  | Validation error      | Missing required field (e.g., `root` activity), malformed JSON |
+| **401 Unauthorized** | Authentication failed | Invalid or expired token                                       |
+| **404 Not Found**    | Resource not found    | Definition ID doesn't exist                                    |
+| **409 Conflict**     | Publish conflict      | Version conflict during concurrent publish                     |
+| **410 Gone**         | Resource expired      | Bookmark already consumed or expired                           |
 
 ### Validation Errors (400)
 
@@ -681,11 +678,13 @@ curl "https://your-elsa-server.com/elsa/api/workflow-instances?page=1&pageSize=5
 ### Bookmark Not Found (404/410)
 
 Common causes:
-- Bookmark already burned (consumed)
-- Workflow instance was cancelled
-- Token expired or invalid
+
+* Bookmark already burned (consumed)
+* Workflow instance was cancelled
+* Token expired or invalid
 
 **Resolution:**
+
 1. Verify the workflow instance still exists and is suspended
 2. Check if the bookmark was already consumed
 3. Verify the stimulus payload matches exactly what the bookmark expects
@@ -698,17 +697,17 @@ Common causes:
 4. **Check workflow state** via instance query
 5. **Review bookmark existence** in database
 
-For comprehensive troubleshooting, see [Troubleshooting Guide](../troubleshooting/README.md) (DOC-017).
+For comprehensive troubleshooting, see [Troubleshooting Guide](../troubleshooting/) (DOC-017).
 
----
+***
 
 ## Best Practices Summary
 
 ### Correlation IDs
 
-- **Use correlation IDs** for multi-event workflows to track related activities
-- Choose meaningful, unique identifiers (e.g., order ID, customer ID)
-- Query by correlation ID for efficient instance lookup
+* **Use correlation IDs** for multi-event workflows to track related activities
+* Choose meaningful, unique identifiers (e.g., order ID, customer ID)
+* Query by correlation ID for efficient instance lookup
 
 ```csharp
 var request = new StartWorkflowRequest
@@ -737,20 +736,20 @@ await MarkAsProcessedAsync(bookmarkId);
 
 Choose commit strategy based on your durability vs throughput requirements:
 
-| Requirement | Recommended Strategy |
-|-------------|---------------------|
-| High throughput, short workflows | `WorkflowExecuted` |
-| Long-running, must not lose progress | `ActivityExecuted` |
-| Balanced for most use cases | `Periodic` |
+| Requirement                          | Recommended Strategy |
+| ------------------------------------ | -------------------- |
+| High throughput, short workflows     | `WorkflowExecuted`   |
+| Long-running, must not lose progress | `ActivityExecuted`   |
+| Balanced for most use cases          | `Periodic`           |
 
 ### Client Instrumentation
 
 For custom metrics and monitoring:
 
-- **User-defined metrics** for throughput, latency, error rates
-- **Built-in tracing** via Elsa.OpenTelemetry for workflow execution visibility
+* **User-defined metrics** for throughput, latency, error rates
+* **Built-in tracing** via Elsa.OpenTelemetry for workflow execution visibility
 
-See [Performance & Scaling Guide](../performance/README.md) (DOC-021) for observability patterns.
+See [Performance & Scaling Guide](../performance/) (DOC-021) for observability patterns.
 
 ### General Recommendations
 
@@ -761,35 +760,36 @@ See [Performance & Scaling Guide](../performance/README.md) (DOC-021) for observ
 5. **Monitor workflow health** via status queries
 6. **Clean up completed instances** via retention policies
 
----
+***
 
 ## Example Files
 
-- [publish-workflow.cs](examples/publish-workflow.cs) — Create and publish a workflow definition
-- [start-workflow.cs](examples/start-workflow.cs) — Start a workflow instance with correlation and input
-- [query-workflows.cs](examples/query-workflows.cs) — Query instances with filtering and pagination
-- [resume-bookmark.curl.md](examples/resume-bookmark.curl.md) — Resume workflow via token or stimulus
-- [resilience-strategy.cs](examples/resilience-strategy.cs) — Configure resilience for activities
-- [Source File References](README-REFERENCES.md) — elsa-core source paths for grounding
+* [publish-workflow.cs](examples/publish-workflow.cs) — Create and publish a workflow definition
+* [start-workflow.cs](examples/start-workflow.cs) — Start a workflow instance with correlation and input
+* [query-workflows.cs](examples/query-workflows.cs) — Query instances with filtering and pagination
+* [resume-bookmark.curl.md](examples/resume-bookmark.curl.md) — Resume workflow via token or stimulus
+* [resilience-strategy.cs](examples/resilience-strategy.cs) — Configure resilience for activities
+* [Source File References](README-REFERENCES.md) — elsa-core source paths for grounding
 
 ## Related Documentation
 
-- [Security & Authentication Guide](../security/README.md) (DOC-020) — Authentication, tokenized URLs, security
-- [Performance & Scaling Guide](../performance/README.md) (DOC-021) — Commit strategies, observability
-- [Persistence Guide](../persistence/README.md) (DOC-022) — Database configuration
-- [Troubleshooting Guide](../troubleshooting/README.md) (DOC-017) — Diagnosing common issues
-- [Clustering Guide](../clustering/README.md) (DOC-015) — Distributed deployment
+* [Security & Authentication Guide](../security/) (DOC-020) — Authentication, tokenized URLs, security
+* [Performance & Scaling Guide](../performance/) (DOC-021) — Commit strategies, observability
+* [Persistence Guide](../persistence/) (DOC-022) — Database configuration
+* [Troubleshooting Guide](../troubleshooting/) (DOC-017) — Diagnosing common issues
+* [Clustering Guide](../clustering/) (DOC-015) — Distributed deployment
 
----
+***
 
 **Last Updated:** 2025-11-28
 
 **Acceptance Criteria (DOC-023):**
-- ✅ Covers HTTP APIs and elsa-api-client library usage
-- ✅ Documents workflow lifecycle: publish, start, suspend, resume
-- ✅ Provides actionable C# and curl examples
-- ✅ Explains bookmark creation, stimulus hashing, and resume patterns
-- ✅ References grounded in elsa-core `main` branch
-- ✅ Notes obsolete TriggerWorkflowsOptions, recommends new patterns
-- ✅ Links to DOC-020 (security), DOC-021 (performance), DOC-017 (troubleshooting)
-- ✅ Differentiates built-in tracing vs user-defined metrics
+
+* ✅ Covers HTTP APIs and elsa-api-client library usage
+* ✅ Documents workflow lifecycle: publish, start, suspend, resume
+* ✅ Provides actionable C# and curl examples
+* ✅ Explains bookmark creation, stimulus hashing, and resume patterns
+* ✅ References grounded in elsa-core `main` branch
+* ✅ Notes obsolete TriggerWorkflowsOptions, recommends new patterns
+* ✅ Links to DOC-020 (security), DOC-021 (performance), DOC-017 (troubleshooting)
+* ✅ Differentiates built-in tracing vs user-defined metrics
