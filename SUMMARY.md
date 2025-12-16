@@ -115,6 +115,7 @@
 
 * [Log Persistence](optimize/log-persistence.md)
 * [Retention](optimize/retention.md)
+* [Worker Count](optimize/workers.md)
 
 ## Hosting
 
