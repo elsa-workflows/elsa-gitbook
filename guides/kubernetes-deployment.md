@@ -3183,14 +3183,3 @@ Always refer to the [official releases](https://github.com/elsa-workflows/elsa-c
 ***
 
 **Last Updated**: 2025-11-20
-
-**Acceptance Criteria Checklist** (DOC-009):
-
-* ✅ K8s manifests/Helm charts
-* ✅ Horizontal scaling configuration
-* ✅ Distributed locking setup
-* ✅ Database integration
-* ✅ Secrets management
-* ✅ Health checks & readiness probes
-* ✅ Monitoring integration
-* ✅ Troubleshooting guide
