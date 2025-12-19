@@ -666,19 +666,5 @@ _Note: Diagrams to be added in future updates. Suggested diagrams:_
 
 ---
 
-## Acceptance Criteria (DOC-020)
-
-This guide meets the following acceptance criteria:
-
-- ✅ Actionable, grounded guidance with copy-pasteable snippets
-- ✅ Clear coverage of tokenized bookmark URLs (GenerateBookmarkTriggerUrl)
-- ✅ Identity setup in Program.cs (UseIdentity, UseDefaultAuthentication)
-- ✅ Production hardening checklist included
-- ✅ References list with exact source file paths (see [README-REFERENCES.md](README-REFERENCES.md))
-- ✅ SUMMARY.md updated with Security guide link
-- ✅ Documentation-only changes; no code changes to elsa-core
-
----
-
 **Last Updated:** 2025-11-25  
 **Document ID:** DOC-020
