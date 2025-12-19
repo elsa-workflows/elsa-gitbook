@@ -782,14 +782,3 @@ See [Performance & Scaling Guide](../performance/) (DOC-021) for observability p
 ***
 
 **Last Updated:** 2025-11-28
-
-**Acceptance Criteria (DOC-023):**
-
-* ✅ Covers HTTP APIs and elsa-api-client library usage
-* ✅ Documents workflow lifecycle: publish, start, suspend, resume
-* ✅ Provides actionable C# and curl examples
-* ✅ Explains bookmark creation, stimulus hashing, and resume patterns
-* ✅ References grounded in elsa-core `main` branch
-* ✅ Notes obsolete TriggerWorkflowsOptions, recommends new patterns
-* ✅ Links to DOC-020 (security), DOC-021 (performance), DOC-017 (troubleshooting)
-* ✅ Differentiates built-in tracing vs user-defined metrics
