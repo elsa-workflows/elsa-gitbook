@@ -701,12 +701,3 @@ var connectionString = "Host=localhost;Database=elsa;Username=elsa;Password=...;
 ***
 
 **Last Updated:** 2025-11-28
-
-**Acceptance Criteria (DOC-022):**
-
-* ✅ Grounded, actionable setup guidance for EF Core, MongoDB, Dapper with concise examples
-* ✅ Clear indexing recommendations and retention/cleanup guidance
-* ✅ References to exact elsa-core files underpinning behavior
-* ✅ Cross-links to clustering (DOC-015), troubleshooting (DOC-017), performance (DOC-021) docs
-* ✅ Documentation-only changes
-* ✅ DB-specific tuning deferred to vendor docs
