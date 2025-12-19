@@ -732,14 +732,3 @@ See [Testing & Debugging](../testing-debugging.md) for comprehensive debugging g
 ***
 
 **Last Updated:** 2024-11-25
-
-**Acceptance Criteria Checklist (DOC-018):**
-
-* ✅ Covers 7 workflow patterns with actionable, grounded guidance
-* ✅ References elsa-core files (WorkflowResumer, DefaultBookmarkScheduler, CreateBookmark, GenerateBookmarkTriggerUrl)
-* ✅ Explains correlation/resume semantics (stimulus hashing, BookmarkFilter)
-* ✅ Covers idempotency strategies
-* ✅ Explains scheduling in clustered deployments
-* ✅ Addresses security for human approvals (tokenized URLs)
-* ✅ References DOC-013, DOC-015, DOC-017
-* ✅ Includes code/JSON snippets for fan-out, fan-in, and timeout patterns
