@@ -1468,17 +1468,3 @@ For complete, deployable examples:
 ---
 
 **Last Updated:** 2025-11-24
-
-**Acceptance Criteria Checklist (DOC-015):**
-- ✅ Explains clustering concepts and common pitfalls with practical mitigation steps
-- ✅ Contains working, copy-pasteable configuration snippets for Redis and SQL-based lock options
-- ✅ Includes Quartz clustering configuration snippet
-- ✅ Provides Kubernetes deployment examples (k8s-deployment.yaml)
-- ✅ References elsa-core source files:
-  - WorkflowResumer (distributed locking)
-  - DefaultBookmarkScheduler (enqueuing scheduled bookmarks)
-  - ResumeWorkflowTask (Quartz job execution)
-  - ActivityExecutionContext.CreateBookmark (bookmark hashing)
-  - BookmarkExecutionContextExtensions.GenerateBookmarkTriggerUrl (tokenized URLs)
-- ✅ Adds SUMMARY.md entry (see next step)
-- ✅ Includes operational guidance, troubleshooting, validation checklist, and security notes
