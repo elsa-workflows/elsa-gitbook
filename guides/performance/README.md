@@ -382,12 +382,3 @@ See `examples/throughput-tuning.md` for detailed tuning examples.
 ---
 
 **Last Updated:** 2025-11-28
-
-**Acceptance Criteria (DOC-021):**
-- ✅ Uses correct `UseCommitStrategies(Action<CommitStrategiesFeature>)` API
-- ✅ Documents built-in strategies (WorkflowExecutingWorkflowStrategy, etc.)
-- ✅ Shows `WorkflowOptions.CommitStrategyName` for per-workflow selection
-- ✅ Provides custom IWorkflowCommitStrategy outline for "commit every N activities"
-- ✅ Differentiates between built-in tracing (Elsa.OpenTelemetry) and user-defined metrics
-- ✅ No references to non-existent `CommitStateInterval` or `CommitStateActivityCount` properties
-- ✅ All code samples use correct elsa-core develop/3.6.0 APIs
