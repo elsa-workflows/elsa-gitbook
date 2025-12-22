@@ -63,7 +63,6 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     dotnet add package Elsa.CSharp
     dotnet add package Elsa.JavaScript
     dotnet add package Elsa.Liquid
-    dotnet add package Elsa.Http
     dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server
     ```
 2.  **Update Program.cs**
@@ -117,6 +116,8 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     }
 
     app.UseHttpsRedirection();
+    // if the Method "UseBlazorFrameworkFiles()" is not found by the compiler, change the following entry in the ElsaStudio.csproj file to Version="3.2.1"
+    // ElsaStudio.csproj: <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.1" /> 
     app.UseBlazorFrameworkFiles();
     app.UseRouting();
     app.UseCors();
