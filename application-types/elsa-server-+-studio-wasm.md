@@ -116,9 +116,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     }
 
     app.UseHttpsRedirection();
-    // if the Method "UseBlazorFrameworkFiles()" is not found by the compiler, change the following entry in the ElsaStudio.csproj file to Version="3.2.1"
-    // ElsaStudio.csproj: <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.1" /> 
-    app.UseBlazorFrameworkFiles();
+    app.MapStaticAssets();
     app.UseRouting();
     app.UseCors();
     app.UseStaticFiles();
