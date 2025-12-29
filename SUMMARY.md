@@ -80,6 +80,7 @@
 * [Blocking Activities & Triggers](activities/blocking-and-triggers/README.md)
 * [Control Flow](activities/control-flow/README.md)
   * [Decision](activities/control-flow/decision.md)
+  * [ForEach](activities/control-flow/foreach.md)
 * [Parallel Execution](activities/parallel-execution.md)
 * [MassTransit](activities/masstransit/README.md)
   * [Tutorial](activities/masstransit/tutorial.md)
