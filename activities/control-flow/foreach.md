@@ -13,10 +13,10 @@ The **ForEach** activity iterates over a collection of items, executing a body a
 
 ## Outcomes
 
-| Name      | Description                                       |
-| --------- | ------------------------------------------------- |
-| Iterate   | Triggered after each iteration of the loop        |
-| Done      | Triggered when all iterations have been completed |
+| Name      | Description                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------ |
+| Iterate   | Triggered after each iteration of the loop. Useful for tracking progress or implementing custom aggregation logic |
+| Done      | Triggered when all iterations have been completed successfully, or immediately if the collection is empty or null  |
 
 ## Usage
 
