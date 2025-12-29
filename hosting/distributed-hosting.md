@@ -167,12 +167,20 @@ If you need to customize Quartz clustering behavior, you can access the underlyi
 ```csharp
 elsa.UseQuartz(quartz =>
 {
-   quartz.UsePostgreSql(postgresConnectionString, options =>
-   {
-      // Customize clustering behavior
-      options.ClusterCheckinInterval = TimeSpan.FromSeconds(20); // Default: 20s
-      options.ClusterCheckinMisfireThreshold = TimeSpan.FromMinutes(1); // Default: 60s
-   });
+    quartz.UsePersistentStore(store =>
+    {
+        store.UsePostgres(postgres =>
+        {
+            postgres.ConnectionString = postgresConnectionString;
+        });
+
+        store.UseClustering(clustering =>
+        {
+            // Customize clustering behavior
+            clustering.CheckinInterval = TimeSpan.FromSeconds(20); // Default: 20s
+            clustering.CheckinMisfireThreshold = TimeSpan.FromSeconds(60); // Default: 60s
+        });
+    });
 });
 ```
 
