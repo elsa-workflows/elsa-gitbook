@@ -95,24 +95,88 @@ elsa.UseMassTransit(massTransit =>
 
 ### 4. Quartz.NET Clustered Mode
 
-To ensure that scheduled jobs execute only once across the cluster, configure **Quartz.NET** with a persistent store and enable cluster mode. This is necessary if using Quartz as the scheduling provider instead of an in-memory scheduler or Hangfire.
+When deploying multiple Elsa instances in a distributed environment, scheduled jobs (timers, delays, cron triggers) must execute only once across the cluster to prevent duplicate executions. Quartz.NET clustering ensures this by using a shared database to coordinate job execution across nodes.
+
+#### When is Quartz.NET Clustering Required?
+
+Quartz.NET clustering is **required** when all of the following are true:
+
+1. **Multiple Instances**: You're running 2 or more Elsa instances (e.g., in Kubernetes, Azure App Services, or behind a load balancer)
+2. **Using Quartz Scheduler**: You've configured Elsa to use Quartz.NET as the scheduling provider via `UseScheduling(scheduling => scheduling.UseQuartzScheduler())`
+3. **Workflows with Scheduled Activities**: Your workflows use time-based activities like:
+   - **Timer** activities (delay for a specific duration)
+   - **Cron** activities (scheduled execution based on cron expressions)
+   - **Delay** activities (pause workflow execution)
+
+If you're running a single Elsa instance, or if your workflows don't use scheduled activities, Quartz.NET clustering is not necessary.
+
+#### Automatic Clustering with Convenience API
+
+Elsa provides a convenient configuration API that **automatically enables clustering** when you configure Quartz.NET with a persistent database provider. This was introduced in [elsa-extensions PR #110](https://github.com/elsa-workflows/elsa-extensions/pull/110) to simplify distributed deployments.
 
 #### Configuration Example:
 
 ```csharp
-// Set Quartz as the scheduling provider.
+// Step 1: Set Quartz as the scheduling provider
 elsa.UseScheduling(scheduling =>
 {
    scheduling.UseQuartzScheduler();
 });
 
-// Configure Quartz with a persistent store.
+// Step 2: Configure Quartz with a persistent store
+// Clustering is automatically enabled when using a database provider
 elsa.UseQuartz(quartz =>
 {
-   // This extension enables cluster mode automatically.
    quartz.UsePostgreSql(postgresConnectionString);
+   // Clustering is enabled automatically - no additional configuration needed!
 });
 ```
+
+**Supported Database Providers:**
+
+All database-backed Quartz extensions automatically enable clustering:
+
+```csharp
+// PostgreSQL
+elsa.UseQuartz(quartz => quartz.UsePostgreSql(connectionString));
+
+// SQL Server
+elsa.UseQuartz(quartz => quartz.UseSqlServer(connectionString));
+
+// MySQL
+elsa.UseQuartz(quartz => quartz.UseMySql(connectionString));
+```
+
+{% hint style="info" %}
+**How Clustering Works**
+
+When you call `UseQuartz` with a database provider:
+1. Quartz.NET creates required tables in the database (prefixed with `qrtz_`)
+2. Clustering is automatically enabled with sensible defaults
+3. Each node registers itself in the `qrtz_scheduler_state` table
+4. Nodes coordinate via database locks to ensure only one node executes each scheduled job
+5. If a node fails, other nodes automatically pick up its scheduled jobs (failover)
+
+See the [Clustering Guide](../guides/clustering/README.md) for detailed information on cluster coordination and failover behavior.
+{% endhint %}
+
+#### Advanced Configuration (Optional)
+
+If you need to customize Quartz clustering behavior, you can access the underlying Quartz configuration:
+
+```csharp
+elsa.UseQuartz(quartz =>
+{
+   quartz.UsePostgreSql(postgresConnectionString, options =>
+   {
+      // Customize clustering behavior
+      options.ClusterCheckinInterval = TimeSpan.FromSeconds(20); // Default: 20s
+      options.ClusterCheckinMisfireThreshold = TimeSpan.FromMinutes(1); // Default: 60s
+   });
+});
+```
+
+Most deployments work well with the default settings and don't require this customization.
 
 ### Conclusion
 
