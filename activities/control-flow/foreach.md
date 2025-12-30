@@ -1,6 +1,6 @@
 # ForEach
 
-The **ForEach** activity iterates over a collection of items, executing a body activity for each item in the collection. It is analogous to C#'s `foreach` statement and is useful for processing collections of data, performing batch operations, or handling multiple items in a workflow.
+The **ForEach** activity iterates over a collection of items, executing its body activity for each item in the collection. It is analogous to C#'s `foreach` statement and is useful for processing collections of data, performing batch operations, or handling multiple items in a workflow.
 
 ## Properties
 
@@ -10,13 +10,6 @@ The **ForEach** activity iterates over a collection of items, executing a body a
 | `Body`         | `IActivity`          | The activity (or activities) to execute for each item in the collection. Can be a single activity or a Sequence. |
 | `CurrentValue` | `Output<object>`     | A variable reference that receives the current item value during each iteration.                                  |
 | `Mode`         | `ForEachMode`        | Determines execution mode: `Sequential` (default) or `Parallel` for concurrent processing.                       |
-
-## Outcomes
-
-| Name      | Description                                                                                                        |
-| --------- | ------------------------------------------------------------------------------------------------------------------ |
-| Iterate   | Triggered after each iteration of the loop. Useful for tracking progress or implementing custom aggregation logic |
-| Done      | Triggered when all iterations have been completed successfully, or immediately if the collection is empty or null  |
 
 ## Usage
 
@@ -252,11 +245,6 @@ When working with ForEach in Elsa Studio's designer:
    - Set the **Mode** property to `Sequential` (default) or `Parallel`
    - Use parallel mode when items can be processed independently
 
-6. **Connect Outcomes**:
-   - The **Iterate** outcome fires after each iteration (useful for progress tracking)
-   - The **Done** outcome fires when all iterations complete
-   - Connect these to subsequent activities as needed
-
 ## Common Patterns
 
 ### Processing with Conditional Logic
@@ -394,7 +382,7 @@ builder.Root = new ForEach<Department>
 
 5. **Empty Collections**:
    - If the Items collection is empty or null, the body never executes
-   - The Done outcome triggers immediately
+   - The workflow continues to the next activity after the ForEach
    - Use validation before ForEach if empty collections are problematic
 
 6. **Accessing Collection Metadata**:
@@ -413,7 +401,7 @@ builder.Root = new ForEach<Department>
 
 **Solution**:
 ```csharp
-// ❌ Wrong: Captures the variable itself
+// ❌ Wrong: Incorrect usage without context
 Body = new WriteLine(() => $"Item: {currentItem}")
 
 // ✅ Correct: Use context to get current value
