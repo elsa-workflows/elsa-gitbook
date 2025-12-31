@@ -180,7 +180,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
 To see your application in action, execute the following command:
 
 ```bash
-dotnet run --urls https://locahost:6001
+dotnet run --urls https://localhost:6001
 ```
 
 Your application is now accessible at [https://localhost:6001](https://localhost:6001/).
