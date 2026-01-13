@@ -38,6 +38,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     dotnet add package Elsa.Studio
     dotnet add package Elsa.Studio.Core.BlazorWasm
     dotnet add package Elsa.Studio.Login.BlazorWasm
+    dotnet add package Elsa.Identity
     dotnet add package Elsa.Api.Client
     ```
 3.  **Modify Program.cs**
