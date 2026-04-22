@@ -286,7 +286,7 @@ In this scenario, we use a simple C# delegate expression to dynamically determin
 Alternatively, other installed expression provider syntaxes, such as JavaScript, can be used:
 
 ```csharp
-using Elsa.JavaScript.Models;
+using Elsa.Expressions.JavaScript.Models;
 using Elsa.Workflows;
 using Elsa.Workflows.Contracts;
 
@@ -1306,7 +1306,7 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 Here's a complete example showing activity registration in `Program.cs`:
 
 ```csharp
-using Elsa.EntityFrameworkCore.Extensions;
+using Elsa.Persistence.EFCore.Extensions;
 using Elsa.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

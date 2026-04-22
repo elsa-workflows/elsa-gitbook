@@ -240,18 +240,18 @@ Elsa Workflows v3
 
 ## Key Packages and Their Roles
 
-| Package                      | Purpose                                                     |
-| ---------------------------- | ----------------------------------------------------------- |
-| **Elsa.Workflows.Core**      | Core workflow engine, activities, and abstractions          |
-| **Elsa.Workflows.Runtime**   | Runtime services for execution, persistence, and management |
-| **Elsa**                     | Meta-package that includes commonly needed packages         |
-| **Elsa.EntityFrameworkCore** | EF Core persistence providers                               |
-| **Elsa.Http**                | HTTP activities and triggers                                |
-| **Elsa.MassTransit**         | Message bus integration                                     |
-| **Elsa.JavaScript**          | JavaScript expression evaluator                             |
-| **Elsa.CSharp**              | C# expression evaluator                                     |
-| **Elsa.Liquid**              | Liquid template expression evaluator                        |
-| **Elsa.Alterations**         | Workflow alteration and migration support                   |
+| Package                         | Purpose                                                     |
+| ------------------------------- | ----------------------------------------------------------- |
+| **Elsa.Workflows.Core**         | Core workflow engine, activities, and abstractions          |
+| **Elsa.Workflows.Runtime**      | Runtime services for execution, persistence, and management |
+| **Elsa**                        | Meta-package that includes commonly needed packages         |
+| **Elsa.Persistence.EFCore**     | EF Core persistence providers                               |
+| **Elsa.Http**                   | HTTP activities and triggers                                |
+| **Elsa.MassTransit**            | Message bus integration                                     |
+| **Elsa.Expressions.JavaScript** | JavaScript expression evaluator                             |
+| **Elsa.Expressions.CSharp**     | C# expression evaluator                                     |
+| **Elsa.Expressions.Liquid**     | Liquid template expression evaluator                        |
+| **Elsa.Alterations**            | Workflow alteration and migration support                   |
 
 ## Typical Workflow Execution Flow
 

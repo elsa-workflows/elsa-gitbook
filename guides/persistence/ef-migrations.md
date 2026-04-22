@@ -53,7 +53,7 @@ Elsa uses two separate `DbContext` classes to organize persistence concerns:
 
 ### Built-in Migrations
 
-Elsa ships with complete migrations that create and manage the database schema across versions. These migrations are embedded in the Elsa NuGet packages (`Elsa.EntityFrameworkCore.SqlServer`, `Elsa.EntityFrameworkCore.PostgreSQL`, etc.).
+Elsa ships with complete migrations that create and manage the database schema across versions. These migrations are embedded in the Elsa NuGet packages (`Elsa.Persistence.EFCore.SqlServer`, `Elsa.Persistence.EFCore.PostgreSql`, etc.).
 
 **Migration Naming Convention:**
 - Migrations follow a timestamped pattern: `YYYYMMDDHHMMSS_DescriptionOfChange`
@@ -488,7 +488,7 @@ When upgrading Elsa to a new version:
 **1. Update NuGet Packages:**
 ```bash
 dotnet add package Elsa --version 3.x.x
-dotnet add package Elsa.EntityFrameworkCore.SqlServer --version 3.x.x
+dotnet add package Elsa.Persistence.EFCore.SqlServer --version 3.x.x
 ```
 
 **2. Review Pending Migrations:**
