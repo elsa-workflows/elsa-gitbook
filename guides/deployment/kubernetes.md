@@ -307,9 +307,9 @@ spec:
 If you're building a custom Elsa Server image, configure PostgreSQL persistence in `Program.cs`:
 
 ```csharp
-using Elsa.EntityFrameworkCore.Extensions;
-using Elsa.EntityFrameworkCore.Modules.Management;
-using Elsa.EntityFrameworkCore.Modules.Runtime;
+using Elsa.Persistence.EFCore.Extensions;
+using Elsa.Persistence.EFCore.Modules.Management;
+using Elsa.Persistence.EFCore.Modules.Runtime;
 using Elsa.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -554,7 +554,7 @@ kubectl logs -l app=elsa-server --tail=100
 3. Check that the PostgreSQL package is included in your Docker image:
    ```dockerfile
    # In Dockerfile
-   RUN dotnet add package Elsa.EntityFrameworkCore.PostgreSql
+   RUN dotnet add package Elsa.Persistence.EFCore.PostgreSql
    ```
 
 ### Problem: Connection Refused or Timeout

@@ -11,7 +11,7 @@ Elsa uses the [Fluid library](https://github.com/sebastienros/fluid) to implemen
 The Liquid Expressions feature is provided by the following package:
 
 ```bash
-dotnet package add Elsa.Liquid
+dotnet package add Elsa.Expressions.Liquid
 ```
 
 You can enable the feature as follows:

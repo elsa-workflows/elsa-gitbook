@@ -114,7 +114,7 @@ This document provides exact source file references in the elsa-core and elsa-ex
 
 ### EF Core Module
 
-**Path:** `src/modules/Elsa.EntityFrameworkCore/`
+**Path:** `src/modules/Elsa.Persistence.EFCore/`
 
 **Key Files:**
 - `ElsaDbContext.cs` — Base DbContext
@@ -131,9 +131,9 @@ This document provides exact source file references in the elsa-core and elsa-ex
 
 ### Database Provider Modules
 
-- `src/modules/Elsa.EntityFrameworkCore.PostgreSQL/`
-- `src/modules/Elsa.EntityFrameworkCore.SqlServer/`
-- `src/modules/Elsa.EntityFrameworkCore.Sqlite/`
+- `src/modules/Elsa.Persistence.EFCore.PostgreSql/`
+- `src/modules/Elsa.Persistence.EFCore.SqlServer/`
+- `src/modules/Elsa.Persistence.EFCore.Sqlite/`
 
 ## MongoDB
 

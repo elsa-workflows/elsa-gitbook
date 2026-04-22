@@ -62,9 +62,9 @@ Study these built-in features from elsa-core for reference:
    - Shows complex service registration and options configuration
    - Located in: `src/modules/Elsa.WorkflowManagement/Features/WorkflowManagementFeature.cs`
 
-2. **EntityFrameworkFeature** (`Elsa.EntityFrameworkCore`)
+2. **EntityFrameworkFeature** (`Elsa.Persistence.EFCore`)
    - Demonstrates database provider configuration
-   - Located in: `src/persistence/Elsa.EntityFrameworkCore/Features/EntityFrameworkFeature.cs`
+   - Located in: `src/persistence/Elsa.Persistence.EFCore/Features/EntityFrameworkFeature.cs`
 
 ## Extension Method Patterns
 
@@ -208,7 +208,7 @@ MyWorkflows.Extensions/
   <PackageReference Include="Elsa.Http" Version="3.0.*" />
   
   <!-- Optional: For entity framework -->
-  <PackageReference Include="Elsa.EntityFrameworkCore" Version="3.0.*" />
+  <PackageReference Include="Elsa.Persistence.EFCore" Version="3.0.*" />
 </ItemGroup>
 ```
 

@@ -32,16 +32,16 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
 
     ```bash
     dotnet add package Elsa
-    dotnet add package Elsa.EntityFrameworkCore
-    dotnet add package Elsa.EntityFrameworkCore.Sqlite
+    dotnet add package Elsa.Persistence.EFCore
+    dotnet add package Elsa.Persistence.EFCore.Sqlite
     dotnet add package Elsa.Http
     dotnet add package Elsa.Identity
     dotnet add package Elsa.Scheduling
     dotnet add package Elsa.Workflows.Api
-    dotnet add package Elsa.CSharp
+    dotnet add package Elsa.Expressions.CSharp
     dotnet add package Elsa.Http
-    dotnet add package Elsa.JavaScript
-    dotnet add package Elsa.Liquid
+    dotnet add package Elsa.Expressions.JavaScript
+    dotnet add package Elsa.Expressions.Liquid
     ```
 4.  We need to add some code to make our server work. Open the `Program.cs` file in your project and replace its contents with the code provided below. This code does a lot of things like setting up database connections, enabling user authentication, and preparing the server to handle workflows.
 
@@ -49,9 +49,9 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
     **Program.cs**
 
     ```csharp
-    using Elsa.EntityFrameworkCore.Extensions;
-    using Elsa.EntityFrameworkCore.Modules.Management;
-    using Elsa.EntityFrameworkCore.Modules.Runtime;
+    using Elsa.Persistence.EFCore.Extensions;
+    using Elsa.Persistence.EFCore.Modules.Management;
+    using Elsa.Persistence.EFCore.Modules.Runtime;
     using Elsa.Extensions;
 
     var builder = WebApplication.CreateBuilder(args);

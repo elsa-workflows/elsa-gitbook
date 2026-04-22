@@ -32,7 +32,7 @@ By default, Elsa uses SQLite for development scenarios. For production deploymen
 
 ```bash
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Elsa.EntityFrameworkCore.SqlServer
+dotnet add package Elsa.Persistence.EFCore.SqlServer
 ```
 
 2. **Replace `UseSqlite()` with `UseSqlServer()`** in your `Program.cs`:
@@ -68,7 +68,7 @@ For more detailed information about persistence strategies, connection pooling, 
 
 ```bash
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Elsa.EntityFrameworkCore.SqlServer
+dotnet add package Elsa.Persistence.EFCore.SqlServer
 ```
 
 ### 2. Configure Services
@@ -104,7 +104,7 @@ Add to `appsettings.json`:
 
 ```bash
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
-dotnet add package Elsa.EntityFrameworkCore.PostgreSQL
+dotnet add package Elsa.Persistence.EFCore.PostgreSql
 ```
 
 ### 2. Configure Services

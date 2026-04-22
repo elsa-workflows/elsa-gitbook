@@ -13,7 +13,7 @@ When creating workflows, you'll often need to write dynamic expressions. This pa
 The C# Expressions feature is provided by the following package:
 
 ```bash
-dotnet package add Elsa.CSharp
+dotnet package add Elsa.Expressions.CSharp
 ```
 
 You can enable the feature as follows:

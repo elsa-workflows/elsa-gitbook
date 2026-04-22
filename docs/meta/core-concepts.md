@@ -211,7 +211,7 @@ Based on the namespace structure, Elsa Core is organized into several layers:
 - Import/export functionality
 - API endpoints
 
-### Persistence (`Elsa.EntityFrameworkCore`, `Elsa.MongoDb`, etc.)
+### Persistence (`Elsa.Persistence.EFCore`, `Elsa.MongoDb`, etc.)
 - Storage abstractions and implementations
 - Entity Framework Core providers
 - MongoDB providers

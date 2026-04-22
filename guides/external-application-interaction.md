@@ -433,8 +433,8 @@ dotnet add package Microsoft.EntityFrameworkCore
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite.Design
-dotnet add package Elsa.EntityFrameworkCore
-dotnet add package Elsa.EntityFrameworkCore.Sqlite
+dotnet add package Elsa.Persistence.EFCore
+dotnet add package Elsa.Persistence.EFCore.Sqlite
 ```
 {% endstep %}
 

@@ -108,7 +108,7 @@ Refer to the [Pythonnet GitHub project](https://github.com/pythonnet/pythonnet) 
 The Python Expressions feature is provided by the following package:
 
 ```bash
-dotnet package add Elsa.Python
+dotnet package add Elsa.Expressions.Python
 ```
 
 You can enable the feature as follows:

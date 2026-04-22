@@ -29,13 +29,13 @@ Install the required packages:
 
 ```bash
 dotnet add package Elsa
-dotnet add package Elsa.EntityFrameworkCore.SqlServer
+dotnet add package Elsa.Persistence.EFCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
 **Package Descriptions:**
 - `Elsa` - Core Elsa Workflows library
-- `Elsa.EntityFrameworkCore.SqlServer` - SQL Server persistence provider for Elsa
+- `Elsa.Persistence.EFCore.SqlServer` - SQL Server persistence provider for Elsa
 - `Microsoft.EntityFrameworkCore.SqlServer` - Entity Framework Core SQL Server driver
 
 ## Configuration
@@ -319,11 +319,11 @@ To migrate an existing Elsa installation from SQLite to SQL Server:
 **1. Update packages:**
 ```bash
 # Remove SQLite packages
-dotnet remove package Elsa.EntityFrameworkCore.Sqlite
+dotnet remove package Elsa.Persistence.EFCore.Sqlite
 dotnet remove package Microsoft.EntityFrameworkCore.Sqlite
 
 # Add SQL Server packages
-dotnet add package Elsa.EntityFrameworkCore.SqlServer
+dotnet add package Elsa.Persistence.EFCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 ```
 

@@ -497,7 +497,7 @@ When Elsa releases a new version with schema changes:
 
 ```bash
 dotnet add package Elsa --version 3.x.x
-dotnet add package Elsa.EntityFrameworkCore.PostgreSQL --version 3.x.x
+dotnet add package Elsa.Persistence.EFCore.PostgreSql --version 3.x.x
 ```
 
 **2. Generate Migration:**

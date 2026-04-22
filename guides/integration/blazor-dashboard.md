@@ -100,7 +100,7 @@ dotnet add package Microsoft.AspNetCore.Components.Web
 dotnet add package Elsa
 dotnet add package Elsa.Workflows.Runtime
 dotnet add package Elsa.Workflows.Api
-dotnet add package Elsa.EntityFrameworkCore.PostgreSql  # or your chosen provider
+dotnet add package Elsa.Persistence.EFCore.PostgreSql  # or your chosen provider
 
 # Add Elsa Studio packages
 dotnet add package Elsa.Studio

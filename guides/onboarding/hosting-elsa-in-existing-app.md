@@ -46,19 +46,19 @@ dotnet add package Elsa.Workflows.Api
 For PostgreSQL:
 
 ```bash
-dotnet add package Elsa.EntityFrameworkCore.PostgreSql
+dotnet add package Elsa.Persistence.EFCore.PostgreSql
 ```
 
 For SQL Server:
 
 ```bash
-dotnet add package Elsa.EntityFrameworkCore.SqlServer
+dotnet add package Elsa.Persistence.EFCore.SqlServer
 ```
 
 For SQLite (development only):
 
 ```bash
-dotnet add package Elsa.EntityFrameworkCore.Sqlite
+dotnet add package Elsa.Persistence.EFCore.Sqlite
 ```
 
 ### Optional: HTTP Activities
@@ -140,9 +140,9 @@ app.Run();
 ### With Persistence (PostgreSQL Example)
 
 ```csharp
-using Elsa.EntityFrameworkCore.Extensions;
-using Elsa.EntityFrameworkCore.Modules.Management;
-using Elsa.EntityFrameworkCore.Modules.Runtime;
+using Elsa.Persistence.EFCore.Extensions;
+using Elsa.Persistence.EFCore.Modules.Management;
+using Elsa.Persistence.EFCore.Modules.Runtime;
 using Elsa.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -349,7 +349,7 @@ Align your EF Core versions with Elsa's requirements:
   
   <!-- Elsa packages (replace x.y.z with the latest version from NuGet) -->
   <PackageReference Include="Elsa" Version="x.y.z" />
-  <PackageReference Include="Elsa.EntityFrameworkCore.PostgreSql" Version="x.y.z" />
+  <PackageReference Include="Elsa.Persistence.EFCore.PostgreSql" Version="x.y.z" />
 </ItemGroup>
 ```
 

@@ -18,21 +18,21 @@ This document provides a minimal, copy-pasteable example for configuring Elsa Wo
 **For PostgreSQL:**
 ```bash
 dotnet add package Elsa
-dotnet add package Elsa.EntityFrameworkCore.PostgreSQL
+dotnet add package Elsa.Persistence.EFCore.PostgreSql
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 ```
 
 **For SQL Server:**
 ```bash
 dotnet add package Elsa
-dotnet add package Elsa.EntityFrameworkCore.SqlServer
+dotnet add package Elsa.Persistence.EFCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
 **For SQLite:**
 ```bash
 dotnet add package Elsa
-dotnet add package Elsa.EntityFrameworkCore.Sqlite
+dotnet add package Elsa.Persistence.EFCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
