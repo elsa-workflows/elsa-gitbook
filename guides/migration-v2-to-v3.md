@@ -109,7 +109,7 @@ Use this checklist to track your migration progress:
 
 **Key Changes:**
 - Consolidated packages: The `Elsa` meta-package includes `Elsa.Api.Common`, `Elsa.Mediator`, `Elsa.Workflows.Core`, `Elsa.Workflows.Management`, and `Elsa.Workflows.Runtime`
-- Persistence packages renamed: `Elsa.Persistence.*` → `Elsa.Persistence.EFCore.*`
+- Persistence packages renamed: `Elsa.Persistence.EntityFramework.*` → `Elsa.Persistence.EFCore.*`
 - .NET 8+ required (no longer supports .NET Standard 2.0)
 
 ### Namespace Changes
@@ -1185,8 +1185,8 @@ protected override void Execute(ActivityExecutionContext context)
 **Solution:** Ensure all Elsa packages are V3:
 ```xml
 <!-- All packages should be version 3.x -->
-<PackageReference Include="Elsa" Version="3.5.1" />
-<PackageReference Include="Elsa.Persistence.EFCore.SqlServer" Version="3.5.1" />
+<PackageReference Include="Elsa" Version="3.x.x" />
+<PackageReference Include="Elsa.Persistence.EFCore.SqlServer" Version="3.x.x" />
 ```
 
 ### 10. Trigger Activity Implementation
