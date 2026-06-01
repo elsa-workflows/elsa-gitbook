@@ -32,18 +32,30 @@ Use Elsa's built-in identity system for authentication.
 
 ### Using OIDC (OpenID Connect)
 
-* **Description**: Integrate with an OIDC provider for authentication.
-*   **Configuration Steps**:
+OIDC integration has two parts:
 
-    * Register your application with the OIDC provider.
-    * Obtain client ID and secret.
-    * Update API configuration with OIDC provider details.
-    * Ensure redirect URIs are correctly set up.
+* Elsa Server must validate the access tokens sent to its API endpoints.
+* Elsa Studio must sign users in and attach an access token to calls to the Elsa Server API.
 
-    #### Conclusion
+For Elsa Studio 3.7, configure the `Elsa.Studio.Authentication.OpenIdConnect` modules with `Authentication:Provider` set to `OpenIdConnect`:
 
-    Choose the appropriate authentication mode based on your security requirements and follow the above steps to configure it.
-* Install and configure `Elsa.Identity` package.
-* Update API configuration to enable `Elsa.Identity` mode.
-* Set up user roles and permissions.
-* Set authentication mode to `None` in the configuration file.
+```json
+{
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://your-identity-provider.com",
+      "ClientId": "elsa-studio",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa_api"]
+    }
+  }
+}
+```
+
+Use a `ClientSecret` only for confidential clients such as a Blazor Server Studio host. Do not use a client secret for WebAssembly or other browser-hosted public clients; use authorization code flow with PKCE instead.
+
+See the [Authentication & Authorization Guide](../guides/authentication.md#studio-authentication-configuration) for the full Studio OIDC setup.

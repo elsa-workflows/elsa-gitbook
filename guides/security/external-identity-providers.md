@@ -425,61 +425,27 @@ builder.Services
 
 When using an external IdP, configure Elsa Studio to authenticate users and forward tokens to Elsa Server.
 
-**Studio Program.cs (Conceptual):**
+**Studio configuration:**
 
-```csharp
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-
-// Configure authentication (same IdP as Server)
-builder.Services
-    .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(options =>
-    {
-        options.Authority = builder.Configuration["OIDC:Authority"];
-        options.ClientId = builder.Configuration["OIDC:ClientId"];
-        options.ClientSecret = builder.Configuration["OIDC:ClientSecret"];
-        options.ResponseType = "code";
-        options.SaveTokens = true;
-    });
-
-// Configure Elsa Studio
-builder.Services.AddElsaStudio(studio =>
+```json
 {
-    studio.ConfigureHttpClient(options =>
-    {
-        options.BaseAddress = new Uri("https://elsa-server.example.com");
-    });
-    
-    // Forward authentication token to Elsa Server
-    studio.ConfigureHttpClient((sp, client) =>
-    {
-        var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-        var accessToken = httpContextAccessor.HttpContext?
-            .GetTokenAsync("access_token")
-            .GetAwaiter()
-            .GetResult();
-        
-        if (!string.IsNullOrEmpty(accessToken))
-        {
-            client.DefaultRequestHeaders.Authorization = 
-                new AuthenticationHeaderValue("Bearer", accessToken);
-        }
-    });
-});
-
-var app = builder.Build();
-
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapBlazorHub()
-    .RequireAuthorization();  // Require authentication for Studio
-app.MapFallbackToPage("/_Host");
-
-app.Run();
+  "Backend": {
+    "Url": "https://elsa-server.example.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://your-identity-provider.com",
+      "ClientId": "elsa-studio",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa_api"],
+      "SaveTokens": true
+    }
+  }
+}
 ```
+
+For Blazor Server Studio hosts, `ClientSecret` can be added when the OIDC provider requires a confidential client. For WebAssembly Studio hosts, omit `ClientSecret` and register the client as a public SPA using authorization code flow with PKCE.
 
 ## REST API Integration
 

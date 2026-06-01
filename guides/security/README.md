@@ -451,20 +451,18 @@ spec:
 **Studio Authentication:**
 - Configure Studio to use the same OIDC provider as Elsa Server
 - Example Studio configuration:
-  ```csharp
-  builder.Services.AddElsaStudio(studio =>
+  ```json
   {
-      studio.UseIdentity(identity =>
-      {
-          identity.UseOidcProvider(oidc =>
-          {
-              oidc.Authority = "https://your-idp.com";
-              oidc.ClientId = "elsa-studio";
-              oidc.ResponseType = "code";
-              oidc.Scope = "openid profile elsa_api";
-          });
-      });
-  });
+    "Authentication": {
+      "Provider": "OpenIdConnect",
+      "OpenIdConnect": {
+        "Authority": "https://your-idp.com",
+        "ClientId": "elsa-studio",
+        "AuthenticationScopes": ["openid", "profile", "offline_access"],
+        "BackendApiScopes": ["elsa_api"]
+      }
+    }
+  }
   ```
 
 **Authorization:**

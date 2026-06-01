@@ -192,7 +192,7 @@ OpenID Connect (OIDC) allows you to integrate with external identity providers l
 ### General OIDC Setup
 
 1. Register your application with the OIDC provider
-2. Obtain client ID and client secret
+2. Obtain a client ID, and a client secret only for confidential clients such as a server-side host
 3. Configure redirect URIs
 4. Install required NuGet packages
 5. Configure authentication middleware
@@ -215,7 +215,7 @@ Azure Active Directory (Azure AD / Microsoft Entra ID) is a popular choice for e
 5. Click **Register**
 6. Note the **Application (client) ID** and **Directory (tenant) ID**
 
-#### Step 2: Create Client Secret
+#### Step 2: Create Client Secret (Confidential Clients Only)
 
 1. In your app registration, go to **Certificates & secrets**
 2. Click **New client secret**
@@ -293,25 +293,44 @@ app.Run();
 
 #### Step 7: Configure Studio for Azure AD
 
-In your Elsa Studio `Program.cs`:
+Elsa Studio 3.7 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. For Blazor Server Studio hosts, configure `Authentication:Provider` and `Authentication:OpenIdConnect`:
 
-```csharp
-builder.Services.AddElsaStudio(studio =>
+```json
 {
-    studio.ConfigureBackend(backend =>
-    {
-        backend.Url = new Uri("https://your-elsa-server.com");
-        backend.UseAuthentication(() => new OpenIdConnectAuthenticationOptions
-        {
-            Authority = "https://login.microsoftonline.com/your-tenant-id",
-            ClientId = "your-studio-client-id",
-            RedirectUri = "https://your-studio.com/authentication/login-callback",
-            PostLogoutRedirectUri = "https://your-studio.com/",
-            ResponseType = "code",
-            Scope = ["openid", "profile", "email"]
-        });
-    });
-});
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://login.microsoftonline.com/your-tenant-id/v2.0",
+      "ClientId": "your-studio-client-id",
+      "ClientSecret": "your-client-secret",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["api://your-api-app-id/elsa-server-api"],
+      "SaveTokens": true
+    }
+  }
+}
+```
+
+`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. For Studio WebAssembly, register a SPA/public client and omit the client secret:
+
+```json
+{
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://login.microsoftonline.com/your-tenant-id/v2.0",
+      "ClientId": "your-studio-wasm-client-id",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["api://your-api-app-id/elsa-server-api"]
+    }
+  }
+}
 ```
 
 ### Auth0 Integration
@@ -1036,151 +1055,100 @@ This configuration accepts either JWT Bearer tokens or API keys.
 
 ## Studio Authentication Configuration
 
-Elsa Studio needs to be configured to authenticate with the Elsa Server API.
+Elsa Studio needs to authenticate the user and send an access token to the Elsa Server API. In Elsa Studio 3.7, this is handled by the Studio authentication modules and the HTTP message handler configured for the backend client.
 
-### Studio with JWT Bearer Tokens
+### Studio with OpenID Connect
 
-When using JWT-based authentication (OIDC, Elsa.Identity):
+Set the Studio authentication provider to `OpenIdConnect` and configure the `Authentication:OpenIdConnect` section.
 
-```csharp
-using Elsa.Studio.Extensions;
+For a Blazor Server Studio host:
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-
-builder.Services.AddElsaStudio(studio =>
+```json
 {
-    studio.ConfigureBackend(backend =>
-    {
-        backend.Url = new Uri(builder.Configuration["Backend:Url"]!);
-        
-        // Configure JWT authentication
-        backend.UseAuthentication(() => new JwtBearerAuthenticationOptions
-        {
-            TokenEndpoint = new Uri("https://your-elsa-server.com/identity/login"),
-            Username = "admin@localhost",
-            Password = "Admin123!"
-        });
-    });
-});
-
-var app = builder.Build();
-
-app.UseStaticFiles();
-app.UseRouting();
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
-
-app.Run();
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://your-identity-provider.com",
+      "ClientId": "elsa-studio",
+      "ClientSecret": "optional-client-secret",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa_api"],
+      "SaveTokens": true
+    }
+  }
+}
 ```
 
-### Studio with OIDC
+For a Blazor WebAssembly Studio host:
 
-When using OpenID Connect:
+```json
+{
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://your-identity-provider.com",
+      "ClientId": "elsa-studio-wasm",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa_api"]
+    }
+  }
+}
+```
+
+Use `ClientSecret` only for confidential clients that can protect the secret, such as Blazor Server. Do not configure a client secret for WebAssembly or any other browser-hosted public client.
+
+The corresponding Program.cs setup uses `AddOpenIdConnectAuth` and `OidcAuthenticatingApiHttpMessageHandler`:
 
 ```csharp
-builder.Services.AddElsaStudio(studio =>
+using Elsa.Studio.Authentication.OpenIdConnect.BlazorServer.Extensions; // Or .BlazorWasm.Extensions for WASM.
+using Elsa.Studio.Authentication.OpenIdConnect.HttpMessageHandlers;
+using Elsa.Studio.Extensions;
+using Elsa.Studio.Models;
+
+builder.Services.AddOpenIdConnectAuth(options =>
 {
-    studio.ConfigureBackend(backend =>
-    {
-        backend.Url = new Uri(builder.Configuration["Backend:Url"]!);
-        
-        backend.UseAuthentication(() => new OpenIdConnectAuthenticationOptions
-        {
-            Authority = "https://your-identity-provider.com",
-            ClientId = "elsa-studio-client",
-            RedirectUri = "https://your-studio.com/authentication/login-callback",
-            PostLogoutRedirectUri = "https://your-studio.com/",
-            ResponseType = "code",
-            Scope = ["openid", "profile", "email"]
-        });
-    });
+    builder.Configuration.GetSection("Authentication:OpenIdConnect").Bind(options);
 });
+
+var backendApiConfig = new BackendApiConfig
+{
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options),
+    ConfigureHttpClientBuilder = options => options.AuthenticationHandler = typeof(OidcAuthenticatingApiHttpMessageHandler)
+};
+
+builder.Services.AddRemoteBackend(backendApiConfig);
+```
+
+### Authentication Scopes and Backend API Scopes
+
+`AuthenticationScopes` are requested during sign-in. They usually include identity scopes such as `openid`, `profile`, `email`, and optionally `offline_access`.
+
+`BackendApiScopes` are requested for access tokens sent to the Elsa Server API. Use this when the Elsa Server API has its own scope or audience, such as `api://your-api-app-id/elsa-server-api`.
+
+### Studio with Elsa.Identity
+
+When using Elsa's built-in identity system, use the Elsa Identity Studio authentication modules. The default Studio hosts support this through:
+
+```json
+{
+  "Authentication": {
+    "Provider": "ElsaIdentity"
+  },
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  }
+}
 ```
 
 ### Studio with API Keys
 
-When using API key authentication:
-
-```csharp
-builder.Services.AddElsaStudio(studio =>
-{
-    studio.ConfigureBackend(backend =>
-    {
-        backend.Url = new Uri(builder.Configuration["Backend:Url"]!);
-        
-        // Configure API key
-        backend.UseAuthentication(() => new ApiKeyAuthenticationOptions
-        {
-            HeaderName = "X-API-Key",
-            ApiKey = builder.Configuration["ApiKey"]
-        });
-    });
-});
-```
-
-Add to `appsettings.json`:
-
-```json
-{
-  "Backend": {
-    "Url": "https://your-elsa-server.com"
-  },
-  "ApiKey": "your-api-key-here"
-}
-```
-
-### Studio WASM Configuration
-
-For Elsa Studio WASM (WebAssembly), configure in the `Program.cs` of the WASM project:
-
-```csharp
-using Elsa.Studio.Extensions;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
-
-builder.Services.AddElsaStudio(studio =>
-{
-    studio.ConfigureBackend(backend =>
-    {
-        backend.Url = new Uri(builder.Configuration["Backend:Url"]!);
-        
-        backend.UseAuthentication(() => new OpenIdConnectAuthenticationOptions
-        {
-            Authority = builder.Configuration["Oidc:Authority"],
-            ClientId = builder.Configuration["Oidc:ClientId"],
-            RedirectUri = builder.Configuration["Oidc:RedirectUri"],
-            PostLogoutRedirectUri = builder.Configuration["Oidc:PostLogoutRedirectUri"],
-            ResponseType = "code",
-            Scope = ["openid", "profile", "email"]
-        });
-    });
-});
-
-await builder.Build().RunAsync();
-```
-
-With `wwwroot/appsettings.json`:
-
-```json
-{
-  "Backend": {
-    "Url": "https://your-elsa-server.com"
-  },
-  "Oidc": {
-    "Authority": "https://your-identity-provider.com",
-    "ClientId": "elsa-studio-wasm",
-    "RedirectUri": "https://your-studio.com/authentication/login-callback",
-    "PostLogoutRedirectUri": "https://your-studio.com/"
-  }
-}
-```
+API keys are appropriate for trusted service-to-service access. For user-facing Studio deployments, prefer OIDC or Elsa.Identity so Studio can represent the signed-in user. If you need API key behavior, implement it as a backend HTTP message handler and configure it through `BackendApiConfig.ConfigureHttpClientBuilder`.
 
 ## Troubleshooting
 
@@ -1309,23 +1277,20 @@ app.UseWorkflowsApi();
    };
    ```
 
-2. **Implement token refresh**:
-   ```csharp
-   builder.Services.AddElsaStudio(studio =>
+2. **Enable refresh tokens for OIDC Studio hosts**:
+   ```json
    {
-       studio.ConfigureBackend(backend =>
-       {
-           backend.UseAuthentication(() => new JwtBearerAuthenticationOptions
-           {
-               TokenEndpoint = new Uri("https://your-server.com/identity/login"),
-               RefreshTokenEndpoint = new Uri("https://your-server.com/identity/refresh"),
-               Username = "admin@localhost",
-               Password = "Admin123!",
-               AutoRefreshToken = true
-           });
-       });
-   });
+     "Authentication": {
+       "Provider": "OpenIdConnect",
+       "OpenIdConnect": {
+         "AuthenticationScopes": ["openid", "profile", "offline_access"],
+         "SaveTokens": true
+       }
+     }
+   }
    ```
+
+   For Blazor Server Studio hosts, saved tokens are refreshed by the server-side OIDC cookie events when a refresh token is available. For WebAssembly Studio hosts, Microsoft's Blazor WebAssembly authentication stack handles token renewal through `IAccessTokenProvider`.
 
 ### HTTPS/SSL Certificate Issues
 
