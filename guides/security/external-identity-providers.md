@@ -425,41 +425,29 @@ builder.Services
 
 When using an external IdP, configure Elsa Studio to authenticate users and forward tokens to Elsa Server.
 
-**Studio Program.cs (Conceptual):**
+**Studio configuration:**
 
-```csharp
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-
-// Configure authentication (same IdP as Server)
-builder.Services
-    .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(options =>
-    {
-        options.Authority = builder.Configuration["OIDC:Authority"];
-        options.ClientId = builder.Configuration["OIDC:ClientId"];
-        options.ClientSecret = builder.Configuration["OIDC:ClientSecret"];
-        options.ResponseType = "code";
-        options.SaveTokens = true;
-    });
-
-// Configure Elsa Studio using the 3.7.0 Blazor host services.
-// See ../studio/integration/README.md for the full AddCore/AddShell/
-// AddRemoteBackend/module registration pattern. Set Backend:Url to the
-// Elsa Server API and Authentication:Provider to OpenIdConnect.
-
-var app = builder.Build();
-
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapBlazorHub()
-    .RequireAuthorization();  // Require authentication for Studio
-app.MapFallbackToPage("/_Host");
-
-app.Run();
+```json
+{
+  "Backend": {
+    "Url": "https://elsa-server.example.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://your-identity-provider.com",
+      "ClientId": "elsa-studio",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa_api"],
+      "SaveTokens": true
+    }
+  }
+}
 ```
+
+Use the Blazor host pattern from [Studio Designer Integration](../studio/integration/README.md) and register the `Elsa.Studio.Authentication.OpenIdConnect` module so Studio can authenticate users and attach access tokens to backend API calls.
+
+For Blazor Server Studio hosts, `ClientSecret` can be added when the OIDC provider requires a confidential client. For WebAssembly Studio hosts, omit `ClientSecret` and register the client as a public SPA using authorization code flow with PKCE.
 
 ## REST API Integration
 

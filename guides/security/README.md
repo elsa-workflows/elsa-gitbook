@@ -481,14 +481,8 @@ spec:
       "OpenIdConnect": {
         "Authority": "https://your-idp.com",
         "ClientId": "elsa-studio",
-        "AuthenticationScopes": [
-          "openid",
-          "profile",
-          "elsa_api"
-        ],
-        "BackendApiScopes": [
-          "elsa_api"
-        ]
+        "AuthenticationScopes": ["openid", "profile", "offline_access"],
+        "BackendApiScopes": ["elsa_api"]
       }
     }
   }

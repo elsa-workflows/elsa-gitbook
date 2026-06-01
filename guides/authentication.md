@@ -192,7 +192,7 @@ OpenID Connect (OIDC) allows you to integrate with external identity providers l
 ### General OIDC Setup
 
 1. Register your application with the OIDC provider
-2. Obtain client ID and client secret
+2. Obtain a client ID, and a client secret only for confidential clients such as a server-side host
 3. Configure redirect URIs
 4. Install required NuGet packages
 5. Configure authentication middleware
@@ -215,7 +215,7 @@ Azure Active Directory (Azure AD / Microsoft Entra ID) is a popular choice for e
 5. Click **Register**
 6. Note the **Application (client) ID** and **Directory (tenant) ID**
 
-#### Step 2: Create Client Secret
+#### Step 2: Create Client Secret (Confidential Clients Only)
 
 1. In your app registration, go to **Certificates & secrets**
 2. Click **New client secret**
@@ -293,7 +293,9 @@ app.Run();
 
 #### Step 7: Configure Studio for Azure AD
 
-Studio 3.7.0 reads backend and client authentication settings from configuration. Use the Blazor host pattern from [Studio Designer Integration](studio/integration/README.md) and add:
+Elsa Studio 3.7 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. Use the Blazor host pattern from [Studio Designer Integration](studio/integration/README.md), then configure `Backend:Url`, `Authentication:Provider`, and `Authentication:OpenIdConnect`.
+
+For Blazor Server Studio hosts:
 
 ```json
 {
@@ -305,14 +307,29 @@ Studio 3.7.0 reads backend and client authentication settings from configuration
     "OpenIdConnect": {
       "Authority": "https://login.microsoftonline.com/your-tenant-id/v2.0",
       "ClientId": "your-studio-client-id",
-      "AuthenticationScopes": [
-        "openid",
-        "profile",
-        "email"
-      ],
-      "BackendApiScopes": [
-        "api://your-elsa-api-client-id/elsa-server-api"
-      ]
+      "ClientSecret": "your-client-secret",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["api://your-api-app-id/elsa-server-api"],
+      "SaveTokens": true
+    }
+  }
+}
+```
+
+`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. For Studio WebAssembly, register a SPA/public client and omit the client secret:
+
+```json
+{
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://login.microsoftonline.com/your-tenant-id/v2.0",
+      "ClientId": "your-studio-wasm-client-id",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["api://your-api-app-id/elsa-server-api"]
     }
   }
 }
@@ -1040,26 +1057,13 @@ This configuration accepts either JWT Bearer tokens or API keys.
 
 ## Studio Authentication Configuration
 
-Elsa Studio needs to be configured to authenticate with the Elsa Server API.
+Elsa Studio needs to authenticate the user and send an access token to the Elsa Server API. In Elsa Studio 3.7, this is handled by the Studio authentication modules and the HTTP message handler configured for the backend client.
 
-### Studio with JWT Bearer Tokens
+### Studio with OpenID Connect
 
-When using JWT-based authentication (OIDC, Elsa.Identity):
+Set the Studio authentication provider to `OpenIdConnect` and configure the `Authentication:OpenIdConnect` section.
 
-```json
-{
-  "Backend": {
-    "Url": "https://your-elsa-server.com/elsa/api"
-  },
-  "Authentication": {
-    "Provider": "ElsaIdentity"
-  }
-}
-```
-
-### Studio with OIDC
-
-When using OpenID Connect:
+For a Blazor Server Studio host:
 
 ```json
 {
@@ -1070,44 +1074,17 @@ When using OpenID Connect:
     "Provider": "OpenIdConnect",
     "OpenIdConnect": {
       "Authority": "https://your-identity-provider.com",
-      "ClientId": "elsa-studio-client",
-      "AuthenticationScopes": [
-        "openid",
-        "profile",
-        "email"
-      ],
-      "BackendApiScopes": [
-        "elsa-api"
-      ]
+      "ClientId": "elsa-studio",
+      "ClientSecret": "optional-client-secret",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa_api"],
+      "SaveTokens": true
     }
   }
 }
 ```
 
-### Studio with API Keys
-
-When using API key authentication:
-
-Studio 3.7.0 does not expose a client-side API-key authentication registration. For browser-hosted Studio, prefer Elsa Identity or OIDC. Use API keys for server-to-server clients calling the Elsa API directly.
-
-Add to `appsettings.json`:
-
-```json
-{
-  "Backend": {
-    "Url": "https://your-elsa-server.com/elsa/api"
-  },
-  "Authentication": {
-    "Provider": "ElsaIdentity"
-  }
-}
-```
-
-### Studio WASM Configuration
-
-For Elsa Studio WASM (WebAssembly), use the Studio 3.7.0 host setup from [Studio Designer Integration](studio/integration/README.md) and provide client settings through configuration.
-
-With `wwwroot/appsettings.json`:
+For a Blazor WebAssembly Studio host:
 
 ```json
 {
@@ -1119,18 +1096,61 @@ With `wwwroot/appsettings.json`:
     "OpenIdConnect": {
       "Authority": "https://your-identity-provider.com",
       "ClientId": "elsa-studio-wasm",
-      "AuthenticationScopes": [
-        "openid",
-        "profile",
-        "email"
-      ],
-      "BackendApiScopes": [
-        "elsa-api"
-      ]
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa_api"]
     }
   }
 }
 ```
+
+Use `ClientSecret` only for confidential clients that can protect the secret, such as Blazor Server. Do not configure a client secret for WebAssembly or any other browser-hosted public client.
+
+The corresponding Program.cs setup uses `AddOpenIdConnectAuth` and `OidcAuthenticatingApiHttpMessageHandler`:
+
+```csharp
+using Elsa.Studio.Authentication.OpenIdConnect.BlazorServer.Extensions; // Or .BlazorWasm.Extensions for WASM.
+using Elsa.Studio.Authentication.OpenIdConnect.HttpMessageHandlers;
+using Elsa.Studio.Extensions;
+using Elsa.Studio.Models;
+
+builder.Services.AddOpenIdConnectAuth(options =>
+{
+    builder.Configuration.GetSection("Authentication:OpenIdConnect").Bind(options);
+});
+
+var backendApiConfig = new BackendApiConfig
+{
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options),
+    ConfigureHttpClientBuilder = options => options.AuthenticationHandler = typeof(OidcAuthenticatingApiHttpMessageHandler)
+};
+
+builder.Services.AddRemoteBackend(backendApiConfig);
+```
+
+### Authentication Scopes and Backend API Scopes
+
+`AuthenticationScopes` are requested during sign-in. They usually include identity scopes such as `openid`, `profile`, `email`, and optionally `offline_access`.
+
+`BackendApiScopes` are requested for access tokens sent to the Elsa Server API. Use this when the Elsa Server API has its own scope or audience, such as `api://your-api-app-id/elsa-server-api`.
+
+### Studio with Elsa.Identity
+
+When using Elsa's built-in identity system, use the Elsa Identity Studio authentication modules. The default Studio hosts support this through:
+
+```json
+{
+  "Authentication": {
+    "Provider": "ElsaIdentity"
+  },
+  "Backend": {
+    "Url": "https://your-elsa-server.com/elsa/api"
+  }
+}
+```
+
+### Studio with API Keys
+
+API keys are appropriate for trusted service-to-service access. For user-facing Studio deployments, prefer OIDC or Elsa.Identity so Studio can represent the signed-in user. If you need API key behavior, implement it as a backend HTTP message handler and configure it through `BackendApiConfig.ConfigureHttpClientBuilder`.
 
 ## Troubleshooting
 
@@ -1259,8 +1279,20 @@ app.UseWorkflowsApi();
    };
    ```
 
-2. **Implement token refresh**:
-   Configure Studio with `Authentication:Provider = ElsaIdentity` or `Authentication:Provider = OpenIdConnect` and verify the selected provider issues refresh tokens. The Studio 3.7.0 host wiring is covered in [Studio Designer Integration](studio/integration/README.md).
+2. **Enable refresh tokens for OIDC Studio hosts**:
+   ```json
+   {
+     "Authentication": {
+       "Provider": "OpenIdConnect",
+       "OpenIdConnect": {
+         "AuthenticationScopes": ["openid", "profile", "offline_access"],
+         "SaveTokens": true
+       }
+     }
+   }
+   ```
+
+   For Blazor Server Studio hosts, saved tokens are refreshed by the server-side OIDC cookie events when a refresh token is available. For WebAssembly Studio hosts, Microsoft's Blazor WebAssembly authentication stack handles token renewal through `IAccessTokenProvider`.
 
 ### HTTPS/SSL Certificate Issues
 
