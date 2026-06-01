@@ -1,6 +1,6 @@
 ---
 description: >-
-  Minimal example to enable Dapper persistence for Elsa Workflows, including connection factory setup and schema responsibility notes.
+  Minimal example to enable Dapper persistence for Elsa Workflows, including connection provider setup and migrations.
 ---
 
 # Dapper Setup Example
@@ -12,21 +12,21 @@ This document provides a minimal, copy-pasteable example for configuring Elsa Wo
 - .NET 8.0 or later
 - Database server (PostgreSQL or SQL Server)
 - Elsa v3.x packages
-- Schema created manually (Dapper does not manage migrations)
+- Elsa Dapper migrations enabled, or schema managed externally
 
 ## NuGet Packages
 
 **For PostgreSQL:**
 ```bash
 dotnet add package Elsa
-dotnet add package Elsa.Dapper
+dotnet add package Elsa.Persistence.Dapper
 dotnet add package Npgsql
 ```
 
 **For SQL Server:**
 ```bash
 dotnet add package Elsa
-dotnet add package Elsa.Dapper
+dotnet add package Elsa.Persistence.Dapper
 dotnet add package Microsoft.Data.SqlClient
 ```
 
@@ -39,7 +39,6 @@ Dapper is ideal for:
 - **Teams with strong SQL expertise** who prefer direct control
 
 Consider EF Core instead if you need:
-- Automatic migration management
 - Higher-level abstractions
 - Simpler configuration
 
@@ -49,7 +48,8 @@ Consider EF Core instead if you need:
 
 ```csharp
 using Elsa.Extensions;
-using Npgsql;
+using Elsa.Persistence.Dapper.Extensions;
+using Elsa.Persistence.Dapper.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,28 +58,18 @@ var connectionString = builder.Configuration.GetConnectionString("PostgreSql")
 
 builder.Services.AddElsa(elsa =>
 {
-    // Configure workflow management with Dapper
-    elsa.UseWorkflowManagement(management =>
+    // Configure the shared Dapper connection provider and migrations.
+    elsa.UseDapper(dapper =>
     {
-        management.UseDapper(dapper =>
-        {
-            // Connection factory creates new connections
-            dapper.ConnectionFactory = () => new NpgsqlConnection(connectionString);
-            
-            // Optional: Specify schema (defaults to public/dbo)
-            dapper.Schema = "elsa";
-        });
+        dapper.DbConnectionProvider = _ => new PostgreSqlDbConnectionProvider(connectionString);
+        dapper.UseMigrations();
     });
     
+    // Configure workflow management with Dapper
+    elsa.UseWorkflowManagement(management => management.UseDapper());
+
     // Configure workflow runtime with Dapper
-    elsa.UseWorkflowRuntime(runtime =>
-    {
-        runtime.UseDapper(dapper =>
-        {
-            dapper.ConnectionFactory = () => new NpgsqlConnection(connectionString);
-            dapper.Schema = "elsa";
-        });
-    });
+    elsa.UseWorkflowRuntime(runtime => runtime.UseDapper());
     
     // Enable HTTP activities (optional)
     elsa.UseHttp();
@@ -102,18 +92,19 @@ app.Run();
 ### SQL Server Example
 
 ```csharp
-using Microsoft.Data.SqlClient;
+using Elsa.Persistence.Dapper.Extensions;
+using Elsa.Persistence.Dapper.Services;
 
 builder.Services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement(management =>
+    elsa.UseDapper(dapper =>
     {
-        management.UseDapper(dapper =>
-        {
-            dapper.ConnectionFactory = () => new SqlConnection(connectionString);
-            dapper.Schema = "elsa";
-        });
+        dapper.DbConnectionProvider = _ => new SqlServerDbConnectionProvider(connectionString);
+        dapper.UseMigrations();
     });
+
+    elsa.UseWorkflowManagement(management => management.UseDapper());
+    elsa.UseWorkflowRuntime(runtime => runtime.UseDapper());
 });
 ```
 
@@ -139,169 +130,19 @@ builder.Services.AddElsa(elsa =>
 
 ## Schema Creation
 
-With Dapper, you are responsible for creating and maintaining the database schema.
+Use `dapper.UseMigrations()` to let Elsa create and update the Dapper schema for supported databases. The migrations are included with `Elsa.Persistence.Dapper` and use PascalCase table and column names.
 
-### PostgreSQL Schema
+Core workflow tables created by the migrations include:
 
-```sql
--- Create schema
-CREATE SCHEMA IF NOT EXISTS elsa;
+- `WorkflowDefinitions`
+- `WorkflowInstances`
+- `Triggers`
+- `Bookmarks`
+- `WorkflowExecutionLogRecords`
+- `ActivityExecutionRecords`
+- `WorkflowInboxMessages`
 
--- Workflow Definitions
-CREATE TABLE elsa.workflow_definitions (
-    id VARCHAR(255) PRIMARY KEY,
-    definition_id VARCHAR(255) NOT NULL,
-    name VARCHAR(500),
-    description TEXT,
-    version INT NOT NULL DEFAULT 1,
-    is_published BOOLEAN NOT NULL DEFAULT FALSE,
-    is_latest BOOLEAN NOT NULL DEFAULT FALSE,
-    is_readonly BOOLEAN NOT NULL DEFAULT FALSE,
-    is_system BOOLEAN NOT NULL DEFAULT FALSE,
-    materialized_name VARCHAR(500),
-    provider_name VARCHAR(255),
-    custom_properties JSONB,
-    variables JSONB,
-    inputs JSONB,
-    outputs JSONB,
-    outcomes JSONB,
-    root JSONB,
-    options JSONB,
-    use_activity_id_as_node_id BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    UNIQUE (definition_id, version)
-);
-
--- Workflow Instances
-CREATE TABLE elsa.workflow_instances (
-    id VARCHAR(255) PRIMARY KEY,
-    definition_id VARCHAR(255) NOT NULL,
-    definition_version_id VARCHAR(255) NOT NULL,
-    version INT NOT NULL DEFAULT 1,
-    status VARCHAR(50) NOT NULL,
-    sub_status VARCHAR(50) NOT NULL,
-    correlation_id VARCHAR(255),
-    name VARCHAR(500),
-    incident_count INT NOT NULL DEFAULT 0,
-    is_system BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    finished_at TIMESTAMP WITH TIME ZONE,
-    workflow_state JSONB
-);
-
--- Bookmarks
-CREATE TABLE elsa.bookmarks (
-    id VARCHAR(255) PRIMARY KEY,
-    activity_type_name VARCHAR(500) NOT NULL,
-    hash VARCHAR(255) NOT NULL,
-    workflow_instance_id VARCHAR(255) NOT NULL,
-    correlation_id VARCHAR(255),
-    activity_id VARCHAR(255) NOT NULL,
-    activity_node_id VARCHAR(255),
-    activity_instance_id VARCHAR(255),
-    payload JSONB,
-    metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-);
-
--- Activity Execution Records
-CREATE TABLE elsa.activity_execution_records (
-    id VARCHAR(255) PRIMARY KEY,
-    workflow_instance_id VARCHAR(255) NOT NULL,
-    activity_id VARCHAR(255) NOT NULL,
-    activity_node_id VARCHAR(255),
-    activity_type VARCHAR(500) NOT NULL,
-    activity_type_version INT NOT NULL DEFAULT 1,
-    activity_name VARCHAR(500),
-    status VARCHAR(50) NOT NULL,
-    has_bookmarks BOOLEAN NOT NULL DEFAULT FALSE,
-    started_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    completed_at TIMESTAMP WITH TIME ZONE,
-    activity_state JSONB,
-    outputs JSONB,
-    exception JSONB
-);
-
--- Workflow Execution Log Records
-CREATE TABLE elsa.workflow_execution_log_records (
-    id VARCHAR(255) PRIMARY KEY,
-    workflow_instance_id VARCHAR(255) NOT NULL,
-    activity_id VARCHAR(255),
-    activity_node_id VARCHAR(255),
-    activity_type VARCHAR(500),
-    activity_type_version INT,
-    activity_name VARCHAR(500),
-    message TEXT,
-    event_name VARCHAR(255),
-    source VARCHAR(255),
-    payload JSONB,
-    timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    sequence BIGINT NOT NULL
-);
-
--- Workflow Inbox Messages
-CREATE TABLE elsa.workflow_inbox_messages (
-    id VARCHAR(255) PRIMARY KEY,
-    activity_type_name VARCHAR(500) NOT NULL,
-    hash VARCHAR(255) NOT NULL,
-    workflow_instance_id VARCHAR(255),
-    correlation_id VARCHAR(255),
-    activity_instance_id VARCHAR(255),
-    input JSONB,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    expires_at TIMESTAMP WITH TIME ZONE
-);
-
--- Create indexes (see indexing-notes.md for details)
-CREATE INDEX idx_workflow_definitions_definition_id ON elsa.workflow_definitions(definition_id);
-CREATE INDEX idx_workflow_definitions_is_published ON elsa.workflow_definitions(is_published);
-
-CREATE INDEX idx_workflow_instances_correlation_id ON elsa.workflow_instances(correlation_id);
-CREATE INDEX idx_workflow_instances_status ON elsa.workflow_instances(status);
-CREATE INDEX idx_workflow_instances_definition_id ON elsa.workflow_instances(definition_id);
-CREATE INDEX idx_workflow_instances_updated_at ON elsa.workflow_instances(updated_at);
-
-CREATE INDEX idx_bookmarks_hash ON elsa.bookmarks(hash);
-CREATE INDEX idx_bookmarks_activity_type_hash ON elsa.bookmarks(activity_type_name, hash);
-CREATE INDEX idx_bookmarks_workflow_instance_id ON elsa.bookmarks(workflow_instance_id);
-
-CREATE INDEX idx_activity_records_workflow_instance ON elsa.activity_execution_records(workflow_instance_id);
-CREATE INDEX idx_execution_logs_workflow_instance ON elsa.workflow_execution_log_records(workflow_instance_id);
-CREATE INDEX idx_inbox_hash ON elsa.workflow_inbox_messages(hash);
-```
-
-### SQL Server and Other Databases
-
-For SQL Server and other databases, use the official Elsa Dapper migrations package which provides complete schema management:
-
-**Repository:** [elsa-extensions/Elsa.Persistence.Dapper.Migrations](https://github.com/elsa-workflows/elsa-extensions/tree/main/src/modules/persistence/Elsa.Persistence.Dapper.Migrations)
-
-**Installation:**
-```bash
-dotnet add package Elsa.Persistence.Dapper.Migrations
-```
-
-**Usage:**
-```csharp
-using Elsa.Persistence.Dapper.Migrations;
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflowManagement(management =>
-    {
-        management.UseDapper(dapper =>
-        {
-            dapper.ConnectionFactory = () => new SqlConnection(connectionString);
-            dapper.UseMigrations();  // Enable automatic migrations
-        });
-    });
-});
-```
-
-The migrations package handles schema creation and versioning for supported databases including SQL Server, PostgreSQL, and MySQL.
-
-> **Note:** For custom schema requirements or unsupported databases, you can use the PostgreSQL schema above as a reference and adapt it to your database's SQL dialect.
+If you manage the schema externally, mirror the 3.7.0 migrations from `src/modules/persistence/Elsa.Persistence.Dapper.Migrations` and keep the PascalCase names. Do not use the snake_case MongoDB collection names or older hand-written SQL snippets for Dapper.
 
 ## Transactions
 
@@ -345,7 +186,7 @@ var connectionString = new NpgsqlConnectionStringBuilder
     CommandTimeout = 60
 }.ToString();
 
-dapper.ConnectionFactory = () => new NpgsqlConnection(connectionString);
+dapper.DbConnectionProvider = _ => new PostgreSqlDbConnectionProvider(connectionString);
 ```
 
 ### Batch Operations
@@ -356,65 +197,26 @@ Dapper excels at batch operations with low overhead:
 // Example: Batch delete with Dapper
 using var connection = new NpgsqlConnection(connectionString);
 await connection.ExecuteAsync(
-    @"DELETE FROM elsa.workflow_instances 
-      WHERE status = @Status 
-      AND finished_at < @Threshold",
+    @"DELETE FROM ""WorkflowInstances""
+      WHERE ""Status"" = @Status
+      AND ""FinishedAt"" < @Threshold",
     new { Status = "Finished", Threshold = DateTime.UtcNow.AddDays(-30) }
 );
 ```
 
 ## Migration Strategy
 
-Since Dapper doesn't manage migrations, use one of these approaches:
-
-### Option 1: FluentMigrator
-
-```bash
-dotnet add package FluentMigrator
-dotnet add package FluentMigrator.Runner
-dotnet add package FluentMigrator.Runner.Postgres
-```
+For supported databases, prefer Elsa's Dapper migrations:
 
 ```csharp
-[Migration(1)]
-public class CreateElsaTables : Migration
+elsa.UseDapper(dapper =>
 {
-    public override void Up()
-    {
-        Execute.Sql(@"CREATE TABLE elsa.workflow_instances (...)");
-    }
-    
-    public override void Down()
-    {
-        Execute.Sql("DROP TABLE elsa.workflow_instances");
-    }
-}
+    dapper.DbConnectionProvider = _ => new PostgreSqlDbConnectionProvider(connectionString);
+    dapper.UseMigrations();
+});
 ```
 
-### Option 2: DbUp
-
-```bash
-dotnet add package DbUp
-```
-
-```csharp
-var upgrader = DeployChanges.To
-    .PostgresqlDatabase(connectionString)
-    .WithScriptsFromFileSystem("./Migrations")
-    .Build();
-
-var result = upgrader.PerformUpgrade();
-```
-
-### Option 3: Plain SQL Scripts
-
-Maintain versioned SQL scripts and apply via CI/CD:
-```
-/migrations
-  /001_initial_schema.sql
-  /002_add_indexes.sql
-  /003_add_inbox_table.sql
-```
+For production deployments, run the application once in a controlled deployment step or environment where migrations are allowed to apply. If your organization requires separately reviewed SQL scripts, generate or maintain those scripts from the 3.7.0 Dapper migration definitions and preserve the PascalCase table and column names.
 
 ## Troubleshooting
 
@@ -429,9 +231,9 @@ Maintain versioned SQL scripts and apply via CI/CD:
 
 ### Schema Mismatch
 
-**Error:** `relation "elsa.workflow_instances" does not exist`
+**Error:** `relation "WorkflowInstances" does not exist`
 
-**Solution:** Schema must be created before running the application. Run schema creation scripts.
+**Solution:** Enable `dapper.UseMigrations()` or apply the equivalent 3.7.0 Dapper migration scripts before running the application.
 
 ### Performance Issues
 

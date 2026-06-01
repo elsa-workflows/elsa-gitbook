@@ -113,10 +113,13 @@ The workflow editor is the heart of Elsa Studio. This is where you design your a
 
 4. **Properties Panel** (Right Sidebar)
    - **Activity Properties**: When an activity is selected
-     - **Common Tab**: Name, description, trigger settings
      - **Input Tab**: Configure activity inputs
-     - **Output Tab**: Map outputs to variables
-     - **Advanced Tab**: Additional settings
+     - **Output Tab**: Bind activity outputs to workflow variables or workflow outputs
+     - **Common Tab**: Name, description, and trigger settings
+     - **Test Tab**: Test supported activities from the editor
+     - **Commit Strategy Tab**: Configure commit behavior where applicable
+     - **Task Tab**: Configure task execution settings such as Run Asynchronously
+     - **Log, Info, Version, and Resilience Tabs**: Inspect activity details and optional feature-specific settings
    - **Expression Editor**: Write C#, JavaScript, Liquid, or Python expressions
    - **Syntax Selector**: Choose expression language
 
@@ -155,13 +158,7 @@ The Properties Panel is context-sensitive and changes based on the selected acti
 
 **Tabs and Sections:**
 
-1. **Common Properties**
-   - **Name**: Human-readable identifier
-   - **Description**: Document the activity's purpose
-   - **Trigger Workflow**: Check if this activity can start the workflow
-   - **Run Asynchronously**: Execute without blocking
-
-2. **Input Properties**
+1. **Input Properties**
    - Activity-specific inputs
    - **Syntax Selector**: Choose expression type
      - **Literal/Default**: Plain text or simple values
@@ -171,13 +168,26 @@ The Properties Panel is context-sensitive and changes based on the selected acti
      - **Python**: Python expressions
    - **Expression Editor**: Multi-line code editor with syntax highlighting
 
-3. **Output Properties**
-   - Map activity outputs to variables
-   - Choose storage location (Workflow Instance, Memory, Input)
+2. **Output Properties**
+   - Map activity outputs to workflow variables
+   - Map activity outputs to workflow outputs
+   - Clear a binding when the output should not be captured
 
-4. **Advanced Properties**
-   - Storage driver options
-   - Custom settings
+3. **Common Properties**
+   - **Name**: Human-readable identifier
+   - **Description**: Document the activity's purpose
+   - **Trigger Workflow**: Check if this activity can start the workflow
+
+4. **Task Properties**
+   - **Run Asynchronously**: Execute task activities asynchronously
+
+5. **Additional Tabs**
+   - **Test**: Test an activity when supported by Studio and the backend
+   - **Commit Strategy**: Configure commit behavior
+   - **Log**: Inspect activity log information
+   - **Info**: Inspect activity metadata
+   - **Version**: Select a version for workflow-as-activity entries
+   - **Resilience**: Configure resilience settings when the backend feature is enabled and the activity supports it
 
 **Expression Examples:**
 

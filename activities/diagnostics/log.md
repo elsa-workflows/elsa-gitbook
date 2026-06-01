@@ -1,42 +1,26 @@
 ---
-description: Emits log entries to a configurable set of log targets called sinks
+description: Notes about logging from workflows in Elsa 3.7.0
 ---
 
 # Log
 
-Workflow designers can drop a **Log** activity onto the canvas to emit structured log entries from a workflow.
+Elsa 3.7.0 does not include a built-in workflow activity named **Log** in the core activity set.
 
-\
-The `Message` input supports [message templates](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging#log-message-template), allowing placeholders such as `Hello {Name}` to be replaced with runtime values provided through the **Arguments** input.
+For simple diagnostic output from a workflow, use the built-in **WriteLine** activity. `WriteLine` is implemented in `Elsa.Workflows.Activities.WriteLine` and writes text to the configured standard output stream.
 
-The activity exposes the following properties:
+For application logging and workflow execution logging, use the platform logging and persistence features instead of adding a Log activity to the workflow canvas:
 
-* **Message**: The log message template to emit.
-* **Level**: The log level (Trace, Debug, Information, Warning, Error, Critical).
-* **Category**: The log category (defaults to "Process").
-* **Arguments**: Values for named or indexed placeholders in the message template.
-* **Attributes**: Additional key/value pairs to include as attributes.
-* **SinkNames**: Target sinks to write to (appears as a check list of available sinks).
+* ASP.NET Core logging for host and module logs.
+* Workflow execution logs for activity execution history.
+* Log persistence configuration for controlling which execution log records are stored.
 
-When the application exposes multiple sinks, they appear in the **Sinks** picker so the workflow author can choose one or more destinations for the log entry.
-
-Example usage in a workflow:
+Example workflow diagnostic output:
 
 ```csharp
-new Log("Workflow started", LogLevel.Information)
+new WriteLine("Workflow started")
 ```
 
-You can also specify sinks and attributes:
+## Related Topics
 
-```csharp
-new Log
-{
-    Message = new("Order received: {OrderId}"),
-    Arguments = new(new { OrderId = orderId }),
-    SinkNames = new(new[] { "FileJson" })
-}
-```
-
-## Custom Log Sinks
-
-The Logging Framework is designed to be extended with custom Log Sink configurations and implementations. To learn more, see [Logging Framework](../../features/logging-framework.md).
+* [Logging Framework](../../features/logging-framework.md)
+* [Log Persistence](../../optimize/log-persistence.md)

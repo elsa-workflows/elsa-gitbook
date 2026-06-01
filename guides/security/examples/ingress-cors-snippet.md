@@ -57,15 +57,11 @@ app.UseCors("ElsaCorsPolicy");
 
 ### Public Webhook Endpoints (No CORS)
 
-For server-to-server webhooks (e.g., resume endpoints called by external services):
+For server-to-server webhooks (e.g., Elsa tokenized resume URLs called by external services), browser CORS is not involved. The Elsa resume endpoint is `GET`/`POST /elsa/api/bookmarks/resume?t=...`.
 
 ```csharp
 // No CORS needed - server-to-server calls bypass browser CORS checks
-// Optionally disable CORS for specific endpoints:
-app.MapPost("/elsa/api/bookmarks/resume", async (HttpContext context) =>
-{
-    // Handle resume without CORS
-}).DisableCors();
+// Keep CORS scoped to browser clients and avoid exposing webhook/resume routes to arbitrary origins.
 ```
 
 **Rationale:** CORS is a browser security feature. Server-to-server HTTP calls (e.g., from payment gateways, notification services) don't trigger CORS checks.
@@ -490,7 +486,7 @@ for i in {1..150}; do
     -w "\n%{http_code}\n" \
     -s -o /dev/null
 done
-# Expected: First 100 return 200/401, then 429 Too Many Requests
+# Expected: Early requests reach Elsa and return the endpoint's token validation response; later requests return 429 Too Many Requests
 ```
 
 ### Test CORS

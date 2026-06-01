@@ -85,24 +85,25 @@ curl -X GET "https://your-elsa-server.com/elsa/api/workflow-definitions" \
 
 ```bash
 curl -X GET "https://your-elsa-server.com/elsa/api/workflow-definitions" \
-  -H "X-Api-Key: YOUR_API_KEY" \
+  -H "Authorization: ApiKey YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
 
 #### elsa-api-client Configuration
 
 ```csharp
-using Elsa.Api.Client;
+using Elsa.Api.Client.Extensions;
 
-services.AddElsaClient(client =>
+services.AddDefaultApiClientsUsingApiKey(options =>
 {
-    client.BaseUrl = new Uri("https://your-elsa-server.com");
-    client.ApiKey = "YOUR_API_KEY";
-    // Or use ConfigureHttpClient for JWT bearer tokens
+    options.BaseAddress = new Uri("https://your-elsa-server.com/elsa/api");
+    options.ApiKey = "YOUR_API_KEY";
 });
 ```
 
-**Code Reference:** `src/clients/Elsa.Api.Client/Extensions/ServiceCollectionExtensions.cs` — Client registration extensions.
+The default API-key handler sends `Authorization: ApiKey <key>`. For bearer tokens, use `AddDefaultApiClients` and set the `Authorization` header in `ConfigureHttpClient`.
+
+**Code Reference:** `src/clients/Elsa.Api.Client/Extensions/DependencyInjectionExtensions.cs` — Client registration extensions.
 
 ***
 
@@ -154,7 +155,7 @@ public class WorkflowPublisher
         };
 
         var response = await _api.SaveAsync(request);
-        return response;
+        return response.WorkflowDefinition;
     }
 }
 ```
@@ -172,8 +173,6 @@ public class WorkflowPublisher
 
 **Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/WorkflowOptions.cs`
 
-See [publish-workflow.cs](examples/publish-workflow.cs) for a complete example.
-
 ### HTTP Variant (POST)
 
 ```bash
@@ -181,21 +180,24 @@ curl -X POST "https://your-elsa-server.com/elsa/api/workflow-definitions" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "definitionId": "my-workflow",
-    "name": "My Workflow",
-    "description": "A sample workflow",
-    "version": 1,
-    "isPublished": true,
-    "root": {
-      "type": "Elsa.WriteLine",
-      "id": "write-line-1",
-      "text": "Hello, World!"
+    "model": {
+      "definitionId": "my-workflow",
+      "name": "My Workflow",
+      "description": "A sample workflow",
+      "version": 1,
+      "isPublished": true,
+      "root": {
+        "type": "Elsa.WriteLine",
+        "id": "write-line-1",
+        "text": "Hello, World!"
+      },
+      "options": {
+        "commitStrategyName": "WorkflowExecuted",
+        "activationStrategyType": "Default",
+        "autoUpdateConsumingWorkflows": true
+      }
     },
-    "options": {
-      "commitStrategyName": "WorkflowExecuted",
-      "activationStrategyType": "Default",
-      "autoUpdateConsumingWorkflows": true
-    }
+    "publish": true
   }'
 ```
 
@@ -203,12 +205,16 @@ curl -X POST "https://your-elsa-server.com/elsa/api/workflow-definitions" \
 
 ```json
 {
-  "id": "abc123",
-  "definitionId": "my-workflow",
-  "name": "My Workflow",
-  "version": 1,
-  "isPublished": true,
-  "createdAt": "2025-01-01T00:00:00Z"
+  "workflowDefinition": {
+    "id": "abc123",
+    "definitionId": "my-workflow",
+    "name": "My Workflow",
+    "version": 1,
+    "isPublished": true,
+    "createdAt": "2025-01-01T00:00:00Z"
+  },
+  "alreadyPublished": false,
+  "consumingWorkflowCount": 0
 }
 ```
 
@@ -267,51 +273,49 @@ See the documentation on Activation Strategies in the main Elsa docs for detaile
 
 ***
 
-## Starting / Instantiating Workflows
+## Executing / Dispatching Workflows
 
 ### Using elsa-api-client (C#)
 
 ```csharp
-using Elsa.Api.Client.Resources.WorkflowInstances.Contracts;
-using Elsa.Api.Client.Resources.WorkflowInstances.Requests;
+using System.Net.Http;
+using Elsa.Api.Client.Resources.WorkflowDefinitions.Contracts;
+using Elsa.Api.Client.Resources.WorkflowDefinitions.Requests;
 
-public class WorkflowStarter
+public class WorkflowRunner
 {
-    private readonly IWorkflowInstancesApi _api;
+    private readonly IExecuteWorkflowApi _api;
 
-    public WorkflowStarter(IWorkflowInstancesApi api)
+    public WorkflowRunner(IExecuteWorkflowApi api)
     {
         _api = api;
     }
 
-    public async Task<string> StartWorkflowAsync(
+    public async Task<HttpResponseMessage> ExecuteWorkflowAsync(
         string definitionId,
         string? correlationId = null,
         Dictionary<string, object>? input = null)
     {
-        var request = new StartWorkflowRequest
+        var request = new ExecuteWorkflowDefinitionRequest
         {
-            DefinitionId = definitionId,
             CorrelationId = correlationId,
             Input = input
         };
 
-        var response = await _api.StartAsync(request);
-        return response.WorkflowInstanceId;
+        var response = await _api.ExecuteAsync(definitionId, request);
+        response.EnsureSuccessStatusCode();
+        return response;
     }
 }
 ```
 
-See [start-workflow.cs](examples/start-workflow.cs) for a complete example.
-
 ### HTTP Variant (POST)
 
 ```bash
-curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances/start" \
+curl -X POST "https://your-elsa-server.com/elsa/api/workflow-definitions/my-workflow/execute" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "definitionId": "my-workflow",
     "correlationId": "order-12345",
     "input": {
       "orderId": "12345",
@@ -329,18 +333,20 @@ curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances/start" \
 }
 ```
 
+Use `/workflow-definitions/{definitionId}/dispatch` with the same request body to enqueue execution asynchronously.
+
 ### Key Parameters
 
 | Parameter        | Description                                        | Required |
 | ---------------- | -------------------------------------------------- | -------- |
-| `definitionId`   | ID of the workflow definition to start             | Yes      |
+| `definitionId`   | ID of the workflow definition in the route         | Yes      |
 | `correlationId`  | External identifier for correlation                | No       |
 | `input`          | Dictionary of input values                         | No       |
 | `versionOptions` | Which version to run (Latest, Published, Specific) | No       |
 
-> **Note:** `TriggerWorkflowsOptions` is obsolete. Use the `StartWorkflowRequest` pattern shown above for creating new workflow instances.
+> **Note:** In 3.7.0, the API client executes workflow definitions through `IExecuteWorkflowApi.ExecuteAsync` and `IExecuteWorkflowApi.DispatchAsync`. `IWorkflowInstancesApi` is for listing, reading, cancelling, deleting, importing, and exporting workflow instances.
 
-**Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowInstances/` — Instance management models.
+**Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Contracts/IExecuteWorkflowApi.cs`.
 
 ***
 
@@ -385,22 +391,26 @@ public class WorkflowQuerier
 }
 ```
 
-See [query-workflows.cs](examples/query-workflows.cs) for a complete example.
-
 #### HTTP Variant (curl)
 
 ```bash
 # Query by correlationId
-curl -X GET "https://your-elsa-server.com/elsa/api/workflow-instances?correlationId=order-12345&page=0&pageSize=25" \
-  -H "Authorization: Bearer YOUR_TOKEN"
+curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"correlationId":"order-12345","page":0,"pageSize":25}'
 
 # Query by status
-curl -X GET "https://your-elsa-server.com/elsa/api/workflow-instances?status=Running&page=0&pageSize=25" \
-  -H "Authorization: Bearer YOUR_TOKEN"
+curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"status":"Running","page":0,"pageSize":25}'
 
 # Query by definitionId and version
-curl -X GET "https://your-elsa-server.com/elsa/api/workflow-instances?definitionId=my-workflow&version=2" \
-  -H "Authorization: Bearer YOUR_TOKEN"
+curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"definitionId":"my-workflow","version":2}'
 ```
 
 ### Query Parameters
@@ -458,42 +468,21 @@ HTTP triggers generate tokenized URLs for easy resumption:
 # Token-based resume (generated URL)
 curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume?t=ENCRYPTED_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"status": "approved"}'
+  -d '{"input":{"status":"approved"}}'
 ```
 
 **Code Reference:** `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs` — `GenerateBookmarkTriggerUrl` method.
 
-#### Stimulus-Based Resume
-
-Resume by providing the stimulus payload directly:
-
-```bash
-# Stimulus-based resume
-curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "activityTypeName": "Elsa.HttpEndpoint",
-    "stimulus": {
-      "path": "/webhook/order-approved",
-      "method": "POST"
-    },
-    "input": {
-      "status": "approved",
-      "approvedBy": "manager@example.com"
-    }
-  }'
-```
+The HTTP endpoint expects the encrypted `t` query-string token generated by Elsa. The token payload contains the bookmark ID and workflow instance ID; it is not a general stimulus-resume API.
 
 See [resume-bookmark.curl.md](examples/resume-bookmark.curl.md) for complete examples.
 
-#### elsa-api-client Resume
+#### Runtime Service Resume
 
 ```csharp
-using Elsa.Api.Client.Resources.WorkflowInstances.Contracts;
+using Elsa.Workflows.Runtime;
 
-// Resume via workflow instance ID and bookmark ID
-await _instancesApi.ResumeAsync(new ResumeWorkflowRequest
+await workflowResumer.ResumeAsync(new ResumeBookmarkRequest
 {
     WorkflowInstanceId = instanceId,
     BookmarkId = bookmarkId,
@@ -504,11 +493,13 @@ await _instancesApi.ResumeAsync(new ResumeWorkflowRequest
 });
 ```
 
+There is no 3.7.0 `elsa-api-client` resume method on `IWorkflowInstancesApi`; use the generated tokenized URL over HTTP or the runtime services inside the server process.
+
 ### Resume Flow & Locking
 
 The `WorkflowResumer` service:
 
-1. Acquires a distributed lock on the workflow instance
+1. Acquires a distributed lock for the bookmark filter
 2. Loads the workflow state from the database
 3. Finds the matching bookmark
 4. Resumes execution from the bookmarked activity
@@ -554,8 +545,6 @@ activity.CustomProperties["resilience"] = new Dictionary<string, object>
     ["backoffType"] = "Exponential"
 };
 ```
-
-See [resilience-strategy.cs](examples/resilience-strategy.cs) for additional patterns and considerations.
 
 > **Note:** The resilience configuration API is evolving. Check the `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/` directory in elsa-core for current extension methods and models.
 
@@ -625,10 +614,14 @@ All list endpoints support pagination:
 
 ```bash
 # First page
-curl "https://your-elsa-server.com/elsa/api/workflow-instances?page=0&pageSize=50"
+curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances" \
+  -H "Content-Type: application/json" \
+  -d '{"page":0,"pageSize":50}'
 
 # Second page
-curl "https://your-elsa-server.com/elsa/api/workflow-instances?page=1&pageSize=50"
+curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances" \
+  -H "Content-Type: application/json" \
+  -d '{"page":1,"pageSize":50}'
 ```
 
 ### Performance Recommendations
@@ -637,7 +630,9 @@ curl "https://your-elsa-server.com/elsa/api/workflow-instances?page=1&pageSize=5
 
     ```bash
     # Good: Server-side filtering
-    curl "https://your-elsa-server.com/elsa/api/workflow-instances?status=Running&correlationId=order-123"
+    curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances" \
+      -H "Content-Type: application/json" \
+      -d '{"status":"Running","correlationId":"order-123"}'
 
     # Avoid: Fetching all and filtering client-side
     ```
@@ -659,7 +654,6 @@ curl "https://your-elsa-server.com/elsa/api/workflow-instances?page=1&pageSize=5
 | **401 Unauthorized** | Authentication failed | Invalid or expired token                                       |
 | **404 Not Found**    | Resource not found    | Definition ID doesn't exist                                    |
 | **409 Conflict**     | Publish conflict      | Version conflict during concurrent publish                     |
-| **410 Gone**         | Resource expired      | Bookmark already consumed or expired                           |
 
 ### Validation Errors (400)
 
@@ -675,7 +669,7 @@ curl "https://your-elsa-server.com/elsa/api/workflow-instances?page=1&pageSize=5
 }
 ```
 
-### Bookmark Not Found (404/410)
+### Bookmark Resume Does Not Continue
 
 Common causes:
 
@@ -687,7 +681,7 @@ Common causes:
 
 1. Verify the workflow instance still exists and is suspended
 2. Check if the bookmark was already consumed
-3. Verify the stimulus payload matches exactly what the bookmark expects
+3. Verify the resume URL includes the encrypted `t` token generated for that bookmark
 
 ### Troubleshooting Checklist
 
@@ -710,11 +704,12 @@ For comprehensive troubleshooting, see [Troubleshooting Guide](../troubleshootin
 * Query by correlation ID for efficient instance lookup
 
 ```csharp
-var request = new StartWorkflowRequest
+var request = new ExecuteWorkflowDefinitionRequest
 {
-    DefinitionId = "order-processing",
     CorrelationId = $"order-{orderId}"  // Use meaningful ID
 };
+
+await executeWorkflowApi.ExecuteAsync("order-processing", request);
 ```
 
 ### Idempotent Resume Handlers
@@ -764,11 +759,7 @@ See [Performance & Scaling Guide](../performance/) (DOC-021) for observability p
 
 ## Example Files
 
-* [publish-workflow.cs](examples/publish-workflow.cs) — Create and publish a workflow definition
-* [start-workflow.cs](examples/start-workflow.cs) — Start a workflow instance with correlation and input
-* [query-workflows.cs](examples/query-workflows.cs) — Query instances with filtering and pagination
-* [resume-bookmark.curl.md](examples/resume-bookmark.curl.md) — Resume workflow via token or stimulus
-* [resilience-strategy.cs](examples/resilience-strategy.cs) — Configure resilience for activities
+* [resume-bookmark.curl.md](examples/resume-bookmark.curl.md) — Resume workflow via tokenized bookmark URL
 * [Source File References](README-REFERENCES.md) — elsa-core source paths for grounding
 
 ## Related Documentation

@@ -2069,10 +2069,10 @@ By following these practices and patterns, along with the official Elsa testing 
 
 ### Elsa Core Repository Examples
 
-- [Elsa Core Test Guidelines](https://github.com/elsa-workflows/elsa-core/blob/main/doc/qa/test-guidelines.md) - Official testing guidelines from the elsa-core repository
-- [Unit Test Examples](https://github.com/elsa-workflows/elsa-core/tree/main/test/unit) - Unit test examples using ActivityTestFixture
-- [Integration Test Examples](https://github.com/elsa-workflows/elsa-core/tree/main/test/integration) - Integration tests with WorkflowTestFixture
-- [Component Test Examples](https://github.com/elsa-workflows/elsa-core/tree/main/test/component) - Component tests with AsyncWorkflowRunner
+- [Elsa Core Test Guidelines](https://github.com/elsa-workflows/elsa-core/blob/3.7.0/doc/qa/test-guidelines.md) - Official testing guidelines from the elsa-core repository
+- [Unit Test Examples](https://github.com/elsa-workflows/elsa-core/tree/3.7.0/test/unit) - Unit test examples using ActivityTestFixture
+- [Integration Test Examples](https://github.com/elsa-workflows/elsa-core/tree/3.7.0/test/integration) - Integration tests with WorkflowTestFixture
+- [Component Test Examples](https://github.com/elsa-workflows/elsa-core/tree/3.7.0/test/component) - Component tests with AsyncWorkflowRunner
 
 ### Testing Frameworks & Tools
 

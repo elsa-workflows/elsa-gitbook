@@ -445,30 +445,10 @@ builder.Services
         options.SaveTokens = true;
     });
 
-// Configure Elsa Studio
-builder.Services.AddElsaStudio(studio =>
-{
-    studio.ConfigureHttpClient(options =>
-    {
-        options.BaseAddress = new Uri("https://elsa-server.example.com");
-    });
-    
-    // Forward authentication token to Elsa Server
-    studio.ConfigureHttpClient((sp, client) =>
-    {
-        var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-        var accessToken = httpContextAccessor.HttpContext?
-            .GetTokenAsync("access_token")
-            .GetAwaiter()
-            .GetResult();
-        
-        if (!string.IsNullOrEmpty(accessToken))
-        {
-            client.DefaultRequestHeaders.Authorization = 
-                new AuthenticationHeaderValue("Bearer", accessToken);
-        }
-    });
-});
+// Configure Elsa Studio using the 3.7.0 Blazor host services.
+// See ../studio/integration/README.md for the full AddCore/AddShell/
+// AddRemoteBackend/module registration pattern. Set Backend:Url to the
+// Elsa Server API and Authentication:Provider to OpenIdConnect.
 
 var app = builder.Build();
 

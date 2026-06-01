@@ -56,7 +56,7 @@ elsa.UseLoggingFramework(logging =>
     logging.UseConsole(); // Installs the Console Log Sink Factory.
     logging.UseSerilog(); // Installs the Serilog Log Sink Factory.
     
-    // Bind the "LoggingFramework:Defaults" section. Default sinks are used when the Log activity doesn't specify what sinks to write to.
+    // Bind the "LoggingFramework:Defaults" section. Default sinks are used by emitters that do not specify sinks explicitly.
     logging.ConfigureDefaults(options => configuration.GetSection("LoggingFramework").Bind(options));
 });
 ```
@@ -120,9 +120,9 @@ Each sink specifies the factory type, name, and options.
 
 ## Log Levels and Categories
 
-Log sinks follow the same filtering semantics as the built-in ASP.NET Core logging system. Each sink defines a minimum log level and may specify category-specific overrides. When a Log activity emits a log entry, the value provided to the **Category** input is used to evaluate these filters.
+Log sinks follow the same filtering semantics as the built-in ASP.NET Core logging system. Each sink defines a minimum log level and may specify category-specific overrides. When custom code emits a log entry through the logging framework, the log category is used to evaluate these filters.
 
-For example, the following .NET loggng configuration allows `Warning` and higher by default, but only `Information` and higher for `Microsoft.Hosting.Lifetime`:
+For example, the following .NET logging configuration allows `Warning` and higher by default, but only `Information` and higher for `Microsoft.Hosting.Lifetime`:
 
 ```
 {
@@ -135,39 +135,16 @@ For example, the following .NET loggng configuration allows `Warning` and higher
 }
 ```
 
-You can achieve the same behavior with the `LoggingFramework` section when configuring sinks. A sink with the configuration shown earlier emits entries only if the log level for the specified category is enabled. This means that choosing `Category = "Process.Nested"` on the `Log` activity will use the `Debug` level override from the example configuration, while `Category = "Process.Nested.Inner"` will drop entries below `Information`.
+You can achieve the same behavior with the `LoggingFramework` section when configuring sinks. A sink with the configuration shown earlier emits entries only if the log level for the specified category is enabled. This means a custom emitter using category `Process.Nested` will use the `Debug` level override from the example configuration, while category `Process.Nested.Inner` will drop entries below `Information`.
 
-## Log Activity
+## Workflow Diagnostic Output
 
-Workflow designers can drop a **Log** activity onto the canvas to emit structured log entries from a workflow.\
-The `Message` input supports [message templates](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging#log-message-template), allowing placeholders such as `Hello {Name}` to be replaced with runtime values provided through the **Arguments** input.
+Elsa 3.7.0 does not include a built-in workflow activity named **Log** in the core activity set. Use the built-in **WriteLine** activity for simple workflow diagnostic output, and use Elsa's execution logging and log persistence features for activity execution history.
 
-The activity exposes the following properties:
-
-* **Message**: The log message template to emit.
-* **Level**: The log level (Trace, Debug, Information, Warning, Error, Critical).
-* **Category**: The log category (defaults to "Process").
-* **Arguments**: Values for named or indexed placeholders in the message template.
-* **Attributes**: Additional key/value pairs to include as attributes.
-* **SinkNames**: Target sinks to write to (appears as a check list of available sinks).
-
-When the application exposes multiple sinks, they appear in the **Sinks** picker so the workflow author can choose one or more destinations for the log entry.
-
-Example usage in a workflow:
+Example workflow diagnostic output:
 
 ```csharp
-new Log("Workflow started", LogLevel.Information)
-```
-
-You can also specify sinks and attributes:
-
-```csharp
-new Log
-{
-    Message = new("Order received: {OrderId}"),
-    Arguments = new(new { OrderId = orderId }),
-    SinkNames = new(new[] { "FileJson" })
-}
+new WriteLine("Workflow started")
 ```
 
 ## Extending with Custom Sinks

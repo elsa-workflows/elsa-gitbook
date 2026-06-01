@@ -131,10 +131,10 @@ public static class ActivityTypes
 // Usage Example:
 // 
 // var services = new ServiceCollection();
-// services.AddElsaClient(client =>
+// services.AddDefaultApiClientsUsingApiKey(options =>
 // {
-//     client.BaseUrl = new Uri("https://your-elsa-server.com");
-//     client.ApiKey = "YOUR_API_KEY";
+//     options.BaseAddress = new Uri("https://your-elsa-server.com/elsa/api");
+//     options.ApiKey = "YOUR_API_KEY";
 // });
 // 
 // var serviceProvider = services.BuildServiceProvider();

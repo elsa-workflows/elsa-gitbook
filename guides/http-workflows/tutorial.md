@@ -987,25 +987,25 @@ Add custom headers:
 
 Implement robust error handling to make your workflows production-ready.
 
-### Pattern 1: Try-Catch with Fault Activity
+### Pattern 1: Emit a Workflow Fault
 
-Create a workflow that handles exceptions gracefully:
+Use the **Fault** activity when the workflow should stop with a structured fault that can be processed by Elsa's incident handling pipeline.
 
 {% stepper %}
 {% step %}
 #### Use Fault Activity
 
-Wrap risky operations in a **Fault** activity to catch exceptions:
+Add a **Fault** activity on the branch where the workflow has detected an unrecoverable business or integration error:
 
 1. Add a **Fault** activity
-2. Inside the Fault activity, add activities that might fail (e.g., HTTP Request to external API)
-3. Connect the **Faulted** outcome to error handling logic
+2. Configure its **Code**, **Category**, **Type**, and optional **Message** inputs
+3. Configure incident handling or resilience behavior for activities that may fail before this point
 {% endstep %}
 
 {% step %}
-#### Handle Fault
+#### Build the Fault Message
 
-Create a Set Variable activity to process the error:
+Create a Set Variable activity before the Fault activity if you need to assemble a reusable error message:
 
 {% tabs %}
 {% tab title="Input" %}

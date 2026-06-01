@@ -138,7 +138,9 @@ builder.Services.AddElsa(elsa =>
         // Only enable identity in production
         elsa.UseIdentity(identity =>
         {
-            identity.UseConfigurationBasedIdentityProvider();
+            identity.UseConfigurationBasedUserProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedApplicationProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedRoleProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
         });
         elsa.UseDefaultAuthentication();
     }
@@ -208,7 +210,9 @@ builder.Services.AddElsa(elsa =>
         elsa
             .UseIdentity(identity =>
             {
-                identity.UseConfigurationBasedIdentityProvider();
+                identity.UseConfigurationBasedUserProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedApplicationProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedRoleProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
             })
             .UseDefaultAuthentication();
     }
@@ -239,25 +243,25 @@ When disabling authentication in Elsa Server, you also need to configure Elsa St
 
 **Program.cs (Studio app):**
 ```csharp
+using Elsa.Studio.Contracts;
+using Elsa.Studio.Core.BlazorServer.Extensions;
+using Elsa.Studio.Dashboard.Extensions;
 using Elsa.Studio.Extensions;
+using Elsa.Studio.Models;
+using Elsa.Studio.Shell.Extensions;
+using Elsa.Studio.Workflows.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.RootComponents.RegisterCustomElsaStudioElements();
+    options.RootComponents.MaxJSRootComponents = 1000;
+});
 
 if (builder.Environment.IsDevelopment())
 {
-    // Disable Studio authorization checks
-    builder.Services.AddElsaStudio(studio =>
-    {
-        studio.ConfigureHttpClient(options =>
-        {
-            options.BaseAddress = new Uri("https://localhost:5001");
-            // No authentication configuration needed
-        });
-    });
-    
     // Optional: Disable authorization on Studio pages
     builder.Services.Configure<Microsoft.AspNetCore.Components.Server.CircuitOptions>(options =>
     {
@@ -268,15 +272,20 @@ else
 {
     // Production: Enable authentication
     builder.Services.AddAuthentication(/* ... */);
-    builder.Services.AddElsaStudio(studio =>
-    {
-        studio.ConfigureHttpClient(options =>
-        {
-            options.BaseAddress = new Uri("https://elsa-server.example.com");
-        });
-        // Configure authentication forwarding
-    });
 }
+
+builder.Services.AddCore();
+builder.Services.AddShell(options =>
+{
+    builder.Configuration.GetSection("Shell").Bind(options);
+    options.DisableAuthorization = builder.Environment.IsDevelopment();
+});
+builder.Services.AddRemoteBackend(new BackendApiConfig
+{
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options)
+});
+builder.Services.AddDashboardModule();
+builder.Services.AddWorkflowsModule();
 
 var app = builder.Build();
 
@@ -290,6 +299,21 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.Run();
 ```
+
+In development configuration, point Studio to the anonymous Elsa Server API:
+
+```json
+{
+  "Shell": {
+    "DisableAuthorization": true
+  },
+  "Backend": {
+    "Url": "https://localhost:5001/elsa/api"
+  }
+}
+```
+
+For the full Studio 3.7.0 host setup, see [Studio Designer Integration](../studio/integration/README.md).
 
 ## Docker Compose Example
 
@@ -444,7 +468,9 @@ builder.Services.AddElsa(elsa =>
     elsa
         .UseIdentity(identity =>
         {
-            identity.UseConfigurationBasedIdentityProvider();
+            identity.UseConfigurationBasedUserProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedApplicationProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedRoleProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
         })
         .UseDefaultAuthentication()
         .UseWorkflowManagement()
@@ -473,15 +499,15 @@ For production authentication options, see:
 **Cause:** Studio authorization is still enabled.
 
 **Fix:** Ensure Studio is configured without authentication requirements:
-```csharp
-builder.Services.AddElsaStudio(studio =>
+```json
 {
-    studio.ConfigureHttpClient(options =>
-    {
-        options.BaseAddress = new Uri("https://localhost:5001");
-        // No authentication configuration - allows anonymous access
-    });
-});
+  "Shell": {
+    "DisableAuthorization": true
+  },
+  "Backend": {
+    "Url": "https://localhost:5001/elsa/api"
+  }
+}
 ```
 
 Also verify that Elsa Server has disabled security (see Method 1 above).

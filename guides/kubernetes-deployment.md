@@ -140,7 +140,7 @@ elsaServer:
   name: elsa-server
   
   image:
-    repository: elsaworkflows/elsa-server-v3-5
+    repository: elsaworkflows/elsa-server-v3
     tag: latest
     pullPolicy: IfNotPresent
   
@@ -213,7 +213,7 @@ elsaStudio:
   name: elsa-studio
   
   image:
-    repository: elsaworkflows/elsa-studio-v3-5
+    repository: elsaworkflows/elsa-studio-v3
     tag: latest
     pullPolicy: IfNotPresent
   
@@ -551,7 +551,7 @@ metadata:
   labels:
     app: elsa-server
     component: api
-    version: v3.5
+    version: v3.7.0
 spec:
   replicas: 3
   strategy:
@@ -567,7 +567,7 @@ spec:
       labels:
         app: elsa-server
         component: api
-        version: v3.5
+        version: v3.7.0
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
@@ -593,7 +593,7 @@ spec:
       
       containers:
         - name: elsa-server
-          image: elsaworkflows/elsa-server-v3-5:latest
+          image: elsaworkflows/elsa-server-v3:latest
           imagePullPolicy: IfNotPresent
           
           ports:
@@ -706,7 +706,7 @@ metadata:
   labels:
     app: elsa-studio
     component: ui
-    version: v3.5
+    version: v3.7.0
 spec:
   replicas: 2
   strategy:
@@ -722,7 +722,7 @@ spec:
       labels:
         app: elsa-studio
         component: ui
-        version: v3.5
+        version: v3.7.0
     spec:
       securityContext:
         runAsNonRoot: true
@@ -731,7 +731,7 @@ spec:
       
       containers:
         - name: elsa-studio
-          image: elsaworkflows/elsa-studio-v3-5:latest
+          image: elsaworkflows/elsa-studio-v3:latest
           imagePullPolicy: IfNotPresent
           
           ports:
@@ -2505,7 +2505,7 @@ spec:
     spec:
       containers:
         - name: migration
-          image: elsaworkflows/elsa-server-v3-5:latest
+          image: elsaworkflows/elsa-server-v3:latest
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -3171,7 +3171,7 @@ After deploying Elsa Workflows to Kubernetes:
 
 This guide is written for:
 
-* **Elsa Workflows**: v3.5+
+* **Elsa Workflows**: v3.7.0
 * **Kubernetes**: v1.28+
 * **Helm**: v3.12+
 * **PostgreSQL**: 16+

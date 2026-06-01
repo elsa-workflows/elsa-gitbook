@@ -115,9 +115,9 @@ In `Program.cs`:
 builder.Services.AddElsa(elsa =>
 {
     elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => 
-        ef.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")!)));
+        ef.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql")!)));
     elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => 
-        ef.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql")!)));
+        ef.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql")!)));
     elsa.UseWorkflowsApi();
 });
 ```
@@ -137,8 +137,7 @@ builder.Services.AddElsa(elsa =>
 ### 1. Install NuGet Packages
 
 ```bash
-dotnet add package MongoDB.Driver
-dotnet add package Elsa.MongoDb
+dotnet add package Elsa.Persistence.MongoDb
 ```
 
 ### 2. Configure Services
@@ -146,8 +145,11 @@ dotnet add package Elsa.MongoDb
 In `Program.cs`:
 
 ```csharp
+var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDb")!;
+
 builder.Services.AddElsa(elsa =>
 {
+    elsa.UseMongoDb(mongoConnectionString);
     elsa.UseWorkflowManagement(management => management.UseMongoDb());
     elsa.UseWorkflowRuntime(runtime => runtime.UseMongoDb());
     elsa.UseWorkflowsApi();
@@ -219,7 +221,7 @@ builder.Services.AddElsa(elsa =>
     elsa.UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseSqlServer("ManagementConnectionString")));
     
     // Runtime database (executions)
-    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UsePostgreSQL("RuntimeConnectionString")));
+    elsa.UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(ef => ef.UsePostgreSql("RuntimeConnectionString")));
 });
 ```
 

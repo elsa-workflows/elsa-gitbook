@@ -88,7 +88,7 @@ Elsa supports three primary persistence providers:
 **Cons:**
 
 * ❌ No built-in migration tooling (schema changes require application logic)
-* ❌ Index creation must be managed manually
+* ❌ Custom indexes beyond Elsa's defaults must be managed manually
 * ❌ Different consistency model than relational databases
 
 **When to Choose:**
@@ -111,7 +111,7 @@ See [MongoDB Setup Example](examples/mongodb-setup.md) for configuration details
 
 **Cons:**
 
-* ❌ Manual schema management (no built-in migrations)
+* ❌ Requires the Dapper migrations feature or external schema management
 * ❌ Requires SQL expertise for customization
 * ❌ Less abstraction than EF Core
 
@@ -229,20 +229,30 @@ For detailed information on working with EF Core migrations, adding custom entit
 
 ### MongoDB Configuration
 
-MongoDB does not use migrations. Configure the database and collection names:
+MongoDB does not use migrations. Configure the shared MongoDB connection at the Elsa module level, then select MongoDB for the management and runtime stores:
 
 ```csharp
-elsa.UseWorkflowManagement(management =>
+var connectionString = builder.Configuration.GetConnectionString("MongoDb")!;
+
+builder.Services.AddElsa(elsa =>
 {
-    management.UseMongoDb(mongo =>
+    elsa.UseMongoDb(connectionString);
+
+    elsa.UseWorkflowManagement(management =>
     {
-        mongo.ConnectionString = builder.Configuration.GetConnectionString("MongoDb");
-        mongo.DatabaseName = "elsa";  // Optional: defaults to 'elsa'
+        management.UseMongoDb();
+    });
+
+    elsa.UseWorkflowRuntime(runtime =>
+    {
+        runtime.UseMongoDb();
     });
 });
 ```
 
-**Index Creation:** MongoDB requires manual index creation. See [Indexing Notes](examples/indexing-notes.md) for recommended indexes. Refer to [MongoDB Index Documentation](https://www.mongodb.com/docs/manual/indexes/) for detailed guidance.
+The database name comes from the MongoDB connection string. Elsa creates its MongoDB indexes on startup and uses snake_case collection names such as `workflow_definitions`, `workflow_instances`, `bookmarks`, `workflow_execution_logs`, and `activity_execution_logs`.
+
+**Custom Indexes:** Create any additional workload-specific indexes yourself. See [Indexing Notes](examples/indexing-notes.md) for examples and refer to [MongoDB Index Documentation](https://www.mongodb.com/docs/manual/indexes/) for detailed guidance.
 
 **Mapping Considerations:**
 
@@ -252,24 +262,33 @@ elsa.UseWorkflowManagement(management =>
 
 ### Dapper Configuration
 
-Dapper requires a connection factory and manual schema setup:
+Dapper requires module-level connection provider configuration. Select the Dapper stores separately for workflow management and runtime:
 
 ```csharp
-elsa.UseWorkflowManagement(management =>
+using Elsa.Persistence.Dapper.Extensions;
+using Elsa.Persistence.Dapper.Services;
+
+var connectionString = builder.Configuration.GetConnectionString("PostgreSql")!;
+
+builder.Services.AddElsa(elsa =>
 {
-    management.UseDapper(dapper =>
+    elsa.UseDapper(dapper =>
     {
-        dapper.ConnectionFactory = () => new NpgsqlConnection(connectionString);
-        dapper.Schema = "elsa";  // Optional: database schema
+        dapper.DbConnectionProvider = _ => new PostgreSqlDbConnectionProvider(connectionString);
+        dapper.UseMigrations();
     });
+
+    elsa.UseWorkflowManagement(management => management.UseDapper());
+    elsa.UseWorkflowRuntime(runtime => runtime.UseDapper());
 });
 ```
 
 **Schema Responsibility:**
 
-* You are responsible for creating and maintaining the database schema
-* Use SQL scripts or a migration tool like FluentMigrator
-* See [Dapper Setup Example](examples/dapper-setup.md) for schema scripts
+* Use `dapper.UseMigrations()` to run Elsa's Dapper migrations for supported databases
+* If you do not enable Elsa migrations, you are responsible for creating and maintaining the database schema
+* Elsa's Dapper migrations create PascalCase tables and columns such as `WorkflowInstances`, `Bookmarks`, and `WorkflowExecutionLogRecords`
+* See [Dapper Setup Example](examples/dapper-setup.md) for a complete setup
 
 ## Indexes & Queries
 
@@ -282,42 +301,42 @@ Proper indexing is essential for production performance. Create indexes for freq
 ```sql
 -- Query by instance ID (primary key in most providers)
 -- Query by correlation ID
-CREATE INDEX idx_workflow_instances_correlation_id ON workflow_instances(correlation_id);
+CREATE INDEX idx_workflow_instances_correlation_id ON "WorkflowInstances"("CorrelationId");
 
 -- Query by status (running, suspended, completed, faulted)
-CREATE INDEX idx_workflow_instances_status ON workflow_instances(status);
+CREATE INDEX idx_workflow_instances_status ON "WorkflowInstances"("Status");
 
 -- Query by definition ID
-CREATE INDEX idx_workflow_instances_definition_id ON workflow_instances(definition_id);
+CREATE INDEX idx_workflow_instances_definition_id ON "WorkflowInstances"("DefinitionId");
 
 -- Query by updated timestamp (for retention/cleanup)
-CREATE INDEX idx_workflow_instances_updated_at ON workflow_instances(updated_at);
+CREATE INDEX idx_workflow_instances_updated_at ON "WorkflowInstances"("UpdatedAt");
 
 -- Composite index for common queries
-CREATE INDEX idx_workflow_instances_status_definition ON workflow_instances(status, definition_id);
+CREATE INDEX idx_workflow_instances_status_definition ON "WorkflowInstances"("Status", "DefinitionId");
 ```
 
 **Bookmarks:**
 
 ```sql
 -- Query by activity type + stimulus hash (primary lookup path)
-CREATE INDEX idx_bookmarks_activity_type_hash ON bookmarks(activity_type_name, hash);
+CREATE INDEX idx_bookmarks_activity_type_hash ON "Bookmarks"("ActivityTypeName", "Hash");
 
 -- Query by workflow instance ID (for cleanup)
-CREATE INDEX idx_bookmarks_workflow_instance_id ON bookmarks(workflow_instance_id);
+CREATE INDEX idx_bookmarks_workflow_instance_id ON "Bookmarks"("WorkflowInstanceId");
 
 -- Query by correlation ID
-CREATE INDEX idx_bookmarks_correlation_id ON bookmarks(correlation_id);
+CREATE INDEX idx_bookmarks_correlation_id ON "Bookmarks"("CorrelationId");
 ```
 
 **Incidents:**
 
 ```sql
 -- Query by workflow instance ID
-CREATE INDEX idx_incidents_workflow_instance_id ON incidents(workflow_instance_id);
+CREATE INDEX idx_incidents_workflow_instance_id ON "Incidents"("WorkflowInstanceId");
 
 -- Query by timestamp (for monitoring dashboards)
-CREATE INDEX idx_incidents_timestamp ON incidents(timestamp);
+CREATE INDEX idx_incidents_timestamp ON "Incidents"("Timestamp");
 ```
 
 **Code Reference:** `src/modules/Elsa.Workflows.Core/Bookmarks/*` — Bookmark hashing and storage logic.
@@ -391,13 +410,13 @@ Orphaned bookmarks (where the associated workflow instance no longer exists) sho
 
 ```sql
 -- Find orphaned bookmarks
-SELECT b.* FROM bookmarks b
-LEFT JOIN workflow_instances wi ON b.workflow_instance_id = wi.id
-WHERE wi.id IS NULL;
+SELECT b.* FROM "Bookmarks" b
+LEFT JOIN "WorkflowInstances" wi ON b."WorkflowInstanceId" = wi."Id"
+WHERE wi."Id" IS NULL;
 
 -- Delete orphaned bookmarks
-DELETE FROM bookmarks
-WHERE workflow_instance_id NOT IN (SELECT id FROM workflow_instances);
+DELETE FROM "Bookmarks"
+WHERE "WorkflowInstanceId" NOT IN (SELECT "Id" FROM "WorkflowInstances");
 ```
 
 ### Workflow Inbox Cleanup
@@ -423,17 +442,17 @@ For immediate cleanup needs:
 
 ```sql
 -- Delete completed workflows older than 30 days
-DELETE FROM workflow_instances
-WHERE status = 'Finished'
-  AND finished_at < NOW() - INTERVAL '30 days';
+DELETE FROM "WorkflowInstances"
+WHERE "Status" = 'Finished'
+  AND "FinishedAt" < NOW() - INTERVAL '30 days';
 
 -- Delete activity execution records for deleted instances
-DELETE FROM activity_execution_records
-WHERE workflow_instance_id NOT IN (SELECT id FROM workflow_instances);
+DELETE FROM "ActivityExecutionRecords"
+WHERE "WorkflowInstanceId" NOT IN (SELECT "Id" FROM "WorkflowInstances");
 
 -- Delete execution logs for deleted instances
-DELETE FROM workflow_execution_log_records
-WHERE workflow_instance_id NOT IN (SELECT id FROM workflow_instances);
+DELETE FROM "WorkflowExecutionLogRecords"
+WHERE "WorkflowInstanceId" NOT IN (SELECT "Id" FROM "WorkflowInstances");
 ```
 
 ## Backup & Restore

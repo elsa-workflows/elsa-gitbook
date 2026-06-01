@@ -1,6 +1,6 @@
 ---
 description: >-
-  Minimal example to enable MongoDB persistence for Elsa Workflows, including connection configuration and index creation guidance.
+  Minimal example to enable MongoDB persistence for Elsa Workflows, including connection configuration and indexing notes.
 ---
 
 # MongoDB Setup Example
@@ -17,8 +17,7 @@ This document provides a minimal, copy-pasteable example for configuring Elsa Wo
 
 ```bash
 dotnet add package Elsa
-dotnet add package Elsa.MongoDb
-dotnet add package MongoDB.Driver
+dotnet add package Elsa.Persistence.MongoDb
 ```
 
 ## Minimal Configuration
@@ -36,24 +35,19 @@ var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDb")
 
 builder.Services.AddElsa(elsa =>
 {
+    // Configure the shared MongoDB connection.
+    elsa.UseMongoDb(mongoConnectionString);
+
     // Configure workflow management (definitions, instances)
     elsa.UseWorkflowManagement(management =>
     {
-        management.UseMongoDb(mongo =>
-        {
-            mongo.ConnectionString = mongoConnectionString;
-            // Optional: Specify database name (defaults to 'elsa')
-            // mongo.DatabaseName = "elsa_workflows";
-        });
+        management.UseMongoDb();
     });
     
     // Configure workflow runtime (bookmarks, inbox, execution logs)
     elsa.UseWorkflowRuntime(runtime =>
     {
-        runtime.UseMongoDb(mongo =>
-        {
-            mongo.ConnectionString = mongoConnectionString;
-        });
+        runtime.UseMongoDb();
     });
     
     // Enable HTTP activities (optional)
@@ -104,60 +98,28 @@ app.Run();
 
 ## Index Creation
 
-MongoDB does not automatically create indexes. Create these indexes for production performance:
+Elsa creates the MongoDB indexes it needs on startup. You do not need to run a separate index creation script for the built-in workflow management and runtime stores.
 
-### Using MongoDB Shell
+Elsa uses snake_case collection names, including:
+
+- `workflow_definitions`
+- `workflow_instances`
+- `triggers`
+- `bookmarks`
+- `bookmark_queue_items`
+- `workflow_execution_logs`
+- `activity_execution_logs`
+- `key_value_pairs`
+
+Use MongoDB shell commands only for verification or for additional workload-specific indexes:
 
 ```javascript
-// Connect to the elsa database
 use elsa;
 
-// Workflow Definitions
-db.WorkflowDefinitions.createIndex({ "DefinitionId": 1 });
-db.WorkflowDefinitions.createIndex({ "Name": 1 });
-db.WorkflowDefinitions.createIndex({ "IsPublished": 1 });
-db.WorkflowDefinitions.createIndex({ "IsLatest": 1 });
-db.WorkflowDefinitions.createIndex({ "Version": 1 });
-
-// Workflow Instances
-db.WorkflowInstances.createIndex({ "CorrelationId": 1 });
-db.WorkflowInstances.createIndex({ "Status": 1 });
-db.WorkflowInstances.createIndex({ "SubStatus": 1 });
-db.WorkflowInstances.createIndex({ "DefinitionId": 1 });
-db.WorkflowInstances.createIndex({ "DefinitionVersionId": 1 });
-db.WorkflowInstances.createIndex({ "UpdatedAt": -1 });
-db.WorkflowInstances.createIndex({ "CreatedAt": -1 });
-db.WorkflowInstances.createIndex({ "Status": 1, "DefinitionId": 1 });
-
-// Bookmarks
-db.Bookmarks.createIndex({ "Hash": 1 });
-db.Bookmarks.createIndex({ "ActivityTypeName": 1, "Hash": 1 });
-db.Bookmarks.createIndex({ "WorkflowInstanceId": 1 });
-db.Bookmarks.createIndex({ "CorrelationId": 1 });
-db.Bookmarks.createIndex({ "ActivityId": 1 });
-
-// Activity Execution Records
-db.ActivityExecutionRecords.createIndex({ "WorkflowInstanceId": 1 });
-db.ActivityExecutionRecords.createIndex({ "ActivityId": 1 });
-db.ActivityExecutionRecords.createIndex({ "StartedAt": -1 });
-
-// Workflow Execution Log Records
-db.WorkflowExecutionLogRecords.createIndex({ "WorkflowInstanceId": 1 });
-db.WorkflowExecutionLogRecords.createIndex({ "Timestamp": -1 });
-
-// Workflow Inbox Messages
-db.WorkflowInboxMessages.createIndex({ "Hash": 1 });
-db.WorkflowInboxMessages.createIndex({ "CorrelationId": 1 });
-db.WorkflowInboxMessages.createIndex({ "CreatedAt": 1 }, { expireAfterSeconds: 604800 });  // TTL: 7 days (7 * 24 * 60 * 60 = 604800 seconds)
-
-print("Indexes created successfully");
-```
-
-### Save as Script
-
-Save the above as `create-indexes.js` and run:
-```bash
-mongosh "mongodb://localhost:27017/elsa" create-indexes.js
+db.workflow_definitions.getIndexes();
+db.workflow_instances.getIndexes();
+db.bookmarks.getIndexes();
+db.workflow_execution_logs.getIndexes();
 ```
 
 ## Advanced Configuration
@@ -165,41 +127,31 @@ mongosh "mongodb://localhost:27017/elsa" create-indexes.js
 ### Custom Database and Collection Names
 
 ```csharp
-elsa.UseWorkflowManagement(management =>
+var mongoConnectionString = "mongodb://localhost:27017/my_workflows";
+
+builder.Services.AddElsa(elsa =>
 {
-    management.UseMongoDb(mongo =>
+    elsa.UseMongoDb(mongoConnectionString);
+
+    elsa.UseWorkflowManagement(management =>
     {
-        mongo.ConnectionString = mongoConnectionString;
-        mongo.DatabaseName = "my_workflows";
-        
-        // Optional: Custom collection name prefix
-        // mongo.CollectionNamingStrategy = name => $"elsa_{name}";
+        management.UseMongoDb();
     });
 });
 ```
 
+The database name is read from the connection string. For custom collection names, replace the `CollectionNamingStrategy` on the MongoDB feature.
+
 ### Connection Pool Settings
 
-Configure MongoDB driver settings for high-concurrency scenarios:
+Configure MongoDB driver settings such as pool sizes in the connection string:
 
-```csharp
-var mongoSettings = MongoClientSettings.FromConnectionString(mongoConnectionString);
-mongoSettings.MaxConnectionPoolSize = 100;
-mongoSettings.MinConnectionPoolSize = 10;
-mongoSettings.WaitQueueTimeout = TimeSpan.FromSeconds(30);
-mongoSettings.ConnectTimeout = TimeSpan.FromSeconds(10);
-
-// Register the configured client
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoSettings));
-
-// Use the registered client
-elsa.UseWorkflowManagement(management =>
+```json
 {
-    management.UseMongoDb(mongo =>
-    {
-        mongo.ConnectionString = mongoConnectionString;
-    });
-});
+  "ConnectionStrings": {
+    "MongoDb": "mongodb://localhost:27017/elsa?maxPoolSize=100&minPoolSize=10&waitQueueTimeoutMS=30000&connectTimeoutMS=10000"
+  }
+}
 ```
 
 ### Read Preference for Replicas
@@ -207,10 +159,12 @@ elsa.UseWorkflowManagement(management =>
 For read-heavy workloads with replica sets:
 
 ```csharp
-var mongoSettings = MongoClientSettings.FromConnectionString(mongoConnectionString);
-mongoSettings.ReadPreference = ReadPreference.SecondaryPreferred;
+using MongoDB.Driver;
 
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoSettings));
+elsa.UseMongoDb(mongoConnectionString, options =>
+{
+    options.ReadPreference = ReadPreference.SecondaryPreferred;
+});
 ```
 
 ## Mapping Considerations
@@ -261,14 +215,14 @@ MongoDB supports TTL (Time-To-Live) indexes for automatic document expiration:
 
 ```javascript
 // Auto-delete workflow execution logs after 30 days
-db.WorkflowExecutionLogRecords.createIndex(
+db.workflow_execution_logs.createIndex(
     { "Timestamp": 1 },
     { expireAfterSeconds: 2592000 }  // 30 days
 );
 
 // Auto-delete completed workflow instances after 60 days
 // Note: Only works if you have a dedicated TTL field
-db.WorkflowInstances.createIndex(
+db.workflow_instances.createIndex(
     { "ExpiresAt": 1 },
     { expireAfterSeconds: 0 }  // Expire at the ExpiresAt time
 );

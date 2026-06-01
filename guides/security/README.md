@@ -35,7 +35,7 @@ For clustering-specific security (distributed lock credentials, database permiss
 
 ### UseIdentity Configuration
 
-Elsa Server's identity system is configured in `Program.cs` via the `UseIdentity` extension method. This setup supports API keys, JWT tokens, and OIDC integration.
+Elsa Server's identity system is configured in `Program.cs` via the `UseIdentity` extension method. In the 3.7.0 server sample, token options are bound from `Identity:Tokens`, while users, applications, and roles are provided by configuration-based providers bound from the `Identity` section.
 
 **Reference:** `src/apps/Elsa.Server.Web/Program.cs` in elsa-core
 
@@ -45,6 +45,8 @@ Elsa Server's identity system is configured in `Program.cs` via the `UseIdentity
 using Elsa.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+var identitySection = builder.Configuration.GetSection("Identity");
+var identityTokenSection = identitySection.GetSection("Tokens");
 
 // Configure Elsa with identity
 builder.Services.AddElsa(elsa =>
@@ -52,15 +54,10 @@ builder.Services.AddElsa(elsa =>
     elsa
         .UseIdentity(identity =>
         {
-            // Load identity configuration from appsettings.json
-            identity.UseConfigurationBasedIdentityProvider();
-            
-            // Configure token options
-            identity.ConfigureTokenOptions(options =>
-            {
-                options.AccessTokenLifetime = TimeSpan.FromHours(1);
-                options.RefreshTokenLifetime = TimeSpan.FromDays(7);
-            });
+            identity.TokenOptions += options => identityTokenSection.Bind(options);
+            identity.UseConfigurationBasedUserProvider(options => identitySection.Bind(options));
+            identity.UseConfigurationBasedApplicationProvider(options => identitySection.Bind(options));
+            identity.UseConfigurationBasedRoleProvider(options => identitySection.Bind(options));
         })
         .UseDefaultAuthentication() // Enables JWT/API key authentication
         .UseWorkflowManagement()
@@ -80,9 +77,9 @@ app.Run();
 
 **Key Configuration Points:**
 - **`UseIdentity`**: Registers Elsa's built-in identity system
-- **`UseConfigurationBasedIdentityProvider`**: Loads identity providers from `appsettings.json`
-- **`UseDefaultAuthentication`**: Enables API key and JWT bearer authentication
-- **Token Lifetimes**: Configure appropriate TTLs for access and refresh tokens
+- **`identity.TokenOptions`**: Configures JWT issuer, audience, signing key, and token lifetimes
+- **Configuration-based providers**: Load `Users`, `Applications`, and `Roles` from the `Identity` section
+- **`UseDefaultAuthentication`**: Enables JWT bearer and API-key authentication from the `Authorization` header
 
 ### Minimal appsettings.json Structure
 
@@ -90,35 +87,53 @@ See [examples/appsettings-identity.json](examples/appsettings-identity.json) for
 
 ```json
 {
-  "Elsa": {
-    "Identity": {
-      "Providers": [
-        {
-          "Type": "ApiKey",
-          "Name": "ApiKeyProvider",
-          "Options": {
-            "ApiKeys": [
-              {
-                "Key": "${API_KEY_1}",  // Use environment variable
-                "Roles": ["Admin"]
-              }
-            ]
-          }
-        },
-        {
-          "Type": "Jwt",
-          "Name": "JwtProvider",
-          "Options": {
-            "Issuer": "https://your-identity-provider.com",
-            "Audience": "elsa-workflows",
-            "SigningKey": "${JWT_SIGNING_KEY}"  // Never commit this!
-          }
-        }
-      ]
-    }
+  "Identity": {
+    "Tokens": {
+      "SigningKey": "${ELSA_IDENTITY_SIGNING_KEY}",
+      "Issuer": "https://your-elsa-server.com",
+      "Audience": "https://your-elsa-server.com",
+      "AccessTokenLifetime": "01:00:00",
+      "RefreshTokenLifetime": "7.00:00:00"
+    },
+    "Roles": [
+      {
+        "Id": "admin",
+        "Name": "Administrator",
+        "Permissions": ["*"]
+      }
+    ],
+    "Users": [
+      {
+        "Id": "admin-user",
+        "Name": "admin",
+        "HashedPassword": "${ELSA_ADMIN_HASHED_PASSWORD}",
+        "HashedPasswordSalt": "${ELSA_ADMIN_PASSWORD_SALT}",
+        "Roles": ["admin"]
+      }
+    ],
+    "Applications": [
+      {
+        "Id": "service-client",
+        "Name": "Service Client",
+        "ClientId": "service-client",
+        "HashedApiKey": "${ELSA_SERVICE_HASHED_API_KEY}",
+        "HashedApiKeySalt": "${ELSA_SERVICE_API_KEY_SALT}",
+        "HashedClientSecret": "${ELSA_SERVICE_HASHED_CLIENT_SECRET}",
+        "HashedClientSecretSalt": "${ELSA_SERVICE_CLIENT_SECRET_SALT}",
+        "Roles": ["admin"]
+      }
+    ]
   }
 }
 ```
+
+API-key clients authenticate with:
+
+```bash
+Authorization: ApiKey YOUR_API_KEY
+```
+
+Elsa validates the API key against configured applications; store hashed API keys and salts in configuration, not raw API keys.
 
 **Important:**
 - **Never commit secrets** to source control
@@ -154,14 +169,14 @@ Elsa generates tokenized URLs for resuming workflows at bookmarks (e.g., HTTP ca
 
 The `GenerateBookmarkTriggerUrl` method creates URLs in this format:
 ```
-POST /elsa/api/bookmarks/resume?t=<encrypted_token>
+GET or POST /elsa/api/bookmarks/resume?t=<encrypted_token>
 ```
 
 The token contains:
 - Bookmark ID
 - Workflow instance ID
-- Expiration timestamp
-- Optional payload data
+
+`BookmarkTokenPayload` contains only `BookmarkId` and `WorkflowInstanceId`. Token lifetime is controlled by the token generated by `GenerateBookmarkTriggerToken` / `GenerateBookmarkTriggerUrl`, including overloads that accept a `TimeSpan` or `DateTimeOffset`.
 
 ### Security Best Practices for Resume Tokens
 
@@ -170,10 +185,8 @@ See [examples/resume-endpoint-notes.md](examples/resume-endpoint-notes.md) for d
 **Critical Security Controls:**
 
 1. **Time-to-Live (TTL):**
-   - Bookmark tokens generated by `GenerateBookmarkTriggerUrl` are encrypted and contain bookmark metadata
-   - Token lifetime is not configurable separately; implement expiration at the bookmark level
-   - Use short-lived bookmarks for webhooks (minutes) and longer-lived for email approvals (hours/days)
-   - Consider implementing custom token expiration logic if needed for your security requirements
+   - Bookmark resume tokens can be generated with a lifetime or absolute expiration
+   - Use short-lived tokens for webhooks (minutes) and longer-lived tokens for email approvals (hours/days)
    - Tokens become invalid when the bookmark is consumed (AutoBurn) or the workflow is cancelled
 
 2. **Single-Use Semantics:**
@@ -210,13 +223,12 @@ See [examples/resume-endpoint-notes.md](examples/resume-endpoint-notes.md) for d
 ```bash
 curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume?t=eyJhbGc..." \
   -H "Content-Type: application/json" \
-  -d '{"approvalStatus": "approved", "comments": "LGTM"}'
+  -d '{"input":{"approvalStatus":"approved","comments":"LGTM"}}'
 ```
 
 **Expected Responses:**
 - **200 OK**: Workflow resumed successfully
-- **401 Unauthorized**: Token invalid or expired
-- **404 Not Found**: Bookmark not found (already consumed or workflow cancelled)
+- **400 Bad Request**: Token invalid or input query-string JSON is malformed
 - **429 Too Many Requests**: Rate limit exceeded
 
 **Security Notes:**
@@ -292,6 +304,12 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
             Endpoint = "POST:/elsa/api/bookmarks/resume",
             Period = "1m",
             Limit = 100
+        },
+        new RateLimitRule
+        {
+            Endpoint = "GET:/elsa/api/bookmarks/resume",
+            Period = "1m",
+            Limit = 100
         }
     };
 });
@@ -334,7 +352,9 @@ builder.Configuration.AddEnvironmentVariables(prefix: "ELSA_");
 
 ```bash
 # Set environment variables
-export ELSA_Identity__Providers__0__Options__ApiKeys__0__Key="your-secure-key-here"
+export ELSA_Identity__Tokens__SigningKey="your-signing-key"
+export ELSA_Identity__Applications__0__HashedApiKey="..."
+export ELSA_Identity__Applications__0__HashedApiKeySalt="..."
 export ELSA_ConnectionStrings__DefaultConnection="Server=db;Database=elsa;..."
 ```
 
@@ -449,22 +469,29 @@ spec:
 ### SSO/Identity Integration
 
 **Studio Authentication:**
-- Configure Studio to use the same OIDC provider as Elsa Server
-- Example Studio configuration:
-  ```csharp
-  builder.Services.AddElsaStudio(studio =>
+- Configure Studio to use the same OIDC provider as Elsa Server through Studio 3.7.0 configuration
+- Use the Blazor host pattern in [Studio Designer Integration](../studio/integration/README.md), then configure:
+  ```json
   {
-      studio.UseIdentity(identity =>
-      {
-          identity.UseOidcProvider(oidc =>
-          {
-              oidc.Authority = "https://your-idp.com";
-              oidc.ClientId = "elsa-studio";
-              oidc.ResponseType = "code";
-              oidc.Scope = "openid profile elsa_api";
-          });
-      });
-  });
+    "Backend": {
+      "Url": "https://api.your-domain.com/elsa/api"
+    },
+    "Authentication": {
+      "Provider": "OpenIdConnect",
+      "OpenIdConnect": {
+        "Authority": "https://your-idp.com",
+        "ClientId": "elsa-studio",
+        "AuthenticationScopes": [
+          "openid",
+          "profile",
+          "elsa_api"
+        ],
+        "BackendApiScopes": [
+          "elsa_api"
+        ]
+      }
+    }
+  }
   ```
 
 **Authorization:**
@@ -513,7 +540,7 @@ Use this checklist to verify your Elsa deployment is production-ready from a sec
 - [ ] SameSite cookie attribute set to Strict or Lax
 
 ### Resume Tokens
-- [ ] Bookmark resume token TTL configured (default: 24h)
+- [ ] Bookmark URLs generated with an appropriate lifetime or absolute expiration
 - [ ] Single-use semantics enforced (`AutoBurn = true`)
 - [ ] Audit logging enabled for all resume attempts
 - [ ] Rate limiting in place (100 req/min per IP recommended)
@@ -561,7 +588,7 @@ Use this checklist to verify your Elsa deployment is production-ready from a sec
 
 Monitor these metrics for security anomalies:
 - **Authentication Failures:** Spike indicates brute-force attempts
-- **Resume Token Errors:** High rate of 401/404 may indicate token enumeration
+- **Resume Token Errors:** High rate of invalid-token or no-op resume attempts may indicate token enumeration
 - **Rate Limit Hits:** Track which IPs/tokens are rate-limited
 - **Workflow Cancellations:** Unusual patterns may indicate attacks
 
@@ -601,15 +628,15 @@ For full monitoring setup, see the **Monitoring Guide** (DOC-016 - to be created
 
 #### Token Invalid or Expired
 
-**Symptom:** Resume requests return 401 Unauthorized
+**Symptom:** Resume requests fail validation or return a client error
 
 **Diagnosis:**
-1. Check token expiration: decode JWT or bookmark token
+1. Check whether the resume URL contains the `t` query-string token
 2. Verify clock synchronization across nodes (use NTP)
 3. Confirm token signing key matches between issue and validation
 
 **Fix:**
-- Adjust token TTL if expiring too quickly
+- Generate bookmark URLs with an appropriate lifetime or absolute expiration
 - Ensure all nodes use same signing key
 - Regenerate token if signing key rotated
 
@@ -660,7 +687,7 @@ For more troubleshooting guidance, see [Troubleshooting Guide](../troubleshootin
 
 _Note: Diagrams to be added in future updates. Suggested diagrams:_
 - Identity flow: Client → Elsa API → OIDC Provider
-- Resume token lifecycle: Generation → Storage → Validation → Expiration
+- Resume token lifecycle: Generation → Validation → Bookmark resume
 - Network architecture: Ingress → Load Balancer → Elsa Nodes → Database
 - Studio SSO flow: Browser → Studio → OIDC Provider → Elsa API
 

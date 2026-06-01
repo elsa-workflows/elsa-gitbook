@@ -511,7 +511,9 @@ builder.Services.AddElsa(elsa =>
     elsa
         .UseIdentity(identity =>
         {
-            identity.UseConfigurationBasedIdentityProvider();
+            identity.UseConfigurationBasedUserProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedApplicationProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedRoleProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
         })
         .UseDefaultAuthentication()
         .UseWorkflowManagement()
