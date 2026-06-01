@@ -221,7 +221,10 @@ Next, we will modify the client project.
     cd ../ElsaStudio
     dotnet add package Elsa.Studio
     dotnet add package Elsa.Studio.Core.BlazorWasm
-    dotnet add package Elsa.Studio.Login.BlazorWasm
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI
+    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm
+    dotnet add package Elsa.Studio.Localization.BlazorWasm
     dotnet add package Elsa.Api.Client
     ```
 2.  **Modify Program.cs**
@@ -232,13 +235,18 @@ Next, we will modify the client project.
 
     ```csharp
     using System.Text.Json;
+    using Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm.Extensions;
+    using Elsa.Studio.Authentication.ElsaIdentity.HttpMessageHandlers;
+    using Elsa.Studio.Authentication.ElsaIdentity.UI.Extensions;
+    using Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm.Extensions;
+    using Elsa.Studio.Authentication.OpenIdConnect.HttpMessageHandlers;
     using Elsa.Studio.Contracts;
     using Elsa.Studio.Core.BlazorWasm.Extensions;
     using Elsa.Studio.Dashboard.Extensions;
     using Elsa.Studio.Extensions;
-    using Elsa.Studio.Login.BlazorWasm.Extensions;
-    using Elsa.Studio.Login.Extensions;
-    using Elsa.Studio.Login.HttpMessageHandlers;
+    using Elsa.Studio.Localization.BlazorWasm.Extensions;
+    using Elsa.Studio.Localization.Models;
+    using Elsa.Studio.Models;
     using Elsa.Studio.Options;
     using Elsa.Studio.Shell;
     using Elsa.Studio.Shell.Extensions;
@@ -251,30 +259,63 @@ Next, we will modify the client project.
 
     // Build the host.
     var builder = WebAssemblyHostBuilder.CreateDefault(args);
+    var configuration = builder.Configuration;
 
     // Register root components.
     builder.RootComponents.Add<App>("#app");
     builder.RootComponents.Add<HeadOutlet>("head::after");
     builder.RootComponents.RegisterCustomElsaStudioElements();
 
+    // Choose authentication provider.
+    // Supported values: "OpenIdConnect" or "ElsaIdentity".
+    var authProvider = configuration["Authentication:Provider"];
+    if (string.IsNullOrWhiteSpace(authProvider))
+        authProvider = "ElsaIdentity";
+
+    Type authenticationHandler;
+
+    if (authProvider.Equals("ElsaIdentity", StringComparison.OrdinalIgnoreCase))
+    {
+        // Elsa Identity (username/password against Elsa backend) + login UI at /login.
+        builder.Services.AddElsaIdentity();
+        builder.Services.AddElsaIdentityUI();
+        authenticationHandler = typeof(ElsaIdentityAuthenticatingApiHttpMessageHandler);
+    }
+    else if (authProvider.Equals("OpenIdConnect", StringComparison.OrdinalIgnoreCase))
+    {
+        // OpenID Connect.
+        builder.Services.AddOpenIdConnectAuth(options =>
+        {
+            configuration.GetSection("Authentication:OpenIdConnect").Bind(options);
+        });
+        authenticationHandler = typeof(OidcAuthenticatingApiHttpMessageHandler);
+    }
+    else
+    {
+        throw new InvalidOperationException($"Unsupported Authentication:Provider value '{authProvider}'. Supported values are 'OpenIdConnect' and 'ElsaIdentity'.");
+    }
+
     // Register shell services and modules.
+    var localizationConfig = new LocalizationConfig
+    {
+        ConfigureLocalizationOptions = options => configuration.GetSection("Localization").Bind(options)
+    };
+
     builder.Services.AddCore();
     builder.Services.AddShell();
     builder.Services.AddRemoteBackend(new()
     {
-        ConfigureHttpClientBuilder = options => options.AuthenticationHandler = typeof(AuthenticatingApiHttpMessageHandler)
+        ConfigureHttpClientBuilder = options => options.AuthenticationHandler = authenticationHandler
     });
-    builder.Services
-        .AddLoginModule()
-        .UseElsaIdentity();
 
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
-    builder.Services.UseElsaIdentity();
-
+    builder.Services.AddLocalizationModule(localizationConfig);
 
     // Build the application.
     var app = builder.Build();
+
+    await app.UseElsaLocalization();
 
     // Apply client config.
     var js = app.Services.GetRequiredService<IJSRuntime>();
@@ -289,7 +330,36 @@ Next, we will modify the client project.
     // Run the application.
     await app.RunAsync();
     ```
-3.  **Modify MainLayout.razor**
+3.  **Configure Client Authentication and Localization**
+
+    The hosted page still supplies the backend API URL through `window.getClientConfig`, but the client can use `wwwroot/appsettings.json` to select the Studio authentication provider and localization settings:
+
+    ```json
+    {
+        "Authentication": {
+            "Provider": "ElsaIdentity",
+            "OpenIdConnect": {
+                "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
+                "ClientId": "{client-id}",
+                "AuthenticationScopes": [
+                    "openid",
+                    "profile",
+                    "offline_access"
+                ],
+                "BackendApiScopes": [
+                    "api://{backend-api-client-id}/elsa-server-api"
+                ]
+            }
+        },
+        "Localization": {
+            "DefaultCulture": "en-US",
+            "SupportedCultures": [
+                "en-US"
+            ]
+        }
+    }
+    ```
+4.  **Modify MainLayout.razor**
 
     Update `Layout/MainLayout.razor` with the following code listing:
 

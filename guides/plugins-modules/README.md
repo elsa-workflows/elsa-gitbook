@@ -166,12 +166,8 @@ public override void Configure()
     Services.AddSingleton<IMyCustomService, MyCustomService>();
     Services.AddScoped<IMyRepository, MyRepository>();
     
-    // Configure workflow options
-    Module.ConfigureWorkflowOptions(options =>
-    {
-        // Register UI hint handlers
-        options.RegisterUIHintHandler<MyCustomUIHintHandler>("MyCustomHint");
-    });
+    // Studio-side UI hint handlers are registered in the Studio application
+    // with services.AddUIHintHandler<T>().
 }
 ```
 
@@ -411,8 +407,8 @@ MyWorkflows.Extensions/
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elsa" Version="3.0.*" />
-    <PackageReference Include="Elsa.Workflows.Core" Version="3.0.*" />
+    <PackageReference Include="Elsa" Version="3.7.0" />
+    <PackageReference Include="Elsa.Workflows.Core" Version="3.7.0" />
   </ItemGroup>
 </Project>
 ```
@@ -449,22 +445,19 @@ UI hint handlers control how activity properties are edited in the workflow desi
 ```csharp
 public class MyCustomUIHintHandler : IUIHintHandler
 {
-    public string UIHint => "MyCustomHint";
+    public string UISyntax => "MyCustomHint";
 
-    public object GetDefaultValue()
-    {
-        return new MyCustomData();
-    }
+    public bool GetSupportsUIHint(string uiHint) => uiHint == UISyntax;
+
+    public RenderFragment DisplayInputEditor(DisplayInputEditorContext context) =>
+        builder => builder.AddContent(0, "Render a custom editor here.");
 }
 ```
 
-Register in your feature:
+Register in your Studio application:
 
 ```csharp
-Module.ConfigureWorkflowOptions(options =>
-{
-    options.RegisterUIHintHandler<MyCustomUIHintHandler>("MyCustomHint");
-});
+services.AddUIHintHandler<MyCustomUIHintHandler>();
 ```
 
 ### Custom Serializers

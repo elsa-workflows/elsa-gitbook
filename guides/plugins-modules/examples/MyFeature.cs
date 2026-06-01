@@ -29,11 +29,8 @@ public class MyFeature : FeatureBase
         // Optionally register custom services
         // Services.AddSingleton<IMyCustomService, MyCustomService>();
         
-        // Optionally register UI hint handlers for custom activity properties
-        // Module.ConfigureWorkflowOptions(options =>
-        // {
-        //     options.RegisterUIHintHandler<MyCustomUIHintHandler>("MyCustomHint");
-        // });
+        // Register UI hint handlers for custom activity properties in the Studio application
+        // with services.AddUIHintHandler<MyCustomUIHintHandler>().
     }
 
     /// <summary>

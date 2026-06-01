@@ -445,6 +445,8 @@ When using an external IdP, configure Elsa Studio to authenticate users and forw
 }
 ```
 
+Use the Blazor host pattern from [Studio Designer Integration](../studio/integration/README.md) and register the `Elsa.Studio.Authentication.OpenIdConnect` module so Studio can authenticate users and attach access tokens to backend API calls.
+
 For Blazor Server Studio hosts, `ClientSecret` can be added when the OIDC provider requires a confidential client. For WebAssembly Studio hosts, omit `ClientSecret` and register the client as a public SPA using authorization code flow with PKCE.
 
 ## REST API Integration

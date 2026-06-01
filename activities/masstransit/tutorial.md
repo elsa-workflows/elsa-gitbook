@@ -13,11 +13,11 @@ public record OrderCreated(string Id, string ProductId, int Quantity);
 services.AddElsa(elsa =>
 {
     // Enable and configure MassTransit
-    elsa.AddMassTransit(massTransit =>
+    elsa.UseMassTransit(massTransit =>
     {
         // Register our message type.
         massTransit.AddMessageType<OrderCreated>();
-    };
+    });
 });
 ```
 {% endcode %}

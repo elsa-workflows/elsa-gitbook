@@ -308,6 +308,7 @@ If you're building a custom Elsa Server image, configure PostgreSQL persistence 
 
 ```csharp
 using Elsa.Persistence.EFCore.Extensions;
+using Elsa.Persistence.EFCore;
 using Elsa.Persistence.EFCore.Modules.Management;
 using Elsa.Persistence.EFCore.Modules.Runtime;
 using Elsa.Extensions;
@@ -323,9 +324,9 @@ builder.Services.AddElsa(elsa =>
         {
             ef.UsePostgreSql(
                 builder.Configuration.GetConnectionString("PostgreSql"),
-                options =>
+                new ElsaDbContextOptions
                 {
-                    options.MigrationsHistoryTable("__EFMigrationsHistory_Management");
+                    MigrationsHistoryTableName = "__EFMigrationsHistory_Management"
                 }
             );
         });
@@ -338,9 +339,9 @@ builder.Services.AddElsa(elsa =>
         {
             ef.UsePostgreSql(
                 builder.Configuration.GetConnectionString("PostgreSql"),
-                options =>
+                new ElsaDbContextOptions
                 {
-                    options.MigrationsHistoryTable("__EFMigrationsHistory_Runtime");
+                    MigrationsHistoryTableName = "__EFMigrationsHistory_Runtime"
                 }
             );
         });
@@ -367,20 +368,20 @@ app.Run();
 A common mistake is to update the connection string but forget to configure the persistence provider. This leads to:
 
 **Symptoms:**
-- Elsa still creates `elsa.db` file (SQLite)
+- Elsa still uses the in-memory stores configured by default
 - Connection string is ignored
 - Data not persisted to PostgreSQL
 
 **Root Cause:**
 
-Elsa modules have **default persistence providers** built into the code. Simply changing the connection string doesn't change the provider. You must explicitly configure each module:
+Elsa modules use in-memory stores unless you explicitly configure a persistence provider. Simply changing the connection string doesn't change the provider. You must explicitly configure each module:
 
 ```csharp
 // ❌ Wrong: Only changing connection string
 services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement();  // Uses default provider (SQLite)
-    elsa.UseWorkflowRuntime();     // Uses default provider (SQLite)
+    elsa.UseWorkflowManagement();  // Uses in-memory stores
+    elsa.UseWorkflowRuntime();     // Uses in-memory stores
 });
 
 // ✅ Correct: Configure provider for each module
@@ -782,18 +783,12 @@ kubectl exec -it deployment/postgres -- psql -U elsa_user -d elsa_workflows -c "
 # Port-forward Elsa Server
 kubectl port-forward svc/elsa-server 8080:80
 
-# Create a workflow via API
-curl -X POST http://localhost:8080/elsa/api/workflow-definitions/execute \
+# Execute an existing workflow definition via API
+curl -X POST http://localhost:8080/elsa/api/workflow-definitions/{definitionId}/execute \
   -H "Content-Type: application/json" \
   -d '{
-    "workflow": {
-      "activities": [
-        {
-          "id": "1",
-          "type": "WriteLine",
-          "text": "Hello from Kubernetes!"
-        }
-      ]
+    "input": {
+      "message": "Hello from Kubernetes!"
     }
   }'
 

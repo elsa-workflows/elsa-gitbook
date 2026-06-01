@@ -4,9 +4,11 @@ This document provides curl examples for resuming workflows via bookmarks.
 
 ## Token-Based Resume
 
-When Elsa generates a bookmark URL (e.g., for HTTP callbacks or email approvals), it includes an encrypted token that identifies the bookmark.
+When Elsa generates a bookmark URL (e.g., for HTTP callbacks or email approvals), it includes an encrypted token that identifies the bookmark and workflow instance.
 
-**Code Reference:** `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs` — `GenerateBookmarkTriggerUrl` method.
+**Code References:**
+- `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs` — `GenerateBookmarkTriggerUrl` and `GenerateBookmarkTriggerToken`
+- `src/modules/Elsa.Workflows.Runtime/Models/BookmarkTokenPayload.cs` — token payload with `BookmarkId` and `WorkflowInstanceId`
 
 ### Basic Token Resume
 
@@ -23,9 +25,35 @@ curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume?t=eyJhbGciO
 curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume?t=YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "status": "approved",
-    "approvedBy": "manager@example.com",
-    "comments": "Looks good to proceed"
+    "input": {
+      "status": "approved",
+      "approvedBy": "manager@example.com",
+      "comments": "Looks good to proceed"
+    }
+  }'
+```
+
+### Token Resume with Query Input
+
+The endpoint also accepts `GET`. When using `GET`, pass JSON input through the `in` query parameter.
+
+```bash
+curl -G "https://your-elsa-server.com/elsa/api/bookmarks/resume" \
+  --data-urlencode "t=YOUR_TOKEN" \
+  --data-urlencode 'in={"status":"approved","approvedBy":"manager@example.com"}'
+```
+
+### Asynchronous Resume
+
+Add `async=true` to enqueue the bookmark resume request instead of running it inline.
+
+```bash
+curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume?t=YOUR_TOKEN&async=true" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {
+      "status": "approved"
+    }
   }'
 ```
 
@@ -33,76 +61,9 @@ curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume?t=YOUR_TOKE
 
 | Status | Meaning |
 |--------|---------|
-| 200 OK | Workflow resumed successfully |
-| 401 Unauthorized | Token invalid |
-| 404 Not Found | Bookmark not found (may be expired or already consumed) |
-| 410 Gone | Bookmark expired or workflow cancelled |
-
----
-
-## Stimulus-Based Resume
-
-For programmatic resume without a token, provide the stimulus payload that matches the bookmark's expected input.
-
-**Code Reference:** `src/modules/Elsa.Workflows.Core/Bookmarks/` — Stimulus hashing implementation.
-
-### HTTP Endpoint Resume
-
-Resume a workflow waiting on an HTTP endpoint:
-
-```bash
-curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "activityTypeName": "Elsa.HttpEndpoint",
-    "stimulus": {
-      "path": "/webhook/order-approved",
-      "method": "POST"
-    },
-    "input": {
-      "orderId": "ORD-12345",
-      "status": "approved"
-    }
-  }'
-```
-
-### Signal-Based Resume
-
-Resume a workflow waiting on a signal:
-
-```bash
-curl -X POST "https://your-elsa-server.com/elsa/api/bookmarks/resume" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "activityTypeName": "Elsa.RunTask",
-    "stimulus": {
-      "taskName": "approval-required"
-    },
-    "correlationId": "order-12345",
-    "input": {
-      "approved": true,
-      "approverName": "John Manager"
-    }
-  }'
-```
-
-### Resume by Instance and Bookmark ID
-
-When you know the specific instance and bookmark:
-
-```bash
-curl -X POST "https://your-elsa-server.com/elsa/api/workflow-instances/{instanceId}/resume" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "bookmarkId": "bookmark-abc123",
-    "input": {
-      "result": "success"
-    }
-  }'
-```
+| 200 OK | Request accepted. The workflow is resumed inline or queued when `async=true`. |
+| 400 Bad Request | Token cannot be decrypted or `in` query-string input is not valid JSON. |
+| 429 Too Many Requests | Returned by ingress or middleware if rate limiting is configured. |
 
 ---
 
@@ -126,8 +87,9 @@ Tokens become invalid when:
 - The bookmark is burned (consumed)
 - The workflow instance is cancelled
 - The workflow instance is deleted
+- The token was generated with a lifetime or expiration time and that time has passed
 
-See [Security & Authentication Guide](../security/README.md) (DOC-020) for token security best practices.
+See [Security & Authentication Guide](../../security/README.md) (DOC-020) for token security best practices.
 
 ### Rate Limiting
 
@@ -142,11 +104,11 @@ Protect resume endpoints with rate limiting:
 
 ## Troubleshooting
 
-### Bookmark Not Found (404)
+### Resume Does Not Continue the Workflow
 
 Common causes:
 1. **Already consumed:** Bookmark was burned on previous resume
-2. **Wrong stimulus:** Payload doesn't match what the bookmark expects
+2. **Wrong token:** Token points to a different bookmark or workflow instance
 3. **Workflow cancelled:** Instance no longer exists
 
 **Debug steps:**
@@ -155,38 +117,14 @@ Common causes:
 # Check if the workflow instance exists
 curl -X GET "https://your-elsa-server.com/elsa/api/workflow-instances/{instanceId}" \
   -H "Authorization: Bearer YOUR_TOKEN"
-
-# List bookmarks for the instance
-curl -X GET "https://your-elsa-server.com/elsa/api/bookmarks?workflowInstanceId={instanceId}" \
-  -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
-### Token Invalid (401)
+### Token Invalid
 
 Common causes:
 1. **Malformed token:** Check for copy/paste errors
 2. **Wrong server:** Token was generated by a different Elsa instance
 3. **Key mismatch:** Server signing key changed since token was generated
-
-### Stimulus Mismatch
-
-The stimulus hash must match exactly. Common issues:
-
-```bash
-# These will NOT match the same bookmark:
-
-# Original expectation
-{"path": "/webhook/order-approved", "method": "POST"}
-
-# Different order (may work depending on serialization)
-{"method": "POST", "path": "/webhook/order-approved"}
-
-# Extra field (won't match)
-{"path": "/webhook/order-approved", "method": "POST", "extra": "data"}
-
-# Missing field (won't match)
-{"path": "/webhook/order-approved"}
-```
 
 **Code Reference:** `src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs` — Resume logic and bookmark matching.
 

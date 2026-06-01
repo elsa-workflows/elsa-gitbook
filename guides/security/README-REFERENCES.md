@@ -8,11 +8,13 @@ This file lists the exact source file paths referenced in the Security & Authent
 
 | File Path | Purpose | Referenced In |
 |-----------|---------|---------------|
-| `src/apps/Elsa.Server.Web/Program.cs` | Demonstrates `UseIdentity` configuration with token options and configuration-based providers. Shows `UseDefaultAuthentication` setup for JWT/API key authentication. | Identity & Authentication in Elsa Server |
-| `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs` | Provides `GenerateBookmarkTriggerUrl(bookmarkId)` for creating tokenized HTTP resume URLs. Used in HTTP callback patterns and webhook scenarios. | Tokenized Bookmark Resume URLs |
+| `src/apps/Elsa.Server.Web/Program.cs` | Demonstrates `UseIdentity`, `identity.TokenOptions`, configuration-based user/application/role providers, and `UseDefaultAuthentication`. | Identity & Authentication in Elsa Server |
+| `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs` | Provides `GenerateBookmarkTriggerUrl(bookmarkId)`, plus lifetime and absolute-expiration overloads, for creating tokenized HTTP resume URLs. | Tokenized Bookmark Resume URLs |
+| `src/modules/Elsa.Workflows.Api/Endpoints/Bookmarks/Resume/Endpoint.cs` | Exposes the anonymous `GET`/`POST /bookmarks/resume?t=...` endpoint and resumes using the decrypted bookmark token payload. | Tokenized Bookmark Resume URLs |
 | `src/modules/Elsa.Workflows.Core/Contexts/ActivityExecutionContext.cs` | Contains `CreateBookmark(CreateBookmarkArgs)` method for creating bookmarks with payloads, callbacks, and auto-burn settings. Central to bookmark lifecycle. | Tokenized Bookmark Resume URLs (Single-Use Semantics) |
-| `src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs` | Implements distributed locking for workflow resume operations. Uses `IDistributedLockProvider` to serialize resume requests and prevent concurrent modifications. | Tokenized Bookmark Resume URLs (Revocation Strategy, Distributed Locking) |
-| `src/modules/Elsa.Identity/*` | Identity module containing authentication providers (API key, JWT, OIDC), token validation, and user management services. | Identity & Authentication in Elsa Server |
+| `src/modules/Elsa.Workflows.Runtime/Services/WorkflowResumer.cs` | Implements distributed locking for bookmark resume operations and resumes matching bookmarks. | Tokenized Bookmark Resume URLs (Revocation Strategy, Distributed Locking) |
+| `src/modules/Elsa.Workflows.Runtime/Models/BookmarkTokenPayload.cs` | Defines the bookmark token payload as `BookmarkId` and `WorkflowInstanceId`. | Tokenized Bookmark Resume URLs |
+| `src/modules/Elsa.Identity/*` | Identity module containing JWT/API-key authentication, token options, and user/application/role providers. | Identity & Authentication in Elsa Server |
 
 ---
 
@@ -32,18 +34,20 @@ This file lists the exact source file paths referenced in the Security & Authent
 
 | Interface/Type | Location | Purpose |
 |----------------|----------|---------|
-| `IIdentityProvider` | `Elsa.Identity.Contracts` | Abstraction for authentication providers (API key, JWT, OIDC) |
-| `ITokenService` | `Elsa.Identity.Contracts` | Generates and validates JWT tokens and bookmark resume tokens |
-| `TokenOptions` | `Elsa.Identity.Models` | Configuration for token lifetimes, issuer, audience, and signing keys |
-| `ApiKeyOptions` | `Elsa.Identity.Models` | Configuration for API key authentication |
+| `IUserProvider` | `Elsa.Identity.Contracts` | Abstraction for loading users from stores or configuration |
+| `IApplicationProvider` | `Elsa.Identity.Contracts` | Abstraction for loading API clients/applications from stores or configuration |
+| `IRoleProvider` | `Elsa.Identity.Contracts` | Abstraction for loading roles and permissions from stores or configuration |
+| `IdentityTokenOptions` | `Elsa.Identity.Options` | Configuration for token lifetimes, issuer, audience, signing key, and tenant claim type |
+| `ApiKeyOptions` | `AspNetCore.Authentication.ApiKey` | Configuration for API-key authentication in the `Authorization` header |
 
 ### Bookmark & Resume
 
 | Interface/Type | Location | Purpose |
 |----------------|----------|---------|
 | `CreateBookmarkArgs` | `Elsa.Workflows.Core.Models` | Arguments for bookmark creation including AutoBurn, payload, and callbacks |
-| `BookmarkResumptionResult` | `Elsa.Workflows.Runtime.Models` | Result of bookmark resume operation with success/failure status |
-| `IWorkflowResumer` | `Elsa.Workflows.Runtime.Contracts` | Service for resuming workflows by bookmark or stimulus |
+| `BookmarkTokenPayload` | `Elsa.Workflows.Runtime` | Token payload containing `BookmarkId` and `WorkflowInstanceId` |
+| `ResumeBookmarkResult` | `Elsa.Workflows.Runtime.Models` | Result of bookmark resume operation with success/failure status |
+| `IWorkflowResumer` | `Elsa.Workflows.Runtime.Contracts` | Runtime service used by Elsa internals to resume bookmarked workflows |
 
 ### Distributed Locking
 
@@ -86,19 +90,20 @@ This file lists the exact source file paths referenced in the Security & Authent
 **Identity Configuration:**
 ```json
 {
-  "Elsa": {
-    "Identity": {
-      "Providers": [ /* API key, JWT, OIDC providers */ ],
-      "TokenOptions": {
-        "AccessTokenLifetime": "01:00:00",
-        "RefreshTokenLifetime": "7.00:00:00"
-      }
-    }
+  "Identity": {
+    "Tokens": {
+      "SigningKey": "...",
+      "AccessTokenLifetime": "01:00:00",
+      "RefreshTokenLifetime": "7.00:00:00"
+    },
+    "Users": [],
+    "Applications": [],
+    "Roles": []
   }
 }
 ```
 
-**Note:** Bookmark resume tokens generated by `GenerateBookmarkTriggerUrl` do not have a separate configurable lifetime in `TokenOptions`. Token validity is determined by bookmark lifecycle (consumed, workflow cancelled, or custom expiration logic).
+**Note:** `Program.cs` binds `Identity:Tokens` to `identity.TokenOptions` and the full `Identity` section to configuration-based user, application, and role providers. Bookmark resume token payloads contain only bookmark and workflow instance IDs; generate them with a lifetime or absolute expiration when time-boxing is required.
 
 See [examples/appsettings-identity.json](examples/appsettings-identity.json) for complete example.
 
@@ -108,12 +113,12 @@ See [examples/appsettings-identity.json](examples/appsettings-identity.json) for
 
 ### TTL and Token Expiration
 
-**Grounded in:** `src/modules/Elsa.Identity/Services/TokenService.cs`
+**Grounded in:** `src/modules/Elsa.Identity/Options/IdentityTokenOptions.cs` and `src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs`
 
-The `TokenService` generates tokens with configurable lifetimes. Best practices:
+Identity access and refresh tokens use `IdentityTokenOptions`. Bookmark resume URLs can be generated with lifetime or absolute-expiration overloads. Best practices:
 - Access tokens: 1 hour (short-lived, refresh as needed)
 - Refresh tokens: 7 days (balance security and UX)
-- Bookmark resume tokens: 24 hours (adjust per use case)
+- Bookmark resume tokens: shortest lifetime that fits the workflow use case
 
 ### Distributed Locking for Resume
 
@@ -161,7 +166,7 @@ When updating the Security & Authentication Guide, verify:
 
 1. **File paths remain accurate** after elsa-core or elsa-extensions refactoring
 2. **Method signatures match** current implementation (e.g., `UseIdentity`, `GenerateBookmarkTriggerUrl`)
-3. **Configuration structure is current** (TokenOptions, Identity providers)
+3. **Configuration structure is current** (`Identity:Tokens`, `Users`, `Applications`, `Roles`)
 4. **New security features are documented** (e.g., new authentication providers, token types)
 5. **Deprecated patterns are removed** or marked as such
 
@@ -181,6 +186,7 @@ test -f src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs &
 # Check for key methods
 grep -q "UseIdentity" src/apps/Elsa.Server.Web/Program.cs && echo "✅ UseIdentity found"
 grep -q "GenerateBookmarkTriggerUrl" src/modules/Elsa.Http/Extensions/BookmarkExecutionContextExtensions.cs && echo "✅ GenerateBookmarkTriggerUrl found"
+grep -q "Routes(\"/bookmarks/resume\")" src/modules/Elsa.Workflows.Api/Endpoints/Bookmarks/Resume/Endpoint.cs && echo "✅ Bookmark resume route found"
 ```
 
 ---

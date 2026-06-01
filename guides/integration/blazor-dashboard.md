@@ -111,14 +111,23 @@ dotnet add package Elsa.Studio.Core.BlazorWasm
 
 ```csharp
 using Elsa.Extensions;
+using Elsa.Studio.Contracts;
+using Elsa.Studio.Core.BlazorServer.Extensions;
+using Elsa.Studio.Dashboard.Extensions;
 using Elsa.Studio.Extensions;
-using Microsoft.AspNetCore.Components;
+using Elsa.Studio.Models;
+using Elsa.Studio.Shell.Extensions;
+using Elsa.Studio.Workflows.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Blazor Server
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.RootComponents.RegisterCustomElsaStudioElements();
+    options.RootComponents.MaxJSRootComponents = 1000;
+});
 
 // Add your existing services
 builder.Services.AddControllersWithViews();
@@ -141,15 +150,15 @@ builder.Services.AddElsa(elsa =>
         .UseHttp();
 });
 
-// Add Elsa Studio
-builder.Services.AddElsaStudio(studio =>
+// Add Elsa Studio 3.7.0 host services.
+builder.Services.AddCore();
+builder.Services.AddShell(options => builder.Configuration.GetSection("Shell").Bind(options));
+builder.Services.AddRemoteBackend(new BackendApiConfig
 {
-    // Configure Studio to connect to local Elsa Server
-    studio.ConfigureHttpClient(options =>
-    {
-        options.BaseAddress = new Uri("https://localhost:5001");  // Same app
-    });
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options)
 });
+builder.Services.AddDashboardModule();
+builder.Services.AddWorkflowsModule();
 
 var app = builder.Build();
 
@@ -180,6 +189,19 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");  // Or your Blazor root page
 
 app.Run();
+```
+
+Configure the Studio backend URL in `appsettings.json`:
+
+```json
+{
+  "Shell": {
+    "DisableAuthorization": false
+  },
+  "Backend": {
+    "Url": "https://localhost:5001/elsa/api"
+  }
+}
 ```
 
 ### Step 3: Create Blazor Host Page
@@ -293,7 +315,11 @@ builder.Services.AddAuthorization(options =>
 
 // Add Blazor and Elsa
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.RootComponents.RegisterCustomElsaStudioElements();
+    options.RootComponents.MaxJSRootComponents = 1000;
+});
 
 builder.Services.AddElsa(elsa =>
 {
@@ -310,7 +336,14 @@ builder.Services.AddElsa(elsa =>
         .UseWorkflowsApi();
 });
 
-builder.Services.AddElsaStudio();
+builder.Services.AddCore();
+builder.Services.AddShell(options => builder.Configuration.GetSection("Shell").Bind(options));
+builder.Services.AddRemoteBackend(new BackendApiConfig
+{
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options)
+});
+builder.Services.AddDashboardModule();
+builder.Services.AddWorkflowsModule();
 
 var app = builder.Build();
 
@@ -399,27 +432,16 @@ public class LoginModel : PageModel
 
 **Solution:**
 
-Configure Studio to forward authentication:
+Configure the Studio remote backend to use an authenticating HTTP message handler:
 
 ```csharp
-builder.Services.AddElsaStudio(studio =>
+builder.Services.AddRemoteBackend(new BackendApiConfig
 {
-    studio.ConfigureHttpClient(options =>
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options),
+    ConfigureHttpClientBuilder = options =>
     {
-        options.BaseAddress = new Uri("https://elsa-server.example.com");
-    });
-    
-    // Forward authentication token
-    studio.ConfigureHttpClient((sp, client) =>
-    {
-        var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-        var token = httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
-        
-        if (!string.IsNullOrEmpty(token))
-        {
-            client.DefaultRequestHeaders.Add("Authorization", token);
-        }
-    });
+        options.AuthenticationHandler = typeof(YourAuthenticatingApiHttpMessageHandler);
+    }
 });
 ```
 
@@ -438,7 +460,9 @@ builder.Services.AddElsa(elsa =>
     elsa
         .UseIdentity(identity =>
         {
-            identity.UseConfigurationBasedIdentityProvider();
+            identity.UseConfigurationBasedUserProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedApplicationProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
+            identity.UseConfigurationBasedRoleProvider(options => builder.Configuration.GetSection("Identity").Bind(options));
         })
         .UseDefaultAuthentication()
         .UseWorkflowManagement()
@@ -476,35 +500,26 @@ app.Run();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.RootComponents.RegisterCustomElsaStudioElements();
+    options.RootComponents.MaxJSRootComponents = 1000;
+});
 
 builder.Services.AddAuthentication(/* Your auth config */);
 
-builder.Services.AddElsaStudio(studio =>
+builder.Services.AddCore();
+builder.Services.AddShell(options => builder.Configuration.GetSection("Shell").Bind(options));
+builder.Services.AddRemoteBackend(new BackendApiConfig
 {
-    // Point to remote Elsa Server
-    studio.ConfigureHttpClient(options =>
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options),
+    ConfigureHttpClientBuilder = options =>
     {
-        options.BaseAddress = new Uri("https://elsa-server.example.com");
-    });
-    
-    // Configure authentication forwarding
-    studio.ConfigureHttpClient((sp, client) =>
-    {
-        var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-        var context = httpContextAccessor.HttpContext;
-        
-        if (context?.User?.Identity?.IsAuthenticated == true)
-        {
-            // Forward authentication cookie or token
-            var authHeader = context.Request.Headers["Authorization"].ToString();
-            if (!string.IsNullOrEmpty(authHeader))
-            {
-                client.DefaultRequestHeaders.Add("Authorization", authHeader);
-            }
-        }
-    });
+        options.AuthenticationHandler = typeof(YourAuthenticatingApiHttpMessageHandler);
+    }
 });
+builder.Services.AddDashboardModule();
+builder.Services.AddWorkflowsModule();
 
 var app = builder.Build();
 
@@ -589,50 +604,22 @@ builder.Services.AddCors(options =>
 
 **Problem:** User is authenticated in Studio, but API calls don't include authentication.
 
-**Solution:** Configure HTTP client to forward authentication:
+**Solution:** Configure the Studio remote backend to use an authenticating HTTP message handler:
 
 ```csharp
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddElsaStudio(studio =>
+builder.Services.AddRemoteBackend(new BackendApiConfig
 {
-    studio.ConfigureHttpClient((sp, client) =>
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options),
+    ConfigureHttpClientBuilder = options =>
     {
-        var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-        var httpContext = httpContextAccessor.HttpContext;
-        
-        if (httpContext != null)
-        {
-            // Forward authorization header (preferred for API calls)
-            var authHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
-            if (!string.IsNullOrEmpty(authHeader))
-            {
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authHeader);
-            }
-            
-            // Forward authentication cookies only to trusted Elsa Server
-            // Note: Only forward to the same domain or explicitly trusted domains
-            var cookies = httpContext.Request.Headers["Cookie"].FirstOrDefault();
-            if (!string.IsNullOrEmpty(cookies) && IsElsaServerTrusted(client.BaseAddress))
-            {
-                // Filter to only authentication-related cookies if needed
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Cookie", cookies);
-            }
-        }
-    });
+        options.AuthenticationHandler = typeof(YourAuthenticatingApiHttpMessageHandler);
+    }
 });
 
-// Helper method to validate Elsa Server is trusted
-bool IsElsaServerTrusted(Uri baseAddress)
-{
-    // Only forward cookies to same origin or explicitly configured trusted domains
-    var trustedDomains = builder.Configuration.GetSection("ElsaServer:TrustedDomains").Get<string[]>() 
-        ?? Array.Empty<string>();
-    
-    return trustedDomains.Contains(baseAddress.Host, StringComparer.OrdinalIgnoreCase)
-        || baseAddress.Host == "localhost"
-        || baseAddress.Host == "127.0.0.1";
-}
+// Implement YourAuthenticatingApiHttpMessageHandler to add only the
+// trusted bearer token or cookie values required by your Elsa Server.
 ```
 
 ## Minimal Conceptual Example
@@ -642,14 +629,24 @@ Here's a complete minimal example of a Blazor Server app with Elsa Studio:
 **Program.cs:**
 ```csharp
 using Elsa.Extensions;
+using Elsa.Studio.Contracts;
+using Elsa.Studio.Core.BlazorServer.Extensions;
+using Elsa.Studio.Dashboard.Extensions;
 using Elsa.Studio.Extensions;
+using Elsa.Studio.Models;
+using Elsa.Studio.Shell.Extensions;
+using Elsa.Studio.Workflows.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Blazor
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.RootComponents.RegisterCustomElsaStudioElements();
+    options.RootComponents.MaxJSRootComponents = 1000;
+});
 
 // Authentication
 builder.Services
@@ -669,13 +666,14 @@ builder.Services.AddElsa(elsa =>
 });
 
 // Elsa Studio
-builder.Services.AddElsaStudio(studio =>
+builder.Services.AddCore();
+builder.Services.AddShell(options => builder.Configuration.GetSection("Shell").Bind(options));
+builder.Services.AddRemoteBackend(new BackendApiConfig
 {
-    studio.ConfigureHttpClient(options =>
-    {
-        options.BaseAddress = new Uri("https://localhost:5001");
-    });
+    ConfigureBackendOptions = options => builder.Configuration.GetSection("Backend").Bind(options)
 });
+builder.Services.AddDashboardModule();
+builder.Services.AddWorkflowsModule();
 
 var app = builder.Build();
 

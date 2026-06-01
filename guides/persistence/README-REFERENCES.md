@@ -139,13 +139,13 @@ This document provides exact source file references in the elsa-core and elsa-ex
 
 ### MongoDB Module
 
-**Path:** `src/modules/Elsa.MongoDb/`
+**Path:** `src/modules/persistence/Elsa.Persistence.MongoDb/`
 
 **Key Files:**
-- `MongoDbStore.cs` — Generic MongoDB store implementation
-- `MongoDbWorkflowDefinitionStore.cs`
-- `MongoDbWorkflowInstanceStore.cs`
-- `MongoDbBookmarkStore.cs`
+- `Extensions/ModuleExtensions.cs` — Module-level MongoDB configuration
+- `Features/MongoDbFeature.cs` — MongoDB connection and collection naming options
+- `Modules/Management/WorkflowManagementPersistenceFeature.cs`
+- `Modules/Runtime/WorkflowRuntimePersistenceFeature.cs`
 
 **Purpose:** MongoDB persistence implementation.
 
@@ -158,14 +158,14 @@ This document provides exact source file references in the elsa-core and elsa-ex
 
 ### Dapper Module
 
-**Path:** `src/modules/Elsa.Dapper/`
+**Path:** `src/modules/persistence/Elsa.Persistence.Dapper/`
 
 **Key Files:**
-- `DapperStore.cs` — Generic Dapper store implementation
-- `DapperWorkflowDefinitionStore.cs`
-- `DapperWorkflowInstanceStore.cs`
-- `DapperBookmarkStore.cs`
-- `TypeHandlers/` — Custom type handlers for complex types
+- `Extensions/DapperFeatureExtensions.cs` — Module-level Dapper configuration
+- `Features/DapperFeature.cs` — Dapper connection provider configuration
+- `Modules/Management/Features/DapperWorkflowManagementPersistenceFeature.cs`
+- `Modules/Runtime/Features/DapperWorkflowRuntimePersistenceFeature.cs`
+- `../Elsa.Persistence.Dapper.Migrations/` — Dapper migration definitions
 
 **Purpose:** Dapper persistence implementation for performance-critical scenarios.
 

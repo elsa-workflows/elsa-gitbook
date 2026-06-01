@@ -1409,12 +1409,10 @@ builder.Services.AddElsa(elsa =>
     });
 });
 
-// In Elsa Studio
-builder.Services.AddElsaStudio(studio =>
-{
-    studio.ServerUrl = "https://api.example.com/elsa/api";
-    studio.Authentication = new BearerTokenAuthentication("your-jwt-token");
-});
+// In Elsa Studio, use the 3.7.0 Blazor host pattern from
+// guides/studio/integration/README.md and set:
+// Backend:Url = "https://api.example.com/elsa/api"
+// Authentication:Provider = "OpenIdConnect"
 ```
 
 **Alternative: OpenID Connect with External Provider:**

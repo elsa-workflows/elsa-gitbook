@@ -293,7 +293,9 @@ app.Run();
 
 #### Step 7: Configure Studio for Azure AD
 
-Elsa Studio 3.7 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. For Blazor Server Studio hosts, configure `Authentication:Provider` and `Authentication:OpenIdConnect`:
+Elsa Studio 3.7 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. Use the Blazor host pattern from [Studio Designer Integration](studio/integration/README.md), then configure `Backend:Url`, `Authentication:Provider`, and `Authentication:OpenIdConnect`.
+
+For Blazor Server Studio hosts:
 
 ```json
 {

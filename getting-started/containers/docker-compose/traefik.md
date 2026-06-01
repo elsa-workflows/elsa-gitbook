@@ -30,12 +30,12 @@ services:
 
     # Elsa Server and Studio behind Traefik and configured with PostgreSQL.
     elsa-server-and-studio:
-        image: elsaworkflows/elsa-server-and-studio-v3-5:latest
+        image: elsaworkflows/elsa-server-and-studio-v3:latest
         pull_policy: always
         environment:
             ASPNETCORE_ENVIRONMENT: Development
             HTTP_PORTS: 8080
-            HOSTING__BASEURL: http://elsa.localhost:1280
+            HTTP__BASEURL: http://elsa.localhost:1280
             DATABASEPROVIDER: PostgreSql
             CONNECTIONSTRINGS__POSTGRESQL: Host=postgres;Port=5432;Database=elsa;Username=elsa;Password=elsa
         labels:

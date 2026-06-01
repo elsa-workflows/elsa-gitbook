@@ -2,17 +2,17 @@
 
 ## Overview
 
-Field extensions allow you to add functionality to activity elements directly within the studio, rather than on the Elsa Server side. Extension can be ordered and filtered to render on either, All components, specific `InputUIHints` components, specific activity names or `InputAttribute.DefaultSyntax`.&#x20;
+Field extensions allow you to add functionality to activity elements directly within the studio, rather than on the Elsa Server side. Extensions can be ordered and filtered to render for all components, specific `UIHintComponent` values, specific activity types, or specific syntaxes.
 
 ## Example
 
-In this example, a simple field extension is applied to the **Client** property. It displays a message beneath all `InputUiHint.DropDown`'s, and an additional toolbar at the top of the query editor—shown only when the syntax type is `"sql"`.
+In this example, a simple field extension is applied to the **Client** property. It displays a message beneath all `InputUIHints.DropDown` fields, and an additional toolbar at the top of the query editor shown only when the syntax type is `"sql"`.
 
 <figure><img src="../../.gitbook/assets/420121687-6f84fbad-5e5e-4e20-ae2d-314a42b05674.png" alt=""><figcaption></figcaption></figure>
 
 ## Creating a field extension
 
-To create a field extension you can implement the `IFieldExtension` interface:
+To create a field extension you can implement the `IUIFieldExtensionHandler` interface:
 
 ```csharp
 public interface IUIFieldExtensionHandler

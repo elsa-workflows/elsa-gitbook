@@ -35,7 +35,7 @@ Create a file named `docker-compose.yml` with the following content:
 ```yaml
 services:
   elsa-server-and-studio:
-    image: elsaworkflows/elsa-server-and-studio-v3-5:latest
+    image: elsaworkflows/elsa-server-and-studio-v3:latest
     pull_policy: always
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -102,7 +102,7 @@ services:
     restart: unless-stopped
 
   elsa-server-and-studio:
-    image: elsaworkflows/elsa-server-and-studio-v3-5:latest
+    image: elsaworkflows/elsa-server-and-studio-v3:latest
     pull_policy: always
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -479,7 +479,7 @@ If you encounter issues not covered in this guide:
 ## Version Information
 
 This guide is written for:
-* Elsa Workflows v3.5
+* Elsa Workflows v3.7.0
 * Docker Compose V2
 * PostgreSQL 16
 * SQLite 3

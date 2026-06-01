@@ -12,9 +12,9 @@ Elsa Studio is a flexible, framework-agnostic web application that can be integr
 Elsa Studio provides a visual workflow designer that connects to Elsa Server (the backend API). Depending on your application architecture and technology stack, you can integrate Studio in several ways:
 
 - **Separate Application**: Studio runs as a standalone app (recommended for most scenarios)
-- **Embedded in Host**: Studio is embedded within your application's UI
 - **Iframe Integration**: Studio is loaded in an iframe with cross-origin communication
-- **Same Process**: Studio and Server run in the same ASP.NET Core process
+- **Blazor Server Host**: Studio runs from an ASP.NET Core Blazor Server host and connects to an Elsa Server backend
+- **Custom Elements Host**: Studio workflow components are exposed as web components for host pages that can provide backend configuration
 
 ## Common Integration Approaches
 
@@ -71,9 +71,9 @@ Studio is loaded in an iframe within your application:
 - PostMessage required for communication
 - CORS and authentication complexity
 
-### 3. Direct Embedding (Blazor/MVC)
+### 3. Blazor Server Host
 
-Studio is embedded directly into an ASP.NET Core application:
+Studio can be hosted by an ASP.NET Core Blazor Server application:
 
 ```
 ┌────────────────────────────────────────┐
@@ -81,21 +81,18 @@ Studio is embedded directly into an ASP.NET Core application:
 │                                        │
 │  ┌──────────────┐  ┌────────────────┐ │
 │  │ Your Pages   │  │ Elsa Studio    │ │
-│  │ /dashboard   │  │ /workflows/*   │ │
+│  │ /dashboard   │  │ Blazor Server  │ │
 │  └──────────────┘  └────────────────┘ │
 │                                        │
-│  ┌─────────────────────────────────┐  │
-│  │     Elsa Server (API)           │  │
-│  │     /api/workflows/*            │  │
-│  └─────────────────────────────────┘  │
+│  Backend:Url ──> Elsa Server /elsa/api │
 └────────────────────────────────────────┘
 ```
 
 **Advantages:**
 - Single deployment unit
 - Shared authentication/authorization
-- No CORS issues
-- Simplified configuration
+- Server-side Blazor hosting for Studio
+- Configuration through the same application settings
 
 **Disadvantages:**
 - Tighter coupling
@@ -112,62 +109,76 @@ Studio needs to know where Elsa Server's API is located:
 
 ```json
 {
-  "Elsa": {
-    "Server": {
-      "BaseUrl": "https://your-api.example.com"
-    }
+  "Backend": {
+    "Url": "https://your-api.example.com/elsa/api"
   }
 }
 ```
 
-Or via environment variable:
+Or via the equivalent environment variable:
 
 ```bash
-ELSA__SERVER__BASEURL=https://your-api.example.com
+Backend__Url=https://your-api.example.com/elsa/api
 ```
 
 ### Authentication
 
-Studio must authenticate with Elsa Server. Common approaches:
+Studio 3.7.0 selects the client-side authentication integration through `Authentication:Provider`.
 
-#### API Key (Simplest)
+#### Elsa Identity
+
+Use Elsa Identity when users should sign in with credentials accepted by the Elsa backend:
+
 ```json
 {
-  "Elsa": {
-    "Server": {
-      "BaseUrl": "https://your-api.example.com",
-      "ApiKey": "your-api-key-here"
+  "Backend": {
+    "Url": "https://your-api.example.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "ElsaIdentity"
+  }
+}
+```
+
+#### OpenID Connect
+
+Use OpenID Connect when Studio should acquire tokens from an external identity provider:
+
+```json
+{
+  "Backend": {
+    "Url": "https://your-api.example.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
+      "ClientId": "{client-id}",
+      "AuthenticationScopes": [
+        "openid",
+        "profile",
+        "offline_access"
+      ],
+      "BackendApiScopes": [
+        "api://{backend-api-client-id}/elsa-server-api"
+      ]
     }
   }
 }
 ```
 
-#### Bearer Token (OAuth2/OIDC)
+### Localization
+
+Studio 3.7.0 hosts wire localization through the `Localization` section:
+
 ```json
 {
-  "Elsa": {
-    "Server": {
-      "BaseUrl": "https://your-api.example.com",
-      "AuthenticationScheme": "Bearer"
-    }
-  }
-}
-```
-
-Studio will include the token in API requests:
-```
-Authorization: Bearer <token>
-```
-
-#### Cookie-Based (Same Domain)
-When Studio and Server share a domain, cookies can be used:
-```json
-{
-  "Elsa": {
-    "Server": {
-      "BaseUrl": "https://your-app.example.com/api",
-      "AuthenticationScheme": "Cookies"
-    }
+  "Localization": {
+    "DefaultCulture": "en-US",
+    "SupportedCultures": [
+      "en-GB",
+      "nl-NL"
+    ]
   }
 }
 ```
@@ -203,7 +214,7 @@ React applications typically integrate Studio as a separate service or via ifram
 ```bash
 # Run Studio on port 5001
 docker run -d -p 5001:8080 \
-  -e ELSA__SERVER__BASEURL=https://api.example.com \
+  -e Backend__Url=https://api.example.com/elsa/api \
   elsaworkflows/elsa-studio:latest
 ```
 
@@ -398,50 +409,97 @@ export class AppRoutingModule { }
 
 ## Blazor Integration
 
-Blazor offers the tightest integration since both Studio and your app use Blazor.
+Blazor offers the tightest hosting option because Elsa Studio itself is a Blazor application. In 3.7.0, Studio is wired through Blazor host services and normal ASP.NET Core endpoints, not through `AddElsaStudio` or `MapElsaStudio` helper APIs.
 
-### Pattern 1: Same Process (Recommended)
+### Pattern 1: Blazor Server Studio Host
 
-Studio runs in the same ASP.NET Core application:
+The Blazor Server host registers Razor Pages, Server-Side Blazor, Studio root custom elements, Studio modules, a remote backend, and the Blazor fallback page:
 
 **Program.cs:**
 ```csharp
-using Elsa.Studio;
+using Elsa.Studio.Authentication.ElsaIdentity.BlazorServer.Extensions;
+using Elsa.Studio.Authentication.ElsaIdentity.HttpMessageHandlers;
+using Elsa.Studio.Authentication.ElsaIdentity.UI.Extensions;
+using Elsa.Studio.Contracts;
+using Elsa.Studio.Core.BlazorServer.Extensions;
+using Elsa.Studio.Dashboard.Extensions;
 using Elsa.Studio.Extensions;
+using Elsa.Studio.Localization.BlazorServer.Extensions;
+using Elsa.Studio.Localization.Models;
+using Elsa.Studio.Models;
+using Elsa.Studio.Shell.Extensions;
+using Elsa.Studio.Workflows.Designer.Extensions;
+using Elsa.Studio.Workflows.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
-// Add your application services
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.RootComponents.RegisterCustomElsaStudioElements();
+    options.RootComponents.MaxJSRootComponents = 1000;
+});
 
-// Add Elsa Server
-builder.Services.AddElsa(elsa => elsa
-    .UseWorkflowRuntime()
-    .UseHttp()
-    .UseEntityFrameworkCore()
-);
+builder.Services.AddElsaIdentity();
+builder.Services.AddElsaIdentityUI();
 
-// Add Elsa Studio
-builder.Services.AddElsaStudio(studio => studio
-    .UseBackendUrl(builder.Configuration["Elsa:Server:BaseUrl"] ?? "/api")
-);
+var backendApiConfig = new BackendApiConfig
+{
+    ConfigureBackendOptions = options => configuration.GetSection("Backend").Bind(options),
+    ConfigureHttpClientBuilder = options =>
+    {
+        options.AuthenticationHandler = typeof(ElsaIdentityAuthenticatingApiHttpMessageHandler);
+    }
+};
+
+var localizationConfig = new LocalizationConfig
+{
+    ConfigureLocalizationOptions = options => configuration.GetSection("Localization").Bind(options)
+};
+
+builder.Services.AddCore();
+builder.Services.AddShell(options => configuration.GetSection("Shell").Bind(options));
+builder.Services.AddRemoteBackend(backendApiConfig);
+builder.Services.AddDashboardModule();
+builder.Services.AddWorkflowsModule();
+builder.Services.AddLocalizationModule(localizationConfig);
 
 var app = builder.Build();
 
-// Map Elsa API endpoints
-app.MapGroup("/api")
-   .MapElsaWorkflowsApi()
-   .RequireAuthorization();
-
-// Map Studio UI
-app.MapElsaStudio("/workflows");
-
-// Map your application
+app.UseElsaLocalization();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapRazorPages();
 app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
 
 app.Run();
+```
+
+**appsettings.json:**
+
+```json
+{
+  "Shell": {
+    "DisableAuthorization": false
+  },
+  "Backend": {
+    "Url": "https://localhost:5001/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "ElsaIdentity"
+  },
+  "Localization": {
+    "DefaultCulture": "en-US",
+    "SupportedCultures": [
+      "en-US"
+    ]
+  }
+}
 ```
 
 **Navigation Integration:**
@@ -465,66 +523,26 @@ app.Run();
 </div>
 ```
 
-### Pattern 2: Embedded Component
+### Pattern 2: Workflow Custom Elements
 
-Embed Studio as a component in your Blazor page:
+The 3.7.0 custom-elements host registers workflow-level elements for pages that need to embed specific Studio surfaces:
 
-```razor
-<!-- Pages/Workflows.razor -->
-@page "/workflows"
-@using Elsa.Studio.Components
-
-<PageTitle>Workflows</PageTitle>
-
-<h1>Workflow Designer</h1>
-
-<div style="height: calc(100vh - 100px);">
-    <ElsaStudioRoot />
-</div>
+```csharp
+builder.RootComponents.RegisterCustomElsaStudioElements();
+builder.RootComponents.RegisterCustomElement<BackendProvider>("elsa-backend-provider");
+builder.RootComponents.RegisterCustomElement<WorkflowDefinitionEditorWrapper>("elsa-workflow-definition-editor");
+builder.RootComponents.RegisterCustomElement<WorkflowInstanceViewerWrapper>("elsa-workflow-instance-viewer");
+builder.RootComponents.RegisterCustomElement<WorkflowInstanceListWrapper>("elsa-workflow-instance-list");
+builder.RootComponents.RegisterCustomElement<WorkflowDefinitionListWrapper>("elsa-workflow-definition-list");
 ```
 
-For detailed Blazor integration, see the [Blazor Dashboard Integration](../../integration/blazor-dashboard.md) guide.
+These are specific workflow components. Studio 3.7.0 does not expose a generic `<ElsaStudioRoot />` component for arbitrary host pages.
 
 ## MVC / Razor Pages Integration
 
-ASP.NET Core MVC and Razor Pages can host Studio in the same process.
+ASP.NET Core MVC and Razor Pages applications can link to a Studio Blazor host, put Studio behind the same reverse proxy, or display Studio in an iframe. If the same ASP.NET Core process hosts Studio, it still needs the Blazor Server setup shown above.
 
-### Pattern 1: Separate Routes
-
-**Program.cs:**
-```csharp
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllersWithViews();
-
-// Add Elsa Server
-builder.Services.AddElsa(elsa => elsa
-    .UseWorkflowRuntime()
-    .UseHttp()
-);
-
-// Add Elsa Studio (Blazor Server)
-builder.Services.AddElsaStudio();
-
-var app = builder.Build();
-
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthorization();
-
-// Map MVC routes
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-// Map Elsa Studio (uses Blazor Server)
-app.MapElsaStudio("/workflows");
-
-// Map Elsa API
-app.MapGroup("/api").MapElsaWorkflowsApi();
-
-app.Run();
-```
+### Pattern 1: Link or Reverse Proxy to Studio
 
 **View Integration:**
 ```cshtml
@@ -549,6 +567,8 @@ app.Run();
 </html>
 ```
 
+Configure the web server or reverse proxy so `/workflows` routes to the Studio host.
+
 ### Pattern 2: Iframe in View
 
 ```cshtml
@@ -570,49 +590,49 @@ app.Run();
 
 ## Authentication Integration
 
-### Shared Cookie Authentication
+### Elsa Identity
 
-When Studio and your app share a domain:
+For username/password authentication against the Elsa backend, register the Elsa Identity Studio package for the host type and select the provider in configuration:
 
 ```csharp
-// Program.cs
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/login";
-        options.Cookie.Name = "YourApp.Auth";
-        options.Cookie.SameSite = SameSiteMode.Lax;
-    });
-
-// Both Studio and API use the same authentication
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapElsaStudio("/workflows").RequireAuthorization();
-app.MapGroup("/api").MapElsaWorkflowsApi().RequireAuthorization();
+builder.Services.AddElsaIdentity();
+builder.Services.AddElsaIdentityUI();
 ```
 
-### JWT Token Authentication
-
-When Studio is separate from the server:
-
-**Server Configuration:**
-```csharp
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = "https://your-identity-server.com";
-        options.Audience = "elsa-api";
-    });
-```
-
-**Studio Configuration:**
 ```json
 {
-  "Elsa": {
-    "Server": {
-      "BaseUrl": "https://api.example.com",
-      "AuthenticationScheme": "Bearer"
+  "Authentication": {
+    "Provider": "ElsaIdentity"
+  }
+}
+```
+
+### OpenID Connect
+
+For an external identity provider, register OpenID Connect support and configure the authority, client, and backend API scopes:
+
+```csharp
+builder.Services.AddOpenIdConnectAuth(options =>
+{
+    configuration.GetSection("Authentication:OpenIdConnect").Bind(options);
+});
+```
+
+```json
+{
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
+      "ClientId": "{client-id}",
+      "AuthenticationScopes": [
+        "openid",
+        "profile",
+        "offline_access"
+      ],
+      "BackendApiScopes": [
+        "api://{backend-api-client-id}/elsa-server-api"
+      ]
     }
   }
 }
@@ -646,7 +666,8 @@ services:
   elsa-studio:
     image: elsaworkflows/elsa-studio:latest
     environment:
-      - ELSA__SERVER__BASEURL=http://elsa-server:5000
+      - Backend__Url=http://elsa-server:5000/elsa/api
+      - Authentication__Provider=ElsaIdentity
     ports:
       - "5001:8080"
 
@@ -691,8 +712,10 @@ spec:
       - name: studio
         image: elsaworkflows/elsa-studio:latest
         env:
-        - name: ELSA__SERVER__BASEURL
-          value: "http://elsa-server-service/api"
+        - name: Backend__Url
+          value: "http://elsa-server-service/elsa/api"
+        - name: Authentication__Provider
+          value: "ElsaIdentity"
         ports:
         - containerPort: 8080
 ---
@@ -758,9 +781,9 @@ app.Use(async (context, next) =>
 Integrating Elsa Studio into your application depends on your framework and requirements:
 
 - **React/Angular**: Use separate service with reverse proxy or iframe
-- **Blazor**: Use same-process integration with `MapElsaStudio()`
-- **MVC/Razor Pages**: Use same-process or iframe integration
-- **All Frameworks**: Configure base API URL, authentication, and CORS appropriately
+- **Blazor**: Use the Blazor Server host setup with `AddCore`, `AddShell`, `AddRemoteBackend`, Studio modules, `MapBlazorHub`, and `MapFallbackToPage`
+- **MVC/Razor Pages**: Link, reverse proxy, or iframe a Studio host; use the Blazor Server setup when hosting Studio in the same process
+- **All Frameworks**: Configure `Backend:Url`, `Authentication:Provider`, localization, and CORS appropriately
 
 For more detailed framework-specific guidance:
 - **[Blazor Dashboard Integration](../../integration/blazor-dashboard.md)** - Comprehensive Blazor guide
