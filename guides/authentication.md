@@ -1127,6 +1127,23 @@ var backendApiConfig = new BackendApiConfig
 builder.Services.AddRemoteBackend(backendApiConfig);
 ```
 
+If you use the standard Elsa Studio shell `App` component, no Razor page changes are required. The shell already uses `CascadingAuthenticationState`, `AuthorizeRouteView`, and the unauthorized component registered by the selected authentication module.
+
+If you replace the shell `App` component with your own router, wrap the router in `CascadingAuthenticationState` and use `AuthorizeRouteView`.
+
+For Blazor WebAssembly Studio hosts, `wwwroot/index.html` must also include Microsoft's WebAssembly authentication script before `_framework/blazor.webassembly.js`:
+
+```html
+<script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
+<script src="_framework/blazor.webassembly.js"></script>
+```
+
+If this script is missing, the browser console can show:
+
+```text
+Could not find 'AuthenticationService.init' ('AuthenticationService' was undefined).
+```
+
 ### Authentication Scopes and Backend API Scopes
 
 `AuthenticationScopes` are requested during sign-in. They usually include identity scopes such as `openid`, `profile`, `email`, and optionally `offline_access`.
