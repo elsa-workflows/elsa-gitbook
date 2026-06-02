@@ -159,6 +159,7 @@ builder.Services.AddElsa(elsa =>
         management.UseEntityFrameworkCore(ef =>
         {
             ef.UsePostgreSql(builder.Configuration.GetConnectionString("ElsaDatabase"));
+            ef.RunMigrations = builder.Environment.IsDevelopment();
         });
     });
     
@@ -167,6 +168,7 @@ builder.Services.AddElsa(elsa =>
         runtime.UseEntityFrameworkCore(ef =>
         {
             ef.UsePostgreSql(builder.Configuration.GetConnectionString("ElsaDatabase"));
+            ef.RunMigrations = builder.Environment.IsDevelopment();
         });
     });
     
@@ -175,13 +177,6 @@ builder.Services.AddElsa(elsa =>
 });
 
 var app = builder.Build();
-
-// Run EF Core migrations on startup (development only)
-// For production, run migrations separately
-if (app.Environment.IsDevelopment())
-{
-    await app.Services.MigrateElsaDatabaseAsync();
-}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -210,6 +205,7 @@ elsa.UseWorkflowManagement(management =>
     management.UseEntityFrameworkCore(ef =>
     {
         ef.UseSqlServer(builder.Configuration.GetConnectionString("ElsaDatabase"));
+        ef.RunMigrations = builder.Environment.IsDevelopment();
     });
 });
 
@@ -218,6 +214,7 @@ elsa.UseWorkflowRuntime(runtime =>
     runtime.UseEntityFrameworkCore(ef =>
     {
         ef.UseSqlServer(builder.Configuration.GetConnectionString("ElsaDatabase"));
+        ef.RunMigrations = builder.Environment.IsDevelopment();
     });
 });
 ```
@@ -236,38 +233,47 @@ elsa.UseWorkflowRuntime(runtime =>
 
 After configuring persistence, you need to create the database schema.
 
-### Option A: Auto-Migration (Development)
+### Option A: Automatic Migrations (Development)
 
-For development environments, you can auto-migrate on startup:
+For development environments, configure Elsa's EF Core persistence features to run migrations on startup:
 
 ```csharp
-if (app.Environment.IsDevelopment())
+elsa.UseWorkflowManagement(management =>
 {
-    await app.Services.MigrateElsaDatabaseAsync();
-}
+    management.UseEntityFrameworkCore(ef =>
+    {
+        ef.UsePostgreSql(builder.Configuration.GetConnectionString("ElsaDatabase"));
+        ef.RunMigrations = builder.Environment.IsDevelopment();
+    });
+});
+
+elsa.UseWorkflowRuntime(runtime =>
+{
+    runtime.UseEntityFrameworkCore(ef =>
+    {
+        ef.UsePostgreSql(builder.Configuration.GetConnectionString("ElsaDatabase"));
+        ef.RunMigrations = builder.Environment.IsDevelopment();
+    });
+});
 ```
 
-This creates/updates the database schema automatically when the app starts.
+There is no `MigrateElsaDatabaseAsync` extension method. In Elsa's source, the real configuration property is `PersistenceFeatureBase.RunMigrations`; Elsa's EF Core modules register `RunMigrationsStartupTask<TDbContext>`, which runs EF Core `Database.MigrateAsync()` for each Elsa DbContext when `RunMigrations` is enabled.
 
-### Option B: Manual Migration (Production)
+### Option B: Manual Migration Application (Production)
 
-For production, run migrations separately using the EF Core CLI:
+For production, disable automatic migrations and apply Elsa's built-in provider migrations in a controlled deployment step:
 
 ```bash
 # Install EF Core tools if not already installed
 dotnet tool install --global dotnet-ef
 
-# Add a migration
-dotnet ef migrations add InitialElsa --context ManagementElsaDbContext
-dotnet ef migrations add InitialElsaRuntime --context RuntimeElsaDbContext
-
-# Apply migrations
+# Apply Elsa's built-in Management and Runtime context migrations
 dotnet ef database update --context ManagementElsaDbContext
 dotnet ef database update --context RuntimeElsaDbContext
 ```
 
 {% hint style="info" %}
-**Note:** Elsa uses separate DbContexts for management (workflow definitions) and runtime (workflow instances). You'll need to manage migrations for both contexts.
+**Note:** Elsa uses separate DbContexts for management data and runtime data: `ManagementElsaDbContext` and `RuntimeElsaDbContext`. Apply migrations for both contexts. You only need `dotnet ef migrations add` for your own application DbContexts or custom migration strategy, not for the built-in Elsa provider migrations.
 {% endhint %}
 
 ## Common Pain Points and Solutions
@@ -637,14 +643,9 @@ var app = builder.Build();  // After AddElsa
 
 **Problem:** Tables not created after running migrations.
 
-**Solution:** Ensure migrations were created for both contexts:
+**Solution:** For development startup migrations, ensure `RunMigrations` is enabled for both Elsa EF Core persistence features: workflow management and workflow runtime.
 
-```bash
-dotnet ef migrations add InitialElsa --context ManagementElsaDbContext
-dotnet ef migrations add InitialElsaRuntime --context RuntimeElsaDbContext
-```
-
-Then apply both:
+For manual deployment, apply Elsa's built-in migrations for both contexts:
 
 ```bash
 dotnet ef database update --context ManagementElsaDbContext
@@ -653,5 +654,5 @@ dotnet ef database update --context RuntimeElsaDbContext
 
 ---
 
-**Last Updated:** 2025-12-02  
+**Last Updated:** 2026-06-02  
 **Addresses Issues:** #6
