@@ -37,14 +37,15 @@ Each variable retrieved is represented by a unique ID, a name, and a value.
 
 ### Updating﻿ <a href="#update-variables" id="update-variables"></a>
 
-You can also use the `IWorkflowInstanceVariableManager` service to update one or more variables of a workflow instance. Below is an example of how to perform the update:
+You can also use the `IWorkflowInstanceVariableManager` service to update one or more variables of a workflow instance. Provide the variable IDs you want to change and the new values to assign to them:
 
 ```csharp
-var variablesToUpdate = [
+var workflowInstanceId = "some-workflow-instance-id";
+var variablesToUpdate = new[]
 {
     new VariableUpdateValue("some-variable-id", "Some variable value"),
     new VariableUpdateValue("another-variable-id", 42)
-}];
+};
 
 // Update the variables. This returns a complete list of variables, including both unchanged and changed variables.
 var variables = await _workflowInstanceVariableManager.SetVariablesAsync(workflowInstanceId, variablesToUpdate, cancellationToken);
@@ -57,7 +58,7 @@ foreach (var variable in variables)
 ```
 
 {% hint style="info" %}
-The `SetVariablesAsync` method replaces the specified variables' values. Any variable not included in the update request will retain its original value. Ensure that the variable IDs provided are correct to avoid unintended updates.
+`SetVariablesAsync` updates only the variables you specify by ID and then saves the workflow instance. Variables not included in the request keep their current values.
 {% endhint %}
 
 Updating variables in a workflow instance can be particularly useful for dynamically adjusting the workflow's behaviour based on changing data inputs or conditions during execution.
