@@ -37,15 +37,56 @@ If your server does not register one of these features, Studio will not offer th
 In Elsa 3.8, C# and Python are only browsable in Studio when host code execution is allowed for those engines. If you do not see them in the picker, check your server configuration first.
 {% endhint %}
 
+## Expression matrix
+
+The following matrix separates what Studio shows from what the backend actually evaluates.
+
+| Studio choice | Source | Authoring style | Notes |
+| --- | --- | --- | --- |
+| `Default` | Studio UI mode | Field-specific editor | Not a separate runtime expression engine. |
+| `Variable` | Server descriptor | Picker UI | Resolves to a selected workflow variable. Different from `variables` in JavaScript or `Variable` in C#. |
+| `Input` | Server descriptor | Picker UI | Resolves to a selected workflow input. Different from `getInput(...)` or C# `Input`. |
+| `JavaScript` | `UseJavaScript(...)` | Monaco code editor | Best general-purpose dynamic option in Studio. |
+| `Liquid` | `UseLiquid(...)` | Monaco code editor | Best for text templates. |
+| `C#` | `UseCSharp(...)` | Monaco code editor | Browsable only when host code execution is allowed. |
+| `Python` | `UsePython(...)` | Monaco code editor | Browsable only when host code execution is allowed. |
+| Custom types such as `Secret` | Feature-specific descriptor | Usually picker or custom UI | Only appears when the related backend feature is installed. |
+
+Studio also has hidden internal descriptors such as `Literal` and `Object` that support plain values and structured values behind the scenes.
+
 ## Which syntax should you use?
 
 Use the simplest option that matches the job:
 
 - **Default** for plain text, numbers, booleans, dropdowns, and other normal field editors.
+- **Variable** when you want the field to resolve directly from a selected workflow variable without writing code.
+- **Input** when you want the field to resolve from a selected workflow input without writing code.
 - **JavaScript** for most dynamic value composition and workflow-variable lookups.
 - **Liquid** for templated text output.
 - **C#** when you explicitly want Roslyn-based expressions and have enabled them for trusted authors.
 - **Python** only when your server is configured for Python.NET expressions and you need it specifically.
+
+## Picker syntaxes versus code-expression objects
+
+This is the most common point of confusion in Studio:
+
+- **Variable** and **Input** in the syntax picker are expression types backed by picker UI.
+- `variables` in JavaScript is a runtime object injected into the JavaScript engine.
+- `Variable` and `Input` in C# are runtime proxies injected into the C# evaluator.
+
+So these are related, but they are not the same thing.
+
+### Variable picker
+
+Use **Variable** when a property should simply read from one workflow variable and you do not need any extra logic.
+
+Example: choose the `CustomerName` variable from the picker for a text field.
+
+### Input picker
+
+Use **Input** when a property should read directly from one declared workflow input.
+
+Example: choose the `OrderId` workflow input from the picker for a downstream activity field.
 
 ## JavaScript expressions
 
@@ -93,6 +134,24 @@ getOutputFrom("SendHttpRequest", "ParsedContent")
 getLastResult()
 ```
 
+### Practical JavaScript examples
+
+```javascript
+variables.Total > 1000 ? "Priority" : "Standard"
+```
+
+```javascript
+`${variables.FirstName} ${variables.LastName}`
+```
+
+```javascript
+getOutputFrom("SendHttpRequest", "ParsedContent")
+```
+
+```javascript
+setVariable("CorrelationCopy", getCorrelationId())
+```
+
 ### Important wrapper limitation
 
 The `variables.SomeName` style depends on two JavaScript runtime settings:
@@ -123,6 +182,44 @@ Variable.Set("OrderId", Guid.NewGuid());
 Variable.Set("Status", "Completed");
 ```
 
+### Accessing inputs and outputs
+
+```csharp
+Input.CustomerId
+Input.Get<Guid>("CustomerId")
+Output.From<string>("SendHttpRequest", "ParsedContent")
+Output.LastResult
+```
+
+### Accessing workflow metadata
+
+```csharp
+WorkflowInstanceId
+CorrelationId
+WorkflowInstanceName
+```
+
+You can also assign metadata in C# expressions when the scenario supports it:
+
+```csharp
+CorrelationId = Variable.Get<string>("OrderId");
+WorkflowInstanceName = $"Order {Variable.Get<string>("OrderId")}";
+```
+
+### Practical C# examples
+
+```csharp
+Variable.TotalAmount > 1000 ? "Priority" : "Standard"
+```
+
+```csharp
+$"{Variable.FirstName} {Variable.LastName}"
+```
+
+```csharp
+Output.From<string>("SendHttpRequest", "ParsedContent")
+```
+
 ### When to prefer `Get<T>()`
 
 Use `Get<T>()` when:
@@ -141,6 +238,25 @@ Elsa 3.8 registers workflow variables through the `Variables` object and workflo
 Hello {{ Variables.CustomerName }}
 Order {{ Variables.OrderId }} is {{ Variables.Status }}
 Customer input: {{ Input.CustomerId }}
+```
+
+Liquid also exposes workflow metadata:
+
+```liquid
+Instance: {{ WorkflowInstanceId }}
+Correlation: {{ CorrelationId }}
+Definition: {{ WorkflowDefinitionId }}
+Version: {{ WorkflowDefinitionVersion }}
+```
+
+### Practical Liquid examples
+
+```liquid
+Hello {{ Variables.FirstName }} {{ Variables.LastName }}
+```
+
+```liquid
+Order {{ Variables.OrderId }} total is {{ Variables.TotalAmount }}
 ```
 
 Use Liquid when the result should primarily be formatted text, not when you need more procedural logic.
@@ -164,6 +280,40 @@ variables.OrderId
 variables.set("Status", "Processed")
 variables.get("CustomerName")
 ```
+
+### Accessing inputs and outputs
+
+```python
+input.Get("CustomerId")
+output.Get("SendHttpRequest", "ParsedContent")
+output.LastResult
+```
+
+### Practical Python examples
+
+```python
+variables.get("TotalAmount") > 1000
+```
+
+```python
+variables.set("ResponseBody", output.Get("SendHttpRequest", "ParsedContent"))
+variables.get("ResponseBody")
+```
+
+{% hint style="info" %}
+Python expressions are executed through Python.NET in Elsa 3.8. Keep them for intentionally enabled, trusted-author scenarios rather than as the default authoring path in Studio.
+{% endhint %}
+
+## Feature-specific custom expression types
+
+Studio can also surface feature-specific expression types beyond the core set above.
+
+For example, Elsa's secrets feature contributes a `Secret` expression descriptor with its own custom UI instead of a code editor. The general rule is:
+
+- if a backend feature registers an expression descriptor and marks it browsable, Studio can show it.
+- if the descriptor provides a custom `UIHint`, Studio renders that custom picker/editor instead of Monaco.
+
+That is why two Elsa deployments can show different syntax choices for the same activity field.
 
 ## Variable naming guidance
 
