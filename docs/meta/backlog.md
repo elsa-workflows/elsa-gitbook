@@ -2,6 +2,63 @@
 
 This backlog is prioritized by user impact and frequency of complaints based on gap analysis from 161 issues across elsa-studio and elsa-gitbook.
 
+## Slice Inventory (2026-06-08)
+
+This inventory reflects the current GitBook contents before selecting the next automation slice. "Covered" means the repository now includes a dedicated page or guide for the topic; it does not imply every acceptance criterion below is already complete.
+
+### Covered or substantially covered slices
+
+- `DOC-001` V2 to V3 migration
+- `DOC-002` Database configuration
+- `DOC-003` Authentication and authorization
+- `DOC-004` Hello World examples
+- `DOC-005` HTTP workflows
+- `DOC-006` Docker quickstart
+- `DOC-008` Architecture overview
+- `DOC-009` Kubernetes deployment
+- `DOC-010` Studio tour and troubleshooting
+- `DOC-011` Testing and debugging workflows
+- `DOC-012` Blocking and trigger activities
+- `DOC-013` Studio integration
+- `DOC-014` Clustering and distributed hosting
+- `DOC-017` Common workflow patterns
+- `DOC-018` Plugins and modules development
+- `DOC-020` EF Core migrations
+- `DOC-022` Scaling and performance
+- `DOC-037` Alterations
+- `DOC-041` Loading workflows from JSON
+
+### Available next slices
+
+- `DOC-007` Custom activities V3 rewrite
+- `DOC-015` Monitoring and observability
+- `DOC-016` Workflow context V3
+- `DOC-019` HTTP endpoint security
+- `DOC-021` Configuration management
+- `DOC-023` Identity provider integrations
+- `DOC-024` MassTransit communication
+- `DOC-025` Long-running workflows
+- `DOC-026` Error handling and retry logic
+- `DOC-027` Execution model
+- `DOC-028` Studio customization
+- `DOC-029` Custom UI hints
+- `DOC-030` Custom UI components
+- `DOC-038` Distributed tracing
+- `DOC-039` Performance tuning
+- `DOC-040` Timer and scheduled workflows
+- `DOC-042` Bulk dispatch workflows activity
+- `DOC-043` Hangfire integration
+- `DOC-047` API reference
+- `DOC-048` Activity reference
+
+### Newly discovered follow-up topics
+
+- `DOC-049` Studio custom-elements embedding cookbook: a dedicated guide for embedding Elsa Studio components with `elsa-backend-provider`, tenant headers, and host-supplied API key or bearer token credentials.
+
+### Selected slice for this run
+
+- Refresh `DOC-013` Studio integration so it matches the actual `release/3.8.0` Studio host models and authentication behavior.
+
 ## Critical Priority (Must Have - Block Users)
 
 ### DOC-001: V2 to V3 Migration Guide
@@ -462,6 +519,12 @@ This backlog is prioritized by user impact and frequency of complaints based on 
 - **Description**: Complete reference for all built-in activities
 - **References**: Issue #88 (elsa-gitbook)
 - **Estimated Effort**: 3-4 days
+
+### DOC-049: Studio Custom Elements Embedding
+- **Persona**: Backend Integrator, Workflow Designer
+- **Lifecycle Stage**: Install, Extend
+- **Description**: Dedicated cookbook for embedding Elsa Studio components into existing web apps using the custom-elements host, including backend credentials, tenant headers, and framework wrappers.
+- **Estimated Effort**: 1-2 days
 
 ## Implementation Roadmap
 
