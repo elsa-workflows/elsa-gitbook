@@ -1,10 +1,15 @@
 # Prioritized Documentation Backlog
 
-This backlog is prioritized by user impact and frequency of complaints based on gap analysis from 161 issues across elsa-studio and elsa-gitbook.
+This backlog is prioritized by user impact and frequency of complaints
+based on gap analysis from 161 issues across elsa-studio and
+elsa-gitbook.
 
-## Slice Inventory (2026-06-08)
+## Slice Inventory (2026-06-09)
 
-This inventory reflects the current GitBook contents before selecting the next automation slice. "Covered" means the repository now includes a dedicated page or guide for the topic; it does not imply every acceptance criterion below is already complete.
+This inventory reflects the current GitBook contents before selecting the
+next automation slice. "Covered" means the repository now includes a
+dedicated page or guide for the topic; it does not imply every
+acceptance criterion below is already complete.
 
 ### Covered or substantially covered slices
 
@@ -25,6 +30,7 @@ This inventory reflects the current GitBook contents before selecting the next a
 - `DOC-018` Plugins and modules development
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
+- `DOC-029` Custom UI hints
 - `DOC-037` Alterations
 - `DOC-041` Loading workflows from JSON
 
@@ -41,7 +47,6 @@ This inventory reflects the current GitBook contents before selecting the next a
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
 - `DOC-028` Studio customization
-- `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
@@ -53,11 +58,16 @@ This inventory reflects the current GitBook contents before selecting the next a
 
 ### Newly discovered follow-up topics
 
-- `DOC-049` Studio custom-elements embedding cookbook: a dedicated guide for embedding Elsa Studio components with `elsa-backend-provider`, tenant headers, and host-supplied API key or bearer token credentials.
+- `DOC-049` Studio custom-elements embedding cookbook: a dedicated guide
+  for embedding Elsa Studio components with `elsa-backend-provider`,
+  tenant headers, and host-supplied API key or bearer token
+  credentials.
 
-### Selected slice for this run
+### Recommended next slice
 
-- Refresh `DOC-013` Studio integration so it matches the actual `release/3.8.0` Studio host models and authentication behavior.
+- `DOC-030` Custom UI components: add a source-backed guide that
+  connects Studio-side editor components, UI hint handlers, and custom
+  activity metadata.
 
 ## Critical Priority (Must Have - Block Users)
 
