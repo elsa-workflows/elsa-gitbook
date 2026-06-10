@@ -1,63 +1,80 @@
 ---
 description: >-
-  Learn how to create custom Elsa Studio activity input editors using the
-  Blazor UI hint handler model used by Elsa Studio 3.7.0.
+  Source-backed guide to customizing Elsa Studio input editors in release
+  3.8.0 using backend UI hints, property UI handlers, and Studio UI hint
+  handlers.
 ---
 
 # Custom UI Components in Studio
 
-Elsa Studio renders activity input editors through UI hint handlers. Activity descriptors provide a UI hint string, Studio resolves an `IUIHintHandler` that supports that hint, and the handler returns a Blazor `RenderFragment` for the editor.
+This guide is based on `release/3.8.0` in `elsa-core` and `elsa-studio`.
 
-In Elsa Studio 3.7.0, custom property editors are Blazor components registered through dependency injection. Studio does not expose a JavaScript property editor registry such as `window.elsa.propertyEditors`, an `IPropertyEditor` TypeScript contract, or a generic `<elsa-studio-root>` custom element.
+Custom activity editors in Elsa 3.8.0 are built in two layers:
 
-## What You Can Customize
+1. Your activity declares a `UIHint` and optional `UIHandler` metadata on
+   the backend.
+2. Elsa Studio resolves that metadata to a Studio-side `IUIHintHandler`
+   that renders the editor component.
 
-- **Input editors**: Register an `IUIHintHandler` for a UI hint such as `custom-email-input`.
-- **Field extensions**: Add UI around existing field editors with `IUIFieldExtensionHandler`.
-- **Content visualizers**: Display output values with custom visualizers.
-- **Workflow custom elements**: Embed specific workflow surfaces such as `elsa-workflow-definition-editor` from the custom-elements host.
+Use this guide when you need a custom input editor for an activity
+property. If you only need to add UI around an existing editor, use
+[Field Extensions](../../studio/workflow-editor/field-extensions.md)
+instead.
 
-## How Studio Resolves Input Editors
+## The Customization Model
 
-When an activity is selected in the workflow editor, Studio:
+`elsa-core` and `elsa-studio` each have an `IUIHintHandler`, but they do
+different jobs:
 
-1. Reads the activity descriptor and its input descriptors.
-2. Looks at each input descriptor's UI hint.
-3. Resolves the first registered `IUIHintHandler` whose `GetSupportsUIHint` method returns `true`.
-4. Calls `DisplayInputEditor(DisplayInputEditorContext context)`.
-5. Uses the supplied `DisplayInputEditorContext` to read and update the input value.
+- In `elsa-core`, `IUIHintHandler` maps a UI hint string such as
+  `dropdown` or `json-editor` to one or more backend
+  `IPropertyUIHandler` types that provide UI metadata.
+- In `elsa-studio`, `IUIHintHandler` is the rendering contract. Studio
+  asks `IUIHintService` for the first handler whose
+  `GetSupportsUIHint(string uiHint)` returns `true`, then calls
+  `DisplayInputEditor(DisplayInputEditorContext context)`.
 
-The built-in handlers are registered by `AddWorkflowsModule()`, which calls `AddDefaultUIHintHandlers()`.
+That means a working custom editor usually needs both sides:
 
-## Built-In UI Hints
+- a backend activity descriptor with the right `UIHint`
+- a Studio handler that knows how to render that hint
 
-Elsa Studio 3.7.0 includes handlers for these well-known input UI hints:
+## When To Use Each Extension Point
 
-| UI Hint | Purpose |
-| --- | --- |
-| `singleline` | Single-line text input |
-| `multiline` | Multi-line text input |
-| `checkbox` | Boolean checkbox |
-| `checklist` | Multiple-choice checklist |
-| `radiolist` | Single-choice radio list |
-| `dropdown` | Dropdown selection |
-| `multitext` | Multiple text values |
-| `code-editor` | Code editor |
-| `expression-editor` | Expression editor |
-| `json-editor` | JSON editor |
-| `variable-picker` | Workflow variable picker |
-| `input-picker` | Workflow input picker |
-| `output-picker` | Workflow output picker |
-| `outcome-picker` | Workflow outcome picker |
-| `workflow-definition-picker` | Workflow definition picker |
-| `type-picker` | Type picker |
-| `datetime-picker` | Date/time picker |
-| `http-status-codes` | HTTP status code picker |
-| `dynamic-outcomes` | Dynamic outcome editor |
+Use `UIHint` when you need a different editor type.
 
-## Requesting a Custom Editor from an Activity
+Use `UIHandler` or `UIHandlers` when you want to keep an existing editor
+type but supply metadata such as options, adornments, editor height, or
+refresh behavior.
 
-Use the activity input's `UIHint` value to select your custom handler:
+Use a Studio `IUIHintHandler` when Studio needs to render a brand-new
+editor for a hint string that the default handler set does not support.
+
+Use a Studio `IUIFieldExtensionHandler` when you want to decorate an
+existing editor instead of replacing it.
+
+## How The Pieces Fit Together
+
+For a typical activity input, the flow is:
+
+1. `ActivityDescriber` inspects your `[Input]` attribute.
+2. It sets the input descriptor's `UIHint`.
+3. `PropertyUIHandlerResolver` collects any explicit `UIHandler` or
+   `UIHandlers`, then adds default metadata handlers associated with the
+   chosen backend UI hint.
+4. The resulting UI metadata is stored in `InputDescriptor.UISpecifications`.
+5. Studio loads the activity descriptor, looks up a Studio
+   `IUIHintHandler`, and renders the editor in the workflow inspector.
+6. If the metadata contains `"Refresh": true`, Studio posts to
+   `/descriptors/activities/{activityTypeName}/options/{propertyName}` to
+   recompute UI metadata with the current input values as context.
+
+This split is important: backend code decides what metadata an input has,
+but Studio code decides how that input is rendered.
+
+## Step 1: Mark The Activity Input
+
+Start by assigning a UI hint on the activity:
 
 ```csharp
 using Elsa.Workflows;
@@ -77,14 +94,75 @@ public class SendCustomEmail : CodeActivity
     protected override void Execute(ActivityExecutionContext context)
     {
         var email = context.Get(ToEmail);
-        // Send email.
     }
 }
 ```
 
-## Creating a Custom UI Hint Handler
+If your goal is only to customize a built-in editor, keep a built-in hint
+and attach a property UI handler instead:
 
-Implement `IUIHintHandler` and render a Blazor component from `DisplayInputEditor`:
+```csharp
+[Input(
+    UIHint = InputUIHints.DropDown,
+    UIHandler = typeof(ChannelOptionsProvider)
+)]
+public Input<string> Channel { get; set; } = default!;
+```
+
+That pattern is used throughout the release branch for inputs such as:
+
+- HTTP endpoint paths
+- dispatcher channel selection
+- SQL client selection
+- Kafka producer and consumer selection
+
+## Step 2: Add Backend UI Metadata When Needed
+
+Backend `IPropertyUIHandler` implementations provide the metadata that
+Studio editors consume.
+
+For example, a dropdown options provider can inherit
+`DropDownOptionsProviderBase`:
+
+```csharp
+using System.Reflection;
+using Elsa.Workflows.UIHints.Dropdown;
+
+public class ChannelOptionsProvider : DropDownOptionsProviderBase
+{
+    protected override ValueTask<ICollection<SelectListItem>> GetItemsAsync(
+        PropertyInfo propertyInfo,
+        object? context,
+        CancellationToken cancellationToken)
+    {
+        ICollection<SelectListItem> items = new List<SelectListItem>
+        {
+            new("Default", ""),
+            new("Priority", "Priority")
+        };
+
+        return new(items);
+    }
+}
+```
+
+If the available options depend on other inputs, override
+`RefreshOnChange` in one of these base classes:
+
+- `DropDownOptionsProviderBase`
+- `CheckListOptionsProviderBase`
+- `RadioListOptionsProviderBase`
+
+When `RefreshOnChange` returns `true`, the backend includes
+`"Refresh": true` in the UI metadata and Studio refreshes the descriptor
+options through the activity descriptor options endpoint.
+
+## Step 3: Render The Custom Hint In Studio
+
+If you introduce a new hint string such as `custom-email-input`, Studio
+must also know how to render it.
+
+Implement `Elsa.Studio.Contracts.IUIHintHandler`:
 
 ```csharp
 using Elsa.Studio;
@@ -97,7 +175,6 @@ namespace MyCompany.Studio;
 public class CustomEmailInputHandler : IUIHintHandler
 {
     public bool GetSupportsUIHint(string uiHint) => uiHint == "custom-email-input";
-
     public string UISyntax => WellKnownSyntaxNames.Literal;
 
     public RenderFragment DisplayInputEditor(DisplayInputEditorContext context)
@@ -112,7 +189,7 @@ public class CustomEmailInputHandler : IUIHintHandler
 }
 ```
 
-Register the handler with the Studio service collection:
+Register it with DI:
 
 ```csharp
 using Elsa.Studio.Extensions;
@@ -120,31 +197,30 @@ using Elsa.Studio.Extensions;
 builder.Services.AddUIHintHandler<CustomEmailInputHandler>();
 ```
 
-Register custom handlers before `AddWorkflowsModule()` when you want to override a built-in UI hint. The UI hint service uses the first matching handler from DI, so registration order can matter when multiple handlers support the same hint.
+Studio resolves the first handler whose `GetSupportsUIHint` method
+matches the hint. If none matches, `DefaultUIHintService` falls back to
+`UnsupportedUIHintHandler`. If you are overriding a built-in hint,
+registration order matters because the first matching handler wins.
 
-## Creating the Blazor Editor Component
+## Step 4: Build The Editor Component
 
-A custom editor receives a `DisplayInputEditorContext`. Use it to read the descriptor, honor read-only mode, and write changes back to the workflow definition.
+Studio editor components receive a `DisplayInputEditorContext`.
+
+For literal string input, a component typically reads the current value
+with `GetLiteralValueOrDefault()` and writes changes with
+`UpdateValueOrLiteralExpressionAsync(...)`:
 
 ```razor
 @using Elsa.Studio.Models
-@inject ILocalizer Localizer
-
-@{
-    var inputDescriptor = EditorContext.InputDescriptor;
-    var value = EditorContext.GetLiteralValueOrDefault();
-}
 
 <ExpressionInput EditorContext="@EditorContext">
     <ChildContent>
         <MudTextField
             T="string"
-            Label="@Localizer[inputDescriptor.DisplayName]"
-            HelperText="@Localizer[inputDescriptor.Description]"
-            Value="@value"
+            Label="@EditorContext.InputDescriptor.DisplayName"
+            HelperText="@EditorContext.InputDescriptor.Description"
+            Value="@EditorContext.GetLiteralValueOrDefault()"
             ValueChanged="OnValueChanged"
-            Variant="Variant.Outlined"
-            Margin="Margin.Dense"
             InputType="InputType.Email"
             ReadOnly="EditorContext.IsReadOnly"
             Disabled="EditorContext.IsReadOnly" />
@@ -154,40 +230,100 @@ A custom editor receives a `DisplayInputEditorContext`. Use it to read the descr
 @code {
     [Parameter] public DisplayInputEditorContext EditorContext { get; set; } = null!;
 
-    private Task OnValueChanged(string newValue)
-    {
-        return EditorContext.UpdateValueOrLiteralExpressionAsync(newValue);
-    }
+    private Task OnValueChanged(string value) =>
+        EditorContext.UpdateValueOrLiteralExpressionAsync(value);
 }
 ```
 
-`DisplayInputEditorContext` also exposes helpers for object values and direct value updates:
+The same context also supports:
 
-- `GetLiteralValueOrDefault()`
+- `GetValueOrDefault<T>()`
 - `GetObjectValueOrDefault()`
 - `GetExpressionValueOrDefault()`
-- `UpdateValueAsync(object? value)`
-- `UpdateExpressionAsync(Expression expression)`
-- `UpdateValueOrLiteralExpressionAsync(string value)`
-- `UpdateValueOrObjectExpressionAsync(object value)`
+- `UpdateValueAsync(...)`
+- `UpdateExpressionAsync(...)`
+- `UpdateValueOrObjectExpressionAsync(...)`
 
-## Custom Elements
+Those helpers matter because many activity inputs are wrapped as
+`Input<T>`, not plain values.
 
-Elsa Studio 3.7.0 includes a custom-elements host, but the registered elements are workflow surfaces, not individual input editor registrations:
+## Built-In Studio Handlers In 3.8.0
+
+`AddDefaultUIHintHandlers()` in `elsa-studio` registers handlers for:
+
+- `singleline`
+- `checkbox`
+- `checklist`
+- `dictionary`
+- `multitext`
+- `multiline`
+- `dropdown`
+- `code-editor`
+- `expression-editor`
+- `json-editor`
+- `switch-editor`
+- `http-status-codes`
+- `variable-picker`
+- `input-picker`
+- `type-picker`
+- `workflow-definition-picker`
+- `output-picker`
+- `radiolist`
+- `outcome-picker`
+- `dynamic-outcomes`
+- `datetime-picker`
+
+The secrets module also adds a `secret-picker` Studio handler.
+
+If you can express your requirement with one of those hints plus backend
+metadata, that is usually simpler than inventing a brand-new hint.
+
+## Field Extensions Versus Custom Editors
+
+Field extensions are Studio-only decorations around existing editors.
+They implement `IUIFieldExtensionHandler` and are registered with:
 
 ```csharp
-builder.RootComponents.RegisterCustomElsaStudioElements();
-builder.RootComponents.RegisterCustomElement<BackendProvider>("elsa-backend-provider");
-builder.RootComponents.RegisterCustomElement<WorkflowDefinitionEditorWrapper>("elsa-workflow-definition-editor");
-builder.RootComponents.RegisterCustomElement<WorkflowInstanceViewerWrapper>("elsa-workflow-instance-viewer");
-builder.RootComponents.RegisterCustomElement<WorkflowInstanceListWrapper>("elsa-workflow-instance-list");
-builder.RootComponents.RegisterCustomElement<WorkflowDefinitionListWrapper>("elsa-workflow-definition-list");
+services.AddUIFieldEnhancerHandler<CustomFieldExtension>();
 ```
 
-Use these when a host page needs to embed a workflow list, editor, or instance view. Use `IUIHintHandler` when you need to customize an activity input editor inside Studio.
+Choose a field extension when you want to add helper UI, warnings,
+buttons, or toolbars around an existing input component. Choose a custom
+UI hint handler when the editor itself needs to change.
 
-## Further Reading
+## Custom Elements Are A Different Feature
 
-- [Field Extensions](../../studio/workflow-editor/field-extensions.md) - Adding UI around existing field editors.
-- [Content Visualisers](../../studio/workflow-editor/content-visualisers-3.6-preview.md) - Custom output visualization.
-- [Custom Activities](../../extensibility/custom-activities.md) - Creating activities that use custom UI hints.
+The custom-elements host is for embedding Elsa Studio surfaces in another
+application. It does not register input editors.
+
+The `Elsa.Studio.Host.CustomElements` host registers these elements in
+`release/3.8.0`:
+
+- `elsa-backend-provider`
+- `elsa-workflow-definition-editor`
+- `elsa-workflow-instance-viewer`
+- `elsa-workflow-instance-list`
+- `elsa-workflow-definition-list`
+
+The React wrapper forwards `remote-endpoint`, `api-key`, and
+`access-token` attributes to `elsa-backend-provider`. Use that model for
+embedding Studio. Use `IUIHintHandler` when you want to change how an
+activity input is edited inside Studio.
+
+## Practical Guidance
+
+- Start with a built-in UI hint before introducing a custom one.
+- Use backend `UIHandler` metadata providers for options, adornments, and
+  editor configuration.
+- Add a Studio `IUIHintHandler` only when the built-in handlers cannot
+  render the experience you need.
+- Keep the backend and Studio halves aligned. A custom hint string is not
+  enough on its own.
+- Prefer field extensions when you are augmenting, not replacing, an
+  existing editor.
+
+## Related Reading
+
+- [UI Hints](../../studio/workflow-editor/ui-hints.md)
+- [Field Extensions](../../studio/workflow-editor/field-extensions.md)
+- [Integration](integration/README.md)

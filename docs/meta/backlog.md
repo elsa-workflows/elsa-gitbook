@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-09)
+## Slice Inventory (2026-06-10)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -31,6 +31,7 @@ acceptance criterion below is already complete.
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
 - `DOC-029` Custom UI hints
+- `DOC-030` Custom UI components
 - `DOC-037` Alterations
 - `DOC-041` Loading workflows from JSON
 
@@ -47,7 +48,6 @@ acceptance criterion below is already complete.
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
 - `DOC-028` Studio customization
-- `DOC-030` Custom UI components
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
 - `DOC-040` Timer and scheduled workflows
@@ -65,9 +65,10 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-030` Custom UI components: add a source-backed guide that
-  connects Studio-side editor components, UI hint handlers, and custom
-  activity metadata.
+- `DOC-049` Studio custom-elements embedding cookbook: document the
+  host-side setup for `elsa-backend-provider`, authentication, and
+  embeddable workflow surfaces now that the editor customization guide
+  is source-backed.
 
 ## Critical Priority (Must Have - Block Users)
 
