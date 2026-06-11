@@ -188,6 +188,10 @@ The host registers these custom elements:
 - `elsa-workflow-instance-list`
 - `elsa-workflow-definition-list`
 
+For the full source-backed setup, including tenant headers, bearer tokens,
+per-element configuration, and the React wrapper, see
+[Custom Elements Embedding](custom-elements.md).
+
 ### Why Use It
 
 Use the custom-elements host when:
@@ -257,6 +261,16 @@ If your backend secures workflow, dashboard, or diagnostic endpoints, make sure 
 - the custom-elements host does this through `AuthHttpMessageHandler` and `BackendServiceHttpConnectionOptionsConfigurator`.
 
 ## What This Guide Does Not Assume
+
+This guide does not assume that:
+
+- Studio must run as a standalone application
+- your host application uses Blazor
+- your backend uses only cookie authentication
+- tenant context always comes from the access token
+
+If you are embedding Studio surfaces into another frontend shell, use
+[Custom Elements Embedding](custom-elements.md) as the implementation guide.
 
 This guide does not assume a first-class Angular, MVC, or Razor Pages Studio host in the Elsa 3.8.0 source tree. For those scenarios, use one of these patterns instead:
 

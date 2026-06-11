@@ -71,6 +71,7 @@
   * [Expressions](guides/studio/expressions.md)
   * [Custom UI Components](guides/studio/custom-ui-components.md)
   * [Integration](guides/studio/integration/README.md)
+    * [Custom Elements Embedding](guides/studio/integration/custom-elements.md)
 * [Workflow Patterns](guides/patterns/README.md)
 * [Troubleshooting](guides/troubleshooting/README.md)
 

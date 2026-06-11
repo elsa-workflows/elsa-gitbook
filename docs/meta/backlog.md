@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-10)
+## Slice Inventory (2026-06-11)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -34,6 +34,7 @@ acceptance criterion below is already complete.
 - `DOC-030` Custom UI components
 - `DOC-037` Alterations
 - `DOC-041` Loading workflows from JSON
+- `DOC-049` Studio custom-elements embedding cookbook
 
 ### Available next slices
 
@@ -56,19 +57,12 @@ acceptance criterion below is already complete.
 - `DOC-047` API reference
 - `DOC-048` Activity reference
 
-### Newly discovered follow-up topics
-
-- `DOC-049` Studio custom-elements embedding cookbook: a dedicated guide
-  for embedding Elsa Studio components with `elsa-backend-provider`,
-  tenant headers, and host-supplied API key or bearer token
-  credentials.
-
 ### Recommended next slice
 
-- `DOC-049` Studio custom-elements embedding cookbook: document the
-  host-side setup for `elsa-backend-provider`, authentication, and
-  embeddable workflow surfaces now that the editor customization guide
-  is source-backed.
+- `DOC-028` Studio customization: build on the Studio integration and
+  custom-elements guidance with a source-backed guide for changing
+  embedded Studio behavior, shell composition, and user-facing
+  customization seams.
 
 ## Critical Priority (Must Have - Block Users)
 
