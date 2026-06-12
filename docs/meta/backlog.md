@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-11)
+## Slice Inventory (2026-06-12)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -30,6 +30,7 @@ acceptance criterion below is already complete.
 - `DOC-018` Plugins and modules development
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
+- `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
 - `DOC-037` Alterations
@@ -48,7 +49,6 @@ acceptance criterion below is already complete.
 - `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
-- `DOC-028` Studio customization
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
 - `DOC-040` Timer and scheduled workflows
@@ -59,10 +59,16 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-028` Studio customization: build on the Studio integration and
-  custom-elements guidance with a source-backed guide for changing
-  embedded Studio behavior, shell composition, and user-facing
-  customization seams.
+- `DOC-007` Custom activities V3 rewrite: the Studio customization slice
+  now explains the Studio-side seams, but the main custom-activities guide
+  still needs a release-backed V3 rewrite that ties backend activity
+  metadata, registration, and Studio behavior together.
+
+### Newly discovered follow-on topics
+
+- `DOC-050` Studio platform integration: add a focused guide for
+  `AddPlatformIntegrationModule`, workflow submission widgets, and when to
+  use that integration path instead of custom-elements embedding alone.
 
 ## Critical Priority (Must Have - Block Users)
 
