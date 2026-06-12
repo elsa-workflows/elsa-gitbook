@@ -25,6 +25,10 @@ Use the standalone hosts when Studio should run as its own application.
 
 Use the custom-elements host when you want to embed selected Studio capabilities, such as the workflow editor or workflow lists, inside an existing application shell.
 
+If you also need to change shell composition, branding, menus, widgets, or
+workflow-editor extension points, continue with
+[Customizing Elsa Studio](../customization.md).
+
 ## Shared Configuration
 
 All current host models connect to Elsa Server through the `Backend` section.

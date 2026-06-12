@@ -69,6 +69,7 @@
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
 * [Studio User Guide](guides/studio/README.md)
   * [Expressions](guides/studio/expressions.md)
+  * [Customization](guides/studio/customization.md)
   * [Custom UI Components](guides/studio/custom-ui-components.md)
   * [Integration](guides/studio/integration/README.md)
     * [Custom Elements Embedding](guides/studio/integration/custom-elements.md)
