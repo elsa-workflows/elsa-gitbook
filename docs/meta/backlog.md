@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-12)
+## Slice Inventory (2026-06-13)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -19,6 +19,7 @@ acceptance criterion below is already complete.
 - `DOC-004` Hello World examples
 - `DOC-005` HTTP workflows
 - `DOC-006` Docker quickstart
+- `DOC-007` Custom activities V3 rewrite
 - `DOC-008` Architecture overview
 - `DOC-009` Kubernetes deployment
 - `DOC-010` Studio tour and troubleshooting
@@ -39,7 +40,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-007` Custom activities V3 rewrite
 - `DOC-015` Monitoring and observability
 - `DOC-016` Workflow context V3
 - `DOC-019` HTTP endpoint security
@@ -59,16 +59,21 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-007` Custom activities V3 rewrite: the Studio customization slice
-  now explains the Studio-side seams, but the main custom-activities guide
-  still needs a release-backed V3 rewrite that ties backend activity
-  metadata, registration, and Studio behavior together.
+- `DOC-015` Monitoring and observability: the logging and incidents pages
+  now cover parts of the runtime story, but there is still no
+  release-backed guide that explains how workflow execution logs, activity
+  execution records, sinks, and Studio/runtime diagnostics fit together for
+  operators and developers.
 
 ### Newly discovered follow-on topics
 
 - `DOC-050` Studio platform integration: add a focused guide for
   `AddPlatformIntegrationModule`, workflow submission widgets, and when to
   use that integration path instead of custom-elements embedding alone.
+- `DOC-051` Activity and workflow testing cookbook: add a focused guide for
+  `Elsa.Testing.Shared`, `ActivityTestFixture`, and `WorkflowTestFixture`
+  so custom activity authors can validate behavior without reverse
+  engineering test setup from source.
 
 ## Critical Priority (Must Have - Block Users)
 
