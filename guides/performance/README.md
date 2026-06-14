@@ -197,9 +197,9 @@ builder.Services.AddElsa(elsa =>
 
 ## Observability and Monitoring
 
-### Built-in Tracing with Elsa.OpenTelemetry
+### Built-in OpenTelemetry instrumentation
 
-Elsa provides built-in OpenTelemetry integration through the `Elsa.OpenTelemetry` module, which automatically instruments workflow execution with traces and spans.
+In `release/3.8.0`, workflow traces and metrics come from `Elsa.Workflows` itself via `WorkflowInstrumentation.ActivitySourceName` and `WorkflowInstrumentation.MeterName`.
 
 **Configuration:**
 ```csharp
@@ -218,18 +218,6 @@ builder.Services.AddOpenTelemetry()
             .AddSource("Elsa.Workflows")  // Add Elsa's activity source
             .AddOtlpExporter();  // Export to OTLP-compatible backend
     });
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflows(workflows =>
-    {
-        // Enable OpenTelemetry middleware
-        workflows.UseWorkflowExecutionPipeline(pipeline =>
-        {
-            pipeline.UseDefaultPipeline();
-        });
-    });
-});
 
 var app = builder.Build();
 app.Run();
@@ -286,9 +274,11 @@ public class MetricsMiddleware : IActivityExecutionMiddleware
 }
 ```
 
-> **Important Distinction:** 
-> - **Built-in tracing** (Elsa.OpenTelemetry) provides distributed tracing for debugging and understanding execution flow
+> **Important Distinction:**
+> - **Built-in OpenTelemetry instrumentation** provides distributed tracing for debugging and understanding execution flow
 > - **User-defined metrics** are for custom performance monitoring, alerting, and capacity planning
+
+For the complete release-backed observability story, including Studio diagnostics modules and OTLP collection, see [Monitoring & Observability](../../operate/monitoring-observability.md).
 
 ## Performance Tuning Best Practices
 

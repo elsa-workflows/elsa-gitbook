@@ -427,24 +427,20 @@ In workflows, the workflow instance ID and correlation ID are automatically adde
 
 ---
 
-## Tracing with Elsa.OpenTelemetry
+## OpenTelemetry tracing and diagnostics
 
-For production observability, Elsa provides OpenTelemetry integration through the `Elsa.OpenTelemetry` package in the [elsa-extensions](https://github.com/elsa-workflows/elsa-extensions) repository.
+In `release/3.8.0`, Elsa emits workflow traces through `Elsa.Workflows` and exposes separate Studio diagnostics modules for structured logs, console logs, and OTLP collection.
 
 **Quick Setup:**
 ```csharp
-using Elsa.OpenTelemetry.Extensions;
+using Elsa.Workflows.Telemetry;
 
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseOpenTelemetry();  // Adds tracing middleware
-});
-
-// Configure OpenTelemetry exporter
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing =>
     {
-        tracing.AddElsaSource();  // Add Elsa's ActivitySource
+        tracing.AddAspNetCoreInstrumentation();
+        tracing.AddHttpClientInstrumentation();
+        tracing.AddSource(WorkflowInstrumentation.ActivitySourceName);
         tracing.AddOtlpExporter();
     });
 ```
@@ -455,10 +451,11 @@ builder.Services.AddOpenTelemetry()
 - HTTP trigger processing
 - Background job execution
 
-For full setup including metrics export to Prometheus, Grafana dashboards, and distributed tracing with Jaeger, see **DOC-016: Monitoring Guide**.
+For the complete release-backed setup, see [Monitoring & Observability](../../operate/monitoring-observability.md).
 
 **Code Reference:**
-- `src/modules/diagnostics/Elsa.OpenTelemetry/*` (in elsa-extensions) - Contains tracing middleware and `ActivitySource` definitions for OpenTelemetry integration.
+- `src/modules/Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` - Defines Elsa's `ActivitySource`, `Meter`, counters, and histograms.
+- `src/modules/Elsa.Diagnostics.OpenTelemetry/*` - Provides OTLP ingestion, query APIs, and the Studio diagnostics collector surface.
 
 ---
 

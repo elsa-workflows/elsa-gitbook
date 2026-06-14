@@ -742,9 +742,9 @@ Choose commit strategy based on your durability vs throughput requirements:
 For custom metrics and monitoring:
 
 * **User-defined metrics** for throughput, latency, error rates
-* **Built-in tracing** via Elsa.OpenTelemetry for workflow execution visibility
+* **Built-in OpenTelemetry instrumentation** via `Elsa.Workflows` for workflow execution visibility
 
-See [Performance & Scaling Guide](../performance/) (DOC-021) for observability patterns.
+See [Performance & Scaling Guide](../performance/) and [Monitoring & Observability](../../operate/monitoring-observability.md) for observability patterns.
 
 ### General Recommendations
 

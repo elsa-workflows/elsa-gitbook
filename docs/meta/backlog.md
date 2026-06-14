@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-13)
+## Slice Inventory (2026-06-14)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -27,6 +27,7 @@ acceptance criterion below is already complete.
 - `DOC-012` Blocking and trigger activities
 - `DOC-013` Studio integration
 - `DOC-014` Clustering and distributed hosting
+- `DOC-015` Monitoring and observability
 - `DOC-017` Common workflow patterns
 - `DOC-018` Plugins and modules development
 - `DOC-020` EF Core migrations
@@ -40,7 +41,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-015` Monitoring and observability
 - `DOC-016` Workflow context V3
 - `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
@@ -59,11 +59,11 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-015` Monitoring and observability: the logging and incidents pages
-  now cover parts of the runtime story, but there is still no
-  release-backed guide that explains how workflow execution logs, activity
-  execution records, sinks, and Studio/runtime diagnostics fit together for
-  operators and developers.
+- `DOC-016` Workflow context V3: multiple guides assume readers already
+  understand what lives in workflow state, activity state, variables,
+  inputs, outputs, bookmarks, and execution logs. A dedicated release-backed
+  guide would remove repeated confusion across both Studio and code-first
+  workflows.
 
 ### Newly discovered follow-on topics
 
