@@ -586,24 +586,23 @@ Monitor these metrics for security anomalies:
 - **Rate Limit Hits:** Track which IPs/tokens are rate-limited
 - **Workflow Cancellations:** Unusual patterns may indicate attacks
 
-### Tracing with Elsa.OpenTelemetry
+### Tracing and diagnostics
 
 Enable distributed tracing to track security-relevant events:
 
-**Reference:** `elsa-extensions/src/modules/diagnostics/Elsa.OpenTelemetry/*`
+**Reference:** `Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` and `Elsa.Diagnostics.OpenTelemetry/*`
 
 ```csharp
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseOpenTelemetry(otel =>
+using Elsa.Workflows.Telemetry;
+
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing =>
     {
-        otel.AddElsaActivitySource();
-        otel.AddOtlpExporter(options =>
-        {
-            options.Endpoint = new Uri("http://jaeger:4317");
-        });
+        tracing.AddAspNetCoreInstrumentation();
+        tracing.AddHttpClientInstrumentation();
+        tracing.AddSource(WorkflowInstrumentation.ActivitySourceName);
+        tracing.AddOtlpExporter(options => options.Endpoint = new Uri("http://jaeger:4317"));
     });
-});
 ```
 
 **Security Event Tracing:**
@@ -612,7 +611,7 @@ builder.Services.AddElsa(elsa =>
 - Workflow instance modifications
 - Permission checks
 
-For full monitoring setup, see the **Monitoring Guide** (DOC-016 - to be created).
+For full monitoring setup, see [Monitoring & Observability](../../operate/monitoring-observability.md).
 
 ---
 
@@ -672,7 +671,7 @@ For more troubleshooting guidance, see [Troubleshooting Guide](../troubleshootin
 - [Authentication & Authorization Guide](../authentication.md) - Detailed OIDC and API key setup
 - [Clustering Guide](../clustering/README.md) (DOC-015) - Distributed runtime security
 - [Troubleshooting Guide](../troubleshooting/README.md) (DOC-017) - Diagnosing security issues
-- [Monitoring Guide](#) (DOC-016 - to be created) - Security metrics and alerting
+- [Monitoring & Observability](../../operate/monitoring-observability.md) - Security metrics and alerting
 - [Workflow Patterns Guide](../patterns/README.md) (DOC-018) - Secure workflow design
 
 ---

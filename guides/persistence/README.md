@@ -573,29 +573,26 @@ builder.Services.AddOpenTelemetry()
 | `elsa.bookmark.lookup.duration`        | Bookmark query time             | P95 > 100ms       |
 | `db.connection.pool.active`            | Active database connections     | > 80% of max pool |
 
-### Tracing with Elsa.OpenTelemetry
+### Tracing and telemetry
 
 For distributed tracing of workflow execution including persistence operations:
 
 ```csharp
-using Elsa.OpenTelemetry.Extensions;
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseOpenTelemetry();  // Enable workflow tracing
-});
+using Elsa.Workflows.Telemetry;
 
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing =>
     {
-        tracing.AddElsaSource();
+        tracing.AddAspNetCoreInstrumentation();
+        tracing.AddHttpClientInstrumentation();
+        tracing.AddSource(WorkflowInstrumentation.ActivitySourceName);
         tracing.AddOtlpExporter();
     });
 ```
 
-See [Performance & Scaling Guide](../performance/) for detailed observability configuration.
+See [Performance & Scaling Guide](../performance/) and [Monitoring & Observability](../../operate/monitoring-observability.md) for the release-backed observability setup.
 
-> **Note:** Elsa provides built-in tracing. Custom metrics (throughput, latency percentiles) are user-defined. See DOC-016 (Monitoring Guide) for implementation patterns.
+> **Note:** Elsa provides built-in OpenTelemetry instrumentation through `Elsa.Workflows`. Custom metrics beyond the built-in counters and histograms are still user-defined.
 
 ## Common Pitfalls
 

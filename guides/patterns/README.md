@@ -650,24 +650,16 @@ See [Clustering Guide](../clustering/) for configuration.
 
 #### Tracing with OpenTelemetry
 
-Elsa provides OpenTelemetry integration via `Elsa.OpenTelemetry`:
+In `release/3.8.0`, Elsa publishes workflow tracing through `Elsa.Workflows`.
 
-* **ActivitySource**: Traces workflow and activity execution
-* **Middleware**: Adds tracing to HTTP endpoints
-
-**Reference:** `elsa-extensions` - `Elsa.OpenTelemetry` ActivitySource and tracing middleware
+* **ActivitySource**: `Elsa.Workflows`
+* **Instrumentation**: workflow and activity execution spans plus built-in metrics
 
 ```csharp
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseOpenTelemetry(otel =>
-    {
-        otel.ConfigureTracing(tracing =>
-        {
-            tracing.AddSource("Elsa");
-        });
-    });
-});
+using Elsa.Workflows.Telemetry;
+
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddSource(WorkflowInstrumentation.ActivitySourceName));
 ```
 
 #### Metrics

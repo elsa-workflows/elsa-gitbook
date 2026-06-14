@@ -4,7 +4,7 @@ This document summarizes the existing documentation structure and key topics cov
 
 ## Overview
 
-The documentation currently contains 67 markdown files organized into the following sections:
+The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
 ### ACTIVITIES (7 pages)
@@ -86,8 +86,9 @@ The documentation currently contains 67 markdown files organized into the follow
 - **Introduction** (`multitenancy/introduction.md`)
 - **Setup** (`multitenancy/setup.md`)
 
-### OPERATE (5 pages)
+### OPERATE (6 pages)
 
+- **Monitoring & Observability** (`operate/monitoring-observability.md`)
 - **Incidents** (`operate/incidents/README.md`)
 - **Configuration** (`operate/incidents/configuration.md`)
 - **Strategies** (`operate/incidents/strategies.md`)
@@ -193,7 +194,7 @@ Based on the current structure, the following core concepts are documented:
 5. **Observability & Troubleshooting**
    - ❌ No debugging guide
    - ❌ No troubleshooting common issues
-   - ❌ No monitoring/observability patterns
+   - ⚠️ Monitoring/observability guide now exists, but related guides still need deeper consistency work
 
 6. **Migration & Versioning**
    - ❌ No migration guide from v2 to v3
