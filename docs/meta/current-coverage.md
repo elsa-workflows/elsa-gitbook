@@ -49,9 +49,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **REST API** (`features/alterations/applying-alterations/rest-api.md`)
 - **Logging Framework** (`features/logging-framework.md`)
 
-### GETTING-STARTED (13 pages)
+### GETTING-STARTED (14 pages)
 
 - **>-** (`getting-started/concepts/README.md`)
+- **Workflow Context** (`getting-started/concepts/workflow-context.md`)
 - **Correlation ID** (`getting-started/concepts/correlation-id.md`)
 - **Outcomes** (`getting-started/concepts/outcomes.md`)
 - **Containers** (`getting-started/containers/README.md`)
@@ -123,6 +124,7 @@ Based on the current structure, the following core concepts are documented:
 
 ### Workflows
 - ✅ Basic workflow concepts (Concepts section)
+- ✅ Workflow context, state, variables, inputs, outputs, bookmarks, and incidents
 - ✅ Outcomes and correlation IDs
 - ✅ Running workflows (multiple methods)
 - ✅ Loading workflows from JSON

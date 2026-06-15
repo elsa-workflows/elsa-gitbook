@@ -1,16 +1,35 @@
 ---
 description: >-
-  This topic covers various services and API endpoints available for listing and
-  managing the variables of a workflow instance.
+  Inspect and update workflow instance variables through Elsa Studio, the
+  runtime API, or `IWorkflowInstanceVariableManager`.
 ---
 
 # Workflow Instance Variables
 
-Manipulating workflow instance variables is crucial for correcting defects in workflows or variable values. This ability allows quick fixes without restarting processes, minimizing downtime, and ensuring consistent operations. It enables dynamic adjustments for unexpected changes, enhancing system robustness and efficiency.
+Use workflow instance variable management when you need to inspect or correct the current variable values of a running or suspended workflow without restarting it.
 
 {% hint style="info" %}
-**Using Variables in Elsa Studio**: If you're working with variables in the Elsa Studio designer, see the [Expressions guide](../guides/studio/expressions.md) to learn how to reference and manipulate variables using JavaScript and C# expressions in activities like SetVariable.
+If you need the broader model first, read [Workflow Context](../getting-started/concepts/workflow-context.md). That page explains how variables relate to workflow inputs, outputs, activity state, bookmarks, incidents, and the journal.
 {% endhint %}
+
+## What this page is for
+
+This page is specifically about live instance variable inspection and mutation.
+
+Use it when you need to:
+
+- inspect the current values of persisted workflow variables
+- correct a bad value on a suspended instance
+- build an operations tool around Elsa's variable-management API
+
+For authoring variables in workflow definitions, use [Workflow Context](../getting-started/concepts/workflow-context.md) and [Expressions in Elsa Studio](../guides/studio/expressions.md).
+
+## Elsa Studio
+
+Elsa Studio exposes variables in at least two places in 3.8:
+
+- the workflow instance viewer has a **Variables** tab for instance inspection
+- the alterations UI can load workflow instance variables before staging a change
 
 ## Programmatic Access﻿ <a href="#programmatic-access" id="programmatic-access"></a>
 
@@ -67,10 +86,14 @@ Updating variables in a workflow instance can be particularly useful for dynamic
 
 ### Listing﻿ <a href="#api-list-variables" id="api-list-variables"></a>
 
-The workflow instance API also provides an endpoint for retrieving a list of all variables for a specified workflow instance. You can make a `GET` request to the following endpoint:
+The workflow instance API exposes a relative endpoint at `/workflow-instances/{id}/variables`.
+
+If you run the default Elsa Server host, that endpoint is typically available under the global API prefix `/elsa/api`, so the full URL becomes `/elsa/api/workflow-instances/{id}/variables`.
+
+You can retrieve the variables for a workflow instance with:
 
 ```bash
-curl --location
+curl --location \
 'https://localhost:5001/elsa/api/workflow-instances/{your-workflow-instance-id}/variables' \
 --header 'Authorization: ApiKey {your-api-key}'
 ```
@@ -99,10 +122,10 @@ Each item in the response includes the variable's unique `id`, `name`, and `valu
 
 ### Updating﻿ <a href="#api-update-variables" id="api-update-variables"></a>
 
-To update one or more variables in a workflow instance via the API, send a `POST` request to the following endpoint:
+To update one or more variables in a workflow instance, send a `POST` request to the same route:
 
 ```bash
-curl --location
+curl --location \
 'https://localhost:5001/elsa/api/workflow-instances/{your-workflow-instance-id}/variables' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: ApiKey {your-api-key}' \
@@ -120,4 +143,9 @@ curl --location
 }'
 ```
 
-The request payload specifies the `id` of each variable to update, along with the new `value`. Ensure the variable IDs match those in the workflow instance to prevent accidental data mismatches.
+The request payload uses `VariableUpdateValue` records, so each entry contains:
+
+- `id`: the variable ID
+- `value`: the new value
+
+After the update, Elsa saves the workflow instance and returns the resolved variable list.

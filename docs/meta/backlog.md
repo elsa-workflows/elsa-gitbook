@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-14)
+## Slice Inventory (2026-06-15)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -28,6 +28,7 @@ acceptance criterion below is already complete.
 - `DOC-013` Studio integration
 - `DOC-014` Clustering and distributed hosting
 - `DOC-015` Monitoring and observability
+- `DOC-016` Workflow context V3
 - `DOC-017` Common workflow patterns
 - `DOC-018` Plugins and modules development
 - `DOC-020` EF Core migrations
@@ -41,7 +42,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-016` Workflow context V3
 - `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
@@ -59,11 +59,11 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-016` Workflow context V3: multiple guides assume readers already
-  understand what lives in workflow state, activity state, variables,
-  inputs, outputs, bookmarks, and execution logs. A dedicated release-backed
-  guide would remove repeated confusion across both Studio and code-first
-  workflows.
+- `DOC-019` HTTP endpoint security: the HTTP workflow guides now explain how
+  to build endpoints, but the auth surface is still spread across multiple
+  pages. A single release-backed guide should connect `Authorize`,
+  `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
+  Studio-facing troubleshooting.
 
 ### Newly discovered follow-on topics
 
@@ -74,6 +74,9 @@ acceptance criterion below is already complete.
   `Elsa.Testing.Shared`, `ActivityTestFixture`, and `WorkflowTestFixture`
   so custom activity authors can validate behavior without reverse
   engineering test setup from source.
+- `DOC-052` Workflow state and journal API cookbook: add an operations-facing
+  guide for inspecting workflow state, filtered journal entries, activity
+  executions, and variable mutation endpoints when diagnosing live instances.
 
 ## Critical Priority (Must Have - Block Users)
 

@@ -5,6 +5,7 @@
 ## Getting Started
 
 * [Concepts](getting-started/concepts/README.md)
+  * [Workflow Context](getting-started/concepts/workflow-context.md)
   * [Outcomes](getting-started/concepts/outcomes.md)
   * [Correlation ID](getting-started/concepts/correlation-id.md)
 * [Architecture Overview](getting-started/architecture-overview.md)
