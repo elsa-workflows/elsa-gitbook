@@ -14,6 +14,8 @@ A workflow is a sequence of steps called **activities** that represents a proces
 
 A workflow instance represents a database-persisted instance of a workflow in execution, encapsulated by the `WorkflowInstance` class.
 
+[Read more](workflow-context.md)
+
 ## Activity
 
 An activity is a unit of work executed by the workflow engine. In Elsa, these are classes implementing the `IActivity` interface and can be linked or composed together to form a workflow.
@@ -73,6 +75,8 @@ Variables can be set at the workflow level to store data. Use dynamic expression
 **In Elsa Studio**: Learn how to reference variables in expressions using JavaScript and C# in the [Expressions guide](../../guides/studio/expressions.md).
 {% endhint %}
 
+[Read more](workflow-context.md)
+
 ## Incident
 
 An incident is an error event that occurred in the workflow. For example, if an activity faults, an incident is recorded as part of the workflow execution.
@@ -82,3 +86,9 @@ An incident is an error event that occurred in the workflow. For example, if an 
 An alteration represents a change that can be applied to a given [workflow instance](./#workflow-instance).
 
 Using alterations, you can modify a workflow instance's state, schedule activities, and more.
+
+## Workflow Context
+
+Workflow execution in Elsa spans workflow-level state, activity-level state, scoped variables, bookmarks, incidents, and execution logs.
+
+[Read more](workflow-context.md)
