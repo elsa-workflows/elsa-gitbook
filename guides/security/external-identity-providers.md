@@ -57,14 +57,14 @@ Regardless of the specific provider, the general pattern for integrating Elsa wi
 
 - Install necessary NuGet packages
 - Configure authentication middleware in `Program.cs`
-- Map external claims to Elsa's authorization model
+- Map external claims to Elsa's `permissions` claims
 - Configure token validation parameters
 
 ### 3. Configure Elsa to Use ASP.NET Core Authentication
 
 - Enable Elsa's default authentication
-- Configure authorization policies
-- Map roles and claims to Elsa permissions
+- Ensure the authenticated principal has Elsa API permission claims
+- Use ASP.NET Core authorization policies only for custom host endpoints
 
 ### 4. Configure Elsa Studio (if used)
 
@@ -142,7 +142,7 @@ Microsoft Entra ID (formerly Azure Active Directory) is Microsoft's cloud-based 
 3. **Configure authentication in Elsa Server**
    - Install package: `Microsoft.AspNetCore.Authentication.OpenIdConnect`
    - Configure OIDC authentication middleware
-   - Map Azure AD roles/groups to Elsa authorization policies
+   - Map Azure AD roles/groups to Elsa `permissions` claims
 
 4. **Configure Elsa Studio**
    - Configure Studio OIDC client
@@ -219,7 +219,7 @@ Auth0 is a cloud-based authentication and authorization platform with extensive 
 
 3. **Define API in Auth0**
    - Create API for Elsa Server
-   - Define permissions/scopes (e.g., `workflows:read`, `workflows:write`)
+   - Define or map permissions/scopes to Elsa permission values such as `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`
    - Configure token lifetime
 
 4. **Configure authentication in Elsa Server**
@@ -254,11 +254,8 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("WorkflowAdmin", policy =>
-        policy.RequireClaim("permissions", "workflows:admin"));
-});
+// Auth0 can emit a "permissions" array. Ensure the values are Elsa API
+// permissions, for example "read:workflow-definitions" or "*".
 ```
 
 **Further Reading:**
@@ -323,11 +320,8 @@ builder.Services
         options.ClaimActions.MapJsonKey("role", "roles");
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("WorkflowAdmin", policy =>
-        policy.RequireRole("workflow-admin"));
-});
+// Translate Keycloak roles into "permissions" claims in the authentication
+// handler that protects Elsa API endpoints, usually AddJwtBearer.
 ```
 
 **Further Reading:**
@@ -374,52 +368,66 @@ builder.Services
 
 ## Authorization and Claims Mapping
 
-After authentication, you need to map external claims to Elsa's authorization model.
+After authentication, Elsa API endpoints authorize requests with `permissions` claims. Each claim value must match a permission configured by the endpoint, and `*` grants all Elsa permissions.
 
-### Mapping Roles
+Elsa Identity roles are containers for permission strings. When Elsa Identity issues tokens, assigned role permissions are emitted as `permissions` claims. With an external IdP, either emit the same claim type from the provider or map external roles, groups, or scopes into `permissions` claims in the Elsa Server host.
 
-```csharp
-builder.Services.AddAuthorization(options =>
-{
-    // Map external roles to Elsa policies
-    options.AddPolicy("WorkflowAdmin", policy =>
-        policy.RequireRole("WorkflowAdmin", "admin", "workflow_admin"));
-    
-    options.AddPolicy("WorkflowDesigner", policy =>
-        policy.RequireRole("WorkflowDesigner", "designer", "workflow_designer"));
-    
-    options.AddPolicy("WorkflowViewer", policy =>
-        policy.RequireRole("WorkflowViewer", "viewer", "workflow_viewer"));
-});
-```
+### Mapping External Roles to Elsa Permissions
 
-### Custom Claims
+The following example uses JWT bearer authentication because Elsa Server API endpoints validate access tokens on incoming API requests. Use OpenID Connect middleware for interactive sign-in flows, typically paired with cookies, and use JWT bearer middleware for API access-token validation.
 
 ```csharp
 builder.Services
-    .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(options =>
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        // ... other config ...
-        
-        options.Events = new OpenIdConnectEvents
+        // ... authority, audience, and token validation ...
+
+        options.Events = new JwtBearerEvents
         {
             OnTokenValidated = context =>
             {
-                var claimsIdentity = (ClaimsIdentity)context.Principal.Identity;
-                
-                // Add custom claims based on external claims
-                var permissions = context.Principal.FindAll("permissions");
-                foreach (var permission in permissions)
+                var identity = (ClaimsIdentity)context.Principal!.Identity!;
+
+                if (context.Principal.IsInRole("workflow-viewer"))
                 {
-                    claimsIdentity.AddClaim(new Claim("elsa_permission", permission.Value));
+                    identity.AddClaim(new Claim("permissions", "read:workflow-definitions"));
+                    identity.AddClaim(new Claim("permissions", "read:workflow-instances"));
+                    identity.AddClaim(new Claim("permissions", "read:activity-execution"));
                 }
-                
+
+                if (context.Principal.IsInRole("workflow-admin"))
+                    identity.AddClaim(new Claim("permissions", "*"));
+
                 return Task.CompletedTask;
             }
         };
     });
 ```
+
+ASP.NET Core role policies still apply to endpoints you map yourself:
+
+```csharp
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("HostAdminOnly", policy => policy.RequireRole("admin"));
+});
+
+app.MapGet("/host/admin", () => Results.Ok())
+   .RequireAuthorization("HostAdminOnly");
+```
+
+These policies do not replace Elsa API permissions. Elsa endpoint permissions come from endpoint configuration such as `ConfigurePermissions(...)` and from module constants, not only from the shared `PermissionNames` constants.
+
+Common read-only workflow access uses:
+
+```text
+read:workflow-definitions
+read:workflow-instances
+read:activity-execution
+```
+
+Add Studio metadata permissions only as needed, such as `read:activity-descriptors`, `read:expression-descriptors`, `read:storage-drivers`, `read:variable-descriptors`, and `read:installed-features`.
 
 ## Elsa Studio Configuration
 
@@ -513,7 +521,7 @@ For comprehensive security guidance, see:
 - Check claim names in token (decode JWT at jwt.io)
 - Verify claims mapping in OIDC options
 - Ensure roles/permissions are assigned in IdP
-- Review authorization policies
+- Verify the authenticated principal has the `permissions` claims required by the Elsa endpoint
 
 #### CORS Errors
 
@@ -544,7 +552,7 @@ The following sections will be expanded in future documentation updates:
 
 - **Configure your IdP**: Follow provider-specific documentation
 - **Test authentication flow**: Verify token issuance and validation
-- **Implement authorization**: Map roles and claims to Elsa policies
+- **Implement authorization**: Map roles and claims to Elsa `permissions` claims
 - **Deploy to production**: Follow [Security Guide](README.md) best practices
 - **Monitor authentication**: Set up logging and alerting
 
