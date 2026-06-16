@@ -139,7 +139,7 @@ Elsa validates the API key against configured applications; store hashed API key
 
 Elsa API endpoints check the `permissions` claim. Each claim value must match a permission required by the endpoint, and `*` grants all Elsa API permissions.
 
-Elsa Identity roles collect permission strings. When Elsa Identity issues a JWT or validates an Elsa API key, permissions from the assigned roles are emitted as `permissions` claims. External IdPs should emit the same claim type or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
+Elsa Identity roles collect permission strings. When Elsa Identity issues a JWT, permissions from the assigned roles are emitted as `permissions` claims. API-key authentication handlers should add equivalent `permissions` claims. External IdPs should emit the same claim type or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
 
 ASP.NET Core policies such as `RequireRole("Admin")` protect custom host endpoints, pages, or controllers. They do not replace Elsa endpoint permission claims. Elsa endpoint permissions come from endpoint configuration and module constants, not only from shared `PermissionNames` constants.
 

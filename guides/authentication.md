@@ -190,7 +190,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 Elsa API endpoints authorize requests with `permissions` claims. Each claim value must match a permission configured by the endpoint, and `*` grants all Elsa API permissions.
 
-Elsa Identity roles are containers for permission strings. When Elsa Identity issues a JWT or validates an Elsa API key, it collects permissions from the assigned roles and emits them as `permissions` claims. External OIDC providers should emit Elsa permissions directly as `permissions` claims, or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
+Elsa Identity roles are containers for permission strings. When Elsa Identity issues a JWT, it collects permissions from the assigned roles and emits them as `permissions` claims. API-key authentication handlers should add equivalent `permissions` claims. External OIDC providers should emit Elsa permissions directly as `permissions` claims, or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
 
 ASP.NET Core role policies such as `RequireRole("Admin")` are useful for your own host endpoints, Razor pages, controllers, or custom APIs. They do not replace Elsa endpoint permissions.
 

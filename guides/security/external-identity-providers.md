@@ -320,8 +320,8 @@ builder.Services
         options.ClaimActions.MapJsonKey("role", "roles");
     });
 
-// Add an OnTokenValidated handler to translate Keycloak roles into
-// "permissions" claims before requests reach Elsa API endpoints.
+// Translate Keycloak roles into "permissions" claims in the authentication
+// handler that protects Elsa API endpoints, usually AddJwtBearer.
 ```
 
 **Further Reading:**
