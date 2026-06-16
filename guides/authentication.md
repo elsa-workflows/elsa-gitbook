@@ -727,8 +727,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
         
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, apiKey.Owner),
-            new Claim("ApiKey", providedApiKey)
+            new Claim(ClaimTypes.Name, apiKey.Owner)
         };
         
         claims.AddRange(apiKey.Permissions.Select(permission => new Claim("permissions", permission)));
