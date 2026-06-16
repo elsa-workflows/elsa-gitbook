@@ -131,7 +131,7 @@ Microsoft Entra ID (formerly Azure Active Directory) is Microsoft's cloud-based 
 1. **Register application in Azure Portal**
    - Navigate to Azure Active Directory → App registrations
    - Create new registration for Elsa Server
-   - Configure redirect URIs (e.g., `https://elsa.example.com/signin-oidc`)
+   - Configure redirect URIs for the Elsa Server and Studio host model you use
    - Generate client secret
    - Note Application (client) ID and Directory (tenant) ID
 
@@ -215,7 +215,7 @@ Auth0 is a cloud-based authentication and authorization platform with extensive 
 
 2. **Configure allowed callback URLs**
    - Add `https://elsa.example.com/signin-oidc`
-   - Add `https://studio.example.com/signin-oidc`
+   - Add `https://studio.example.com/signin-oidc` for Blazor Server Studio, or `https://studio.example.com/authentication/login-callback` for Blazor WebAssembly Studio
 
 3. **Define API in Auth0**
    - Create API for Elsa Server
@@ -448,6 +448,15 @@ When using an external IdP, configure Elsa Studio to authenticate users and forw
 Use the Blazor host pattern from [Studio Designer Integration](../studio/integration/README.md) and register the `Elsa.Studio.Authentication.OpenIdConnect` module so Studio can authenticate users and attach access tokens to backend API calls.
 
 For Blazor Server Studio hosts, `ClientSecret` can be added when the OIDC provider requires a confidential client. For WebAssembly Studio hosts, omit `ClientSecret` and register the client as a public SPA using authorization code flow with PKCE.
+
+`AuthenticationScopes` are requested during sign-in. `BackendApiScopes` are requested when Studio obtains an access token for the Elsa Server API. Some identity providers require the backend API scope in the original sign-in grant before refresh-token or incremental token acquisition can return backend API tokens; in that case, include the backend API scope in both arrays.
+
+Register callback URIs according to the Studio host model:
+
+- Blazor WebAssembly Studio: `https://studio.example.com/authentication/login-callback` and `https://studio.example.com/authentication/logout-callback`.
+- Blazor Server Studio: `https://studio.example.com/signin-oidc` and `https://studio.example.com/signout-callback-oidc` by default.
+
+Studio initiates OIDC logout at `https://studio.example.com/authentication/logout`.
 
 ## REST API Integration
 
