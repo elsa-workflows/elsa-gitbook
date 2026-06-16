@@ -374,6 +374,8 @@ Elsa Identity roles are containers for permission strings. When Elsa Identity is
 
 ### Mapping External Roles to Elsa Permissions
 
+The following example uses JWT bearer authentication because Elsa Server API endpoints validate access tokens on incoming API requests. Use OpenID Connect middleware for interactive sign-in flows, typically paired with cookies, and use JWT bearer middleware for API access-token validation.
+
 ```csharp
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
