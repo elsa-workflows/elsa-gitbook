@@ -30,6 +30,12 @@ builder.Services.AddShell(x => x.DisableAuthorization = true);
 
 Use Elsa's built-in identity system for authentication.
 
+Elsa API endpoint authorization is based on permission claims. The claim type is `permissions`; each claim value must match an Elsa API permission, and `*` grants all Elsa API permissions.
+
+Elsa Identity roles collect permission strings. When Elsa Identity issues a token or validates an Elsa API key, permissions from assigned roles are emitted as `permissions` claims. External OIDC providers should emit these values as `permissions` claims, or the host application should map external roles, groups, or scopes into `permissions` claims.
+
+ASP.NET Core `RequireRole(...)` policies can protect custom host endpoints, but they do not replace the `permissions` claims checked by Elsa API endpoints. Permission names come from endpoint configuration and module constants, not only from shared `PermissionNames` constants.
+
 ### Using OIDC (OpenID Connect)
 
 OIDC integration has two parts:
