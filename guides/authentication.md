@@ -316,7 +316,9 @@ For Blazor Server Studio hosts:
 }
 ```
 
-`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. For Studio WebAssembly, register a SPA/public client and omit the client secret:
+`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. Register `{studio-url}/signin-oidc` as the redirect URI and `{studio-url}/signout-callback-oidc` as the signed-out callback URI unless you override the defaults. Studio initiates logout at `{studio-url}/authentication/logout`.
+
+For Studio WebAssembly, register a SPA/public client and omit the client secret:
 
 ```json
 {
@@ -334,6 +336,8 @@ For Blazor Server Studio hosts:
   }
 }
 ```
+
+Register `{studio-url}/authentication/login-callback` as the WebAssembly redirect URI and `{studio-url}/authentication/logout-callback` as the WebAssembly logout callback URI. Studio initiates logout at `{studio-url}/authentication/logout`.
 
 ### Auth0 Integration
 
@@ -356,12 +360,14 @@ Auth0 is a flexible identity platform with extensive features for authentication
 3. Configure **Allowed Callback URLs**:
    ```
    https://your-elsa-server.com/signin-oidc,
+   https://your-studio-server.com/signin-oidc,
    https://your-studio.com/authentication/login-callback
    ```
 4. Configure **Allowed Logout URLs**:
    ```
    https://your-elsa-server.com/signout-callback-oidc,
-   https://your-studio.com/
+   https://your-studio-server.com/signout-callback-oidc,
+   https://your-studio.com/authentication/logout-callback
    ```
 5. Configure **Allowed Web Origins** (for CORS):
    ```
@@ -1105,6 +1111,13 @@ For a Blazor WebAssembly Studio host:
 
 Use `ClientSecret` only for confidential clients that can protect the secret, such as Blazor Server. Do not configure a client secret for WebAssembly or any other browser-hosted public client.
 
+Register callback URIs according to the Studio host model:
+
+- Blazor WebAssembly Studio: `{studio-url}/authentication/login-callback` and `{studio-url}/authentication/logout-callback`.
+- Blazor Server Studio: `{studio-url}/signin-oidc` and `{studio-url}/signout-callback-oidc` by default.
+
+Studio initiates OIDC logout at `{studio-url}/authentication/logout`.
+
 The corresponding Program.cs setup uses `AddOpenIdConnectAuth` and `OidcAuthenticatingApiHttpMessageHandler`:
 
 ```csharp
@@ -1132,6 +1145,19 @@ builder.Services.AddRemoteBackend(backendApiConfig);
 `AuthenticationScopes` are requested during sign-in. They usually include identity scopes such as `openid`, `profile`, `email`, and optionally `offline_access`.
 
 `BackendApiScopes` are requested for access tokens sent to the Elsa Server API. Use this when the Elsa Server API has its own scope or audience, such as `api://your-api-app-id/elsa-server-api`.
+
+Some identity providers require the backend API scope to be part of the original sign-in grant before they allow refresh-token or incremental token acquisition for that scope. If Studio signs in successfully but cannot obtain or refresh a backend API token, include the backend API scope in both arrays:
+
+```json
+{
+  "Authentication": {
+    "OpenIdConnect": {
+      "AuthenticationScopes": ["openid", "profile", "offline_access", "api://your-api-app-id/elsa-server-api"],
+      "BackendApiScopes": ["api://your-api-app-id/elsa-server-api"]
+    }
+  }
+}
+```
 
 ### Studio with Elsa.Identity
 
@@ -1285,14 +1311,15 @@ app.UseWorkflowsApi();
      "Authentication": {
        "Provider": "OpenIdConnect",
        "OpenIdConnect": {
-         "AuthenticationScopes": ["openid", "profile", "offline_access"],
+         "AuthenticationScopes": ["openid", "profile", "offline_access", "elsa_api"],
+         "BackendApiScopes": ["elsa_api"],
          "SaveTokens": true
        }
      }
    }
    ```
 
-   For Blazor Server Studio hosts, saved tokens are refreshed by the server-side OIDC cookie events when a refresh token is available. For WebAssembly Studio hosts, Microsoft's Blazor WebAssembly authentication stack handles token renewal through `IAccessTokenProvider`.
+   For Blazor Server Studio hosts, saved tokens are refreshed by the server-side OIDC cookie events when a refresh token is available. For WebAssembly Studio hosts, Microsoft's Blazor WebAssembly authentication stack handles token renewal through `IAccessTokenProvider`. If your identity provider requires backend API scopes in the original sign-in grant, keep the backend API scope in both `AuthenticationScopes` and `BackendApiScopes`.
 
 ### HTTPS/SSL Certificate Issues
 

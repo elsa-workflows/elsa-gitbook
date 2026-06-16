@@ -56,6 +56,15 @@ For Elsa Studio 3.7, configure the `Elsa.Studio.Authentication.OpenIdConnect` mo
 }
 ```
 
+`AuthenticationScopes` are requested during Studio sign-in. `BackendApiScopes` are requested when Studio obtains an access token for calls to the Elsa Server API. Some identity providers require the backend API scope to be part of the original sign-in grant before they allow refresh-token or incremental token acquisition for that scope. If your provider behaves this way, include the backend API scope in both arrays, for example `AuthenticationScopes: ["openid", "profile", "offline_access", "elsa_api"]` and `BackendApiScopes: ["elsa_api"]`.
+
+Register the redirect and logout callback URIs for the Studio host model you use:
+
+* Blazor WebAssembly Studio uses `{studio-url}/authentication/login-callback` and `{studio-url}/authentication/logout-callback`.
+* Blazor Server Studio uses `{studio-url}/signin-oidc` and `{studio-url}/signout-callback-oidc` by default.
+
+Studio initiates OIDC logout through `{studio-url}/authentication/logout`.
+
 Use a `ClientSecret` only for confidential clients such as a Blazor Server Studio host. Do not use a client secret for WebAssembly or other browser-hosted public clients; use authorization code flow with PKCE instead.
 
 See the [Authentication & Authorization Guide](../guides/authentication.md#studio-authentication-configuration) for the full Studio OIDC setup.

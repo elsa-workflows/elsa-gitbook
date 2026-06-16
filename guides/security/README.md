@@ -488,6 +488,10 @@ spec:
   }
   ```
 
+  `AuthenticationScopes` are requested during sign-in. `BackendApiScopes` are requested when Studio obtains an access token for the Elsa Server API. Some identity providers require the backend API scope in the original sign-in grant as well; if backend API token acquisition or refresh fails, include the same scope in both `AuthenticationScopes` and `BackendApiScopes`.
+
+  Register Studio redirect and logout callback URIs according to the host model: Blazor WebAssembly uses `/authentication/login-callback` and `/authentication/logout-callback`; Blazor Server uses `/signin-oidc` and `/signout-callback-oidc` by default. Studio initiates logout at `/authentication/logout`.
+
 **Authorization:**
 - Implement role-based access control (RBAC) for Studio users
 - Restrict workflow editing to authorized roles:
