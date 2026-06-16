@@ -1,6 +1,10 @@
 # REST API
 
-The Alterations module exposes a REST API for applying alterations directly. For example, to apply an alteration that modifies a variable, migrates the workflow instance to a new version and to schedule an activity, use the following request:
+The Alterations module exposes `POST /alterations/run` for immediate execution against explicit workflow instance IDs.
+
+Use this endpoint when you already know the target instance IDs and want the results immediately. If you want Elsa to select instances from a filter and process them in the background, use [alteration plans](../alteration-plans/rest-api.md) instead.
+
+For example, to apply an alteration that modifies a variable, migrates the workflow instance to a new version, and schedules an activity, use the following request:
 
 ```http
 POST /alterations/run HTTP/1.1
@@ -28,15 +32,16 @@ Host: localhost:5001
 }
 ```
 
-Notice that the JSON structure is exactly the same as when submitting a plan. The only difference is that the request is sent to the `/alterations/run` endpoint instead of the `/alteration/submit` endpoint.
+Unlike `/alterations/submit`, this endpoint does not accept a filter. It requires explicit `workflowInstanceIds`.
 
-The response wil include the execution results:
+The response includes one result per targeted workflow instance:
 
 ```json
 {
   "results": [
     {
       "workflowInstanceId": "88ce68d00e824c78a53af04f16d276ea",
+      "workflowHasScheduledWork": true,
       "log": {
         "logEntries": [
           {
@@ -61,3 +66,5 @@ The response wil include the execution results:
   ]
 }
 ```
+
+After the runner finishes, the endpoint automatically dispatches any successful workflow instance that still has scheduled work.

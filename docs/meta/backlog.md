@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-15)
+## Slice Inventory (2026-06-16)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -36,7 +36,6 @@ acceptance criterion below is already complete.
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
-- `DOC-037` Alterations
 - `DOC-041` Loading workflows from JSON
 - `DOC-049` Studio custom-elements embedding cookbook
 
@@ -56,6 +55,7 @@ acceptance criterion below is already complete.
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
+- `DOC-053` Alterations operational guide hardening
 
 ### Recommended next slice
 
@@ -79,6 +79,16 @@ acceptance criterion below is already complete.
   executions, and variable mutation endpoints when diagnosing live instances.
 
 ## Critical Priority (Must Have - Block Users)
+
+### Current slice note
+
+- `DOC-053` Alterations operational guide hardening:
+  `features/alterations` is present, but the current pages are not fully
+  release-backed. Examples still use pre-filter plan payloads, omit the built-in
+  `Cancel` alteration, describe `/alterations/run` as requiring manual resume
+  dispatch even though the endpoint already dispatches successful instances with
+  scheduled work, and do not explain the Studio alterations surface or the
+  persistence/dispatcher options available in `release/3.8.0`.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

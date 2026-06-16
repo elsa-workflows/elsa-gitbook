@@ -41,14 +41,25 @@ The following example demonstrates how to define a custom alteration type and ha
 ```csharp
 public class MyAlteration : IAlteration
 {
-    public string Message { get; set; }
+    public string Message { get; set; } = default!;
 }
 
 public class MyAlterationHandler : AlterationHandlerBase<MyAlteration>
 {
-    public override async ValueTask HandleAsync(AlterationContext context, MyAlteration alteration)
+    protected override ValueTask HandleAsync(AlterationContext context, MyAlteration alteration)
     {
-        context.WorkflowExecutionContext.Output.Add("Message", context.Alteration.Message);
+        context.WorkflowExecutionContext.Output["Message"] = alteration.Message;
+        context.Succeed();
+        return ValueTask.CompletedTask;
     }
 }
 ```
+
+## Handler guidance
+
+An alteration handler runs inside Elsa's alteration pipeline against an existing workflow instance. In practice, that means your handler should:
+
+* validate that the target activity, variable, or workflow state exists
+* call `context.Succeed()` when the alteration completed successfully
+* call `context.Fail(...)` when the alteration cannot be applied safely
+* schedule additional work only when the workflow should continue after the change
