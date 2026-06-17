@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-16)
+## Slice Inventory (2026-06-17)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -33,6 +33,7 @@ acceptance criterion below is already complete.
 - `DOC-018` Plugins and modules development
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
+- `DOC-024` MassTransit communication
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
@@ -44,7 +45,6 @@ acceptance criterion below is already complete.
 - `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
-- `DOC-024` MassTransit communication
 - `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
@@ -59,11 +59,11 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-019` HTTP endpoint security: the HTTP workflow guides now explain how
-  to build endpoints, but the auth surface is still spread across multiple
-  pages. A single release-backed guide should connect `Authorize`,
-  `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
-  Studio-facing troubleshooting.
+- `DOC-025` Long-running workflows: the documentation covers individual
+  blocking activities and runtime concepts, but it still lacks one
+  release-backed guide that connects bookmarks, timers, incidents,
+  cancellation, persistence, and operator troubleshooting into a single
+  workflow lifecycle narrative.
 
 ### Newly discovered follow-on topics
 
@@ -77,6 +77,10 @@ acceptance criterion below is already complete.
 - `DOC-052` Workflow state and journal API cookbook: add an operations-facing
   guide for inspecting workflow state, filtered journal entries, activity
   executions, and variable mutation endpoints when diagnosing live instances.
+- `DOC-054` Messaging transport decision guide: document when to use
+  MassTransit message-type activities, the Azure Service Bus activity module,
+  or MassTransit-backed workflow dispatching so teams do not conflate three
+  different messaging integration paths.
 
 ## Critical Priority (Must Have - Block Users)
 
