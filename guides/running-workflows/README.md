@@ -4,6 +4,7 @@ There are multiple ways to run a workflow:
 
 * Using Elsa Studio.
 * Using a trigger, such as HTTP Endpoint.
+* Using timer and scheduled activities such as Delay, StartAt, Timer, and Cron.
 * Using Dispatch Workflow Activity
 * Using the Elsa REST API.
 * Using the Elsa library.
