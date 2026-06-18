@@ -11,6 +11,10 @@ Elsa ships with various triggers out of the box, such as:
 * Cron: triggers the workflow each given interval based on a CRON expression.
 * Event: triggers when a given event is received by the workflow server.
 
+For scheduling-focused guidance, including `Delay`, `StartAt`, `Timer`,
+`Cron`, local scheduling, and Quartz-backed durable scheduling, see
+[Timer and Scheduled Workflows](timer-and-scheduled-workflows.md).
+
 We will use the HTTP Endpoint trigger as an example.
 
 ## Using Code
@@ -57,4 +61,3 @@ public class HelloWorldHttpWorkflow : WorkflowBase
 Follow this guide to see step-by-step how to create a simple HTTP workflow using the HTTP Endpoint trigger.
 
 {% embed url="https://dubble.so/guides/http-trigger-zuc6xtxdvoo49omo5oly" %}
-

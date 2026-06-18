@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-17)
+## Slice Inventory (2026-06-18)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -34,6 +34,7 @@ acceptance criterion below is already complete.
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
 - `DOC-024` MassTransit communication
+- `DOC-040` Timer and scheduled workflows
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
@@ -50,7 +51,6 @@ acceptance criterion below is already complete.
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
-- `DOC-040` Timer and scheduled workflows
 - `DOC-042` Bulk dispatch workflows activity
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
@@ -59,11 +59,11 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-025` Long-running workflows: the documentation covers individual
-  blocking activities and runtime concepts, but it still lacks one
-  release-backed guide that connects bookmarks, timers, incidents,
-  cancellation, persistence, and operator troubleshooting into a single
-  workflow lifecycle narrative.
+- `DOC-025` Long-running workflows: the new scheduling guide now explains
+  timers and durable resumes, but the docs still lack one release-backed guide
+  that connects bookmarks, timers, incidents, cancellation, persistence,
+  background execution, and operator troubleshooting into a full workflow
+  lifecycle narrative.
 
 ### Newly discovered follow-on topics
 
@@ -81,6 +81,14 @@ acceptance criterion below is already complete.
   MassTransit message-type activities, the Azure Service Bus activity module,
   or MassTransit-backed workflow dispatching so teams do not conflate three
   different messaging integration paths.
+
+### Current run result
+
+- `DOC-040` Timer and scheduled workflows: completed in this run by adding a
+  dedicated guide for `Delay`, `StartAt`, `Timer`, and `Cron`, and grounding
+  the scheduling model in `DefaultBookmarkScheduler`, `ResumeWorkflowTask`,
+  `LocalScheduler`, and Quartz-backed scheduler configuration from
+  `release/3.8.0`.
 
 ## Critical Priority (Must Have - Block Users)
 
