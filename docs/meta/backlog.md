@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-18)
+## Slice Inventory (2026-06-19)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -35,6 +35,7 @@ acceptance criterion below is already complete.
 - `DOC-022` Scaling and performance
 - `DOC-024` MassTransit communication
 - `DOC-040` Timer and scheduled workflows
+- `DOC-042` Bulk dispatch workflows activity
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
@@ -51,11 +52,17 @@ acceptance criterion below is already complete.
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
-- `DOC-042` Bulk dispatch workflows activity
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
 - `DOC-053` Alterations operational guide hardening
+
+### Current run selection
+
+- `DOC-042` Bulk dispatch workflows activity: add a release-backed guide that
+  explains fan-out child workflow dispatch, item-to-input mapping,
+  `WaitForCompletion`, per-child ports, and how the activity differs from the
+  REST bulk-dispatch endpoint.
 
 ### Recommended next slice
 
@@ -89,6 +96,11 @@ acceptance criterion below is already complete.
   the scheduling model in `DefaultBookmarkScheduler`, `ResumeWorkflowTask`,
   `LocalScheduler`, and Quartz-backed scheduler configuration from
   `release/3.8.0`.
+- `DOC-042` Bulk dispatch workflows activity: completed in this run by adding
+  a dedicated guide for `BulkDispatchWorkflows`, clarifying item input mapping,
+  wait-vs-fire-and-forget behavior, per-child completion and fault ports,
+  channel dispatch, and the difference between in-workflow bulk dispatch and
+  the `/workflow-definitions/{definitionId}/bulk-dispatch` API endpoint.
 
 ## Critical Priority (Must Have - Block Users)
 

@@ -4,6 +4,9 @@ The **Dispatch Workflow** activity can start a new workflow from the current wor
 
 It allows you to specify what workflow to run and provide any input required by the workflow.
 
+If you need to fan out one child workflow per item in a collection, use
+[Bulk Dispatch Workflows Activity](bulk-dispatch-workflows.md) instead.
+
 Let's try it out.
 
 ## Using Code
