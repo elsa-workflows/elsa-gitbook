@@ -69,6 +69,7 @@
   * [Using a Trigger](guides/running-workflows/using-a-trigger.md)
   * [Timer and Scheduled Workflows](guides/running-workflows/timer-and-scheduled-workflows.md)
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
+  * [Bulk Dispatch Workflows Activity](guides/running-workflows/bulk-dispatch-workflows.md)
 * [Studio User Guide](guides/studio/README.md)
   * [Expressions](guides/studio/expressions.md)
   * [Customization](guides/studio/customization.md)
