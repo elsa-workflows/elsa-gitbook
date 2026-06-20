@@ -2,6 +2,8 @@
 
 The Alterations module exposes a REST API for submitting, inspecting, and dry-running alteration plans.
 
+All endpoints on this page require the `run:alterations` permission.
+
 ## Submit a plan
 
 Send `POST /alterations/submit` with `alterations` plus a `filter`:
@@ -68,6 +70,21 @@ Example response:
 }
 ```
 
+The dry-run endpoint accepts the same `AlterationWorkflowInstanceFilter` model that `POST /alterations/submit` uses inside `filter`. In `release/3.8.0`, that includes:
+
+* `workflowInstanceIds`
+* `correlationIds`
+* `names`
+* `searchTerm`
+* `definitionIds`
+* `definitionVersionIds`
+* `statuses`
+* `subStatuses`
+* `hasIncidents`
+* `isSystem`
+* `activityFilters`
+* `timestampFilters`
+
 ## Get plan and job status
 
 Use the plan ID to query the current plan and its jobs:
@@ -132,3 +149,5 @@ The response includes the stored plan and any generated jobs:
 ```
 
 `status` values are serialized from Elsa's plan and job status enums. Use the plan timestamps and per-job logs to understand whether Elsa found matching instances, whether jobs have started, and which alterations succeeded or failed.
+
+If a plan matches no workflow instances, the response still returns the stored plan, but `jobs` remains empty.

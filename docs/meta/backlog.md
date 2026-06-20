@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-19)
+## Slice Inventory (2026-06-20)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -35,7 +35,7 @@ acceptance criterion below is already complete.
 - `DOC-022` Scaling and performance
 - `DOC-024` MassTransit communication
 - `DOC-040` Timer and scheduled workflows
-- `DOC-042` Bulk dispatch workflows activity
+- `DOC-053` Alterations operational guide hardening
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
@@ -52,25 +52,25 @@ acceptance criterion below is already complete.
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
+- `DOC-042` Bulk dispatch workflows activity
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
-- `DOC-053` Alterations operational guide hardening
 
 ### Current run selection
 
-- `DOC-042` Bulk dispatch workflows activity: add a release-backed guide that
-  explains fan-out child workflow dispatch, item-to-input mapping,
-  `WaitForCompletion`, per-child ports, and how the activity differs from the
-  REST bulk-dispatch endpoint.
+- `DOC-053` Alterations operational guide hardening: rewrite the alterations
+  pages around the actual `release/3.8.0` execution modes, built-in alteration
+  types, plan lifecycle, Studio surfaces, persistence options, and shipped HTTP
+  endpoints including bulk retry.
 
 ### Recommended next slice
 
-- `DOC-025` Long-running workflows: the new scheduling guide now explains
-  timers and durable resumes, but the docs still lack one release-backed guide
-  that connects bookmarks, timers, incidents, cancellation, persistence,
-  background execution, and operator troubleshooting into a full workflow
-  lifecycle narrative.
+- `DOC-019` HTTP endpoint security: the HTTP workflow guides now explain how
+  to build endpoints, but the auth surface is still spread across multiple
+  pages. A single release-backed guide should connect `Authorize`,
+  `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
+  Studio-facing troubleshooting.
 
 ### Newly discovered follow-on topics
 
@@ -84,35 +84,27 @@ acceptance criterion below is already complete.
 - `DOC-052` Workflow state and journal API cookbook: add an operations-facing
   guide for inspecting workflow state, filtered journal entries, activity
   executions, and variable mutation endpoints when diagnosing live instances.
-- `DOC-054` Messaging transport decision guide: document when to use
-  MassTransit message-type activities, the Azure Service Bus activity module,
-  or MassTransit-backed workflow dispatching so teams do not conflate three
-  different messaging integration paths.
+- `DOC-054` Messaging transport selection and topology guide: add a focused
+  cross-cutting guide that helps architects choose between MassTransit,
+  Azure Service Bus, and Kafka extensions, and explains when to use
+  workflow-trigger activities vs runtime dispatchers vs custom consumers.
 
 ### Current run result
 
-- `DOC-040` Timer and scheduled workflows: completed in this run by adding a
-  dedicated guide for `Delay`, `StartAt`, `Timer`, and `Cron`, and grounding
-  the scheduling model in `DefaultBookmarkScheduler`, `ResumeWorkflowTask`,
-  `LocalScheduler`, and Quartz-backed scheduler configuration from
-  `release/3.8.0`.
-- `DOC-042` Bulk dispatch workflows activity: completed in this run by adding
-  a dedicated guide for `BulkDispatchWorkflows`, clarifying item input mapping,
-  wait-vs-fire-and-forget behavior, per-child completion and fault ports,
-  channel dispatch, and the difference between in-workflow bulk dispatch and
-  the `/workflow-definitions/{definitionId}/bulk-dispatch` API endpoint.
+- `DOC-053` Alterations operational guide hardening: completed in this run by
+  aligning the overview, alteration plans, and immediate execution guides with
+  `release/3.8.0` behavior, including Studio's alterations module, the
+  built-in `Cancel` alteration, persistence and dispatcher configuration, the
+  `run:alterations` permission surface, and the shipped `/alterations/run`,
+  `/alterations/submit`, `/alterations/dry-run`, and
+  `/alterations/workflows/retry` endpoints.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
 - `DOC-053` Alterations operational guide hardening:
-  `features/alterations` is present, but the current pages are not fully
-  release-backed. Examples still use pre-filter plan payloads, omit the built-in
-  `Cancel` alteration, describe `/alterations/run` as requiring manual resume
-  dispatch even though the endpoint already dispatches successful instances with
-  scheduled work, and do not explain the Studio alterations surface or the
-  persistence/dispatcher options available in `release/3.8.0`.
+  completed on 2026-06-20.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
