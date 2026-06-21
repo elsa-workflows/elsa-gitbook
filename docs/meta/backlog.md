@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-19)
+## Slice Inventory (2026-06-21)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -36,6 +36,7 @@ acceptance criterion below is already complete.
 - `DOC-024` MassTransit communication
 - `DOC-040` Timer and scheduled workflows
 - `DOC-042` Bulk dispatch workflows activity
+- `DOC-025` Long-running workflows
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
@@ -47,7 +48,6 @@ acceptance criterion below is already complete.
 - `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
-- `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
@@ -59,18 +59,17 @@ acceptance criterion below is already complete.
 
 ### Current run selection
 
-- `DOC-042` Bulk dispatch workflows activity: add a release-backed guide that
-  explains fan-out child workflow dispatch, item-to-input mapping,
-  `WaitForCompletion`, per-child ports, and how the activity differs from the
-  REST bulk-dispatch endpoint.
+- `DOC-025` Long-running workflows: add a release-backed guide that connects
+  bookmarks, scheduling, callbacks, dispatch, and runtime recovery for
+  workflows that pause and resume over time.
 
 ### Recommended next slice
 
-- `DOC-025` Long-running workflows: the new scheduling guide now explains
-  timers and durable resumes, but the docs still lack one release-backed guide
-  that connects bookmarks, timers, incidents, cancellation, persistence,
-  background execution, and operator troubleshooting into a full workflow
-  lifecycle narrative.
+- `DOC-026` Error handling and retry logic: the docs cover incidents,
+  alterations, and troubleshooting separately, but there is still no single
+  release-backed guide that explains activity faults, incident strategies,
+  bookmark queue dead letters, retry endpoints, and when to choose retry vs
+  compensation vs manual repair.
 
 ### Newly discovered follow-on topics
 
@@ -88,6 +87,9 @@ acceptance criterion below is already complete.
   MassTransit message-type activities, the Azure Service Bus activity module,
   or MassTransit-backed workflow dispatching so teams do not conflate three
   different messaging integration paths.
+- `DOC-055` Workflow runtime recovery operations: add an operator-facing guide
+  for bookmark queue dead letters, runtime pause/resume management, recovery
+  tasks, and what to inspect before replaying or draining stuck work.
 
 ### Current run result
 
@@ -101,18 +103,18 @@ acceptance criterion below is already complete.
   wait-vs-fire-and-forget behavior, per-child completion and fault ports,
   channel dispatch, and the difference between in-workflow bulk dispatch and
   the `/workflow-definitions/{definitionId}/bulk-dispatch` API endpoint.
+- `DOC-025` Long-running workflows: completed in this run by adding a
+  dedicated guide that explains runtime prerequisites, bookmark and trigger
+  mechanics, time-based waits, callback resumption, `RunTask`, dispatch vs
+  execute guidance, and the built-in recovery tasks that protect paused
+  workflows in `release/3.8.0`.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
-- `DOC-053` Alterations operational guide hardening:
-  `features/alterations` is present, but the current pages are not fully
-  release-backed. Examples still use pre-filter plan payloads, omit the built-in
-  `Cancel` alteration, describe `/alterations/run` as requiring manual resume
-  dispatch even though the endpoint already dispatches successful instances with
-  scheduled work, and do not explain the Studio alterations surface or the
-  persistence/dispatcher options available in `release/3.8.0`.
+- `DOC-025` Long-running workflows:
+  completed on 2026-06-21.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
