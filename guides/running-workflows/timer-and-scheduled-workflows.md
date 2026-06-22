@@ -226,6 +226,12 @@ In `release/3.8.0`, Elsa's built-in `CronosCronParser` parses expressions with
 seconds included, and `UseQuartzScheduler()` swaps that parser for
 `QuartzCronParser`.
 
+Blank cron expressions are treated as disabled:
+
+- a trigger `Cron` activity is skipped during trigger creation
+- an inline `Cron` activity completes immediately instead of scheduling a
+  bookmark
+
 When it is not starting the workflow directly, `Cron.ExecuteAsync(...)`:
 
 - resolves the cron parser from DI

@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-21)
+## Slice Inventory (2026-06-22)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -114,7 +114,7 @@ acceptance criterion below is already complete.
 ### Current slice note
 
 - `DOC-025` Long-running workflows:
-  completed on 2026-06-21.
+  completed on 2026-06-22.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

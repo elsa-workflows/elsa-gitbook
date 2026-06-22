@@ -189,9 +189,11 @@ itself runs elsewhere.
 For long-running flows, prefer entry points that do not assume the workflow will
 finish in the same HTTP request.
 
-- use `/dispatch` when the workflow may suspend or continue in the background
-- use `/execute` only when the caller expects a synchronous response and the
-  workflow path can complete immediately
+- use `POST {RoutePrefix}/workflow-definitions/{definitionId}/dispatch` when
+  the workflow may suspend or continue in the background
+- use `GET` or `POST {RoutePrefix}/workflow-definitions/{definitionId}/execute`
+  only when the caller expects a synchronous response and the workflow path can
+  complete immediately
 
 If an HTTP workflow can block on timers, callbacks, or external events, design
 it as a dispatch-and-observe flow instead of a request-response flow.
