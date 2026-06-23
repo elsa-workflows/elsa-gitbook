@@ -5,10 +5,13 @@ There are multiple ways to run a workflow:
 * Using Elsa Studio.
 * Using a trigger, such as HTTP Endpoint.
 * Using Dispatch Workflow Activity
+* Using Bulk Dispatch Workflows Activity
 * Using the Elsa REST API.
 * Using the Elsa library.
 
 In this guide, we will see an example of each of these methods.
+
+If you need to start one child workflow from another workflow, see [Dispatch Workflow Activity](dispatch-workflow-activity.md). If you need to start one child workflow per item in a collection, see [Bulk Dispatch Workflows Activity](bulk-dispatch-workflows.md).
 
 ## Before you start﻿ <a href="#before-you-start" id="before-you-start"></a>
 

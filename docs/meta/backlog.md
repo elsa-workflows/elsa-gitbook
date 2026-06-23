@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-16)
+## Slice Inventory (2026-06-23)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -37,6 +37,7 @@ acceptance criterion below is already complete.
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
 - `DOC-041` Loading workflows from JSON
+- `DOC-042` Bulk dispatch workflows activity
 - `DOC-049` Studio custom-elements embedding cookbook
 
 ### Available next slices
@@ -51,7 +52,6 @@ acceptance criterion below is already complete.
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
 - `DOC-040` Timer and scheduled workflows
-- `DOC-042` Bulk dispatch workflows activity
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
@@ -82,13 +82,12 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-053` Alterations operational guide hardening:
-  `features/alterations` is present, but the current pages are not fully
-  release-backed. Examples still use pre-filter plan payloads, omit the built-in
-  `Cancel` alteration, describe `/alterations/run` as requiring manual resume
-  dispatch even though the endpoint already dispatches successful instances with
-  scheduled work, and do not explain the Studio alterations surface or the
-  persistence/dispatcher options available in `release/3.8.0`.
+- `DOC-042` Bulk dispatch workflows activity:
+  add a dedicated, release-backed guide for `BulkDispatchWorkflows` that
+  explains how item input mapping works, when `WaitForCompletion` blocks the
+  parent workflow, how `ChildCompleted` and `ChildFaulted` execute per child,
+  what Studio users should configure, and when to use this activity instead of
+  `DispatchWorkflow`, `ForEach`, or the workflow-definition bulk-dispatch API.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
