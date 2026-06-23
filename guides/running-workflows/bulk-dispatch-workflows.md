@@ -16,8 +16,14 @@ Use `BulkDispatchWorkflows` when you need to:
 - react differently when individual child workflows finish or fault
 - assign per-item correlation IDs
 
-Use the single [Dispatch Workflow Activity](dispatch-workflow-activity.md) when
-you only need one child workflow instance.
+Choose the surrounding pattern based on where the fan-out should happen:
+
+| Use this | When |
+| --- | --- |
+| [Dispatch Workflow Activity](dispatch-workflow-activity.md) | You only need one child workflow instance. |
+| `BulkDispatchWorkflows` | You need one child workflow instance per item in a collection. |
+| `ForEach` | You want to iterate inside the same workflow instance instead of creating child workflow instances. |
+| `POST /workflow-definitions/{definitionId}/bulk-dispatch` | An external client needs to queue multiple instances of the same workflow definition. |
 
 ## What it does
 
@@ -99,6 +105,7 @@ variable and passes these values as workflow input:
 This example dispatches one child workflow per employee and waits for all of
 them to complete.
 
+{% code title="GreetEmployeesWorkflow.cs" %}
 ```csharp
 using System.Collections.Generic;
 using Elsa.Workflows;
@@ -107,8 +114,12 @@ using Elsa.Workflows.Runtime.Activities;
 
 public class GreetEmployeesWorkflow : WorkflowBase
 {
+    public const string DefinitionId = "greet-employees";
+
     protected override void Build(IWorkflowBuilder builder)
     {
+        builder.WithDefinitionId(DefinitionId);
+
         var employees = new[]
         {
             new Dictionary<string, object> { ["Employee"] = "Alice" },
@@ -122,7 +133,7 @@ public class GreetEmployeesWorkflow : WorkflowBase
             {
                 new BulkDispatchWorkflows
                 {
-                    WorkflowDefinitionId = new("EmployeeGreetingWorkflow"),
+                    WorkflowDefinitionId = new(EmployeeGreetingWorkflow.DefinitionId),
                     Items = new(employees),
                     WaitForCompletion = new(true)
                 },
@@ -132,6 +143,28 @@ public class GreetEmployeesWorkflow : WorkflowBase
     }
 }
 ```
+{% endcode %}
+
+{% code title="EmployeeGreetingWorkflow.cs" %}
+```csharp
+using Elsa.Extensions;
+using Elsa.Workflows;
+using Elsa.Workflows.Activities;
+
+public class EmployeeGreetingWorkflow : WorkflowBase
+{
+    public const string DefinitionId = "employee-greeting";
+
+    protected override void Build(IWorkflowBuilder builder)
+    {
+        builder.WithDefinitionId(DefinitionId);
+        var employee = builder.WithInput<string>("Employee");
+
+        builder.Root = new WriteLine(context => $"Hello {context.GetInput<string>(employee)}");
+    }
+}
+```
+{% endcode %}
 
 Because each item is a dictionary, the child workflow receives `Employee`
 directly instead of an `Item` wrapper key.
@@ -185,6 +218,8 @@ The main properties to configure are:
 - `Wait For Completion`
 - `Channel`
 - `Start New Trace`
+
+Leaving `Channel` empty uses the default dispatcher channel.
 
 Use `ChildCompleted` and `ChildFaulted` ports when the parent workflow needs
 per-child follow-up logic.
