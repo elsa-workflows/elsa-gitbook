@@ -9,7 +9,10 @@ Elsa ships with various triggers out of the box, such as:
 * HTTP Endpoint: triggers the workflow when a given HTTP request is sent to the workflow server.
 * Timer: triggers the workflow each given interval based on a TimeSpan expression.
 * Cron: triggers the workflow each given interval based on a CRON expression.
+* StartAt: triggers the workflow once at a specific future timestamp.
 * Event: triggers when a given event is received by the workflow server.
+
+For the scheduling triggers (`Timer`, `Cron`, and `StartAt`), see [Timer and Scheduled Workflows](timer-and-scheduled-workflows.md). That guide covers `CanStartWorkflow`, cron format, scheduler behavior, and clustered deployment considerations.
 
 We will use the HTTP Endpoint trigger as an example.
 
@@ -57,4 +60,3 @@ public class HelloWorldHttpWorkflow : WorkflowBase
 Follow this guide to see step-by-step how to create a simple HTTP workflow using the HTTP Endpoint trigger.
 
 {% embed url="https://dubble.so/guides/http-trigger-zuc6xtxdvoo49omo5oly" %}
-

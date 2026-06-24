@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-23)
+## Slice Inventory (2026-06-24)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -38,6 +38,7 @@ acceptance criterion below is already complete.
 - `DOC-030` Custom UI components
 - `DOC-041` Loading workflows from JSON
 - `DOC-042` Bulk dispatch workflows activity
+- `DOC-040` Timer and scheduled workflows
 - `DOC-049` Studio custom-elements embedding cookbook
 
 ### Available next slices
@@ -51,7 +52,6 @@ acceptance criterion below is already complete.
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
-- `DOC-040` Timer and scheduled workflows
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
@@ -82,12 +82,12 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-042` Bulk dispatch workflows activity:
-  add a dedicated, release-backed guide for `BulkDispatchWorkflows` that
-  explains how item input mapping works, when `WaitForCompletion` blocks the
-  parent workflow, how `ChildCompleted` and `ChildFaulted` execute per child,
-  what Studio users should configure, and when to use this activity instead of
-  `DispatchWorkflow`, `ForEach`, or the workflow-definition bulk-dispatch API.
+- `DOC-040` Timer and scheduled workflows:
+  add a dedicated, release-backed guide that explains when to use `Delay`,
+  `Timer`, `Cron`, and `StartAt`, how `CanStartWorkflow` affects trigger
+  indexing, that timer triggers schedule from publish/index time, that cron
+  expressions use the six-field Cronos format with seconds, and what changes in
+  clustered versus in-memory scheduling setups.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
