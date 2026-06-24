@@ -12,7 +12,9 @@ Elsa ships with various triggers out of the box, such as:
 * StartAt: triggers the workflow once at a specific future timestamp.
 * Event: triggers when a given event is received by the workflow server.
 
-For the scheduling triggers (`Timer`, `Cron`, and `StartAt`), see [Timer and Scheduled Workflows](timer-and-scheduled-workflows.md). That guide covers `CanStartWorkflow`, cron format, scheduler behavior, and clustered deployment considerations.
+For scheduling-focused guidance, including `Delay`, `StartAt`, `Timer`,
+`Cron`, scheduler behavior, and clustered deployment considerations, see
+[Timer and Scheduled Workflows](timer-and-scheduled-workflows.md).
 
 We will use the HTTP Endpoint trigger as an example.
 

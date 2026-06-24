@@ -5,6 +5,8 @@ There are multiple ways to run a workflow:
 * Using Elsa Studio.
 * Using a trigger, such as HTTP Endpoint.
 * Using timer and scheduled triggers.
+* Using long-running workflow patterns such as bookmarks, callbacks, and
+  background task resumption.
 * Using Dispatch Workflow Activity
 * Using Bulk Dispatch Workflows Activity
 * Using the Elsa REST API.

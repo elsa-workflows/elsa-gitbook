@@ -33,12 +33,14 @@ acceptance criterion below is already complete.
 - `DOC-018` Plugins and modules development
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
+- `DOC-024` MassTransit communication
+- `DOC-025` Long-running workflows
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
+- `DOC-040` Timer and scheduled workflows
 - `DOC-041` Loading workflows from JSON
 - `DOC-042` Bulk dispatch workflows activity
-- `DOC-040` Timer and scheduled workflows
 - `DOC-049` Studio custom-elements embedding cookbook
 
 ### Available next slices
@@ -46,8 +48,6 @@ acceptance criterion below is already complete.
 - `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
-- `DOC-024` MassTransit communication
-- `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
@@ -57,13 +57,22 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 - `DOC-053` Alterations operational guide hardening
 
+### Current run selection
+
+- `DOC-040` Timer and scheduled workflows: add a release-backed guide that
+  explains when to use `Delay`, `Timer`, `Cron`, and `StartAt`, how
+  `CanStartWorkflow` affects trigger indexing, that timer triggers schedule
+  from publish/index time, that cron expressions use the six-field Cronos
+  format with seconds, and what changes in clustered versus in-memory
+  scheduling setups.
+
 ### Recommended next slice
 
-- `DOC-019` HTTP endpoint security: the HTTP workflow guides now explain how
-  to build endpoints, but the auth surface is still spread across multiple
-  pages. A single release-backed guide should connect `Authorize`,
-  `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
-  Studio-facing troubleshooting.
+- `DOC-026` Error handling and retry logic: the docs cover incidents,
+  alterations, and troubleshooting separately, but there is still no single
+  release-backed guide that explains activity faults, incident strategies,
+  bookmark queue dead letters, retry endpoints, and when to choose retry vs
+  compensation vs manual repair.
 
 ### Newly discovered follow-on topics
 
@@ -77,17 +86,37 @@ acceptance criterion below is already complete.
 - `DOC-052` Workflow state and journal API cookbook: add an operations-facing
   guide for inspecting workflow state, filtered journal entries, activity
   executions, and variable mutation endpoints when diagnosing live instances.
+- `DOC-054` Messaging transport decision guide: document when to use
+  MassTransit message-type activities, the Azure Service Bus activity module,
+  or MassTransit-backed workflow dispatching so teams do not conflate three
+  different messaging integration paths.
+- `DOC-055` Workflow runtime recovery operations: add an operator-facing guide
+  for bookmark queue dead letters, runtime pause/resume management, recovery
+  tasks, and what to inspect before replaying or draining stuck work.
+
+### Current run result
+
+- `DOC-025` Long-running workflows: completed by adding a dedicated guide that
+  explains runtime prerequisites, bookmark and trigger mechanics, time-based
+  waits, callback resumption, `RunTask`, dispatch vs execute guidance, and the
+  built-in recovery tasks that protect paused workflows in `release/3.8.0`.
+- `DOC-040` Timer and scheduled workflows: completed by adding a dedicated
+  guide for `Delay`, `StartAt`, `Timer`, and `Cron`, grounding the scheduling
+  model in `DefaultBookmarkScheduler`, `ResumeWorkflowTask`, and
+  `LocalScheduler`, and clarifying where the docs should point operators for
+  clustered scheduling patterns.
+- `DOC-042` Bulk dispatch workflows activity: completed by adding a dedicated
+  guide for `BulkDispatchWorkflows`, clarifying item input mapping,
+  wait-vs-fire-and-forget behavior, per-child completion and fault ports,
+  channel dispatch, and the difference between in-workflow bulk dispatch and
+  the `/workflow-definitions/{definitionId}/bulk-dispatch` API endpoint.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
 - `DOC-040` Timer and scheduled workflows:
-  add a dedicated, release-backed guide that explains when to use `Delay`,
-  `Timer`, `Cron`, and `StartAt`, how `CanStartWorkflow` affects trigger
-  indexing, that timer triggers schedule from publish/index time, that cron
-  expressions use the six-field Cronos format with seconds, and what changes in
-  clustered versus in-memory scheduling setups.
+  completed on 2026-06-24.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

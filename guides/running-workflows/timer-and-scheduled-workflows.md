@@ -218,5 +218,6 @@ Keep these 3.8.0 behaviors in mind:
 
 * [Using a Trigger](using-a-trigger.md)
 * [Running Workflows](README.md)
+* [Long-Running Workflows](long-running-workflows.md)
 * [Clustering](../clustering/README.md)
 * [Troubleshooting](../troubleshooting/README.md)

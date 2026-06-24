@@ -1,50 +1,109 @@
 # Bulk Dispatch Workflows Activity
 
-Use `BulkDispatchWorkflows` when a workflow needs to create and dispatch one child workflow instance per item in a collection.
+Use `BulkDispatchWorkflows` when one parent workflow should fan out work to
+many child workflow instances in one step.
 
-This activity is available in `release/3.8.0` under the **Composition** category as **Bulk Dispatch Workflows**.
+In `release/3.8.0`, the activity lives in
+`Elsa.Workflows.Runtime.Activities.BulkDispatchWorkflows` and is exposed in the
+`Composition` category in Elsa Studio.
 
 ## When to use it
 
-Use `BulkDispatchWorkflows` when you want the parent workflow to fan out work across many child workflow instances:
+Use `BulkDispatchWorkflows` when you need to:
+
+- dispatch the same child workflow for each item in a collection
+- optionally wait for all child workflows to finish
+- react differently when individual child workflows finish or fault
+- assign per-item correlation IDs
+
+Choose the surrounding pattern based on where the fan-out should happen:
 
 | Use this | When |
 | --- | --- |
-| `DispatchWorkflow` | You need to start one child workflow instance. |
-| `BulkDispatchWorkflows` | You need to start one child workflow instance per item in a collection. |
+| [Dispatch Workflow Activity](dispatch-workflow-activity.md) | You only need one child workflow instance. |
+| `BulkDispatchWorkflows` | You need one child workflow instance per item in a collection. |
 | `ForEach` | You want to iterate inside the same workflow instance instead of creating child workflow instances. |
-| `POST /workflow-definitions/{definitionId}/bulk-dispatch` | An external client, not a parent workflow, needs to queue multiple instances of the same workflow definition. |
+| `POST /workflow-definitions/{definitionId}/bulk-dispatch` | An external client needs to queue multiple instances of the same workflow definition. |
 
 ## What it does
 
-For each item in `Items`, Elsa:
+At execution time, Elsa:
 
-1. Resolves the published version of the child workflow definition.
-2. Creates a new child workflow instance.
-3. Adds `ParentInstanceId` to the child input and workflow properties.
-4. Merges the current item into the child input.
-5. Dispatches the child workflow through the selected channel.
+1. evaluates `Items` into a materialized list
+2. resolves the published child workflow definition from `WorkflowDefinitionId`
+3. dispatches one child workflow instance per item
+4. either completes immediately or waits for child completion, depending on
+   `WaitForCompletion`
 
-If `WaitForCompletion` is `true`, the parent workflow creates a bookmark and resumes only after all dispatched child workflows finish. If `Items` is empty, the activity completes immediately.
+If the target workflow definition does not have a published version, the
+activity faults.
+
+If `Items` is empty, the activity completes immediately even when
+`WaitForCompletion` is `true`.
 
 ## Input mapping
 
-`BulkDispatchWorkflows` supports two item shapes:
+Each dispatched child workflow starts with the optional `Input` dictionary and
+then receives per-item input:
 
-- If each item is a dictionary, Elsa merges that dictionary directly into the child workflow input.
-- If each item is any other value, Elsa stores that value under `DefaultItemInputKey`, which defaults to `Item`.
+- if an item is a plain value, Elsa sends it under `DefaultItemInputKey`
+  (default: `Item`)
+- if an item is already an `IDictionary<string, object>`, Elsa merges that
+  dictionary directly into the child input instead
 
-Elsa also merges any values from the activity's `Input` property into every child workflow input.
+The activity also adds `ParentInstanceId` to the child workflow input before
+merging item dictionaries. If your item dictionaries use the same key, they
+overwrite that input value. The same overwrite behavior applies to any matching
+keys that were already present in the optional `Input` dictionary.
 
-This means each child workflow receives:
+## Waiting vs fire-and-forget
 
-- the shared `Input` values
-- the current item data
-- `ParentInstanceId`
+`WaitForCompletion` defaults to `true`.
 
-## Code example
+| Setting | Runtime behavior |
+| --- | --- |
+| `true` | Creates a bookmark and waits until all dispatched child workflows finish |
+| `false` | Dispatches child workflows and completes the parent activity immediately |
 
-The following example is grounded in the `release/3.8.0` component tests. The parent workflow dispatches one child workflow for each employee record and waits for all of them to finish.
+When Elsa waits for completion, it tracks how many child instances were
+dispatched and resumes the parent activity whenever a finished child workflow
+reports back through `ResumeBulkDispatchWorkflowActivity`.
+
+## Outcomes and child ports
+
+`BulkDispatchWorkflows` exposes these flowchart outcomes in its activity
+metadata:
+
+- `Done`
+- `Completed`
+- `Canceled`
+
+In `release/3.8.0`, the implementation completes with:
+
+- `Done` immediately when `WaitForCompletion` is `false`
+- `Done` immediately when `Items` is empty
+- `Completed` and `Done` after the last child finishes when
+  `WaitForCompletion` is `true`
+
+You can also attach per-child ports:
+
+- `ChildCompleted` runs for each child workflow whose sub-status is `Finished`
+- `ChildFaulted` runs for each child workflow whose sub-status is `Faulted`
+
+While those child-port activities run, Elsa adds a `ChildInstanceId` workflow
+variable and passes these values as workflow input:
+
+- `WorkflowOutput`
+- `WorkflowInstanceId`
+- `WorkflowStatus`
+- `WorkflowSubStatus`
+
+## Using code
+
+### Wait for all child workflows
+
+This example dispatches one child workflow per employee and waits for all of
+them to complete.
 
 {% code title="GreetEmployeesWorkflow.cs" %}
 ```csharp
@@ -78,7 +137,7 @@ public class GreetEmployeesWorkflow : WorkflowBase
                     Items = new(employees),
                     WaitForCompletion = new(true)
                 },
-                new WriteLine("All greetings completed")
+                new WriteLine("All employee greeting workflows finished.")
             }
         };
     }
@@ -107,59 +166,80 @@ public class EmployeeGreetingWorkflow : WorkflowBase
 ```
 {% endcode %}
 
-When the child workflow expects a single simple value instead of a dictionary, keep the default `DefaultItemInputKey = "Item"` and read that input from the child workflow.
+Because each item is a dictionary, the child workflow receives `Employee`
+directly instead of an `Item` wrapper key.
 
-## Correlation IDs per item
+### Fire-and-forget batch dispatch
 
-`CorrelationIdFunction` is evaluated once per item. In the `release/3.8.0` tests, Elsa computes correlation IDs with a JavaScript expression:
+Set `WaitForCompletion` to `false` when the parent workflow should continue
+without waiting for the children:
 
-```javascript
-`correlation-${getItem()}`
+```csharp
+new BulkDispatchWorkflows
+{
+    WorkflowDefinitionId = new("SlowBulkChildWorkflow"),
+    Items = new(new object[] { "A", "B", "C" }),
+    WaitForCompletion = new(false)
+}
 ```
 
-Use this when each dispatched child workflow should get its own predictable correlation ID based on the current item.
+This still records `ParentWorkflowInstanceId` on the dispatched workflow
+request, but the parent activity does not create a waiting bookmark.
 
-## Waiting vs fire-and-forget
+### Per-item correlation IDs
 
-`WaitForCompletion` defaults to `true`.
+`CorrelationIdFunction` is evaluated once per item. The current item is exposed
+to the expression evaluator arguments used by the activity.
 
-- `true`: the parent workflow pauses until every child workflow finishes.
-- `false`: the parent workflow completes this activity immediately after dispatching the child workflows.
+```csharp
+using Elsa.Expressions.JavaScript.Models;
 
-When Elsa waits for completion, each child workflow gets a `WaitForCompletion` marker in its properties so the runtime can resume the parent workflow when that child finishes.
+new BulkDispatchWorkflows
+{
+    WorkflowDefinitionId = new("BulkChildWorkflow"),
+    Items = new(new object[] { 1, 2, 3 }),
+    CorrelationIdFunction = new(JavaScriptExpression.Create("`correlation-${getItem()}`")),
+    WaitForCompletion = new(true)
+}
+```
 
-## Child completion and fault ports
+## Elsa Studio notes
 
-When `WaitForCompletion` is `true`, the activity can schedule extra work for each child result:
+In Elsa Studio, look for `Bulk Dispatch Workflows` under the `Composition`
+activity category.
 
-- `ChildCompleted` runs once for each child workflow that finishes successfully.
-- `ChildFaulted` runs once for each child workflow that finishes with `WorkflowSubStatus.Faulted`.
+The main properties to configure are:
 
-While those ports run, Elsa provides:
+- `Workflow Definition`
+- `Items`
+- `Default Item Input Key`
+- `Correlation ID Function`
+- `Input`
+- `Wait For Completion`
+- `Channel`
+- `Start New Trace`
 
-- `WorkflowInstanceId` in the resumed input
-- `WorkflowStatus` and `WorkflowSubStatus` in the resumed input
-- `WorkflowOutput` in the resumed input
-- a `ChildInstanceId` workflow variable
+Leaving `Channel` empty uses the default dispatcher channel.
 
-This makes the activity useful for fan-out/fan-in orchestration where the parent needs to count, aggregate, or compensate for per-child outcomes.
+Use `ChildCompleted` and `ChildFaulted` ports when the parent workflow needs
+per-child follow-up logic.
 
-## Using it in Elsa Studio
+## Activity vs REST bulk dispatch
 
-In Elsa Studio, configure **Bulk Dispatch Workflows** with these fields:
+Elsa Server also exposes `POST /workflow-definitions/{definitionId}/bulk-dispatch`.
 
-- **Workflow Definition**: the child workflow definition to dispatch. Elsa resolves the published version.
-- **Items**: the collection to fan out over.
-- **Default Item Input Key**: the key used for non-dictionary items. Leave this as `Item` unless the child workflow expects a different input name.
-- **Correlation ID Function**: an optional expression evaluated for each item.
-- **Input**: shared input values added to every child workflow.
-- **Wait For Completion**: whether the parent should block until all child workflows finish.
-- **Channel**: optional dispatcher channel. Leaving it empty uses the default channel.
+That endpoint is useful when an external caller wants to start the same workflow
+`Count` times with the same input payload.
 
-If you connect the `Child Completed` or `Child Faulted` ports, expect them to run once per child workflow, not once for the entire batch.
+`BulkDispatchWorkflows` is different:
 
-## Operational notes
+- it runs inside a parent workflow
+- it can send different input per item
+- it can wait for children and react to child completion or faults
+- it can dispatch to a configured workflow channel
 
-- Elsa dispatches published workflow definitions only. If no published child workflow definition exists, the parent workflow faults.
-- `BulkDispatchWorkflows` does not aggregate child outputs into one collection automatically. Handle that in the parent workflow through variables, `ChildCompleted`, or `ChildFaulted`.
-- The parent-child relationship is tracked through `ParentWorkflowInstanceId` and `ParentInstanceId`, which lets Elsa resume the waiting parent workflow after child completion.
+## Related guides
+
+- [Dispatch Workflow Activity](dispatch-workflow-activity.md)
+- [Running Workflows](README.md)
+- [Timer and Scheduled Workflows](timer-and-scheduled-workflows.md)
