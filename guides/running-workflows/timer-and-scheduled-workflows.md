@@ -1,134 +1,57 @@
 # Timer and Scheduled Workflows
 
-Use Elsa's scheduling activities when a workflow should pause until a future
-time or start on a schedule instead of responding immediately to an HTTP
-request, message, or manual dispatch.
+Elsa 3.8.0 provides four built-in scheduling activities that cover most time-based workflow patterns:
 
-In `release/3.8.0`, the scheduling behavior is implemented by:
+* `Delay`: pause a running workflow and resume it later.
+* `Timer`: start a workflow repeatedly at a fixed interval, or wait for an interval inside a running workflow.
+* `Cron`: start a workflow repeatedly from a cron schedule, or wait for the next cron occurrence inside a running workflow.
+* `StartAt`: start a workflow once at a specific timestamp, or continue immediately if that timestamp is already in the past.
 
-- `Delay`, `Timer`, `Cron`, and `StartAt` in `Elsa.Scheduling.Activities`
-- `DefaultBookmarkScheduler` for turning bookmarks into scheduled work
-- `ResumeWorkflowTask` for resuming suspended workflow instances
-- `QuartzSchedulerFeature` and `QuartzFeature` when you choose Quartz-backed
-  scheduling
+Use this guide when you need reminders, polling jobs, recurring background processes, or workflows that wait before continuing.
 
 ## Choose the right activity
 
-Use these activities for different timing behaviors:
+| Need | Activity |
+| --- | --- |
+| Pause the current workflow for 5 minutes, 2 hours, or 1 day | `Delay` |
+| Run a workflow every fixed interval, such as every 15 minutes | `Timer` |
+| Run a workflow on a calendar schedule, such as every weekday at 09:00 UTC | `Cron` |
+| Run a workflow once at a known future timestamp | `StartAt` |
 
-| Activity | Use it for | Starts a workflow | Resumes a running workflow |
-| --- | --- | --- | --- |
-| `Delay` | Pause for a fixed duration | No | Yes |
-| `StartAt` | Start or continue at a specific timestamp | Yes | Yes |
-| `Timer` | Repeat on a fixed interval | Yes | Yes |
-| `Cron` | Repeat using a cron expression | Yes | Yes |
+The main distinction is this:
 
-## How Elsa schedules work
+* `Delay` is for resuming an existing workflow instance.
+* `Timer`, `Cron`, and `StartAt` can act as workflow triggers when `CanStartWorkflow` is enabled.
 
-When a scheduling activity blocks, Elsa creates a bookmark and hands it to the
-bookmark scheduler.
+## How scheduling works in Elsa 3.8.0
 
-`DefaultBookmarkScheduler` groups bookmarks by stimulus type:
+At the application level, scheduling is enabled with `UseScheduling()`:
 
-- `Elsa.Delay`
-- `Elsa.StartAt`
-- `Elsa.Timer`
-- `Elsa.Cron`
-
-It then asks `IWorkflowScheduler` to do one of two things:
-
-- `ScheduleAtAsync(...)` for one-time resumes such as `Delay`, `StartAt`, and
-  the next `Timer` occurrence
-- `ScheduleCronAsync(...)` for recurring cron execution
-
-When the scheduled time arrives, Elsa runs `ResumeWorkflowTask`, which loads the
-workflow instance and resumes it at the bookmarked activity.
-
-## Local scheduler vs Quartz
-
-If you only call `UseScheduling()`, Elsa uses the default in-memory
-`LocalScheduler`.
-
-That is acceptable for:
-
-- local development
-- demos
-- single-process workloads where losing scheduled state on restart is
-  acceptable
-
-It is not a good fit when you need durable scheduled execution across restarts
-or multiple nodes.
-
-For production scheduling, enable Quartz-backed scheduling:
-
-{% code title="Program.cs" %}
 ```csharp
-using Elsa.Extensions;
-
-builder.Services.AddElsa(elsa => elsa
-    .UseScheduling(scheduling => scheduling.UseQuartzScheduler())
-    .UseQuartz(quartz => quartz.UsePostgreSql(connectionString)));
+builder.Services.AddElsa(elsa =>
+{
+    elsa.UseScheduling();
+});
 ```
-{% endcode %}
 
-`QuartzFeature` configures Quartz itself, while `UseQuartzScheduler()` swaps
-Elsa's `IWorkflowScheduler` and cron parser to Quartz-backed implementations.
+In `release/3.8.0`, `UseScheduling()` wires Elsa to the default local scheduler, which is an in-memory, in-process scheduler. That is fine for local development and single-node deployments, but it is not the right operational model for durable multi-node timer execution.
 
-## Single-node setup
+For clustered scheduled workloads, follow the patterns in the [Clustering guide](../clustering/README.md), especially the Quartz-based scheduler pattern and the single-scheduler-node pattern.
 
-For a single-node application that still needs durable scheduled work, use
-Quartz with a persistent store but without clustering:
+## Starting workflows on a schedule
 
-{% code title="Program.cs" %}
-```csharp
-using Elsa.Extensions;
+When `Timer`, `Cron`, or `StartAt` should create new workflow instances, the activity must be indexed as a trigger. In practice, that means the activity needs `CanStartWorkflow = true`.
 
-builder.Services.AddElsa(elsa => elsa
-    .UseScheduling(scheduling => scheduling.UseQuartzScheduler())
-    .UseQuartz(quartz => quartz.UseSqlite("Data Source=quartz.db")));
-```
-{% endcode %}
+### Timer trigger
 
-This keeps scheduled jobs outside process memory so they survive app restarts.
+Use `Timer` when you want a workflow to start repeatedly at a fixed interval.
 
-## Multi-node setup
-
-For clustered deployments, combine `UseQuartzScheduler()` with a shared Quartz
-database and clustering enabled on the provider:
-
-{% code title="Program.cs" %}
-```csharp
-using Elsa.Extensions;
-
-builder.Services.AddElsa(elsa => elsa
-    .UseScheduling(scheduling => scheduling.UseQuartzScheduler())
-    .UseQuartz(quartz => quartz
-        .ConfigureClusteringIdentity()
-        .UsePostgreSql(connectionString, useClustering: true)));
-```
-{% endcode %}
-
-In `release/3.8.0`, `QuartzFeature.ConfigureClusteringIdentity(...)` sets the
-scheduler ID and name that Quartz uses for clustered coordination. The shared
-job store is what lets only one node claim each scheduled resume.
-
-## Delay
-
-`Delay` pauses the current workflow instance for a `TimeSpan`.
-
-Internally, `Delay.Execute(...)` calls `context.DelayFor(timeSpan)`, which:
-
-- resolves the current UTC clock
-- calculates `resumeAt = now + delay`
-- creates a bookmark with an `Elsa.Delay` stimulus and `DelayPayload`
-
-{% code title="ApprovalWorkflow.cs" %}
 ```csharp
 using Elsa.Scheduling.Activities;
 using Elsa.Workflows;
 using Elsa.Workflows.Activities;
 
-public class ApprovalWorkflow : WorkflowBase
+public class RecurringCleanupWorkflow : WorkflowBase
 {
     protected override void Build(IWorkflowBuilder builder)
     {
@@ -136,69 +59,29 @@ public class ApprovalWorkflow : WorkflowBase
         {
             Activities =
             {
-                new WriteLine("Waiting one day before sending a reminder."),
-                Delay.FromDays(1),
-                new WriteLine("Reminder window opened.")
+                new Timer(TimeSpan.FromMinutes(15))
+                {
+                    CanStartWorkflow = true
+                },
+                new WriteLine("Running scheduled cleanup")
             }
         };
     }
 }
 ```
-{% endcode %}
 
-Use `Delay` when the workflow is already running and should simply wait before
-continuing.
+In 3.8.0, Elsa indexes a timer trigger by calculating `StartAt = UtcNow + Interval` at trigger-index time. In practice, the first run is relative to when the workflow definition is published or re-indexed, not relative to a fixed wall-clock time.
 
-## StartAt
+### Cron trigger
 
-`StartAt` triggers execution at a specific `DateTimeOffset`.
+Use `Cron` when the schedule must follow calendar rules instead of a simple interval.
 
-Two behaviors matter:
-
-- if the workflow reaches `StartAt` after the requested time has already
-  passed, the activity completes immediately
-- if the timestamp is in the future, Elsa creates an `Elsa.StartAt` bookmark
-
-{% code title="ProgrammaticWorkflow.cs" %}
-```csharp
-using Elsa.Scheduling.Activities;
-using Elsa.Workflows;
-
-public class ProgrammaticWorkflow : WorkflowBase
-{
-    protected override void Build(IWorkflowBuilder builder)
-    {
-        builder.Root = new StartAt(DateTimeOffset.UtcNow.AddHours(2))
-        {
-            CanStartWorkflow = true
-        };
-    }
-}
-```
-{% endcode %}
-
-Use `StartAt` when you need an explicit future timestamp instead of "wait this
-many minutes".
-
-## Timer
-
-`Timer` is for recurring execution with a fixed `TimeSpan` interval.
-
-`TimerBase.Execute(...)` calls `context.RepeatWithInterval(...)`, which behaves
-differently depending on whether the activity is acting as the workflow trigger:
-
-- when the workflow is starting from the timer trigger, Elsa completes the
-  trigger path immediately
-- otherwise, Elsa creates an `Elsa.Timer` bookmark with the next `ResumeAt`
-  timestamp
-
-{% code title="HeartbeatWorkflow.cs" %}
 ```csharp
 using Elsa.Scheduling.Activities;
 using Elsa.Workflows;
 using Elsa.Workflows.Activities;
 
-public class HeartbeatWorkflow : WorkflowBase
+public class WeekdayReportWorkflow : WorkflowBase
 {
     protected override void Build(IWorkflowBuilder builder)
     {
@@ -206,46 +89,41 @@ public class HeartbeatWorkflow : WorkflowBase
         {
             Activities =
             {
-                new Timer(TimeSpan.FromMinutes(5)) { CanStartWorkflow = true },
-                new WriteLine("Heartbeat workflow started by timer.")
+                new Cron("0 0 9 * * MON-FRI")
+                {
+                    CanStartWorkflow = true
+                },
+                new WriteLine("Generating weekday report")
             }
         };
     }
 }
 ```
-{% endcode %}
 
-Use `Timer` when the interval is naturally expressed as a `TimeSpan` such as
-every 5 minutes or every 24 hours.
+Elsa 3.8.0 validates cron expressions through the `Cronos` parser using the six-field format with seconds. For example:
 
-## Cron
+* `0 0 9 * * MON-FRI` means 09:00:00 UTC on weekdays.
+* `0 */15 * * * *` means every 15 minutes.
 
-`Cron` is for recurring execution based on a cron expression.
+By default in 3.8.0, invalid cron expressions block publishing because workflow publishing fails on validation errors. If you intentionally want publishing to continue while surfacing validation warnings, disable that behavior in workflow management options:
 
-In `release/3.8.0`, Elsa's built-in `CronosCronParser` parses expressions with
-seconds included, and `UseQuartzScheduler()` swaps that parser for
-`QuartzCronParser`.
+```csharp
+builder.Services.AddElsa(elsa =>
+{
+    elsa.UseWorkflowManagement(management => management.UseFailOnValidationErrors(false));
+});
+```
 
-Blank cron expressions are treated as disabled:
+### StartAt trigger
 
-- a trigger `Cron` activity is skipped during trigger creation
-- an inline `Cron` activity completes immediately instead of scheduling a
-  bookmark
+Use `StartAt` when the workflow should start once at a specific future timestamp.
 
-When it is not starting the workflow directly, `Cron.ExecuteAsync(...)`:
-
-- resolves the cron parser from DI
-- calculates the next occurrence
-- writes that timestamp to journal data as `ExecuteAt`
-- creates a `CronBookmarkPayload`
-
-{% code title="NightlyWorkflow.cs" %}
 ```csharp
 using Elsa.Scheduling.Activities;
 using Elsa.Workflows;
 using Elsa.Workflows.Activities;
 
-public class NightlyWorkflow : WorkflowBase
+public class LaunchWorkflow : WorkflowBase
 {
     protected override void Build(IWorkflowBuilder builder)
     {
@@ -253,55 +131,93 @@ public class NightlyWorkflow : WorkflowBase
         {
             Activities =
             {
-                new Cron("0 0 2 * * ?") { CanStartWorkflow = true },
-                new WriteLine("Nightly maintenance started.")
+                new StartAt(new DateTimeOffset(2026, 7, 1, 8, 0, 0, TimeSpan.Zero))
+                {
+                    CanStartWorkflow = true
+                },
+                new WriteLine("Launch window opened")
             }
         };
     }
 }
 ```
-{% endcode %}
 
-Use `Cron` when you need calendar-based schedules such as "2 AM every day" or
-"every Monday at 09:00".
+If a stored `StartAt` trigger is already in the past when Elsa schedules it, Elsa still schedules a catch-up execution. Inside an already running workflow instance, however, `StartAt` completes immediately when the configured time is in the past or equal to now.
 
-## Studio usage
+## Waiting inside a running workflow
 
-In Elsa Studio:
+### Delay
 
-1. Add `Delay`, `StartAt`, `Timer`, or `Cron` from the scheduling category.
-2. Mark `StartAt`, `Timer`, or `Cron` as a start trigger when the workflow
-   should begin from that activity.
-3. Configure the duration, timestamp, interval, or cron expression.
-4. Publish the workflow.
+Use `Delay` to suspend an existing workflow instance and resume it later.
 
-If scheduled workflows behave differently across environments, verify that the
-runtime node actually runs the configured scheduler.
+```csharp
+using Elsa.Scheduling.Activities;
+using Elsa.Workflows;
+using Elsa.Workflows.Activities;
 
-## Operational guidance
+public class FollowUpWorkflow : WorkflowBase
+{
+    protected override void Build(IWorkflowBuilder builder)
+    {
+        builder.Root = new Sequence
+        {
+            Activities =
+            {
+                new WriteLine("Initial work"),
+                Delay.FromHours(2),
+                new WriteLine("Continue after the delay")
+            }
+        };
+    }
+}
+```
 
-- Use the local scheduler only when losing scheduled state on restart is
-  acceptable.
-- Use Quartz with shared storage for clustered or durable scheduled execution.
-- Keep all cluster nodes on consistent time settings; scheduling uses UTC clock
-  calculations in Elsa and coordinated execution in Quartz.
-- If a scheduled workflow instance is deleted before resume time,
-  `ResumeWorkflowTask` logs a warning and skips execution instead of failing the
-  scheduler.
+`Delay` creates a bookmark with a specific resume time. It does not start new workflow instances by itself.
 
-## Troubleshooting
+### Timer and Cron inside a running workflow
 
-- If a timer or cron workflow never fires, confirm `UseScheduling()` is enabled.
-- If scheduled work disappears after restart, you are likely using the in-memory
-  `LocalScheduler` instead of Quartz persistence.
-- If timers fire multiple times in a cluster, verify Quartz uses a shared store
-  with clustering enabled.
-- If a `StartAt` activity appears to do nothing, check whether the configured
-  timestamp is already in the past.
+`Timer` and `Cron` can also be used inside a running workflow instead of only at the start.
 
-## Related topics
+* `Timer` waits for the configured interval, then continues.
+* `Cron` waits until the next matching cron occurrence, then continues.
 
-- [Using a Trigger](using-a-trigger.md)
-- [Clustering](../clustering/README.md)
-- [Troubleshooting](../troubleshooting/README.md)
-- [Performance & Scaling](../performance/README.md)
+That makes them useful for recurring loops, polling, and wait-until-next-window patterns where the workflow instance should keep its state between resumptions.
+
+## Using Elsa Studio
+
+In Elsa Studio, these activities are available from the scheduling/toolbox categories exposed by the server's registered activities.
+
+For schedule-driven workflows:
+
+1. Add `Timer`, `Cron`, or `StartAt` near the beginning of the workflow.
+2. In the activity properties, enable `CanStartWorkflow`.
+3. Publish the workflow so Elsa can index and schedule the trigger.
+4. Verify executions from the workflow instances view or logs.
+
+For pause-and-resume workflows:
+
+1. Add a `Delay` activity where the workflow should pause.
+2. Configure the delay value.
+3. Publish and run the workflow.
+4. Inspect the suspended instance if you need to confirm it is waiting on scheduled work.
+
+If scheduled workflows do not fire, check the [Troubleshooting guide](../troubleshooting/README.md) and the [Clustering guide](../clustering/README.md) before assuming the activity configuration is wrong.
+
+## Operational notes
+
+Keep these 3.8.0 behaviors in mind:
+
+* `Timer`, `Cron`, and `StartAt` only become workflow-starting triggers when `CanStartWorkflow` is enabled.
+* `Delay` always resumes an existing workflow instance; it is not a start trigger.
+* `Timer` schedules its first trigger occurrence relative to trigger indexing time.
+* `Cron` uses the Cronos parser with seconds included.
+* `UseScheduling()` configures the default local in-memory scheduler.
+* Scheduled bookmarks for `Delay`, `Timer`, `Cron`, and `StartAt` are all handed to Elsa's workflow scheduler, so the deployment model determines whether scheduled execution is local-only or suitable for clustered workloads.
+
+## Related guides
+
+* [Using a Trigger](using-a-trigger.md)
+* [Running Workflows](README.md)
+* [Long-Running Workflows](long-running-workflows.md)
+* [Clustering](../clustering/README.md)
+* [Troubleshooting](../troubleshooting/README.md)
