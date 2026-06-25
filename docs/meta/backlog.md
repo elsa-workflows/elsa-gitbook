@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-23)
+## Slice Inventory (2026-06-25)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -39,13 +39,13 @@ acceptance criterion below is already complete.
 - `DOC-041` Loading workflows from JSON
 - `DOC-042` Bulk dispatch workflows activity
 - `DOC-049` Studio custom-elements embedding cookbook
+- `DOC-024` MassTransit communication
 
 ### Available next slices
 
 - `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
-- `DOC-024` MassTransit communication
 - `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
@@ -82,12 +82,11 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-042` Bulk dispatch workflows activity:
-  add a dedicated, release-backed guide for `BulkDispatchWorkflows` that
-  explains how item input mapping works, when `WaitForCompletion` blocks the
-  parent workflow, how `ChildCompleted` and `ChildFaulted` execute per child,
-  what Studio users should configure, and when to use this activity instead of
-  `DispatchWorkflow`, `ForEach`, or the workflow-definition bulk-dispatch API.
+- `DOC-024` MassTransit communication:
+  completed in this run by rewriting the overview and tutorial around
+  `AddMessageType<T>()`, generated trigger and publish activities, transport
+  setup for in-memory, RabbitMQ, and Azure Service Bus, and operational notes
+  such as `DisableConsumers` and dispatcher-related usage boundaries.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
