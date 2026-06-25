@@ -22,6 +22,7 @@ Elsa Workflows supports multiple authentication mechanisms to secure both the El
 - [Prerequisites](#prerequisites)
 - [No Authentication (Development Only)](#no-authentication-development-only)
 - [Using Elsa.Identity](#using-elsaidentity)
+- [Elsa API Permission Claims](#elsa-api-permission-claims)
 - [OIDC Configuration](#oidc-configuration)
   - [Azure AD Integration](#azure-ad-integration)
   - [Auth0 Integration](#auth0-integration)
@@ -185,6 +186,31 @@ GET /elsa/api/workflow-definitions
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
+## Elsa API Permission Claims
+
+Elsa API endpoints authorize requests with `permissions` claims. Each claim value must match a permission configured by the endpoint, and `*` grants all Elsa API permissions.
+
+Elsa Identity roles are containers for permission strings. When Elsa Identity issues a JWT, it collects permissions from the assigned roles and emits them as `permissions` claims. API-key authentication handlers should add equivalent `permissions` claims. External OIDC providers should emit Elsa permissions directly as `permissions` claims, or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
+
+ASP.NET Core role policies such as `RequireRole("Admin")` are useful for your own host endpoints, Razor pages, controllers, or custom APIs. They do not replace Elsa endpoint permissions.
+
+Permission names are not limited to constants in `PermissionNames`. Shared constants include `*`, `ManageWorkflowRuntime`, expression execution permissions, and bookmark dead-letter permissions. Many endpoints use explicit strings through `ConfigurePermissions(...)`, and feature modules can define their own constants.
+
+| Scenario | Permissions |
+| --- | --- |
+| Full Elsa API access | `*` |
+| Read workflow definitions | `read:workflow-definitions` |
+| Read workflow instances, variables, and journal data | `read:workflow-instances` |
+| Read activity execution results and summaries | `read:activity-execution` |
+| Read common Studio metadata | `read:activity-descriptors`, `read:activity-descriptors-options`, `read:expression-descriptors`, `read:storage-drivers`, `read:variable-descriptors`, `read:installed-features` |
+| Create or edit workflow definitions | `write:workflow-definitions` |
+| Publish or retract workflow definitions | `publish:workflow-definitions`, `retract:workflow-definitions` |
+| Execute or dispatch workflow definitions | `exec:workflow-definitions` |
+| Cancel or delete workflow instances | `cancel:workflow-instances`, `delete:workflow-instances` |
+| Runtime administration | `ManageWorkflowRuntime` |
+
+For read-only workflow instance and execution result screens, start with `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. The current runtime status endpoint requires `ManageWorkflowRuntime`, which also grants pause, resume, and force-drain authority.
+
 ## OIDC Configuration
 
 OpenID Connect (OIDC) allows you to integrate with external identity providers like Azure AD, Auth0, Keycloak, and others.
@@ -316,7 +342,9 @@ For Blazor Server Studio hosts:
 }
 ```
 
-`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. For Studio WebAssembly, register a SPA/public client and omit the client secret:
+`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. Register `{studio-url}/signin-oidc` as the redirect URI and `{studio-url}/signout-callback-oidc` as the signed-out callback URI unless you override the defaults. Studio initiates logout at `{studio-url}/authentication/logout`.
+
+For Studio WebAssembly, register a SPA/public client and omit the client secret:
 
 ```json
 {
@@ -334,6 +362,8 @@ For Blazor Server Studio hosts:
   }
 }
 ```
+
+Register `{studio-url}/authentication/login-callback` as the WebAssembly redirect URI and `{studio-url}/authentication/logout-callback` as the WebAssembly logout callback URI. Studio initiates logout at `{studio-url}/authentication/logout`.
 
 ### Auth0 Integration
 
@@ -356,12 +386,14 @@ Auth0 is a flexible identity platform with extensive features for authentication
 3. Configure **Allowed Callback URLs**:
    ```
    https://your-elsa-server.com/signin-oidc,
+   https://your-studio-server.com/signin-oidc,
    https://your-studio.com/authentication/login-callback
    ```
 4. Configure **Allowed Logout URLs**:
    ```
    https://your-elsa-server.com/signout-callback-oidc,
-   https://your-studio.com/
+   https://your-studio-server.com/signout-callback-oidc,
+   https://your-studio.com/authentication/logout-callback
    ```
 5. Configure **Allowed Web Origins** (for CORS):
    ```
@@ -582,7 +614,7 @@ public class ApiKey
     public string Owner { get; set; }
     public DateTime Created { get; set; }
     public DateTime? Expires { get; set; }
-    public List<string> Roles { get; set; } = new();
+    public List<string> Permissions { get; set; } = new();
     public bool IsActive { get; set; } = true;
 }
 ```
@@ -595,7 +627,7 @@ Implement a store to manage API keys:
 public interface IApiKeyStore
 {
     Task<ApiKey?> GetApiKeyAsync(string key);
-    Task<ApiKey> CreateApiKeyAsync(string owner, List<string> roles, DateTime? expires = null);
+    Task<ApiKey> CreateApiKeyAsync(string owner, List<string> permissions, DateTime? expires = null);
     Task RevokeApiKeyAsync(string key);
 }
 
@@ -609,7 +641,7 @@ public class InMemoryApiKeyStore : IApiKeyStore
         return Task.FromResult(apiKey);
     }
     
-    public Task<ApiKey> CreateApiKeyAsync(string owner, List<string> roles, DateTime? expires = null)
+    public Task<ApiKey> CreateApiKeyAsync(string owner, List<string> permissions, DateTime? expires = null)
     {
         var apiKey = new ApiKey
         {
@@ -617,7 +649,7 @@ public class InMemoryApiKeyStore : IApiKeyStore
             Owner = owner,
             Created = DateTime.UtcNow,
             Expires = expires,
-            Roles = roles,
+            Permissions = permissions,
             IsActive = true
         };
         
@@ -701,11 +733,10 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
         
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, apiKey.Owner),
-            new Claim("ApiKey", providedApiKey)
+            new Claim(ClaimTypes.Name, apiKey.Owner)
         };
         
-        claims.AddRange(apiKey.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(apiKey.Permissions.Select(permission => new Claim("permissions", permission)));
         
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new ClaimsPrincipal(identity);
@@ -756,7 +787,7 @@ app.MapPost("/api/api-keys", async (IApiKeyStore store, CreateApiKeyRequest requ
 {
     var apiKey = await store.CreateApiKeyAsync(
         request.Owner,
-        request.Roles,
+        request.Permissions,
         request.ExpiresInDays.HasValue 
             ? DateTime.UtcNow.AddDays(request.ExpiresInDays.Value) 
             : null);
@@ -772,7 +803,7 @@ app.MapDelete("/api/api-keys/{key}", async (IApiKeyStore store, string key) =>
 })
 .RequireAuthorization();
 
-record CreateApiKeyRequest(string Owner, List<string> Roles, int? ExpiresInDays);
+record CreateApiKeyRequest(string Owner, List<string> Permissions, int? ExpiresInDays);
 ```
 
 #### Step 6: Using API Keys
@@ -814,7 +845,7 @@ public class DbApiKeyStore : IApiKeyStore
             .FirstOrDefaultAsync(x => x.Key == key);
     }
     
-    public async Task<ApiKey> CreateApiKeyAsync(string owner, List<string> roles, DateTime? expires = null)
+    public async Task<ApiKey> CreateApiKeyAsync(string owner, List<string> permissions, DateTime? expires = null)
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
         
@@ -824,7 +855,7 @@ public class DbApiKeyStore : IApiKeyStore
             Owner = owner,
             Created = DateTime.UtcNow,
             Expires = expires,
-            Roles = roles,
+            Permissions = permissions,
             IsActive = true
         };
         
@@ -1105,6 +1136,13 @@ For a Blazor WebAssembly Studio host:
 
 Use `ClientSecret` only for confidential clients that can protect the secret, such as Blazor Server. Do not configure a client secret for WebAssembly or any other browser-hosted public client.
 
+Register callback URIs according to the Studio host model:
+
+- Blazor WebAssembly Studio: `{studio-url}/authentication/login-callback` and `{studio-url}/authentication/logout-callback`.
+- Blazor Server Studio: `{studio-url}/signin-oidc` and `{studio-url}/signout-callback-oidc` by default.
+
+Studio initiates OIDC logout at `{studio-url}/authentication/logout`.
+
 The corresponding Program.cs setup uses `AddOpenIdConnectAuth` and `OidcAuthenticatingApiHttpMessageHandler`:
 
 ```csharp
@@ -1132,6 +1170,19 @@ builder.Services.AddRemoteBackend(backendApiConfig);
 `AuthenticationScopes` are requested during sign-in. They usually include identity scopes such as `openid`, `profile`, `email`, and optionally `offline_access`.
 
 `BackendApiScopes` are requested for access tokens sent to the Elsa Server API. Use this when the Elsa Server API has its own scope or audience, such as `api://your-api-app-id/elsa-server-api`.
+
+Some identity providers require the backend API scope to be part of the original sign-in grant before they allow refresh-token or incremental token acquisition for that scope. If Studio signs in successfully but cannot obtain or refresh a backend API token, include the backend API scope in both arrays:
+
+```json
+{
+  "Authentication": {
+    "OpenIdConnect": {
+      "AuthenticationScopes": ["openid", "profile", "offline_access", "api://your-api-app-id/elsa-server-api"],
+      "BackendApiScopes": ["api://your-api-app-id/elsa-server-api"]
+    }
+  }
+}
+```
 
 ### Studio with Elsa.Identity
 
@@ -1285,14 +1336,15 @@ app.UseWorkflowsApi();
      "Authentication": {
        "Provider": "OpenIdConnect",
        "OpenIdConnect": {
-         "AuthenticationScopes": ["openid", "profile", "offline_access"],
+         "AuthenticationScopes": ["openid", "profile", "offline_access", "elsa_api"],
+         "BackendApiScopes": ["elsa_api"],
          "SaveTokens": true
        }
      }
    }
    ```
 
-   For Blazor Server Studio hosts, saved tokens are refreshed by the server-side OIDC cookie events when a refresh token is available. For WebAssembly Studio hosts, Microsoft's Blazor WebAssembly authentication stack handles token renewal through `IAccessTokenProvider`.
+   For Blazor Server Studio hosts, saved tokens are refreshed by the server-side OIDC cookie events when a refresh token is available. For WebAssembly Studio hosts, Microsoft's Blazor WebAssembly authentication stack handles token renewal through `IAccessTokenProvider`. If your identity provider requires backend API scopes in the original sign-in grant, keep the backend API scope in both `AuthenticationScopes` and `BackendApiScopes`.
 
 ### HTTPS/SSL Certificate Issues
 
@@ -1374,9 +1426,9 @@ options.TokenOptions = options =>
 };
 ```
 
-### 4. Use Role-Based Access Control
+### 4. Use Role-Based Access Control for Host Endpoints
 
-Implement role-based authorization:
+Implement role-based authorization for your own ASP.NET Core endpoints:
 
 ```csharp
 builder.Services.AddAuthorization(options =>
@@ -1398,6 +1450,8 @@ Apply to endpoints:
 app.MapGet("/admin/users", () => { /* ... */ })
    .RequireAuthorization("AdminOnly");
 ```
+
+These policies apply to endpoints you map yourself. Elsa API endpoints use `permissions` claims, so external roles must still be translated into Elsa permission values such as `read:workflow-definitions`, `read:workflow-instances`, or `*`.
 
 ### 5. Implement Rate Limiting
 
@@ -1493,7 +1547,7 @@ public async Task<ApiKey> RotateApiKeyAsync(string oldKey)
     // Create new key with same permissions
     var newApiKey = await CreateApiKeyAsync(
         oldApiKey.Owner,
-        oldApiKey.Roles,
+        oldApiKey.Permissions,
         DateTime.UtcNow.AddDays(90));
     
     // Mark old key for deactivation after grace period

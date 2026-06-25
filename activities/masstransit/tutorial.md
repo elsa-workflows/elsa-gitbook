@@ -1,13 +1,13 @@
 # Tutorial
 
-This example shows the minimum setup needed to publish and receive a typed
-message through Elsa's MassTransit integration in `release/3.8.0`.
+This example shows the full path for using a strongly typed message with Elsa:
 
-## 1. Define a message contract
+1. Define a message contract.
+2. Register the message type with the MassTransit feature.
+3. Configure a transport.
+4. Use the generated trigger and publish activities in workflows.
 
-Use a normal .NET message type. A `record` works well here because it is still a
-class type, which means Elsa can generate both the trigger activity and the
-publish activity.
+## 1. Define the message contract
 
 {% code title="OrderCreated.cs" %}
 
@@ -17,63 +17,105 @@ public record OrderCreated(string OrderId, string ProductId, int Quantity);
 
 {% endcode %}
 
-## 2. Register MassTransit and the message type
+`OrderCreated` is a class, so Elsa will generate both a receive trigger and a
+publish activity for it.
+
+## 2. Register the message type and configure MassTransit
 
 {% code title="Program.cs" %}
 
 ```csharp
-using Elsa.Extensions;
-
-services.AddElsa(elsa =>
-{
-    elsa.UseMassTransit(massTransit =>
+builder.Services.AddElsa(elsa => elsa
+    .UseMassTransit(massTransit =>
     {
         massTransit.AddMessageType<OrderCreated>();
-        massTransit.UseRabbitMq("amqp://guest:guest@localhost:5672");
-    });
-});
+
+        // Use a broker for cross-process messaging.
+        massTransit.UseRabbitMq(rabbitMqConnectionString);
+    }));
 ```
 
 {% endcode %}
 
-If you omit `UseRabbitMq(...)` or `UseAzureServiceBus(...)`, Elsa uses the
-in-memory MassTransit transport instead.
-
-## 3. Use the generated activities
-
-After startup, Elsa exposes two activities derived from `OrderCreated`:
+With that configuration, Elsa adds two activities:
 
 * `Order Created`
 * `Publish Order Created`
 
-### `Order Created`
+If you omit `UseRabbitMq(...)` or another transport configuration method, Elsa
+falls back to MassTransit's in-memory transport.
 
-Use this as a workflow trigger or as a blocking point later in the workflow.
-When a MassTransit consumer receives an `OrderCreated` message, Elsa sends that
-message through the stimulus pipeline and:
+## 3. Start a workflow when the message arrives
 
-* starts a matching workflow if the activity is the workflow trigger
-* resumes a waiting workflow instance if a bookmark already exists
+Use the generated `Order Created` trigger activity at the start of a workflow
+and mark it as a start trigger in Studio.
 
-The received message becomes the activity output, so downstream activities can
-read `OrderId`, `ProductId`, and `Quantity`.
+In code, the equivalent looks like this:
 
-### `Publish Order Created`
+{% code title="OrderCreatedWorkflow.cs" %}
 
-Use this when the workflow needs to publish an `OrderCreated` event to the bus.
-Internally, the generated activity resolves `IBus` and calls `Publish(...)`.
+```csharp
+using Elsa.Workflows;
+using Elsa.Workflows.Activities;
+using Elsa.Workflows.Models;
 
-## 4. Example workflow shape
+public class OrderCreatedWorkflow : WorkflowBase
+{
+    protected override void Build(IWorkflowBuilder builder)
+    {
+        var order = builder.WithVariable<OrderCreated>();
 
-A common pattern is:
+        builder.Root = new Sequence
+        {
+            Activities =
+            {
+                new Elsa.ServiceBus.MassTransit.Activities.MessageReceived
+                {
+                    CanStartWorkflow = true,
+                    MessageType = typeof(OrderCreated),
+                    Result = new Output<OrderCreated>(order)
+                },
+                new WriteLine(context => $"Received order {order.Get(context)!.OrderId}")
+            }
+        };
+    }
+}
+```
 
-1. receive `Order Created`
-2. map fields from the received message
-3. call internal or external order-processing steps
-4. optionally publish another integration event
+{% endcode %}
 
-This works well when Elsa is part of an event-driven workflow architecture and
-the workflow itself is the business process handler.
+When a MassTransit consumer receives `OrderCreated`, Elsa resumes or starts
+matching workflows by sending a stimulus that contains the message payload.
+
+## 4. Publish the message from a workflow
+
+Use the generated `Publish Order Created` activity when a workflow needs to
+emit the message:
+
+{% code title="PublishOrderWorkflow.cs" %}
+
+```csharp
+using Elsa.Workflows;
+using Elsa.Workflows.Activities;
+using Elsa.Workflows.Models;
+using Elsa.ServiceBus.MassTransit.Activities;
+
+public class PublishOrderWorkflow : WorkflowBase
+{
+    protected override void Build(IWorkflowBuilder builder)
+    {
+        builder.Root = new PublishMessage
+        {
+            MessageType = typeof(OrderCreated),
+            Message = new Input<object>(_ => new OrderCreated("1001", "SKU-1", 2))
+        };
+    }
+}
+```
+
+{% endcode %}
+
+In Studio, the equivalent activity is `Publish Order Created`.
 
 ## 5. Deployment notes
 
@@ -85,11 +127,22 @@ the workflow itself is the business process handler.
 
 ## 6. Troubleshooting checklist
 
-* If the activities do not appear, verify `AddMessageType<OrderCreated>()` runs
-  during startup.
+* If the activities do not appear, verify `AddMessageType<OrderCreated>()`
+  runs during startup.
 * If messages publish but workflows do not start, verify consumers are enabled
   on the running node.
 * If you use a real broker, verify the relevant RabbitMQ or Azure Service Bus
   transport package is installed and configured.
 * If correlation matters, confirm the producer sets a MassTransit
   `CorrelationId` that matches your workflow design.
+
+## When to use this pattern
+
+Use this pattern when:
+
+* your application already uses MassTransit contracts between services
+* you want workflows to react to or emit strongly typed domain messages
+* you want the same broker to work across processes or nodes
+
+Use a transport-specific module instead when you need broker-specific concepts
+such as Azure Service Bus queues, topics, or subscriptions.

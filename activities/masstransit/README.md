@@ -1,98 +1,72 @@
 # MassTransit
 
-Use the MassTransit extension packages when your workflows need to react to
-brokered messages or publish messages to other services.
+MassTransit integration in Elsa lets you expose selected .NET message types as
+workflow activities. In `release/3.8.0`, Elsa generates these activities from
+the types you register with the MassTransit feature.
 
-In `release/3.8.0`, the integration lives in the Elsa extensions repository
-under `Elsa.ServiceBus.MassTransit`. Once enabled, Elsa can:
+Use this integration when workflows need to publish strongly typed application
+messages or wait for messages that arrive through a MassTransit bus.
 
-* generate workflow activities from message types you register
-* connect those activities to MassTransit consumers and `IBus.Publish(...)`
-* optionally use MassTransit as the transport for workflow dispatch features in
-  the runtime and management modules
+## What this feature adds
 
-## What the integration actually adds
+After you call `UseMassTransit(...)` and register one or more message types
+with `AddMessageType<T>()`, Elsa adds dynamic activities for those types:
 
-Registering a message type with `AddMessageType<T>()` makes Elsa generate:
+* a trigger activity named after the message type, implemented by
+  `MessageReceived`
+* for class types only, an action activity named
+  `Publish {MessageType}`, implemented by `PublishMessage`
 
-* a trigger activity based on `MessageReceived`
-* a publish activity based on `PublishMessage`
-
-For a message type such as `OrderCreated`, Studio exposes activities similar to:
+For example, registering `OrderCreated` adds:
 
 * `Order Created`
 * `Publish Order Created`
 
-The generated trigger waits for a MassTransit consumer to receive a matching
-message and then starts or resumes workflows whose bookmarks match that message
-type.
+This behavior comes from `MassTransitActivityTypeProvider`, which creates a
+`MessageReceived` descriptor for every registered message type and a
+`PublishMessage` descriptor only when the type is a class.
 
-The generated publish activity resolves `IBus` from DI and calls
-`Publish(...)` with the configured message payload.
+## Registration and transport
 
-## Package and transport setup
-
-Use the MassTransit extension package plus a transport package when you want a
-real broker:
+Install the base package for the feature and one transport package when you
+need broker-backed messaging:
 
 * `Elsa.ServiceBus.MassTransit`
-* `Elsa.ServiceBus.MassTransit.RabbitMq` for RabbitMQ
-* `Elsa.ServiceBus.MassTransit.AzureServiceBus` for Azure Service Bus
+* `Elsa.ServiceBus.MassTransit.RabbitMq`
+* `Elsa.ServiceBus.MassTransit.AzureServiceBus`
 
-If you enable `UseMassTransit(...)` without configuring a transport, Elsa falls
-back to MassTransit's in-memory transport.
-
-## Basic registration pattern
+At minimum, enable the feature and register the message types you want to
+expose:
 
 {% code title="Program.cs" %}
 
 ```csharp
-using Elsa.Extensions;
-
-services.AddElsa(elsa =>
-{
-    elsa.UseMassTransit(massTransit =>
+builder.Services.AddElsa(elsa => elsa
+    .UseMassTransit(mt =>
     {
-        massTransit.AddMessageType<OrderCreated>();
-    });
-});
+        mt.AddMessageType<OrderCreated>();
+    }));
 ```
 
 {% endcode %}
 
-This is enough to:
+If you do not configure a transport, Elsa uses MassTransit's in-memory
+transport. That is useful for local development and single-process setups, but
+it does not provide inter-process messaging.
 
-* register a workflow-facing consumer for `OrderCreated`
-* expose generated activities in Studio and the activity registry
-* use the in-memory transport unless another transport is configured
-
-## Configuring a broker transport
-
-Use the transport-specific extension inside the same `UseMassTransit(...)`
-callback.
+For broker-backed messaging, configure a transport explicitly:
 
 ### RabbitMQ
 
 {% code title="Program.cs" %}
 
 ```csharp
-using Elsa.Extensions;
-
-services.AddElsa(elsa =>
-{
-    elsa.UseMassTransit(massTransit =>
+builder.Services.AddElsa(elsa => elsa
+    .UseMassTransit(mt =>
     {
-        massTransit.AddMessageType<OrderCreated>();
-        massTransit.UseRabbitMq("amqp://guest:guest@localhost:5672", rabbit =>
-        {
-            rabbit.ConfigureTransportBus = (context, bus) =>
-            {
-                bus.PrefetchCount = 50;
-                bus.ConcurrentMessageLimit = 32;
-            };
-        });
-    });
-});
+        mt.AddMessageType<OrderCreated>();
+        mt.UseRabbitMq(rabbitMqConnectionString);
+    }));
 ```
 
 {% endcode %}
@@ -102,71 +76,90 @@ services.AddElsa(elsa =>
 {% code title="Program.cs" %}
 
 ```csharp
-using Elsa.Extensions;
-
-services.AddElsa(elsa =>
-{
-    elsa.UseMassTransit(massTransit =>
+builder.Services.AddElsa(elsa => elsa
+    .UseMassTransit(mt =>
     {
-        massTransit.AddMessageType<OrderCreated>();
-        massTransit.UseAzureServiceBus("<connection-string>", bus =>
+        mt.AddMessageType<OrderCreated>();
+        mt.UseAzureServiceBus("<connection-string>", bus =>
         {
             bus.EnableAutomatedSubscriptionCleanup = true;
             bus.SubscriptionCleanupOptions = options =>
                 options.Interval = System.TimeSpan.FromMinutes(5);
         });
-    });
-});
+    }));
 ```
 
 {% endcode %}
 
-Use RabbitMQ when your application architecture already standardizes on AMQP and
-queue-based routing. Use Azure Service Bus when Elsa participates in Azure
-native messaging and you want broker-managed topics and subscriptions.
+Use RabbitMQ when your environment already standardizes on AMQP-style queues.
+Use Azure Service Bus when Elsa participates in Azure-native messaging and you
+want broker-managed topics and subscriptions.
 
-## How message reception works
+## How receiving works
 
-When a MassTransit consumer receives a registered message type, Elsa's
-`WorkflowMessageConsumer<T>` sends a stimulus whose payload identifies that .NET
-type. The `MessageReceived` trigger:
+When MassTransit receives a registered message type, Elsa's generated
+`WorkflowMessageConsumer<T>` sends a stimulus whose activity type name matches
+the registered message type and whose workflow input contains the message under
+the `Message` key.
 
-* starts a workflow when used as the workflow trigger
-* resumes an existing workflow instance when the activity already created a
-  bookmark
-* exposes the received message as the activity output
+The generated `MessageReceived` activity then:
 
-MassTransit correlation IDs are passed through to the stimulus metadata, so you
-can combine broker correlation with Elsa workflow correlation when your workflow
-design requires it.
+* matches incoming messages by exact CLR type
+* stores the received message in the activity output
+* removes the `Message` input from workflow input before moving to the next
+  activity
+* creates bookmarks without an activity instance ID, so matching messages can
+  resume waiting workflow instances of the same activity type
 
-## Node topology and operational notes
+The generated activity is a trigger activity, but it does not automatically
+start every workflow that contains it. To start new workflow instances from a
+message, configure the activity as a start trigger, just as you would with
+other Elsa triggers.
 
-By default, the MassTransit feature registers consumers for the generated
-message activities.
+MassTransit correlation IDs are passed through in the stimulus metadata, so
+message-bus correlation can flow into your workflow design when needed.
 
-Set `massTransit.DisableConsumers = true` on nodes that should host the Elsa API
-or Studio backend but should not consume bus messages.
+## How publishing works
 
-MassTransit messaging for generated activities is separate from MassTransit as a
-workflow-dispatch transport. If you also enable:
+The generated `Publish {MessageType}` activity resolves `IBus` from DI and
+calls `bus.Publish(...)` with the configured message payload.
 
-* `management.UseMassTransitDispatcher()`
-* `runtime.UseMassTransitDispatcher()`
+Two details matter in practice:
 
-then Elsa uses MassTransit to dispatch workflow-management and workflow-runtime
-messages as well.
+* the publish activity exists only for class message types; if you register an
+  interface, Elsa creates the receive trigger but not the publish activity
+* the message input is converted to the configured CLR type before publishing,
+  so the payload must be compatible with the registered message type
 
-## When to use this integration
+## MassTransit activities vs other messaging features
 
-Use MassTransit-backed workflow activities when:
+This page covers MassTransit-backed message-type activities. Elsa also has two
+related but different messaging integration paths:
 
-* workflows need to start from or wait on brokered integration events
-* workflows need to publish typed integration events to other services
-* your team wants message contracts to appear directly as activities in Studio
+* the MassTransit workflow dispatcher, enabled with
+  `UseMassTransitDispatcher()` on workflow management and runtime features,
+  moves workflow dispatch and stimulus work over MassTransit; it is
+  infrastructure for Elsa itself, not a replacement for message-type activities
+* the Azure Service Bus activity module (`UseAzureServiceBus()`) provides
+  transport-specific activities such as `SendMessage` and `MessageReceived`;
+  those are separate from the generic message-type activities described here
 
-Use direct HTTP, scheduler, or native workflow-dispatch APIs instead when you
-do not need brokered messaging semantics.
+Use the generic MassTransit activities when your workflows exchange strongly
+typed application messages. Use transport-specific activity modules when you
+need queue or topic concepts that belong to a specific broker.
+
+## Operational notes
+
+* `DisableConsumers` can stop MassTransit consumers from being configured on a
+  given node. The Elsa workbench uses this to keep API-only nodes from
+  consuming messages directly.
+* `MassTransitOptions` in `release/3.8.0` include `TemporaryQueueTtl`,
+  `ConcurrentMessageLimit`, `PrefetchCount`, and `MaxAutoRenewDuration` for
+  Azure Service Bus.
+* If you are also using MassTransit for clustered workflow dispatch or
+  distributed cache invalidation, see the distributed hosting and clustering
+  guides as well. Those features share the broker, but they solve a different
+  problem than workflow message activities.
 
 ## Next step
 
