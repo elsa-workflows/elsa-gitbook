@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-25)
+## Slice Inventory (2026-06-26)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -59,10 +59,10 @@ acceptance criterion below is already complete.
 
 ### Current run selection
 
-- `DOC-024` MassTransit communication: refine the newly added guide against
-  `release/3.8.0` source so it clearly explains generated activities,
-  transport setup, consumer behavior, `DisableConsumers`, correlation flow,
-  and how this feature differs from MassTransit-backed workflow dispatching.
+- `DOC-042` Bulk dispatch workflows activity: harden the existing guide
+  against `release/3.8.0` runtime behavior so it documents input precedence,
+  wait vs fire-and-forget completion, child ports, tracing, and the
+  parent-child runtime linkage accurately.
 
 ### Recommended next slice
 
@@ -94,18 +94,20 @@ acceptance criterion below is already complete.
 
 ### Current run result
 
-- `DOC-024` MassTransit communication: refined the overview and tutorial to
-  align with `MassTransitActivityTypeProvider`, `WorkflowMessageConsumer<T>`,
-  `MessageReceived`, `PublishMessage`, transport extension methods, and
-  `MassTransitOptions` in `release/3.8.0`.
+- `DOC-042` Bulk dispatch workflows activity: refined the guide to align with
+  `BulkDispatchWorkflows`, `ResumeBulkDispatchWorkflowActivity`, and the
+  `release/3.8.0` component tests, including item merge precedence,
+  `ParentWorkflowInstanceId` vs `ParentInstanceId`, `StartNewTrace`,
+  completion outcomes, and child-port behavior.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
-- `DOC-024` MassTransit communication:
-  refined on 2026-06-25 to clarify transport choices, generated activities,
-  and operational boundaries against the released source.
+- `DOC-042` Bulk dispatch workflows activity:
+  refined on 2026-06-26 to clarify input precedence, completion outcomes,
+  parent-child linkage, tracing, and when child ports execute against the
+  released runtime.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

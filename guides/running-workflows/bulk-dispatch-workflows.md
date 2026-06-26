@@ -31,8 +31,13 @@ At execution time, Elsa:
 
 1. evaluates `Items` into a materialized list
 2. resolves the published child workflow definition from `WorkflowDefinitionId`
-3. dispatches one child workflow instance per item
-4. either completes immediately or waits for child completion, depending on
+3. creates a new child workflow instance per item
+4. sets `ParentWorkflowInstanceId` on each dispatch request so the runtime can
+   track the parent-child relationship
+5. adds `ParentInstanceId` to the child input and dispatch properties
+6. merges the current item into the child workflow input
+7. dispatches the child workflow through the selected channel
+8. either completes immediately or waits for child completion, depending on
    `WaitForCompletion`
 
 If the target workflow definition does not have a published version, the
@@ -98,6 +103,9 @@ variable and passes these values as workflow input:
 - `WorkflowStatus`
 - `WorkflowSubStatus`
 
+If `WaitForCompletion` is `false`, Elsa never schedules these ports because the
+parent workflow does not wait for child completion events.
+
 ## Using code
 
 ### Wait for all child workflows
@@ -106,6 +114,7 @@ This example dispatches one child workflow per employee and waits for all of
 them to complete.
 
 {% code title="GreetEmployeesWorkflow.cs" %}
+
 ```csharp
 using System.Collections.Generic;
 using Elsa.Workflows;
@@ -143,9 +152,11 @@ public class GreetEmployeesWorkflow : WorkflowBase
     }
 }
 ```
+
 {% endcode %}
 
 {% code title="EmployeeGreetingWorkflow.cs" %}
+
 ```csharp
 using Elsa.Extensions;
 using Elsa.Workflows;
@@ -164,6 +175,7 @@ public class EmployeeGreetingWorkflow : WorkflowBase
     }
 }
 ```
+
 {% endcode %}
 
 Because each item is a dictionary, the child workflow receives `Employee`
