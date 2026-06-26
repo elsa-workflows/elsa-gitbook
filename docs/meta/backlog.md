@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-23)
+## Slice Inventory (2026-06-26)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -82,12 +82,11 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-042` Bulk dispatch workflows activity:
-  add a dedicated, release-backed guide for `BulkDispatchWorkflows` that
-  explains how item input mapping works, when `WaitForCompletion` blocks the
-  parent workflow, how `ChildCompleted` and `ChildFaulted` execute per child,
-  what Studio users should configure, and when to use this activity instead of
-  `DispatchWorkflow`, `ForEach`, or the workflow-definition bulk-dispatch API.
+- `DOC-019` HTTP endpoint security:
+  consolidate the release-backed guidance that currently spans HTTP workflow,
+  authentication, and security pages so users can see one clear path for public
+  endpoints, authenticated endpoints, API permissions, and Studio-facing
+  troubleshooting.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

@@ -21,9 +21,10 @@ For each item in `Items`, Elsa:
 
 1. Resolves the published version of the child workflow definition.
 2. Creates a new child workflow instance.
-3. Adds `ParentInstanceId` to the child input and workflow properties.
-4. Merges the current item into the child input.
-5. Dispatches the child workflow through the selected channel.
+3. Sets `ParentWorkflowInstanceId` on the dispatch request so the runtime can track the parent-child relationship.
+4. Adds `ParentInstanceId` to the child input and dispatch properties.
+5. Merges the current item into the child workflow input.
+6. Dispatches the child workflow through the selected channel.
 
 If `WaitForCompletion` is `true`, the parent workflow creates a bookmark and resumes only after all dispatched child workflows finish. If `Items` is empty, the activity completes immediately.
 
@@ -36,6 +37,8 @@ If `WaitForCompletion` is `true`, the parent workflow creates a bookmark and res
 
 Elsa also merges any values from the activity's `Input` property into every child workflow input.
 
+If the current item contains the same key as `Input`, the current item wins because Elsa applies the item dictionary last.
+
 This means each child workflow receives:
 
 - the shared `Input` values
@@ -47,6 +50,7 @@ This means each child workflow receives:
 The following example is grounded in the `release/3.8.0` component tests. The parent workflow dispatches one child workflow for each employee record and waits for all of them to finish.
 
 {% code title="GreetEmployeesWorkflow.cs" %}
+
 ```csharp
 using System.Collections.Generic;
 using Elsa.Workflows;
@@ -84,9 +88,11 @@ public class GreetEmployeesWorkflow : WorkflowBase
     }
 }
 ```
+
 {% endcode %}
 
 {% code title="EmployeeGreetingWorkflow.cs" %}
+
 ```csharp
 using Elsa.Extensions;
 using Elsa.Workflows;
@@ -105,6 +111,7 @@ public class EmployeeGreetingWorkflow : WorkflowBase
     }
 }
 ```
+
 {% endcode %}
 
 When the child workflow expects a single simple value instead of a dictionary, keep the default `DefaultItemInputKey = "Item"` and read that input from the child workflow.
@@ -128,6 +135,14 @@ Use this when each dispatched child workflow should get its own predictable corr
 
 When Elsa waits for completion, each child workflow gets a `WaitForCompletion` marker in its properties so the runtime can resume the parent workflow when that child finishes.
 
+## Activity outcomes
+
+`BulkDispatchWorkflows` exposes the `Completed`, `Canceled`, and `Done` outcomes in its flow node metadata.
+
+- When `WaitForCompletion` is `false`, Elsa dispatches the child workflows and completes this activity with `Done`.
+- When `WaitForCompletion` is `true` and `Items` is empty, Elsa also completes immediately with `Done`.
+- When `WaitForCompletion` is `true` and at least one child workflow was dispatched, Elsa waits until all tracked child workflows finish, then completes with both `Completed` and `Done`.
+
 ## Child completion and fault ports
 
 When `WaitForCompletion` is `true`, the activity can schedule extra work for each child result:
@@ -144,6 +159,8 @@ While those ports run, Elsa provides:
 
 This makes the activity useful for fan-out/fan-in orchestration where the parent needs to count, aggregate, or compensate for per-child outcomes.
 
+If `WaitForCompletion` is `false`, Elsa never schedules these ports because the parent workflow does not wait for child completion events.
+
 ## Using it in Elsa Studio
 
 In Elsa Studio, configure **Bulk Dispatch Workflows** with these fields:
@@ -154,6 +171,7 @@ In Elsa Studio, configure **Bulk Dispatch Workflows** with these fields:
 - **Correlation ID Function**: an optional expression evaluated for each item.
 - **Input**: shared input values added to every child workflow.
 - **Wait For Completion**: whether the parent should block until all child workflows finish.
+- **Start New Trace**: start a new OpenTelemetry trace context for each dispatched child workflow.
 - **Channel**: optional dispatcher channel. Leaving it empty uses the default channel.
 
 If you connect the `Child Completed` or `Child Faulted` ports, expect them to run once per child workflow, not once for the entire batch.
@@ -162,4 +180,5 @@ If you connect the `Child Completed` or `Child Faulted` ports, expect them to ru
 
 - Elsa dispatches published workflow definitions only. If no published child workflow definition exists, the parent workflow faults.
 - `BulkDispatchWorkflows` does not aggregate child outputs into one collection automatically. Handle that in the parent workflow through variables, `ChildCompleted`, or `ChildFaulted`.
-- The parent-child relationship is tracked through `ParentWorkflowInstanceId` and `ParentInstanceId`, which lets Elsa resume the waiting parent workflow after child completion.
+- `ParentWorkflowInstanceId` links the runtime parent-child relationship, while `ParentInstanceId` is also added to the child input and dispatch properties for workflow logic and resume handling.
+- When you use both shared `Input` values and dictionary-shaped items, item keys overwrite the same keys from `Input`.
