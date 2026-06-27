@@ -73,4 +73,11 @@ Studio initiates OIDC logout through `{studio-url}/authentication/logout`.
 
 Use a `ClientSecret` only for confidential clients such as a Blazor Server Studio host. Do not use a client secret for WebAssembly or other browser-hosted public clients; use authorization code flow with PKCE instead.
 
+For WebAssembly Studio hosts, the default Elsa Studio shell does not require Razor page changes, but custom hosts must include the WebAssembly authentication script in `wwwroot/index.html`:
+
+```html
+<script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
+<script src="_framework/blazor.webassembly.js"></script>
+```
+
 See the [Authentication & Authorization Guide](../guides/authentication.md#studio-authentication-configuration) for the full Studio OIDC setup.
