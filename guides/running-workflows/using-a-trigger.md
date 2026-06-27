@@ -7,8 +7,8 @@ A trigger is represented by an activity, which provides trigger details to servi
 Elsa ships with various triggers out of the box, such as:
 
 * HTTP Endpoint: triggers the workflow when a given HTTP request is sent to the workflow server.
-* Timer: triggers the workflow each given interval based on a TimeSpan expression.
-* Cron: triggers the workflow each given interval based on a CRON expression.
+* Timer: triggers the workflow on a fixed recurring interval based on a `TimeSpan` expression.
+* Cron: triggers the workflow on a recurring cron schedule.
 * StartAt: triggers the workflow once at a specific future timestamp.
 * Event: triggers when a given event is received by the workflow server.
 
