@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-26)
+## Slice Inventory (2026-06-27)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -36,6 +36,7 @@ acceptance criterion below is already complete.
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
+- `DOC-040` Timer and scheduled workflows
 - `DOC-041` Loading workflows from JSON
 - `DOC-042` Bulk dispatch workflows activity
 - `DOC-049` Studio custom-elements embedding cookbook
@@ -51,7 +52,6 @@ acceptance criterion below is already complete.
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
-- `DOC-040` Timer and scheduled workflows
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
@@ -59,9 +59,9 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-- `DOC-019` HTTP endpoint security: the HTTP workflow guides now explain how
-  to build endpoints, but the auth surface is still spread across multiple
-  pages. A single release-backed guide should connect `Authorize`,
+- `DOC-019` HTTP endpoint security: still the highest-value next slice once the
+  current in-progress auth and security edits are either committed or moved to a
+  clean worktree. A single release-backed guide should connect `Authorize`,
   `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
   Studio-facing troubleshooting.
 
@@ -82,11 +82,10 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-019` HTTP endpoint security:
-  consolidate the release-backed guidance that currently spans HTTP workflow,
-  authentication, and security pages so users can see one clear path for public
-  endpoints, authenticated endpoints, API permissions, and Studio-facing
-  troubleshooting.
+- `DOC-040` Timer and scheduled workflows:
+  add a dedicated release-backed guide that separates `Delay`, `StartAt`,
+  `Timer`, and `Cron`, explains bookmark vs trigger scheduling, and points
+  users to durable scheduler options for clustered deployments.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
