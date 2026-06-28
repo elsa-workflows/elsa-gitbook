@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-27)
+## Slice Inventory (2026-06-28)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -33,8 +33,6 @@ acceptance criterion below is already complete.
 - `DOC-018` Plugins and modules development
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
-- `DOC-024` MassTransit communication
-- `DOC-025` Long-running workflows
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
@@ -42,12 +40,15 @@ acceptance criterion below is already complete.
 - `DOC-041` Loading workflows from JSON
 - `DOC-042` Bulk dispatch workflows activity
 - `DOC-049` Studio custom-elements embedding cookbook
+- `DOC-053` Alterations operational guide hardening
 
 ### Available next slices
 
 - `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
+- `DOC-024` MassTransit communication
+- `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
@@ -55,22 +56,12 @@ acceptance criterion below is already complete.
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
-- `DOC-053` Alterations operational guide hardening
-
-### Current run selection
-
-- `DOC-040` Timer and scheduled workflows: harden the new guide against
-  `release/3.8.0` runtime behavior so it documents the real activity input
-  names, bookmark-vs-trigger scheduling flow, and durable scheduler options
-  accurately.
-
 ### Recommended next slice
 
-- `DOC-026` Error handling and retry logic: the docs cover incidents,
-  alterations, and troubleshooting separately, but there is still no single
-  release-backed guide that explains activity faults, incident strategies,
-  bookmark queue dead letters, retry endpoints, and when to choose retry vs
-  compensation vs manual repair.
+- `DOC-019` HTTP endpoint security: still the highest-value next slice after the
+  alterations guide is tightened. A single release-backed guide should connect `Authorize`,
+  `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
+  Studio-facing troubleshooting.
 
 ### Newly discovered follow-on topics
 
@@ -84,29 +75,14 @@ acceptance criterion below is already complete.
 - `DOC-052` Workflow state and journal API cookbook: add an operations-facing
   guide for inspecting workflow state, filtered journal entries, activity
   executions, and variable mutation endpoints when diagnosing live instances.
-- `DOC-054` Messaging transport decision guide: document when to use
-  MassTransit message-type activities, the Azure Service Bus activity module,
-  or MassTransit-backed workflow dispatching so teams do not conflate three
-  different messaging integration paths.
-- `DOC-055` Workflow runtime recovery operations: add an operator-facing guide
-  for bookmark queue dead letters, runtime pause/resume management, recovery
-  tasks, and what to inspect before replaying or draining stuck work.
-
-### Current run result
-
-- `DOC-040` Timer and scheduled workflows: refined the guide to align with
-  `Delay`, `StartAt`, `Timer`, `Cron`, `DefaultTriggerScheduler`,
-  `DefaultBookmarkScheduler`, `LocalScheduler`, and the Quartz/Hangfire
-  scheduler extensions in `release/3.8.0`.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
-- `DOC-040` Timer and scheduled workflows:
-  refined on 2026-06-27 to clarify activity input names, trigger vs bookmark
-  scheduling, and when to replace the in-memory scheduler with Quartz or
-  Hangfire-backed scheduling.
+- `DOC-053` Alterations operational guide hardening:
+  tighten permissions, execution-mode guidance, and operational behavior around
+  plan submission, job inspection, durable stores, and Studio-facing plan usage.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
