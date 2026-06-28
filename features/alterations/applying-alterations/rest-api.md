@@ -4,6 +4,8 @@ The Alterations module exposes `POST /alterations/run` for immediate execution a
 
 Use this endpoint when you already know the target instance IDs and want the results immediately. If you want Elsa to select instances from a filter and process them in the background, use [alteration plans](../alteration-plans/rest-api.md) instead.
 
+All endpoints on this page require the `run:alterations` permission.
+
 For example, to apply an alteration that modifies a variable, migrates the workflow instance to a new version, and schedules an activity, use the following request:
 
 ```http
@@ -68,3 +70,39 @@ The response includes one result per targeted workflow instance:
 ```
 
 After the runner finishes, the endpoint automatically dispatches any successful workflow instance that still has scheduled work.
+
+## Retry faulted activities
+
+`release/3.8.0` also exposes `POST /alterations/workflows/retry` for retrying faulted activities across one or more workflow instances.
+
+If you omit `activityIds`, Elsa retries all incident activity IDs recorded on each specified workflow instance.
+
+```http
+POST /alterations/workflows/retry HTTP/1.1
+Host: localhost:5001
+
+{
+  "workflowInstanceIds": [
+    "88ce68d00e824c78a53af04f16d276ea"
+  ]
+}
+```
+
+To retry only specific activities, include `activityIds`:
+
+```http
+POST /alterations/workflows/retry HTTP/1.1
+Host: localhost:5001
+
+{
+  "workflowInstanceIds": [
+    "88ce68d00e824c78a53af04f16d276ea"
+  ],
+  "activityIds": [
+    "ShipOrder",
+    "CapturePayment"
+  ]
+}
+```
+
+The response shape matches `/alterations/run` by returning one result per targeted workflow instance.
