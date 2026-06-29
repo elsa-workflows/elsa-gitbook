@@ -160,7 +160,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
             "Url": "https://localhost:5001/elsa/api"
         },
         "Authentication": {
-            "Provider": "ElsaIdentity",
+            "Provider": "OpenIdConnect",
             "OpenIdConnect": {
                 "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
                 "ClientId": "{client-id}",
@@ -182,6 +182,10 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
         }
     }
     ```
+
+    `AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
+
+    Because this example is a Blazor WebAssembly host, register `{studio-url}/authentication/login-callback` as the redirect URI and `{studio-url}/authentication/logout-callback` as the logout callback URI. Studio initiates logout at `{studio-url}/authentication/logout`.
 6.  **Update index.html**
 
     To conclude the setup, open the `index.html` file and replace its content with the code showcased below:

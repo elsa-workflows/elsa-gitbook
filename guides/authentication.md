@@ -185,6 +185,33 @@ GET /elsa/api/workflow-definitions
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
+## Elsa API Permission Claims
+
+Elsa API endpoints authorize requests with `permissions` claims. Each claim value must match a permission configured by the endpoint, and `*` grants all Elsa API permissions.
+
+Elsa Identity roles are containers for permission strings. When Elsa Identity issues a JWT or validates an Elsa API key, it collects permissions from the assigned roles and emits them as `permissions` claims. External OIDC providers should emit Elsa permissions directly as `permissions` claims, or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
+
+ASP.NET Core role policies such as `RequireRole("Admin")` are useful for your own host endpoints, Razor pages, controllers, or custom APIs. They do not replace Elsa endpoint permissions.
+
+Permission names are not limited to constants in `PermissionNames`. Shared constants include `*`, `ManageWorkflowRuntime`, expression execution permissions, and bookmark dead-letter permissions. Many endpoints use explicit strings through `ConfigurePermissions(...)`, and feature modules can define their own constants.
+
+| Scenario | Permissions |
+| --- | --- |
+| Full Elsa API access | `*` |
+| Read workflow definitions | `read:workflow-definitions` |
+| Read workflow instances, variables, and journal data | `read:workflow-instances` |
+| Read activity execution results and summaries | `read:activity-execution` |
+| Read common Studio metadata | `read:activity-descriptors`, `read:activity-descriptors-options`, `read:expression-descriptors`, `read:storage-drivers`, `read:variable-descriptors`, `read:installed-features` |
+| Create or edit workflow definitions | `write:workflow-definitions` |
+| Publish or retract workflow definitions | `publish:workflow-definitions`, `retract:workflow-definitions` |
+| Execute or dispatch workflow definitions | `exec:workflow-definitions` |
+| Cancel or delete workflow instances | `cancel:workflow-instances`, `delete:workflow-instances` |
+| Runtime administration | `ManageWorkflowRuntime` |
+
+For read-only workflow instance and execution result screens, start with `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. The current runtime status endpoint requires `ManageWorkflowRuntime`, which also grants pause, resume, and force-drain authority.
+
+For workflow routes handled by the `HttpEndpoint` activity, authorization is configured separately with the activity's `Authorize` and `Policy` settings. See [HTTP Endpoint Security](security/http-endpoint-security.md).
+
 ## OIDC Configuration
 
 OpenID Connect (OIDC) allows you to integrate with external identity providers like Azure AD, Auth0, Keycloak, and others.
@@ -293,7 +320,7 @@ app.Run();
 
 #### Step 7: Configure Studio for Azure AD
 
-Elsa Studio 3.7 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. Use the Blazor host pattern from [Studio Designer Integration](studio/integration/README.md), then configure `Backend:Url`, `Authentication:Provider`, and `Authentication:OpenIdConnect`.
+Elsa Studio 3.8 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. Use the Blazor host pattern from [Studio Designer Integration](studio/integration/README.md), then configure `Backend:Url`, `Authentication:Provider`, and `Authentication:OpenIdConnect`.
 
 For Blazor Server Studio hosts:
 
@@ -316,7 +343,9 @@ For Blazor Server Studio hosts:
 }
 ```
 
-`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. For Studio WebAssembly, register a SPA/public client and omit the client secret:
+`ClientSecret` is optional and should only be used by confidential clients such as a Blazor Server Studio host. Register `{studio-url}/signin-oidc` as the redirect URI and `{studio-url}/signout-callback-oidc` as the signed-out callback URI unless you override the defaults. Studio initiates logout at `{studio-url}/authentication/logout`.
+
+For Studio WebAssembly, register a SPA/public client and omit the client secret:
 
 ```json
 {
@@ -334,6 +363,8 @@ For Blazor Server Studio hosts:
   }
 }
 ```
+
+Register `{studio-url}/authentication/login-callback` as the WebAssembly redirect URI and `{studio-url}/authentication/logout-callback` as the WebAssembly logout callback URI. Studio initiates logout at `{studio-url}/authentication/logout`.
 
 ### Auth0 Integration
 
@@ -356,12 +387,14 @@ Auth0 is a flexible identity platform with extensive features for authentication
 3. Configure **Allowed Callback URLs**:
    ```
    https://your-elsa-server.com/signin-oidc,
+   https://your-studio-server.com/signin-oidc,
    https://your-studio.com/authentication/login-callback
    ```
 4. Configure **Allowed Logout URLs**:
    ```
    https://your-elsa-server.com/signout-callback-oidc,
-   https://your-studio.com/
+   https://your-studio-server.com/signout-callback-oidc,
+   https://your-studio.com/authentication/logout-callback
    ```
 5. Configure **Allowed Web Origins** (for CORS):
    ```
@@ -705,7 +738,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationS
             new Claim("ApiKey", providedApiKey)
         };
         
-        claims.AddRange(apiKey.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(apiKey.Roles.Select(permission => new Claim("permissions", permission)));
         
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new ClaimsPrincipal(identity);
@@ -1057,7 +1090,7 @@ This configuration accepts either JWT Bearer tokens or API keys.
 
 ## Studio Authentication Configuration
 
-Elsa Studio needs to authenticate the user and send an access token to the Elsa Server API. In Elsa Studio 3.7, this is handled by the Studio authentication modules and the HTTP message handler configured for the backend client.
+Elsa Studio needs to authenticate the user and send an access token to the Elsa Server API. In Elsa Studio 3.8, this is handled by the Studio authentication modules and the HTTP message handler configured for the backend client.
 
 ### Studio with OpenID Connect
 
@@ -1105,6 +1138,13 @@ For a Blazor WebAssembly Studio host:
 
 Use `ClientSecret` only for confidential clients that can protect the secret, such as Blazor Server. Do not configure a client secret for WebAssembly or any other browser-hosted public client.
 
+Register callback URIs according to the Studio host model:
+
+- Blazor WebAssembly Studio: `{studio-url}/authentication/login-callback` and `{studio-url}/authentication/logout-callback`.
+- Blazor Server Studio: `{studio-url}/signin-oidc` and `{studio-url}/signout-callback-oidc` by default.
+
+Studio initiates OIDC logout at `{studio-url}/authentication/logout`.
+
 The corresponding Program.cs setup uses `AddOpenIdConnectAuth` and `OidcAuthenticatingApiHttpMessageHandler`:
 
 ```csharp
@@ -1132,6 +1172,8 @@ builder.Services.AddRemoteBackend(backendApiConfig);
 `AuthenticationScopes` are requested during sign-in. They usually include identity scopes such as `openid`, `profile`, `email`, and optionally `offline_access`.
 
 `BackendApiScopes` are requested for access tokens sent to the Elsa Server API. Use this when the Elsa Server API has its own scope or audience, such as `api://your-api-app-id/elsa-server-api`.
+
+Studio uses `AuthenticationScopes` during sign-in and `BackendApiScopes` when requesting bearer tokens for Elsa Server API calls.
 
 ### Studio with Elsa.Identity
 
@@ -1285,7 +1327,8 @@ app.UseWorkflowsApi();
      "Authentication": {
        "Provider": "OpenIdConnect",
        "OpenIdConnect": {
-         "AuthenticationScopes": ["openid", "profile", "offline_access"],
+         "AuthenticationScopes": ["openid", "profile", "offline_access", "elsa_api"],
+         "BackendApiScopes": ["elsa_api"],
          "SaveTokens": true
        }
      }

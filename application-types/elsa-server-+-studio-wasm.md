@@ -337,7 +337,7 @@ Next, we will modify the client project.
     ```json
     {
         "Authentication": {
-            "Provider": "ElsaIdentity",
+            "Provider": "OpenIdConnect",
             "OpenIdConnect": {
                 "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
                 "ClientId": "{client-id}",
@@ -359,6 +359,10 @@ Next, we will modify the client project.
         }
     }
     ```
+
+    `AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
+
+    Because this client is Blazor WebAssembly, register `{studio-url}/authentication/login-callback` as the redirect URI and `{studio-url}/authentication/logout-callback` as the logout callback URI. Studio initiates logout at `{studio-url}/authentication/logout`.
 4.  **Modify MainLayout.razor**
 
     Update `Layout/MainLayout.razor` with the following code listing:

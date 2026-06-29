@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-26)
+## Slice Inventory (2026-06-29)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -31,18 +31,20 @@ acceptance criterion below is already complete.
 - `DOC-016` Workflow context V3
 - `DOC-017` Common workflow patterns
 - `DOC-018` Plugins and modules development
+- `DOC-019` HTTP endpoint security
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
+- `DOC-040` Timer and scheduled workflows
 - `DOC-041` Loading workflows from JSON
 - `DOC-042` Bulk dispatch workflows activity
 - `DOC-049` Studio custom-elements embedding cookbook
+- `DOC-053` Alterations operational guide hardening
 
 ### Available next slices
 
-- `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
 - `DOC-024` MassTransit communication
@@ -51,19 +53,15 @@ acceptance criterion below is already complete.
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
-- `DOC-040` Timer and scheduled workflows
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
-- `DOC-053` Alterations operational guide hardening
-
 ### Recommended next slice
 
-- `DOC-019` HTTP endpoint security: the HTTP workflow guides now explain how
-  to build endpoints, but the auth surface is still spread across multiple
-  pages. A single release-backed guide should connect `Authorize`,
-  `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
-  Studio-facing troubleshooting.
+- `DOC-021` Configuration management: still a high-value follow-on because
+  configuration details remain spread across app-type, deployment, auth, and
+  hosting guides. A single release-backed guide should connect appsettings,
+  environment variables, feature toggles, and common precedence pitfalls.
 
 ### Newly discovered follow-on topics
 
@@ -83,10 +81,9 @@ acceptance criterion below is already complete.
 ### Current slice note
 
 - `DOC-019` HTTP endpoint security:
-  consolidate the release-backed guidance that currently spans HTTP workflow,
-  authentication, and security pages so users can see one clear path for public
-  endpoints, authenticated endpoints, API permissions, and Studio-facing
-  troubleshooting.
+  add a dedicated release-backed guide for `HttpEndpoint` authorization,
+  public vs authenticated ingress, policy behavior, separation from Elsa API
+  permissions, and Studio/operator troubleshooting.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
