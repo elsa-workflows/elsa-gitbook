@@ -38,6 +38,7 @@
 * [Authentication & Authorization](guides/authentication.md)
 * [Security & Authentication](guides/security/README.md)
   * [Disable Auth in Development](guides/security/disable-auth.md)
+  * [HTTP Endpoint Security](guides/security/http-endpoint-security.md)
   * [External Identity Providers](guides/security/external-identity-providers.md)
 * [Deployment](guides/deployment/README.md)
   * [Kubernetes Basics](guides/deployment/kubernetes.md)

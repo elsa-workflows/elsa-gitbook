@@ -132,7 +132,7 @@ With this provider, the server host registers `AddElsaIdentity()` and `AddElsaId
 
 Use `ClientSecret` only for confidential clients such as the server host. In the OpenID Connect modules, bearer tokens for Elsa API calls are attached by `OidcAuthenticatingApiHttpMessageHandler`, and SignalR connections are configured through `OidcHttpConnectionOptionsConfigurator`.
 
-`AuthenticationScopes` are requested during sign-in. `BackendApiScopes` are requested when Studio obtains an access token for the Elsa Server API. Some identity providers require the backend API scope in the original sign-in grant before refresh-token or incremental token acquisition can return backend API tokens; in that case, include the backend API scope in both arrays.
+`AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
 For Blazor Server Studio, register `{studio-url}/signin-oidc` as the redirect URI and `{studio-url}/signout-callback-oidc` as the signed-out callback URI unless you override the defaults. Studio initiates logout at `{studio-url}/authentication/logout`.
 
@@ -169,7 +169,7 @@ Use this host when you want a dedicated SPA-style Studio deployment.
 
 Do not configure a client secret in WebAssembly. The browser host is a public client.
 
-`AuthenticationScopes` are requested during sign-in. `BackendApiScopes` are requested when Studio obtains an access token for the Elsa Server API. Some identity providers require the backend API scope in the original sign-in grant before refresh-token or incremental token acquisition can return backend API tokens; in that case, include the backend API scope in both arrays.
+`AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
 For Blazor WebAssembly Studio, register `{studio-url}/authentication/login-callback` as the redirect URI and `{studio-url}/authentication/logout-callback` as the logout callback URI. Studio initiates logout at `{studio-url}/authentication/logout`.
 

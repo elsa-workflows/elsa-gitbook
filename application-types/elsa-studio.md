@@ -183,7 +183,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     }
     ```
 
-    `AuthenticationScopes` are requested during sign-in. `BackendApiScopes` are requested when Studio obtains an access token for the Elsa Server API. Some identity providers require the backend API scope in the original sign-in grant as well; if token acquisition or refresh fails for the backend API scope, include the same scope in both `AuthenticationScopes` and `BackendApiScopes`.
+    `AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
     Because this example is a Blazor WebAssembly host, register `{studio-url}/authentication/login-callback` as the redirect URI and `{studio-url}/authentication/logout-callback` as the logout callback URI. Studio initiates logout at `{studio-url}/authentication/logout`.
 6.  **Update index.html**

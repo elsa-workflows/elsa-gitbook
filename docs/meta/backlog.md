@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-28)
+## Slice Inventory (2026-06-29)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -31,6 +31,7 @@ acceptance criterion below is already complete.
 - `DOC-016` Workflow context V3
 - `DOC-017` Common workflow patterns
 - `DOC-018` Plugins and modules development
+- `DOC-019` HTTP endpoint security
 - `DOC-020` EF Core migrations
 - `DOC-022` Scaling and performance
 - `DOC-028` Studio customization
@@ -44,7 +45,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-019` HTTP endpoint security
 - `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
 - `DOC-024` MassTransit communication
@@ -58,10 +58,10 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 ### Recommended next slice
 
-- `DOC-019` HTTP endpoint security: still the highest-value next slice after the
-  alterations guide is tightened. A single release-backed guide should connect `Authorize`,
-  `HttpEndpoint`, API permissions, public vs authenticated endpoints, and
-  Studio-facing troubleshooting.
+- `DOC-021` Configuration management: still a high-value follow-on because
+  configuration details remain spread across app-type, deployment, auth, and
+  hosting guides. A single release-backed guide should connect appsettings,
+  environment variables, feature toggles, and common precedence pitfalls.
 
 ### Newly discovered follow-on topics
 
@@ -80,9 +80,10 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-053` Alterations operational guide hardening:
-  tighten permissions, execution-mode guidance, and operational behavior around
-  plan submission, job inspection, durable stores, and Studio-facing plan usage.
+- `DOC-019` HTTP endpoint security:
+  add a dedicated release-backed guide for `HttpEndpoint` authorization,
+  public vs authenticated ingress, policy behavior, separation from Elsa API
+  permissions, and Studio/operator troubleshooting.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
