@@ -190,7 +190,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 Elsa API endpoints authorize requests with `permissions` claims. Each claim value must match a permission configured by the endpoint, and `*` grants all Elsa API permissions.
 
-Elsa Identity roles are containers for permission strings. When Elsa Identity issues a JWT, it collects permissions from the assigned roles and emits them as `permissions` claims. API-key authentication handlers should add equivalent `permissions` claims. External OIDC providers should emit Elsa permissions directly as `permissions` claims, or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
+Elsa Identity roles are containers for permission strings. When Elsa Identity issues a JWT or validates an Elsa API key, it collects permissions from the assigned roles and emits them as `permissions` claims. External OIDC providers should emit Elsa permissions directly as `permissions` claims, or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
 
 ASP.NET Core role policies such as `RequireRole("Admin")` are useful for your own host endpoints, Razor pages, controllers, or custom APIs. They do not replace Elsa endpoint permissions.
 
@@ -211,6 +211,7 @@ Permission names are not limited to constants in `PermissionNames`. Shared const
 
 For read-only workflow instance and execution result screens, start with `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. The current runtime status endpoint requires `ManageWorkflowRuntime`, which also grants pause, resume, and force-drain authority.
 
+For workflow routes handled by the `HttpEndpoint` activity, authorization is configured separately with the activity's `Authorize` and `Policy` settings. See [HTTP Endpoint Security](security/http-endpoint-security.md).
 ## OIDC Configuration
 
 OpenID Connect (OIDC) allows you to integrate with external identity providers like Azure AD, Auth0, Keycloak, and others.
@@ -319,7 +320,7 @@ app.Run();
 
 #### Step 7: Configure Studio for Azure AD
 
-Elsa Studio 3.7 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. Use the Blazor host pattern from [Studio Designer Integration](studio/integration/README.md), then configure `Backend:Url`, `Authentication:Provider`, and `Authentication:OpenIdConnect`.
+Elsa Studio 3.8 uses the `Elsa.Studio.Authentication.OpenIdConnect` modules. Use the Blazor host pattern from [Studio Designer Integration](studio/integration/README.md), then configure `Backend:Url`, `Authentication:Provider`, and `Authentication:OpenIdConnect`.
 
 For Blazor Server Studio hosts:
 
@@ -1088,7 +1089,7 @@ This configuration accepts either JWT Bearer tokens or API keys.
 
 ## Studio Authentication Configuration
 
-Elsa Studio needs to authenticate the user and send an access token to the Elsa Server API. In Elsa Studio 3.7, this is handled by the Studio authentication modules and the HTTP message handler configured for the backend client.
+Elsa Studio needs to authenticate the user and send an access token to the Elsa Server API. In Elsa Studio 3.8, this is handled by the Studio authentication modules and the HTTP message handler configured for the backend client.
 
 ### Studio with OpenID Connect
 
@@ -1171,18 +1172,7 @@ builder.Services.AddRemoteBackend(backendApiConfig);
 
 `BackendApiScopes` are requested for access tokens sent to the Elsa Server API. Use this when the Elsa Server API has its own scope or audience, such as `api://your-api-app-id/elsa-server-api`.
 
-Some identity providers require the backend API scope to be part of the original sign-in grant before they allow refresh-token or incremental token acquisition for that scope. If Studio signs in successfully but cannot obtain or refresh a backend API token, include the backend API scope in both arrays:
-
-```json
-{
-  "Authentication": {
-    "OpenIdConnect": {
-      "AuthenticationScopes": ["openid", "profile", "offline_access", "api://your-api-app-id/elsa-server-api"],
-      "BackendApiScopes": ["api://your-api-app-id/elsa-server-api"]
-    }
-  }
-}
-```
+Studio uses `AuthenticationScopes` during sign-in and `BackendApiScopes` when requesting bearer tokens for Elsa Server API calls.
 
 ### Studio with Elsa.Identity
 

@@ -13,6 +13,7 @@ This guide provides actionable, Elsa-specific security practices for protecting 
 
 **What This Guide Covers:**
 - Configuring Identity and Authentication in Elsa Server (`UseIdentity`, `UseDefaultAuthentication`)
+- Securing `HttpEndpoint` workflow routes, including public vs authenticated endpoints
 - Securing tokenized bookmark resume URLs (TTL, revocation, rate limiting)
 - CORS, CSRF, and rate limiting for public-facing endpoints
 - Secrets management for API keys, database connections, and workflow variables
@@ -29,13 +30,15 @@ This guide provides actionable, Elsa-specific security practices for protecting 
 
 For clustering-specific security (distributed lock credentials, database permissions), see [Clustering Guide](../clustering/README.md) (DOC-015).
 
+For workflow-trigger ingress security specifically, see [HTTP Endpoint Security](http-endpoint-security.md).
+
 ---
 
 ## Identity & Authentication in Elsa Server
 
 ### UseIdentity Configuration
 
-Elsa Server's identity system is configured in `Program.cs` via the `UseIdentity` extension method. In the 3.7.0 server sample, token options are bound from `Identity:Tokens`, while users, applications, and roles are provided by configuration-based providers bound from the `Identity` section.
+Elsa Server's identity system is configured in `Program.cs` via the `UseIdentity` extension method. In the 3.8.0 server sample, token options are bound from `Identity:Tokens`, while users, applications, and roles are provided by configuration-based providers bound from the `Identity` section.
 
 **Reference:** `src/apps/Elsa.Server.Web/Program.cs` in elsa-core
 
@@ -139,11 +142,11 @@ Elsa validates the API key against configured applications; store hashed API key
 
 Elsa API endpoints check the `permissions` claim. Each claim value must match a permission required by the endpoint, and `*` grants all Elsa API permissions.
 
-Elsa Identity roles collect permission strings. When Elsa Identity issues a JWT, permissions from the assigned roles are emitted as `permissions` claims. API-key authentication handlers should add equivalent `permissions` claims. External IdPs should emit the same claim type or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
+Elsa Identity roles collect permission strings. When Elsa Identity issues a JWT or validates an Elsa API key, permissions from the assigned roles are emitted as `permissions` claims. External IdPs should emit the same claim type or the host should map external roles, groups, or scopes into `permissions` claims during token validation.
 
 ASP.NET Core policies such as `RequireRole("Admin")` protect custom host endpoints, pages, or controllers. They do not replace Elsa endpoint permission claims. Elsa endpoint permissions come from endpoint configuration and module constants, not only from shared `PermissionNames` constants.
 
-Common read-only workflow access uses `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. Use `*` only for full administrative access.
+Common read-only workflow access uses `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. Use `*` only for full administrative access. For workflow ingress routes handled by the `HttpEndpoint` activity, see [HTTP Endpoint Security](http-endpoint-security.md).
 
 **Important:**
 - **Never commit secrets** to source control
@@ -479,7 +482,7 @@ spec:
 ### SSO/Identity Integration
 
 **Studio Authentication:**
-- Configure Studio to use the same OIDC provider as Elsa Server through Studio 3.7.0 configuration
+- Configure Studio to use the same OIDC provider as Elsa Server through the current Studio OIDC configuration
 - Use the Blazor host pattern in [Studio Designer Integration](../studio/integration/README.md), then configure:
   ```json
   {
@@ -498,7 +501,7 @@ spec:
   }
   ```
 
-  `AuthenticationScopes` are requested during sign-in. `BackendApiScopes` are requested when Studio obtains an access token for the Elsa Server API. Some identity providers require the backend API scope in the original sign-in grant as well; if backend API token acquisition or refresh fails, include the same scope in both `AuthenticationScopes` and `BackendApiScopes`.
+  `AuthenticationScopes` are used for Studio sign-in. `BackendApiScopes` are used when Studio requests access tokens for Elsa Server API calls.
 
   Register Studio redirect and logout callback URIs according to the host model: Blazor WebAssembly uses `/authentication/login-callback` and `/authentication/logout-callback`; Blazor Server uses `/signin-oidc` and `/signout-callback-oidc` by default. Studio initiates logout at `/authentication/logout`.
 

@@ -6,3 +6,5 @@ In this guide, we'll take a look at a workflow that can receive HTTP requests, s
 * SendHttpRequest
 * WriteHttpResponse
 * SetVariable
+
+For securing inbound workflow routes exposed by `HttpEndpoint`, see [HTTP Endpoint Security](../security/http-endpoint-security.md).

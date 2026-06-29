@@ -320,8 +320,8 @@ builder.Services
         options.ClaimActions.MapJsonKey("role", "roles");
     });
 
-// Translate Keycloak roles into "permissions" claims in the authentication
-// handler that protects Elsa API endpoints, usually AddJwtBearer.
+// Add an OnTokenValidated handler to translate Keycloak roles into
+// "permissions" claims before requests reach Elsa API endpoints.
 ```
 
 **Further Reading:**
@@ -370,11 +370,9 @@ builder.Services
 
 After authentication, Elsa API endpoints authorize requests with `permissions` claims. Each claim value must match a permission configured by the endpoint, and `*` grants all Elsa permissions.
 
-Elsa Identity roles are containers for permission strings. When Elsa Identity issues tokens, assigned role permissions are emitted as `permissions` claims. With an external IdP, either emit the same claim type from the provider or map external roles, groups, or scopes into `permissions` claims in the Elsa Server host.
+Elsa Identity roles are containers for permission strings. With an external IdP, either emit `permissions` claims from the provider or map external roles, groups, or scopes into `permissions` claims in the Elsa Server host.
 
 ### Mapping External Roles to Elsa Permissions
-
-The following example uses JWT bearer authentication because Elsa Server API endpoints validate access tokens on incoming API requests. Use OpenID Connect middleware for interactive sign-in flows, typically paired with cookies, and use JWT bearer middleware for API access-token validation.
 
 ```csharp
 builder.Services
@@ -387,13 +385,13 @@ builder.Services
         {
             OnTokenValidated = context =>
             {
-                var identity = (ClaimsIdentity)context.Principal!.Identity!;
+                var claimsIdentity = (ClaimsIdentity)context.Principal!.Identity!;
 
                 if (context.Principal.IsInRole("workflow-viewer"))
                 {
-                    identity.AddClaim(new Claim("permissions", "read:workflow-definitions"));
-                    identity.AddClaim(new Claim("permissions", "read:workflow-instances"));
-                    identity.AddClaim(new Claim("permissions", "read:activity-execution"));
+                    claimsIdentity.AddClaim(new Claim("permissions", "read:workflow-definitions"));
+                    claimsIdentity.AddClaim(new Claim("permissions", "read:workflow-instances"));
+                    claimsIdentity.AddClaim(new Claim("permissions", "read:activity-execution"));
                 }
 
                 if (context.Principal.IsInRole("workflow-admin"))
@@ -405,29 +403,7 @@ builder.Services
     });
 ```
 
-ASP.NET Core role policies still apply to endpoints you map yourself:
-
-```csharp
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("HostAdminOnly", policy => policy.RequireRole("admin"));
-});
-
-app.MapGet("/host/admin", () => Results.Ok())
-   .RequireAuthorization("HostAdminOnly");
-```
-
-These policies do not replace Elsa API permissions. Elsa endpoint permissions come from endpoint configuration such as `ConfigurePermissions(...)` and from module constants, not only from the shared `PermissionNames` constants.
-
-Common read-only workflow access uses:
-
-```text
-read:workflow-definitions
-read:workflow-instances
-read:activity-execution
-```
-
-Add Studio metadata permissions only as needed, such as `read:activity-descriptors`, `read:expression-descriptors`, `read:storage-drivers`, `read:variable-descriptors`, and `read:installed-features`.
+ASP.NET Core `RequireRole(...)` policies protect custom host endpoints. They do not replace Elsa API permissions. Elsa endpoint permissions come from endpoint configuration such as `ConfigurePermissions(...)` and from module constants, not only from shared `PermissionNames` constants.
 
 ## Elsa Studio Configuration
 
@@ -457,7 +433,7 @@ Use the Blazor host pattern from [Studio Designer Integration](../studio/integra
 
 For Blazor Server Studio hosts, `ClientSecret` can be added when the OIDC provider requires a confidential client. For WebAssembly Studio hosts, omit `ClientSecret` and register the client as a public SPA using authorization code flow with PKCE.
 
-`AuthenticationScopes` are requested during sign-in. `BackendApiScopes` are requested when Studio obtains an access token for the Elsa Server API. Some identity providers require the backend API scope in the original sign-in grant before refresh-token or incremental token acquisition can return backend API tokens; in that case, include the backend API scope in both arrays.
+`AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
 Register callback URIs according to the Studio host model:
 
@@ -466,6 +442,7 @@ Register callback URIs according to the Studio host model:
 
 Studio initiates OIDC logout at `https://studio.example.com/authentication/logout`.
 
+For workflow routes secured with `HttpEndpoint`, see [HTTP Endpoint Security](http-endpoint-security.md).
 ## REST API Integration
 
 When calling Elsa Server APIs from external applications, use bearer token authentication:
