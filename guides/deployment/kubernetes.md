@@ -353,15 +353,14 @@ builder.Services.AddElsa(elsa =>
 
 var app = builder.Build();
 
-// Auto-migrate on startup (optional, can also use init containers)
-if (builder.Configuration.GetValue<bool>("Elsa:AutoMigrate", false))
-{
-    await app.Services.MigrateElsaDatabaseAsync();
-}
-
 app.UseWorkflowsApi();
 app.Run();
 ```
+
+If you want migrations to run at application startup, enable them on the EF
+Core persistence features you configure rather than relying on a built-in
+`Elsa:AutoMigrate` setting. Elsa 3.8 wires migration execution through the
+`RunMigrations` property on the persistence features.
 
 ## Why Changing Only the Connection String Isn't Enough
 
@@ -453,20 +452,52 @@ spec:
 {% endhint %}
 ### Option 2: Auto-Migration on Startup
 
-Enable auto-migration in the application (simpler but not ideal for production):
+Enable auto-migration in the application by setting `RunMigrations` on the EF
+Core persistence features (simpler but not ideal for production):
 
 ```csharp
-// In Program.cs
-if (builder.Configuration.GetValue<bool>("Elsa:AutoMigrate", false))
+elsa.UseWorkflowManagement(management =>
 {
-    await app.Services.MigrateElsaDatabaseAsync();
-}
+    management.UseEntityFrameworkCore(ef =>
+    {
+        ef.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql")!);
+    });
+    management.RunMigrations = true;
+});
+
+elsa.UseWorkflowRuntime(runtime =>
+{
+    runtime.UseEntityFrameworkCore(ef =>
+    {
+        ef.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql")!);
+    });
+    runtime.RunMigrations = true;
+});
+```
+
+If you want to switch this behavior per environment, read your own config flag
+and assign `RunMigrations` from code:
+
+```csharp
+var runMigrations = builder.Configuration.GetValue("Persistence:RunMigrations", false);
+
+elsa.UseWorkflowManagement(management =>
+{
+    management.UseEntityFrameworkCore(ef => ef.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql")!));
+    management.RunMigrations = runMigrations;
+});
+
+elsa.UseWorkflowRuntime(runtime =>
+{
+    runtime.UseEntityFrameworkCore(ef => ef.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql")!));
+    runtime.RunMigrations = runMigrations;
+});
 ```
 
 Set the environment variable in the deployment:
 ```yaml
 env:
-- name: Elsa__AutoMigrate
+- name: Persistence__RunMigrations
   value: "true"
 ```
 

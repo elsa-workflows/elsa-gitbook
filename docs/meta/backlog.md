@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-06-29)
+## Slice Inventory (2026-06-30)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -33,6 +33,7 @@ acceptance criterion below is already complete.
 - `DOC-018` Plugins and modules development
 - `DOC-019` HTTP endpoint security
 - `DOC-020` EF Core migrations
+- `DOC-021` Configuration management
 - `DOC-022` Scaling and performance
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
@@ -45,7 +46,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-021` Configuration management
 - `DOC-023` Identity provider integrations
 - `DOC-024` MassTransit communication
 - `DOC-025` Long-running workflows
@@ -58,10 +58,10 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 ### Recommended next slice
 
-- `DOC-021` Configuration management: still a high-value follow-on because
-  configuration details remain spread across app-type, deployment, auth, and
-  hosting guides. A single release-backed guide should connect appsettings,
-  environment variables, feature toggles, and common precedence pitfalls.
+- `DOC-024` MassTransit communication: the existing activity guide is still
+  thinner than other integration topics and does not yet give operators and
+  workflow designers a single release-backed explanation of transports,
+  contracts, trigger routing, and failure handling.
 
 ### Newly discovered follow-on topics
 
@@ -75,15 +75,19 @@ acceptance criterion below is already complete.
 - `DOC-052` Workflow state and journal API cookbook: add an operations-facing
   guide for inspecting workflow state, filtered journal entries, activity
   executions, and variable mutation endpoints when diagnosing live instances.
+- `DOC-054` Standalone versus modular configuration matrix: add a compact
+  reference that maps `AddElsa(...)` host settings to `CShells` feature
+  settings so teams can migrate between hosting models without reverse
+  engineering sample apps.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
-- `DOC-019` HTTP endpoint security:
-  add a dedicated release-backed guide for `HttpEndpoint` authorization,
-  public vs authenticated ingress, policy behavior, separation from Elsa API
-  permissions, and Studio/operator troubleshooting.
+- `DOC-021` Configuration management:
+  add a release-backed guide that connects standalone server, standalone
+  Studio, and modular-host section names, environment overrides, migration
+  toggles, and cross-host alignment pitfalls.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
