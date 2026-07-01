@@ -66,7 +66,7 @@ Use alteration plans instead when Elsa should discover the target instances for 
 
 ## Retrying faulted workflow instances
 
-`release/3.8.0` also ships a bulk retry endpoint for faulted instances: `POST /alterations/workflows/retry`.
+`release/3.8.0` also ships a retry endpoint for faulted instances: `POST /alterations/workflows/retry`.
 
 That endpoint builds `ScheduleActivity` alterations for the specified activity IDs, or for all incident activity IDs when you omit `activityIds`, then dispatches the updated workflow instances.
 
