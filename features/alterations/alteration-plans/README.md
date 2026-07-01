@@ -108,7 +108,7 @@ Use plan timestamps plus per-job logs to answer operational questions such as:
 
 ## Elsa Studio workflow
 
-In Studio, the alterations designer submits the same `AlterationPlanParams` payload used by the server API.
+In Studio, the alterations designer submits the same `AlterationPlanParams` payload used by the server API, but in `release/3.8.0` it builds that payload from the currently selected workflow instance instead of exposing the full filter authoring surface.
 
 After submission, Studio navigates to a plan details page that shows:
 
@@ -117,4 +117,4 @@ After submission, Studio navigates to a plan details page that shows:
 * generated jobs
 * per-job log entries
 
-This is the fastest path for operators who want plan visibility without scripting the REST API directly.
+Use Studio when operators want to alter a known running instance and then inspect the resulting plan and jobs without scripting the REST API directly.

@@ -73,7 +73,7 @@ After the runner finishes, the endpoint automatically dispatches any successful 
 
 ## Retry faulted activities
 
-`release/3.8.0` also exposes `POST /alterations/workflows/retry` for retrying faulted activities across one or more workflow instances.
+`release/3.8.0` also exposes `POST /alterations/workflows/retry` for retrying faulted activities on specified workflow instances.
 
 If you omit `activityIds`, Elsa retries all incident activity IDs recorded on each specified workflow instance.
 

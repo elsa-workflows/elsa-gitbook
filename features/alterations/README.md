@@ -52,8 +52,8 @@ Use these pages for each mode:
 | --- | --- |
 | You already know the exact workflow instance IDs and need the response now | `POST /alterations/run` or `IAlterationRunner` |
 | You need Elsa to find matching workflow instances from filters and process them in the background | alteration plans |
-| You need to retry faulted activities across one or more instances | `POST /alterations/workflows/retry` |
-| You want designers or operators to stage a bulk plan visually in Studio | Elsa Studio alterations module |
+| You need to retry faulted activities for known workflow instances | `POST /alterations/workflows/retry` |
+| You want designers or operators to stage alterations for one running instance visually and inspect resulting plans later | Elsa Studio alterations module |
 
 ## Elsa Studio
 
@@ -67,7 +67,7 @@ Studio exposes:
 * plan details pages that show plan status, generated jobs, and per-job logs
 * quick **Alter** actions from workflow-instance screens
 
-Studio currently focuses on staging or inspecting plans around individual running instances. For cross-instance bulk operations, use alteration plans and their filter-based API.
+Studio creates plan submissions from a selected workflow instance. For cross-instance bulk operations, use alteration plans and their filter-based API, then use Studio's **Plans** view to inspect the resulting jobs and logs.
 
 ## Persistence and dispatch options
 
@@ -108,4 +108,4 @@ Use the MassTransit dispatcher when alteration jobs should survive node boundari
 * If a submitted plan matches no instances, Elsa still stores the plan but generates no jobs.
 * `/alterations/run` dispatches successful workflow instances that still have scheduled work after the alterations finish.
 * `IAlterationRunner` by itself does not dispatch scheduled work; pair it with `IAlteredWorkflowDispatcher` when you call the service directly.
-* The built-in bulk retry endpoint schedules faulted activities by creating `ScheduleActivity` alterations and then dispatching the affected instances.
+* The retry endpoint schedules faulted activities by creating `ScheduleActivity` alterations and then dispatching the targeted workflow instances.
