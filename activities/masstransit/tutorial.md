@@ -45,6 +45,22 @@ With that configuration, Elsa adds two activities:
 If you omit `UseRabbitMq(...)` or another transport configuration method, Elsa
 falls back to MassTransit's in-memory transport.
 
+If you want to control throughput or temporary queue lifetime, configure
+`MassTransitOptions` in the host as well:
+
+{% code title="Program.cs" %}
+
+```csharp
+builder.Services.Configure<MassTransitOptions>(options =>
+{
+    options.ConcurrentMessageLimit = 16;
+    options.PrefetchCount = 32;
+    options.TemporaryQueueTtl = TimeSpan.FromHours(1);
+});
+```
+
+{% endcode %}
+
 ## 3. Start a workflow when the message arrives
 
 Use the generated `Order Created` trigger activity at the start of a workflow
@@ -87,6 +103,9 @@ public class OrderCreatedWorkflow : WorkflowBase
 When a MassTransit consumer receives `OrderCreated`, Elsa resumes or starts
 matching workflows by sending a stimulus that contains the message payload.
 
+The message is also exposed as the activity result, so downstream activities
+can read it through the output or through a workflow variable, as shown above.
+
 ## 4. Publish the message from a workflow
 
 Use the generated `Publish Order Created` activity when a workflow needs to
@@ -117,11 +136,19 @@ public class PublishOrderWorkflow : WorkflowBase
 
 In Studio, the equivalent activity is `Publish Order Created`.
 
+Because `OrderCreated` is a class, Elsa generates both the trigger and publish
+activities. If you register an interface instead, Elsa generates only the
+receive trigger.
+
 ## 5. Deployment notes
 
 * Keep consumers enabled on nodes that should process broker messages.
 * Set `massTransit.DisableConsumers = true` on nodes that should host the API
   but not consume workflow messages.
+* If you also move Elsa runtime dispatch over MassTransit, configure
+  `UseMassTransitDispatcher()` separately on workflow management and runtime
+  features. Registering message types alone does not enable dispatcher-based
+  workflow execution.
 * Tune queue and broker throughput with `MassTransitOptions` and the transport
   configurator callbacks.
 
@@ -130,7 +157,7 @@ In Studio, the equivalent activity is `Publish Order Created`.
 * If the activities do not appear, verify `AddMessageType<OrderCreated>()`
   runs during startup.
 * If messages publish but workflows do not start, verify consumers are enabled
-  on the running node.
+  on the running node and that the trigger is marked as a start trigger.
 * If you use a real broker, verify the relevant RabbitMQ or Azure Service Bus
   transport package is installed and configured.
 * If correlation matters, confirm the producer sets a MassTransit
