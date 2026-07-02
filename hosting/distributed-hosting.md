@@ -93,6 +93,11 @@ elsa.UseMassTransit(massTransit =>
 });
 ```
 
+This MassTransit configuration is infrastructure for cache invalidation. It is
+separate from the [MassTransit message-type activities](../activities/masstransit/README.md),
+which expose application message contracts such as `OrderCreated` as workflow
+activities.
+
 ### 4. Quartz.NET Clustered Mode
 
 When deploying multiple Elsa instances in a distributed environment, scheduled jobs (timers, delays, cron triggers) must execute only once across the cluster to prevent duplicate executions. Quartz.NET clustering ensures this by using a shared database to coordinate job execution across nodes.

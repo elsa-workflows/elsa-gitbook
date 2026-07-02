@@ -95,6 +95,84 @@ Use RabbitMQ when your environment already standardizes on AMQP-style queues.
 Use Azure Service Bus when Elsa participates in Azure-native messaging and you
 want broker-managed topics and subscriptions.
 
+If you need to tune endpoint lifetime or throughput, configure
+`MassTransitOptions` in your host:
+
+{% code title="Program.cs" %}
+
+```csharp
+builder.Services.Configure<MassTransitOptions>(options =>
+{
+    options.TemporaryQueueTtl = TimeSpan.FromHours(1);
+    options.ConcurrentMessageLimit = 16;
+    options.PrefetchCount = 32;
+    options.MaxAutoRenewDuration = TimeSpan.FromMinutes(5); // Azure Service Bus only
+});
+```
+
+{% endcode %}
+
+In `release/3.8.0`, these options are consumed by the in-memory, RabbitMQ, and
+Azure Service Bus configurators. `TemporaryQueueTtl` controls the lifetime of
+temporary queues created for temporary consumers, `ConcurrentMessageLimit` and
+`PrefetchCount` shape throughput, and `MaxAutoRenewDuration` applies only to
+Azure Service Bus.
+
+## How message types shape the designer
+
+Elsa uses reflection over the registered CLR type to build the generated
+activity descriptor. In `release/3.8.0`, these attributes influence what
+appears in Studio:
+
+* `ActivityAttribute`: can override the generated type name, display name,
+  category, and description
+* `DisplayNameAttribute`: changes the visible activity title when
+  `ActivityAttribute` does not provide one
+* `CategoryAttribute`: changes the Studio category from the default
+  `MassTransit`
+* `DescriptionAttribute`: populates the activity description and variable
+  descriptor metadata
+
+For example:
+
+{% code title="Contracts/OrderCreated.cs" %}
+
+```csharp
+using System.ComponentModel;
+using Elsa.Workflows.Attributes;
+
+[Activity(DisplayName = "Order Accepted", Category = "Sales")]
+[Description("Raised when an order has been accepted by the sales system.")]
+public record OrderCreated(string OrderId);
+```
+
+{% endcode %}
+
+Registering that type generates a trigger named `Order Accepted` in the
+`Sales` category, plus `Publish Order Accepted` because the type is a class.
+
+## Endpoint topology and consumer behavior
+
+The MassTransit feature does more than add activities. It also registers a
+generated `WorkflowMessageConsumer<T>` for each message type you add with
+`AddMessageType<T>()`.
+
+In `release/3.8.0`:
+
+* Elsa configures MassTransit with kebab-case endpoint names
+* each registered message type gets a concrete MassTransit consumer that turns
+  the incoming message into an Elsa stimulus
+* the stimulus activity type name is derived from the CLR message type
+* temporary consumers are created before the transport is configured so MassTransit
+  can bind them correctly
+* RabbitMQ and Azure Service Bus temporary endpoints are prefixed with the
+  current application instance name, which helps isolate per-node temporary
+  consumers
+
+This matters operationally because the same broker can host both your
+application messages and Elsa's own internal dispatcher traffic without those
+concerns being the same feature.
+
 ## How receiving works
 
 When MassTransit receives a registered message type, Elsa's generated
@@ -131,10 +209,40 @@ Two details matter in practice:
 * the message input is converted to the configured CLR type before publishing,
   so the payload must be compatible with the registered message type
 
-## MassTransit activities vs other messaging features
+## Deployment patterns
+
+`DisableConsumers` is the main release-backed switch for deciding whether a
+node should consume MassTransit messages directly.
+
+Use it when you split responsibilities across nodes, for example:
+
+* API-focused nodes: expose Elsa APIs and Studio-backed operations, but do not
+  consume workflow messages
+* worker-focused nodes: run the same application but keep consumers enabled so
+  they receive workflow messages and dispatcher traffic
+
+{% code title="Program.cs" %}
+
+```csharp
+builder.Services.AddElsa(elsa => elsa
+    .UseMassTransit(mt =>
+    {
+        mt.DisableConsumers = appRole == ApplicationRole.Api;
+        mt.AddMessageType<OrderCreated>();
+        mt.UseRabbitMq(rabbitMqConnectionString);
+    }));
+```
+
+{% endcode %}
+
+When consumers are disabled, the generated publish activities still exist, but
+that node does not configure the message consumers that turn inbound MassTransit
+messages into workflow stimuli.
+
+## MassTransit activities vs MassTransit infrastructure features
 
 This page covers MassTransit-backed message-type activities. Elsa also has two
-related but different messaging integration paths:
+related but different MassTransit integration paths:
 
 * the MassTransit workflow dispatcher, enabled with
   `UseMassTransitDispatcher()` on workflow management and runtime features,
@@ -145,17 +253,18 @@ related but different messaging integration paths:
   those are separate from the generic message-type activities described here
 
 Use the generic MassTransit activities when your workflows exchange strongly
-typed application messages. Use transport-specific activity modules when you
-need queue or topic concepts that belong to a specific broker.
+typed application messages. Use the workflow dispatcher when Elsa runtime and
+management work should move over the bus between nodes. Use transport-specific
+activity modules when you need queue or topic concepts that belong to a
+specific broker.
 
 ## Operational notes
 
-* `DisableConsumers` can stop MassTransit consumers from being configured on a
-  given node. The Elsa workbench uses this to keep API-only nodes from
-  consuming messages directly.
-* `MassTransitOptions` in `release/3.8.0` include `TemporaryQueueTtl`,
-  `ConcurrentMessageLimit`, `PrefetchCount`, and `MaxAutoRenewDuration` for
-  Azure Service Bus.
+* `MassTransitHostOptions.WaitUntilStarted` is enabled so the host waits for
+  the bus to start before startup completes.
+* Azure Service Bus can run automated subscription cleanup, but that cleanup is
+  broad: in `release/3.8.0` it can remove subscriptions that Elsa did not
+  create if their queues cannot be found.
 * If you are also using MassTransit for clustered workflow dispatch or
   distributed cache invalidation, see the distributed hosting and clustering
   guides as well. Those features share the broker, but they solve a different
