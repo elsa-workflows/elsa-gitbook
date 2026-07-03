@@ -2,12 +2,38 @@
 
 Use long-running workflows when work should pause and resume instead of
 finishing in a single request or execution burst. In Elsa `release/3.8.0`, that
-model is built on bookmarks, triggers, scheduling, and runtime recovery.
+model is built on bookmarks, triggers, scheduling, queued stimuli, and runtime
+recovery.
 
 This guide connects the pieces that are otherwise spread across the scheduling,
 running, clustering, and troubleshooting docs.
 
-## Runtime prerequisites
+## What makes a workflow long-running
+
+A workflow becomes long-running when it creates a wait point and Elsa persists
+enough runtime state to continue later. Typical wait points are:
+
+- a scheduled pause such as `Delay`, inline `Timer`, inline `Cron`, or inline
+  `StartAt`
+- a callback wait such as an approval link or other bookmark-based resume
+- a trigger or blocking activity waiting for external input such as HTTP,
+  events, signals, or broker messages
+- a background hand-off such as `RunTask`
+
+The important distinction is whether the current workflow instance must survive
+beyond the current execution burst. If yes, design it as long-running from the
+start.
+
+## Host capabilities you need
+
+Long-running workflows usually need more than one Elsa module:
+
+| Need | Required module | Why it matters |
+| --- | --- | --- |
+| Pause and resume existing instances | `UseWorkflowRuntime()` | Stores bookmarks, resumes workflow instances, and runs recovery tasks |
+| Wait for future timestamps | `UseScheduling()` | Schedules resume work for `Delay`, `Timer`, `Cron`, and `StartAt` |
+| Survive process restarts | persistent runtime storage | Keeps workflow instances, bookmarks, and related runtime state durable |
+| Run safely on multiple nodes | `UseDistributedRuntime()` plus clustered scheduling/storage | Prevents competing resume work and coordinates background processing |
 
 At minimum, enable the workflow runtime:
 
@@ -17,7 +43,7 @@ builder.Services.AddElsa(elsa => elsa
 ```
 
 If the workflow waits for future timestamps such as `Delay`, `Timer`, `Cron`,
-or `StartAt`, also enable scheduling:
+or `StartAt`, also enable scheduling and a runtime persistence provider:
 
 ```csharp
 builder.Services.AddElsa(elsa => elsa
@@ -31,7 +57,8 @@ builder.Services.AddElsa(elsa => elsa
 
 Three practical rules matter for long-running workflows:
 
-- use runtime persistence if instances must survive process restarts
+- use runtime persistence if instances, bookmarks, or queued resume work must
+  survive process restarts
 - use scheduling if workflows wait for future times
 - use distributed runtime and clustered scheduling when multiple nodes can
   resume the same work
@@ -42,8 +69,9 @@ reason.
 
 ## How Elsa pauses and resumes
 
-When an activity calls `CreateBookmark(...)`, Elsa adds a bookmark to workflow
-state and suspends the workflow after pending work completes.
+When an activity creates a bookmark, Elsa records a wait condition for the
+current workflow instance and suspends execution after the current burst
+finishes.
 
 | Concept | What it does | Typical examples |
 | --- | --- | --- |
@@ -51,13 +79,20 @@ state and suspends the workflow after pending work completes.
 | Trigger | Start point for a workflow definition | `HttpEndpoint`, trigger `Timer`, trigger `Cron`, trigger `StartAt` |
 | Stimulus | Payload used to match a bookmark or trigger | event name, HTTP route, timer payload, task ID |
 
-In `release/3.8.0`, `WorkflowResumer` matches bookmarks by hash and acquires a
-distributed lock before resuming them. That is why clustered resume operations
-do not rely on sticky sessions.
+In `release/3.8.0`, Elsa uses these runtime paths:
 
-## Choose the right pattern
+1. The activity writes a bookmark or trigger payload.
+2. Elsa stores runtime state through the configured runtime store.
+3. If the wait is time-based, Elsa schedules resume work through
+   `IWorkflowScheduler`.
+4. When the stimulus arrives, `WorkflowResumer` looks up matching bookmarks and
+   acquires a distributed lock for the bookmark filter before resuming them.
 
-Use the simplest pattern that matches the business event:
+That lock is why clustered resume operations do not rely on sticky sessions.
+
+## Choose the right activation model
+
+Use the smallest mechanism that matches the business event:
 
 | Need | Best fit | Notes |
 | --- | --- | --- |
@@ -98,7 +133,8 @@ public class FollowUpWorkflow : WorkflowBase
 
 In `release/3.8.0`:
 
-- `Delay` creates a bookmark with a `ResumeAt` timestamp
+- `Delay` calls `context.DelayFor(...)`, which creates a delay bookmark with a
+  `ResumeAt` timestamp
 - inline `Timer` also creates a one-shot bookmark
 - inline `Cron` creates a bookmark for the next cron occurrence
 - inline `StartAt` creates a bookmark only when the target time is in the
@@ -120,9 +156,18 @@ new Timer(TimeSpan.FromMinutes(15))
 }
 ```
 
-This is different from an inline timer. In `release/3.8.0`, trigger timers are
-scheduled through `DefaultTriggerScheduler.ScheduleRecurringAsync`, while inline
-timers are one-shot waits.
+This is different from an inline timer:
+
+- trigger `Timer` schedules recurring new-workflow starts
+- trigger `Cron` schedules recurring new-workflow starts from the cron
+  expression
+- trigger `StartAt` schedules one future workflow start and logs a catch-up
+  message if the configured time is already in the past
+- inline scheduling activities wait inside the current workflow instance
+
+In `release/3.8.0`, trigger schedules are created by
+`DefaultTriggerScheduler`, while inline waits are created by
+`DefaultBookmarkScheduler`.
 
 For the scheduling-specific details, see
 [Timer and Scheduled Workflows](./timer-and-scheduled-workflows.md).
@@ -169,6 +214,9 @@ With default API settings, that means `/elsa/api/bookmarks/resume?t=...`.
 The endpoint also supports `async=true`, which enqueues bookmark resumption
 instead of resuming the workflow synchronously in the request.
 
+Use the asynchronous form when the callback should return quickly or when the
+resume path might do meaningful work after the bookmark is matched.
+
 ## Pattern 4: wait for background work
 
 `RunTask` is useful when the workflow asks the host application to do work
@@ -183,6 +231,18 @@ In `release/3.8.0`, `RunTask`:
 
 Use this when the workflow runtime should coordinate the task, but the task
 itself runs elsewhere.
+
+## Resume paths you can rely on
+
+In `release/3.8.0`, long-running workflows typically resume through one of four
+paths:
+
+| Resume path | Typical source | What Elsa does |
+| --- | --- | --- |
+| scheduled resume | `Delay`, inline `Timer`, inline `Cron`, inline `StartAt` | Scheduler enqueues or executes resume work for an existing bookmark |
+| bookmark resume endpoint | approval links, custom callback URLs | HTTP endpoint validates token and resumes immediately or enqueues with `async=true` |
+| trigger dispatch | HTTP, `Timer`, `Cron`, `StartAt`, message triggers | Elsa starts a new workflow instance from a trigger |
+| custom stimulus dispatch | `RunTask`, events, signals, broker callbacks | Elsa matches stored bookmarks or triggers from the incoming stimulus payload |
 
 ## Dispatch vs execute
 
@@ -210,24 +270,48 @@ that can act as triggers.
 
 ## Operational notes
 
-- Long-running durability depends on runtime persistence for bookmarks,
-  triggers, and queued resume work.
-- `TriggerBookmarkQueueRecurringTask` periodically signals bookmark queue
-  processing so queued stimuli are not missed.
+- Long-running durability depends on runtime persistence for workflow
+  instances, bookmarks, triggers, and queued resume work.
+- `TriggerBookmarkQueueRecurringTask` signals bookmark queue processing for
+  queued bookmark resumes and other deferred bookmark stimuli.
 - `PurgeBookmarkQueueRecurringTask` removes expired bookmark queue items based on
   `BookmarkQueuePurgeOptions`.
 - `RestartInterruptedWorkflowsTask` looks for workflow instances that are still
   marked as executing but have been inactive longer than
-  `RuntimeOptions.InactivityThreshold`, then requeues them.
+  `RuntimeOptions.InactivityThreshold` and asks the runtime to restart them.
 - For multi-node hosting, pair long-running workflows with the clustered
   guidance in [Clustering](../clustering/README.md) and
   [Distributed Hosting](../../hosting/distributed-hosting.md).
+
+For operators, the most important runtime settings are:
+
+- runtime persistence provider configuration
+- distributed locking configuration when `UseDistributedRuntime()` is enabled
+- `RuntimeOptions.InactivityThreshold` for interrupted workflow recovery
+- recurring task schedules for bookmark queue triggering and purge
+- API and HTTP ingress behavior if workflows are resumed through public or
+  semi-public callback URLs
+
+## Minimal operations checklist
+
+Before calling a workflow long-running and production-ready, verify:
+
+1. runtime persistence is configured for the workflow runtime
+2. scheduling is enabled for any time-based waits
+3. distributed runtime and shared backing stores are configured for multi-node
+   hosting
+4. resume endpoints or external callback handlers are authenticated or
+   token-protected appropriately
+5. operators know where to inspect blocked instances, incidents, and queued
+   background work
 
 ## Common mistakes
 
 - Using in-memory runtime storage for workflows that must survive restarts.
 - Treating inline `Timer` or inline `Cron` as recurring loops. They are one-shot
   waits unless they start the workflow as triggers.
+- Assuming a trigger activity and the same activity inline have the same
+  runtime behavior.
 - Expecting synchronous HTTP responses from workflows that can suspend.
 - Forgetting clustered locking and scheduling when multiple nodes can process
   the same bookmarks.
