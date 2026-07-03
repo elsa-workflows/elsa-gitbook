@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-02)
+## Slice Inventory (2026-07-03)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -35,6 +35,7 @@ acceptance criterion below is already complete.
 - `DOC-020` EF Core migrations
 - `DOC-021` Configuration management
 - `DOC-024` MassTransit communication
+- `DOC-025` Long-running workflows
 - `DOC-022` Scaling and performance
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
@@ -48,7 +49,6 @@ acceptance criterion below is already complete.
 ### Available next slices
 
 - `DOC-023` Identity provider integrations
-- `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
@@ -58,10 +58,11 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 ### Recommended next slice
 
-- `DOC-025` Long-running workflows: the topic now has adjacent material spread
-  across timers, blocking activities, incidents, and clustering docs, but it
-  still needs one release-backed guide that explains lifecycle, persistence,
-  resumption, and operating expectations as a single story.
+- `DOC-026` Error handling and retry logic: incidents, fault handling,
+  blocking resumption failures, and retry behavior are still split across
+  runtime, troubleshooting, and operations docs. A single release-backed guide
+  should show how Elsa records failures, how operators recover, and how to
+  design workflows for safe retries.
 
 ### Newly discovered follow-on topics
 
@@ -88,11 +89,10 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-024` MassTransit communication:
-  expand the release-backed docs beyond basic setup so workflow designers and
-  operators can understand generated activity metadata, transport behavior,
-  node roles, and the boundary between message activities and Elsa's internal
-  dispatch infrastructure.
+- `DOC-025` Long-running workflows:
+  harden the release-backed guide so it explains runtime prerequisites,
+  bookmark and trigger semantics, resume paths, and operational recovery as one
+  coherent workflow lifecycle story.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
