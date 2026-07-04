@@ -122,6 +122,17 @@ The `Elsa.Server.Web` sample app ships with settings shaped like this:
 Use this shape when you host Elsa directly in your own ASP.NET Core app with
 `builder.Services.AddElsa(...)`.
 
+#### Identity signing key rules in 3.8.0
+
+`Identity:Tokens:SigningKey` is validated in the released server code:
+
+* it is required outside the `Development` and `Demo` environments
+* it must not contain leading or trailing whitespace
+* it must use printable ASCII characters only
+* it must be at least 32 characters long
+* known sample values such as `CHANGE_ME_TO_A_SECURE_RANDOM_KEY` are rejected
+  outside development-oriented environments
+
 ### Elsa Studio example
 
 The standalone Studio hosts expect settings shaped like this:
@@ -152,6 +163,17 @@ For Blazor WebAssembly, these values usually live in
 `wwwroot/appsettings.json`. Browser clients do not read server environment
 variables directly, so production overrides usually happen during build,
 publish, or host-page generation.
+
+#### OIDC defaults in 3.8.0 Studio hosts
+
+When `Authentication:Provider` is `OpenIdConnect`, the released Studio hosts
+apply a few defaults that are easy to miss:
+
+* if `AuthenticationScopes` is empty, Studio restores `openid`, `profile`, and
+  `offline_access`
+* `GetClaimsFromUserInfoEndpoint` defaults to `false`
+* the Blazor Server host defaults callback paths to `/signin-oidc` and
+  `/signout-callback-oidc` when you do not set them explicitly
 
 ### Modular server example
 
@@ -224,7 +246,8 @@ Do not commit production secrets into `appsettings.json`.
 If Elsa is exposed behind a reverse proxy or ingress, keep these consistent:
 
 * `Http:BaseUrl` should reflect the public Elsa Server URL.
-* `Backend:Url` in Studio should point to the public Elsa API URL.
+* `Backend:Url` in Studio should point to the public Elsa API URL, usually
+  ending in `/elsa/api`.
 * Reverse proxy rules must preserve the same public API path that Studio uses.
 
 If these drift apart, generated links, callbacks, or Studio API calls can fail
@@ -292,6 +315,14 @@ rewrite those files.
 
 Set `Http:BaseUrl` to the public URL seen by clients, not only the internal
 container or pod address.
+
+### Distributed runtime warns about local locking
+
+If you enable the distributed runtime and keep a local-only lock provider,
+Elsa logs a warning because that setup does not coordinate across nodes. Treat
+`DistributedRuntime:AllowLocalLockProviderInDistributedRuntime=true` as a
+single-host acknowledgement for development or tests, not as a clustering
+solution.
 
 ## Related Guides
 
