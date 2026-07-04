@@ -206,7 +206,7 @@ Based on the current structure, the following core concepts are documented:
 7. **Reference Documentation**
    - ⚠️ Activity reference incomplete (only a few activities documented)
    - ❌ No API reference
-   - ❌ No configuration reference
+   - ⚠️ Configuration management guide now exists, but a full option-by-option reference is still missing
 
 8. **Guides**
    - ⚠️ HTTP workflows guide exists but could be expanded
