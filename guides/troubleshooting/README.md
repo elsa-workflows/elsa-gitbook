@@ -265,14 +265,15 @@ Before diving into specific symptoms, verify these foundational items:
    AND updated_at < NOW() - INTERVAL '1 hour';
    ```
 
-2. **Check for incidents:**
-   ```sql
-   SELECT * FROM elsa.workflow_incidents
-   WHERE workflow_instance_id = '<instance-id>';
-   ```
+2. **Inspect the workflow instance's incidents:**
+   Open the instance in Elsa Studio or retrieve
+   `GET /workflow-instances/<instance-id>` and inspect
+   `workflowState.incidents`.
 
-3. **Review activity execution context:**
-   Look for exceptions in logs around the time the workflow became stuck.
+3. **Review the workflow journal and activity executions:**
+   Check `GET /workflow-instances/<instance-id>/journal` or the filtered
+   `POST` variant, then inspect the failing activity execution in Studio if you
+   need per-activity state or retry metadata.
 
 4. **Check for orphaned locks:**
    If a node crashes while holding a lock, the workflow may appear stuck:
@@ -299,14 +300,15 @@ Before diving into specific symptoms, verify these foundational items:
   ```
 
 - **Retry faulted activities:**
-  Use Elsa Studio's incident handling UI to retry or skip faulted activities
+  Use `POST /alterations/workflows/retry` with one or more
+  `workflowInstanceIds`, and optionally `activityIds`, after fixing the root
+  cause.
 
 - **Configure incident strategies:**
   ```csharp
-  elsa.UseIncidentStrategies(strategies =>
+  builder.Services.Configure<IncidentOptions>(options =>
   {
-      strategies.Add<RetryIncidentStrategy>();
-      strategies.Add<ContinueWithDefaultIncidentStrategy>();
+      options.DefaultIncidentStrategy = typeof(ContinueWithIncidentsStrategy);
   });
   ```
 

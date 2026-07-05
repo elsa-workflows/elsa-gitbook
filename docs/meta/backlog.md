@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-03)
+## Slice Inventory (2026-07-05)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -36,6 +36,7 @@ acceptance criterion below is already complete.
 - `DOC-021` Configuration management
 - `DOC-024` MassTransit communication
 - `DOC-025` Long-running workflows
+- `DOC-026` Error handling and retry logic
 - `DOC-022` Scaling and performance
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
@@ -49,7 +50,6 @@ acceptance criterion below is already complete.
 ### Available next slices
 
 - `DOC-023` Identity provider integrations
-- `DOC-026` Error handling and retry logic
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
@@ -58,11 +58,11 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 ### Recommended next slice
 
-- `DOC-026` Error handling and retry logic: incidents, fault handling,
-  blocking resumption failures, and retry behavior are still split across
-  runtime, troubleshooting, and operations docs. A single release-backed guide
-  should show how Elsa records failures, how operators recover, and how to
-  design workflows for safe retries.
+- `DOC-023` Identity provider integrations: the repo now has broad
+  authentication coverage, but common provider setups are still split across
+  general auth, deployment, and security docs. A release-backed slice should
+  consolidate Elsa Server plus Studio setup, claim mapping, and operator
+  troubleshooting for the main OIDC provider paths.
 
 ### Newly discovered follow-on topics
 
@@ -84,15 +84,20 @@ acceptance criterion below is already complete.
   for queue naming, temporary endpoint lifetime, consumer placement, and broker
   cleanup tradeoffs across MassTransit, Azure Service Bus activities, and
   distributed cache invalidation.
+- `DOC-056` Custom resilience extensibility: add a focused guide for
+  `IResilienceStrategy`, `AddResilienceStrategyType<T>()`, and
+  `WithRetryAttemptRecorder(...)` so teams can persist retry diagnostics and
+  introduce non-HTTP resilience policies without reverse engineering tests and
+  feature registration.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
-- `DOC-025` Long-running workflows:
-  harden the release-backed guide so it explains runtime prerequisites,
-  bookmark and trigger semantics, resume paths, and operational recovery as one
-  coherent workflow lifecycle story.
+- `DOC-023` Identity provider integrations:
+  consolidate the existing broad authentication material into release-backed
+  provider playbooks for Elsa Server, Studio hosts, claim mapping, and common
+  OIDC troubleshooting paths.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
