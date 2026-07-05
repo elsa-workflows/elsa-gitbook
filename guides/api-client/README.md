@@ -521,52 +521,54 @@ Tokenized resume URLs should be treated as secrets:
 
 ### Resilience Strategies
 
-Elsa supports configuring resilience strategies for activities to handle transient failures. The exact API for configuring resilience may vary by version.
+In `release/3.8.0`, the .NET API client configures activity retry behavior with
+`ResilienceStrategyConfig` on `customProperties.resilienceStrategy`.
 
-#### Setting a Resilience Strategy (Conceptual Pattern)
+#### Setting a Resilience Strategy
 
-The following example demonstrates a conceptual pattern for configuring resilience. Consult the current Elsa documentation and source code for the actual API in your version:
+Use `ActivityExtensions.SetResilienceStrategy(...)` or assign the same payload
+directly through `CustomProperties`:
 
 ```csharp
+using Elsa.Api.Client.Extensions;
+using Elsa.Api.Client.Resources.Resilience.Models;
 using Elsa.Api.Client.Resources.WorkflowDefinitions.Models;
 
 var activity = new Activity
 {
-    Type = "Elsa.HttpEndpoint",
+    Type = "Elsa.FlowSendHttpRequest",
     Id = "http-call-1"
 };
 
-// Conceptual pattern: Configure resilience via activity properties
-// The actual API may differ - check Elsa documentation for your version
-activity.CustomProperties["resilience"] = new Dictionary<string, object>
+activity.SetResilienceStrategy(new ResilienceStrategyConfig
 {
-    ["retryCount"] = 3,
-    ["backoffDelay"] = TimeSpan.FromSeconds(5).TotalMilliseconds,
-    ["backoffType"] = "Exponential"
-};
+    Mode = ResilienceStrategyConfigMode.Identifier,
+    StrategyId = "http-default"
+});
 ```
 
-> **Note:** The resilience configuration API is evolving. Check the `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/` directory in elsa-core for current extension methods and models.
+The referenced strategy ID must exist in the host's resilience strategy
+catalog, for example from `Resilience:Strategies` configuration.
 
 ### Handling Incidents
 
-When activities fail, Elsa creates incidents. Query instance state to check for faults:
+When activities fail, inspect `WorkflowState.Incidents` on the workflow
+instance:
 
 ```csharp
 var instance = await _instancesApi.GetAsync(instanceId);
 
-if (instance.Status == WorkflowStatus.Faulted)
+if (instance.WorkflowState.Incidents.Any())
 {
-    // Check faults and incidents
-    var faults = instance.Faults;
-    foreach (var fault in faults)
+    foreach (var incident in instance.WorkflowState.Incidents)
     {
-        Console.WriteLine($"Activity {fault.ActivityId} failed: {fault.Message}");
+        Console.WriteLine($"Activity {incident.ActivityId} failed: {incident.Message}");
     }
 }
 ```
 
-For incident configuration and strategies, see the main documentation on incidents in the [Operate Guide](../operate/incidents.md).
+For workflow-level incident handling and operator retry guidance, see
+[Incidents](../../operate/incidents/README.md).
 
 ***
 

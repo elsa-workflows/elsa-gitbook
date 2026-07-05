@@ -434,27 +434,52 @@ For activities that call external services, configure retry policies:
 **Reference:** `elsa-api-client` - `ActivityExtensions.SetResilienceStrategy` / `GetResilienceStrategy`
 
 ```csharp
-// Configure resilience in activity settings
-var activitySettings = new Dictionary<string, object>
+activity.SetResilienceStrategy(new ResilienceStrategyConfig
 {
-    ["resilienceStrategy"] = new
-    {
-        retryCount = 3,
-        retryInterval = "00:00:30",
-        useExponentialBackoff = true
-    }
-};
+    Mode = ResilienceStrategyConfigMode.Identifier,
+    StrategyId = "http-default"
+});
 ```
+
+That strategy ID must exist in the host's resilience strategy catalog, for
+example:
+
+```json
+{
+  "Resilience": {
+    "Strategies": [
+      {
+        "$type": "HttpResilienceStrategy",
+        "Id": "http-default",
+        "DisplayName": "Default HTTP Retry",
+        "MaxRetryAttempts": 3,
+        "Delay": "00:00:02",
+        "UseJitter": true,
+        "BackoffType": "Exponential"
+      }
+    ]
+  }
+}
+```
+
+For HTTP activities, Elsa `3.8.0` ships `HttpResilienceStrategy` out of the
+box. Use resilience when a transient downstream call should retry before Elsa
+records a final incident.
 
 ### Incident Model
 
-Elsa tracks failures via the **Incident** model. When an activity faults:
+Elsa tracks failures through `WorkflowState.Incidents`. When an activity faults:
 
-1. An incident is recorded with the exception details
-2. The workflow enters a faulted state
-3. You can configure incident strategies (Fault, ContinueWithIncident, etc.)
+1. The activity is marked faulted.
+2. An incident is recorded with the failing activity ID, node ID, message, and
+   exception state.
+3. The configured incident strategy decides whether the overall workflow
+   transitions to `Faulted`.
 
-See [Incidents](../../operate/incidents/) for configuration options.
+Operational retry of an already faulted workflow instance is a separate action.
+Use `POST /alterations/workflows/retry` after the underlying problem is fixed.
+
+See [Incidents](../../operate/incidents/README.md) for the full flow.
 
 ### Pitfalls
 
