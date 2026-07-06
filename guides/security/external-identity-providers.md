@@ -1,548 +1,311 @@
 ---
 description: >-
-  Guide to integrating Elsa Server with external identity providers including Microsoft Entra ID, Auth0, Keycloak, and other OpenID Connect / OAuth2 providers.
+  Release-backed guide to wiring Elsa Server and Elsa Studio to external OpenID
+  Connect identity providers in Elsa 3.8.
 ---
 
 # External Identity Providers
 
-This guide covers integrating Elsa Server with external identity providers (IdP) for authentication and authorization. By integrating with an external IdP, you can leverage existing user directories, enable Single Sign-On (SSO), and centralize identity management across your organization.
+This guide covers the identity-provider integration points that are actually
+present in `release/3.8.0` across `elsa-core` and `elsa-studio`.
 
-## Overview
+Use it when:
 
-Elsa Server supports integration with any identity provider that implements standard authentication protocols:
+- Elsa Server should trust tokens issued by an external provider instead of
+  Elsa's built-in identity system.
+- Elsa Studio should sign users in with the same OpenID Connect provider and
+  forward bearer tokens to Elsa Server.
 
-- **OpenID Connect (OIDC)**: Industry-standard authentication layer on top of OAuth 2.0
-- **OAuth 2.0**: Authorization framework for delegated access
-- **SAML 2.0**: Enterprise SSO protocol (via OIDC bridge or direct integration)
+This page is intentionally narrower than a generic identity-platform guide.
+Elsa 3.8 ships first-class Studio support for OpenID Connect, and Elsa Server
+authorizes API calls based on ASP.NET Core authentication plus Elsa-specific
+`permissions` claims.
 
-### Supported Identity Providers
+## What Elsa 3.8 Actually Expects
 
-- **Microsoft Entra ID (Azure AD)**: Microsoft's cloud identity service
-- **Auth0**: Cloud-based authentication and authorization platform
-- **Keycloak**: Open-source identity and access management
-- **Okta**: Cloud-based identity management
-- **Google Identity**: Google Workspace and consumer accounts
-- **OpenIddict**: Self-hosted OIDC server for .NET
-- **IdentityServer**: .NET identity and access control framework
-- **Any OIDC-compliant provider**: Generic integration pattern
+### Elsa Server
 
-## Why Use External Identity Providers?
-
-**Benefits:**
-- **Centralized user management**: Single source of truth for user identities
-- **Single Sign-On (SSO)**: Users authenticate once across all applications
-- **Multi-Factor Authentication (MFA)**: Enhanced security with 2FA/MFA
-- **Audit and compliance**: Centralized authentication logs and policies
-- **Reduced development**: Leverage existing identity infrastructure
-- **Enterprise features**: Conditional access, risk-based authentication, identity governance
-
-**Use Cases:**
-- **Enterprise deployments**: Integrate with corporate identity systems (Microsoft Entra ID, Okta)
-- **Multi-tenant SaaS**: Per-tenant identity provider configuration
-- **B2B integrations**: Allow partner organizations to use their own identity providers
-- **Compliance requirements**: Meet security standards requiring MFA and audit trails
-
-## General Integration Pattern
-
-Regardless of the specific provider, the general pattern for integrating Elsa with an external IdP is:
-
-### 1. Register Elsa in the Identity Provider
-
-- Create an application registration in your IdP
-- Configure redirect URIs for authentication callbacks
-- Obtain client credentials (client ID, client secret)
-- Configure token lifetimes and allowed scopes
-
-### 2. Configure ASP.NET Core Authentication
-
-- Install necessary NuGet packages
-- Configure authentication middleware in `Program.cs`
-- Map external claims to Elsa's `permissions` claims
-- Configure token validation parameters
-
-### 3. Configure Elsa to Use ASP.NET Core Authentication
-
-- Enable Elsa's default authentication
-- Ensure the authenticated principal has Elsa API permission claims
-- Use ASP.NET Core authorization policies only for custom host endpoints
-
-### 4. Configure Elsa Studio (if used)
-
-- Configure Studio to use the same IdP
-- Set up authentication token forwarding from Studio to Elsa Server
-- Configure OIDC client in Studio
-
-## High-Level Architecture
-
-```
-┌─────────────────┐
-│   End User      │
-└────────┬────────┘
-         │
-         │ 1. Access Studio
-         v
-┌─────────────────────────────────────────┐
-│         Elsa Studio (Blazor)            │
-│                                         │
-│  2. Redirect to IdP for authentication  │
-└────────────┬────────────────────────────┘
-             │
-             │ 3. Authentication
-             v
-┌─────────────────────────────────────────┐
-│   Identity Provider (Azure AD/Auth0)    │
-│                                         │
-│  4. Return token (access + ID token)    │
-└────────────┬────────────────────────────┘
-             │
-             │ 5. Authenticated requests
-             v
-┌─────────────────────────────────────────┐
-│         Elsa Server (API)               │
-│                                         │
-│  6. Validate token, authorize request   │
-└─────────────┬───────────────────────────┘
-              │
-              │ 7. Execute workflow
-              v
-┌─────────────────────────────────────────┐
-│           Database                      │
-└─────────────────────────────────────────┘
-```
-
-## Provider-Specific Integration Guides
-
-### Microsoft Entra ID (Azure AD)
-
-Microsoft Entra ID (formerly Azure Active Directory) is Microsoft's cloud-based identity and access management service.
-
-{% hint style="info" %}
-**Note:** Azure Active Directory was rebranded as Microsoft Entra ID in 2023. Both names refer to the same service. This guide uses "Microsoft Entra ID" but you may see "Azure AD" in older documentation and code examples.
-{% endhint %}
-
-**Key Features:**
-- Integration with Microsoft 365 and Azure services
-- Conditional Access for advanced security policies
-- Support for thousands of pre-integrated SaaS applications
-- B2B and B2C capabilities
-
-**Integration Steps:**
-
-1. **Register application in Azure Portal**
-   - Navigate to Azure Active Directory → App registrations
-   - Create new registration for Elsa Server
-   - Configure redirect URIs for the Elsa Server and Studio host model you use
-   - Generate client secret
-   - Note Application (client) ID and Directory (tenant) ID
-
-2. **Configure API permissions**
-   - Add required Microsoft Graph permissions (if needed)
-   - Common: `User.Read`, `openid`, `profile`, `email`
-
-3. **Configure authentication in Elsa Server**
-   - Install package: `Microsoft.AspNetCore.Authentication.OpenIdConnect`
-   - Configure OIDC authentication middleware
-   - Map Azure AD roles/groups to Elsa `permissions` claims
-
-4. **Configure Elsa Studio**
-   - Configure Studio OIDC client
-   - Ensure same tenant and client ID
-   - Configure token forwarding to Elsa Server API
-
-**Configuration Example:**
-
-{% hint style="info" %}
-**Note:** The following example shows the essential configuration structure. Replace placeholders (`{tenant-id}`, `{client-id}`, `{client-secret}`) with your actual Azure AD values. For production deployments, store secrets in environment variables or a secure key vault.
-{% endhint %}
+In the standalone `Elsa.Server.Web` host, the built-in path is:
 
 ```csharp
-// Program.cs
-builder.Services
-    .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(options =>
-    {
-        options.Authority = "https://login.microsoftonline.com/{tenant-id}";
-        options.ClientId = "{client-id}";
-        options.ClientSecret = "{client-secret}";
-        options.ResponseType = "code";
-        options.SaveTokens = true;
-        
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-        options.Scope.Add("email");
-        
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = "https://login.microsoftonline.com/{tenant-id}/v2.0",
-            ValidateAudience = true,
-            ValidAudience = "{client-id}"
-        };
-    });
+elsa
+    .UseIdentity(...)
+    .UseDefaultAuthentication();
+```
 
-builder.Services.AddElsa(elsa =>
+That helper configures JWT bearer validation from Elsa `IdentityTokenOptions`
+and also adds API-key support. It is the correct choice when Elsa itself issues
+the JWTs or API keys.
+
+For external identity providers, Elsa does not ship a provider-specific server
+module. Your host application is responsible for:
+
+- configuring ASP.NET Core authentication and authorization
+- validating the external bearer tokens
+- mapping external roles, groups, or scopes into Elsa `permissions` claims
+
+Elsa API endpoints then authorize against those `permissions` claims. In
+`release/3.8.0`, the claim type is literally `permissions`, and `*` grants all
+Elsa permissions.
+
+### Elsa Studio
+
+Elsa Studio ships first-class OpenID Connect support for both default hosts:
+
+- `Elsa.Studio.Host.Server`
+- `Elsa.Studio.Host.Wasm`
+
+Both hosts read:
+
+```json
 {
-    elsa
-        .UseDefaultAuthentication()
-        .UseWorkflowManagement()
-        .UseWorkflowRuntime()
-        .UseWorkflowsApi();
-});
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://your-idp",
+      "ClientId": "your-client-id",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["api://your-api/elsa-server-api"]
+    }
+  }
+}
 ```
 
-**Further Reading:**
-- [Microsoft Identity Platform Documentation](https://learn.microsoft.com/en-us/entra/identity-platform/)
-- [ASP.NET Core with Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-web-app-aspnet-core-sign-in)
+In `release/3.8.0`:
 
-### Auth0
+- Blazor Server defaults to `Authentication:Provider = ElsaIdentity`
+- Blazor WebAssembly defaults to `Authentication:Provider = OpenIdConnect`
+- Blazor Server uses `/signin-oidc` and `/signout-callback-oidc` unless
+  overridden
+- Blazor WebAssembly uses `/authentication/login-callback` and
+  `/authentication/logout-callback`
+- Studio logout starts at `/authentication/logout`
 
-Auth0 is a cloud-based authentication and authorization platform with extensive features and integrations.
+## Recommended Topology
 
-**Key Features:**
-- Support for social login (Google, Facebook, GitHub, etc.)
-- Custom databases and passwordless authentication
-- Extensive customization via rules and hooks
-- Global CDN for fast authentication
-- Built-in MFA support
+Use a single OpenID Connect provider for both Studio and Server when you want
+SSO and centralized authorization:
 
-**Integration Steps:**
+1. Register an API or resource for Elsa Server in your identity provider.
+2. Configure Elsa Server to validate bearer tokens for that audience.
+3. Map the provider's roles, groups, or scopes to Elsa `permissions` claims.
+4. Configure Elsa Studio `Authentication:OpenIdConnect` to request sign-in
+   scopes plus the backend API scope.
 
-1. **Create Auth0 application**
-   - Log into Auth0 Dashboard
-   - Create new Regular Web Application
-   - Configure Allowed Callback URLs
-   - Note Domain, Client ID, and Client Secret
+If you only need machine-to-machine access, you can stop at step 2 and issue
+tokens directly to service clients without using Studio.
 
-2. **Configure allowed callback URLs**
-   - Add `https://elsa.example.com/signin-oidc`
-   - Add `https://studio.example.com/signin-oidc` for Blazor Server Studio, or `https://studio.example.com/authentication/login-callback` for Blazor WebAssembly Studio
+## Server Setup Pattern
 
-3. **Define API in Auth0**
-   - Create API for Elsa Server
-   - Define or map permissions/scopes to Elsa permission values such as `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`
-   - Configure token lifetime
-
-4. **Configure authentication in Elsa Server**
-   - Install package: `Microsoft.AspNetCore.Authentication.OpenIdConnect`
-   - Configure OIDC with Auth0 settings
-   - Validate access tokens using Auth0 audience
-
-**Configuration Example:**
-
-{% hint style="info" %}
-Replace `{your-domain}` with your Auth0 domain (e.g., `mycompany.auth0.com`) and `{api-identifier}` with your API identifier from the Auth0 dashboard.
-{% endhint %}
+This host-side pattern matches Elsa's 3.8.0 authorization contract for
+external bearer tokens:
 
 ```csharp
-builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.Authority = "https://{your-domain}.auth0.com/";
-        options.Audience = "{api-identifier}";
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = "https://{your-domain}.auth0.com/",
-            ValidateAudience = true,
-            ValidAudience = "{api-identifier}",
-            ValidateLifetime = true
-        };
-    });
+using System.Security.Claims;
+using Elsa;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
-// Auth0 can emit a "permissions" array. Ensure the values are Elsa API
-// permissions, for example "read:workflow-definitions" or "*".
-```
+var builder = WebApplication.CreateBuilder(args);
 
-**Further Reading:**
-- [Auth0 ASP.NET Core Integration](https://auth0.com/docs/quickstart/webapp/aspnet-core)
-- [Auth0 APIs Documentation](https://auth0.com/docs/get-started/apis)
-
-### Keycloak
-
-Keycloak is an open-source identity and access management solution that can be self-hosted.
-
-**Key Features:**
-- Self-hosted (full control over deployment)
-- Support for LDAP/Active Directory integration
-- User federation and identity brokering
-- Fine-grained authorization services
-- Protocol mappers for custom claims
-
-**Integration Steps:**
-
-1. **Create Keycloak realm and client**
-   - Log into Keycloak Admin Console
-   - Create new realm for Elsa
-   - Create confidential client for Elsa Server
-   - Configure redirect URIs
-
-2. **Configure client settings**
-   - Enable Standard Flow (authorization code flow)
-   - Set Access Type to confidential
-   - Note Client ID and Client Secret
-
-3. **Define roles and groups**
-   - Create roles: `workflow-admin`, `workflow-designer`, `workflow-viewer`
-   - Assign roles to users or groups
-
-4. **Configure authentication in Elsa Server**
-   - Install package: `Microsoft.AspNetCore.Authentication.OpenIdConnect`
-   - Configure OIDC with Keycloak endpoint
-   - Map Keycloak roles to ASP.NET Core claims
-
-**Configuration Example:**
-
-{% hint style="info" %}
-Replace `{realm-name}`, `{client-id}`, and `{client-secret}` with values from your Keycloak configuration. The authority URL should point to your Keycloak instance and realm.
-{% endhint %}
-
-```csharp
-builder.Services
-    .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(options =>
-    {
-        options.Authority = "https://keycloak.example.com/realms/{realm-name}";
-        options.ClientId = "{client-id}";
-        options.ClientSecret = "{client-secret}";
-        options.ResponseType = "code";
-        options.SaveTokens = true;
-        options.GetClaimsFromUserInfoEndpoint = true;
-        
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-        options.Scope.Add("roles");
-        
-        options.ClaimActions.MapJsonKey("role", "roles");
-    });
-
-// Add an OnTokenValidated handler to translate Keycloak roles into
-// "permissions" claims before requests reach Elsa API endpoints.
-```
-
-**Further Reading:**
-- [Keycloak Documentation](https://www.keycloak.org/documentation)
-- [Securing ASP.NET Core with Keycloak](https://www.keycloak.org/docs/latest/securing_apps/)
-
-### Generic OIDC Provider
-
-For any other OIDC-compliant provider, follow this generic integration pattern.
-
-**Prerequisites:**
-- Provider must support OpenID Connect Discovery
-- Provider must issue JWT access tokens
-- Provider must support authorization code flow
-
-**Configuration Steps:**
-
-1. **Obtain provider metadata**
-   - Authority URL (e.g., `https://idp.example.com`)
-   - Client ID and Client Secret
-   - Supported scopes
-
-2. **Configure authentication**
-
-```csharp
-builder.Services
-    .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddOpenIdConnect(options =>
-    {
-        options.Authority = builder.Configuration["OIDC:Authority"];
-        options.ClientId = builder.Configuration["OIDC:ClientId"];
-        options.ClientSecret = builder.Configuration["OIDC:ClientSecret"];
-        options.ResponseType = "code";
-        options.SaveTokens = true;
-        options.GetClaimsFromUserInfoEndpoint = true;
-        
-        // Add custom scopes
-        foreach (var scope in builder.Configuration.GetSection("OIDC:Scopes").Get<string[]>() ?? Array.Empty<string>())
-        {
-            options.Scope.Add(scope);
-        }
-    });
-```
-
-## Authorization and Claims Mapping
-
-After authentication, Elsa API endpoints authorize requests with `permissions` claims. Each claim value must match a permission configured by the endpoint, and `*` grants all Elsa permissions.
-
-Elsa Identity roles are containers for permission strings. With an external IdP, either emit `permissions` claims from the provider or map external roles, groups, or scopes into `permissions` claims in the Elsa Server host.
-
-### Mapping External Roles to Elsa Permissions
-
-```csharp
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        // ... authority, audience, and token validation ...
+        options.Authority = builder.Configuration["Oidc:Authority"];
+        options.Audience = builder.Configuration["Oidc:Audience"];
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "name",
+            RoleClaimType = "role",
+            ValidateIssuer = true,
+            ValidateAudience = true
+        };
 
         options.Events = new JwtBearerEvents
         {
             OnTokenValidated = context =>
             {
-                var claimsIdentity = (ClaimsIdentity)context.Principal!.Identity!;
+                var identity = (ClaimsIdentity)context.Principal!.Identity!;
 
-                if (context.Principal.IsInRole("workflow-viewer"))
+                // Map provider-specific claims into Elsa permissions.
+                foreach (var scope in context.Principal.FindAll("scope").Select(x => x.Value))
                 {
-                    claimsIdentity.AddClaim(new Claim("permissions", "read:workflow-definitions"));
-                    claimsIdentity.AddClaim(new Claim("permissions", "read:workflow-instances"));
-                    claimsIdentity.AddClaim(new Claim("permissions", "read:activity-execution"));
+                    if (scope == "elsa.admin")
+                        identity.AddClaim(new Claim(PermissionNames.ClaimType, PermissionNames.All));
                 }
 
-                if (context.Principal.IsInRole("workflow-admin"))
-                    identity.AddClaim(new Claim("permissions", "*"));
+                foreach (var role in context.Principal.FindAll("role").Select(x => x.Value))
+                {
+                    if (role == "elsa-operator")
+                        identity.AddClaim(new Claim(PermissionNames.ClaimType, "read:workflow-definitions"));
+                }
 
                 return Task.CompletedTask;
             }
         };
     });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddElsa(elsa =>
+{
+    elsa
+        .UseWorkflowManagement()
+        .UseWorkflowRuntime()
+        .UseWorkflowsApi();
+});
+
+var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapWorkflowsApi();
+app.Run();
 ```
 
-ASP.NET Core `RequireRole(...)` policies protect custom host endpoints. They do not replace Elsa API permissions. Elsa endpoint permissions come from endpoint configuration such as `ConfigurePermissions(...)` and from module constants, not only from shared `PermissionNames` constants.
+### Why the `permissions` Claim Matters
 
-## Elsa Studio Configuration
+Elsa endpoint permissions are not expressed as ASP.NET Core policies. They are
+checked as permission claims on the authenticated principal.
 
-When using an external IdP, configure Elsa Studio to authenticate users and forward tokens to Elsa Server.
+That means your external identity provider integration is only complete when one
+of these is true:
 
-**Studio configuration:**
+- the provider issues `permissions` claims with Elsa permission values
+- your ASP.NET Core host maps other claims into `permissions`
+
+## Studio Setup Pattern
+
+### Blazor Server Studio
+
+Use a confidential client when the provider requires a client secret:
 
 ```json
 {
   "Backend": {
-    "Url": "https://elsa-server.example.com/elsa/api"
+    "Url": "https://elsa.example.com/elsa/api"
   },
   "Authentication": {
     "Provider": "OpenIdConnect",
     "OpenIdConnect": {
-      "Authority": "https://your-identity-provider.com",
-      "ClientId": "elsa-studio",
+      "Authority": "https://login.example.com/realms/acme",
+      "ClientId": "elsa-studio-server",
+      "ClientSecret": "set-via-secret-store",
       "AuthenticationScopes": ["openid", "profile", "offline_access"],
-      "BackendApiScopes": ["elsa_api"],
+      "BackendApiScopes": ["elsa-api"],
       "SaveTokens": true
     }
   }
 }
 ```
 
-Use the Blazor host pattern from [Studio Designer Integration](../studio/integration/README.md) and register the `Elsa.Studio.Authentication.OpenIdConnect` module so Studio can authenticate users and attach access tokens to backend API calls.
+Register these redirect URIs unless you override the defaults:
 
-For Blazor Server Studio hosts, `ClientSecret` can be added when the OIDC provider requires a confidential client. For WebAssembly Studio hosts, omit `ClientSecret` and register the client as a public SPA using authorization code flow with PKCE.
+- `https://studio.example.com/signin-oidc`
+- `https://studio.example.com/signout-callback-oidc`
 
-`AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
+### Blazor WebAssembly Studio
 
-Register callback URIs according to the Studio host model:
+Use a public SPA client and do not configure a client secret:
 
-- Blazor WebAssembly Studio: `https://studio.example.com/authentication/login-callback` and `https://studio.example.com/authentication/logout-callback`.
-- Blazor Server Studio: `https://studio.example.com/signin-oidc` and `https://studio.example.com/signout-callback-oidc` by default.
-
-Studio initiates OIDC logout at `https://studio.example.com/authentication/logout`.
-
-For workflow routes secured with `HttpEndpoint`, see [HTTP Endpoint Security](http-endpoint-security.md).
-## REST API Integration
-
-When calling Elsa Server APIs from external applications, use bearer token authentication:
-
-```bash
-# Obtain access token from IdP
-ACCESS_TOKEN="eyJhbGc..."
-
-# Call Elsa API with token
-curl https://elsa-server.example.com/elsa/api/workflow-definitions \
-  -H "Authorization: Bearer $ACCESS_TOKEN"
+```json
+{
+  "Backend": {
+    "Url": "https://elsa.example.com/elsa/api"
+  },
+  "Authentication": {
+    "Provider": "OpenIdConnect",
+    "OpenIdConnect": {
+      "Authority": "https://login.example.com/realms/acme",
+      "ClientId": "elsa-studio-wasm",
+      "AuthenticationScopes": ["openid", "profile", "offline_access"],
+      "BackendApiScopes": ["elsa-api"]
+    }
+  }
+}
 ```
 
-For detailed REST API usage, see:
-- [Running Workflows via REST](../running-workflows/README.md)
-- [HTTP Workflows Guide](../http-workflows/README.md)
+Register these redirect URIs unless you override the defaults:
 
-## Security Best Practices
+- `https://studio.example.com/authentication/login-callback`
+- `https://studio.example.com/authentication/logout-callback`
 
-When integrating with external IdPs:
+### Authentication Scopes vs Backend API Scopes
 
-1. **Always use HTTPS**: Never transmit tokens over HTTP
-2. **Validate tokens properly**: Check issuer, audience, expiration, and signature
-3. **Use short-lived access tokens**: Configure appropriate token lifetimes (1 hour recommended)
-4. **Implement refresh token rotation**: Enhance security with refresh token rotation
-5. **Store secrets securely**: Use Azure Key Vault, AWS Secrets Manager, or similar
-6. **Enable MFA**: Require multi-factor authentication for administrative access
-7. **Audit authentication events**: Log all authentication and authorization decisions
-8. **Implement RBAC**: Use role-based access control with least-privilege principle
+Keep the two scope lists separate:
 
-For comprehensive security guidance, see:
-- [Security & Authentication Guide](README.md)
+- `AuthenticationScopes`: scopes needed for signing the user in
+- `BackendApiScopes`: scopes needed on tokens sent to Elsa Server
+
+This separation matters for providers such as Microsoft Entra ID, where a token
+request must target one resource audience at a time.
+
+## Provider Notes
+
+### Microsoft Entra ID
+
+- Prefer a tenant-specific authority such as
+  `https://login.microsoftonline.com/{tenant-id}/v2.0`
+- Register Studio WASM as a SPA/public client
+- Register Studio Server as a confidential web app if you need a client secret
+- Put the Elsa API scope in `BackendApiScopes`
+- Leave `GetClaimsFromUserInfoEndpoint` disabled unless your app registration
+  explicitly supports `userinfo`
+
+### Auth0
+
+- Set `Authority` to your tenant URL such as `https://acme.us.auth0.com/`
+- Define an API for Elsa Server and request that audience or scope from Studio
+- If Auth0 already emits a `permissions` array, map those values directly to
+  Elsa permissions where possible
+
+### Keycloak, Okta, OpenIddict, IdentityServer, Generic OIDC
+
+- Use discovery-based OpenID Connect metadata through `Authority`
+- Use authorization code flow for Studio
+- Use PKCE for public/browser clients
+- Make sure the API access token audience matches Elsa Server
+- Add explicit mappers if your provider emits roles or groups but not Elsa
+  `permissions` claims
 
 ## Troubleshooting
 
-### Common Issues
+### Studio signs in, but Elsa API calls return 401
 
-#### Token Validation Fails
+Check these first:
 
-**Symptoms:** 401 Unauthorized, "IDX10205: Issuer validation failed"
+- `Backend:Url` points to the actual Elsa API base URL
+- the token audience matches the Elsa API registration
+- the token presented to Elsa Server contains `permissions` claims, or your host
+  maps other claims into `permissions`
+- `app.UseAuthentication()` runs before `app.UseAuthorization()`
 
-**Solutions:**
-- Verify Authority URL matches IdP issuer
-- Check token expiration
-- Ensure clock synchronization (NTP)
-- Validate audience matches client ID
+### Login callback returns 404
 
-#### Claims Not Mapped
+Your identity-provider redirect URI does not match the Studio host model:
 
-**Symptoms:** User authenticated but lacks required permissions
+- Blazor Server: `/signin-oidc`
+- Blazor WebAssembly: `/authentication/login-callback`
 
-**Solutions:**
-- Check claim names in token (decode JWT at jwt.io)
-- Verify claims mapping in OIDC options
-- Ensure roles/permissions are assigned in IdP
-- Verify the authenticated principal has the `permissions` claims required by the Elsa endpoint
+### User is authenticated, but actions are still forbidden
 
-#### CORS Errors
+The common cause is missing Elsa permission claims. Inspect the final
+authenticated principal on the server and verify claim type `permissions`
+contains either:
 
-**Symptoms:** Studio can't call Elsa Server API
+- the specific permission required by the endpoint
+- `*` for full access
 
-**Solutions:**
-- Configure CORS on Elsa Server to allow Studio origin
-- Ensure credentials are allowed (`AllowCredentials()`)
-- Check preflight (OPTIONS) requests succeed
+### OIDC `userinfo` calls fail with 401
 
-For more troubleshooting guidance, see:
-- [Troubleshooting Guide](../troubleshooting/README.md)
+The shipped Studio hosts already default `GetClaimsFromUserInfoEndpoint` to
+`false`. Keep it that way unless your provider specifically requires and allows
+that extra call.
+
+## Related Guides
+
+- [Security & Authentication Guide](README.md)
+- [Authentication & Authorization Guide](../authentication.md)
+- [Studio Designer Integration](../studio/integration/README.md)
 - [Blazor Dashboard Integration](../integration/blazor-dashboard.md)
-
-## Planned Sections (Future Updates)
-
-The following sections will be expanded in future documentation updates:
-
-- **Detailed Azure AD B2C Integration**: Consumer identity scenarios
-- **Multi-Tenant IdP Configuration**: Per-tenant identity provider setup
-- **Custom Authorization Handlers**: Implementing fine-grained permissions
-- **Token Caching and Refresh**: Performance optimization strategies
-- **Federated Identity**: Chain multiple identity providers
-- **API Key + OIDC Hybrid**: Machine-to-machine with user authentication
-- **Identity Provider Failover**: High availability patterns
-
-## Next Steps
-
-- **Configure your IdP**: Follow provider-specific documentation
-- **Test authentication flow**: Verify token issuance and validation
-- **Implement authorization**: Map roles and claims to Elsa `permissions` claims
-- **Deploy to production**: Follow [Security Guide](README.md) best practices
-- **Monitor authentication**: Set up logging and alerting
-
-## Related Documentation
-
-- [Security & Authentication Guide](README.md) - Comprehensive security configuration
-- [Disable Auth in Dev](disable-auth.md) - Development-only auth bypass
-- [Blazor Dashboard Integration](../integration/blazor-dashboard.md) - Studio authentication
-- [Hosting Elsa in an Existing App](../onboarding/hosting-elsa-in-existing-app.md) - Integration patterns
-- [Kubernetes Deployment](../deployment/kubernetes.md) - Production deployment
-
----
-
-**Last Updated:** 2025-12-02  
-**Addresses Issues:** #16 (partial)
-**Status:** Foundational guide with provider-specific sections to be expanded based on community feedback and real-world integration patterns.

@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-05)
+## Slice Inventory (2026-07-06)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -34,6 +34,7 @@ acceptance criterion below is already complete.
 - `DOC-019` HTTP endpoint security
 - `DOC-020` EF Core migrations
 - `DOC-021` Configuration management
+- `DOC-023` Identity provider integrations
 - `DOC-024` MassTransit communication
 - `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
@@ -49,7 +50,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-023` Identity provider integrations
 - `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
@@ -58,11 +58,11 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 ### Recommended next slice
 
-- `DOC-023` Identity provider integrations: the repo now has broad
-  authentication coverage, but common provider setups are still split across
-  general auth, deployment, and security docs. A release-backed slice should
-  consolidate Elsa Server plus Studio setup, claim mapping, and operator
-  troubleshooting for the main OIDC provider paths.
+- `DOC-027` Execution model: the docs now cover long-running workflows,
+  incidents, and external identity setup, but the core execution story is still
+  fragmented across concepts, running-workflows pages, and activity docs. A
+  release-backed execution guide should connect dispatch, execution, bookmarks,
+  triggers, stimuli, and persistence into one operator-friendly mental model.
 
 ### Newly discovered follow-on topics
 
@@ -89,15 +89,18 @@ acceptance criterion below is already complete.
   `WithRetryAttemptRecorder(...)` so teams can persist retry diagnostics and
   introduce non-HTTP resilience policies without reverse engineering tests and
   feature registration.
+- `DOC-057` Elsa API permission reference: add a compact map of common Elsa API
+  and Studio operations to `permissions` claim values, plus starter role
+  templates for external identity providers.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
-- `DOC-023` Identity provider integrations:
-  consolidate the existing broad authentication material into release-backed
-  provider playbooks for Elsa Server, Studio hosts, claim mapping, and common
-  OIDC troubleshooting paths.
+- `DOC-027` Execution model:
+  connect execution, dispatch, bookmarks, triggers, stimuli, persistence, and
+  recovery into one release-backed guide that serves both developers and Studio
+  operators.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
