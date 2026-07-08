@@ -92,3 +92,7 @@ Using alterations, you can modify a workflow instance's state, schedule activiti
 Workflow execution in Elsa spans workflow-level state, activity-level state, scoped variables, bookmarks, incidents, and execution logs.
 
 [Read more](workflow-context.md)
+
+If you want the runtime view that connects triggers, bookmarks, stimuli,
+dispatch, and persistence, read
+[Execution Model](../../guides/architecture/execution-model.md).
