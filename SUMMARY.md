@@ -32,6 +32,7 @@
 
 * [V2 to V3 Migration Guide](guides/migration-v2-to-v3.md)
 * [Architecture](guides/architecture/README.md)
+  * [Execution Model](guides/architecture/execution-model.md)
   * [Workflow Dispatcher Architecture](guides/architecture/workflow-dispatcher.md)
 * [Onboarding](guides/onboarding/README.md)
   * [Hosting Elsa in an Existing App](guides/onboarding/hosting-elsa-in-existing-app.md)

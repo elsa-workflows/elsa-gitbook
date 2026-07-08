@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-06)
+## Slice Inventory (2026-07-08)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -38,6 +38,7 @@ acceptance criterion below is already complete.
 - `DOC-024` MassTransit communication
 - `DOC-025` Long-running workflows
 - `DOC-026` Error handling and retry logic
+- `DOC-027` Execution model
 - `DOC-022` Scaling and performance
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
@@ -50,7 +51,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-027` Execution model
 - `DOC-038` Distributed tracing
 - `DOC-039` Performance tuning
 - `DOC-043` Hangfire integration
@@ -58,11 +58,10 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 ### Recommended next slice
 
-- `DOC-027` Execution model: the docs now cover long-running workflows,
-  incidents, and external identity setup, but the core execution story is still
-  fragmented across concepts, running-workflows pages, and activity docs. A
-  release-backed execution guide should connect dispatch, execution, bookmarks,
-  triggers, stimuli, and persistence into one operator-friendly mental model.
+- `DOC-038` Distributed tracing: the execution model is now documented, but
+  production teams still lack a compact guide for following a workflow across
+  HTTP ingress, dispatched execution, bookmarks, incidents, and external
+  observability tooling.
 
 ### Newly discovered follow-on topics
 
@@ -97,10 +96,9 @@ acceptance criterion below is already complete.
 
 ### Current slice note
 
-- `DOC-027` Execution model:
-  connect execution, dispatch, bookmarks, triggers, stimuli, persistence, and
-  recovery into one release-backed guide that serves both developers and Studio
-  operators.
+- `DOC-038` Distributed tracing:
+  document how to correlate workflow execution, dispatcher activity, bookmarks,
+  incidents, and host telemetry in production.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

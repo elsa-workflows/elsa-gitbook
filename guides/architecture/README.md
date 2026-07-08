@@ -26,7 +26,8 @@ This lifecycle repeats as workflows are triggered, execute activities, wait for 
 
 ### Execute vs Dispatch
 
-Understanding the difference between **executing** and **dispatching** workflows is fundamental:
+Understanding the difference between **executing** and **dispatching**
+workflows is fundamental:
 
 #### Execute (IWorkflowRunner)
 
@@ -60,7 +61,10 @@ await workflowDispatcher.DispatchAsync(
     });
 ```
 
-For a deep dive into dispatching, see the [Workflow Dispatcher Architecture](workflow-dispatcher.md) guide.
+For the release-backed lifecycle that connects execution, dispatch, triggers,
+bookmarks, persistence, and resume behavior, see
+[Execution Model](execution-model.md). For a deeper dive into dispatching, see
+[Workflow Dispatcher Architecture](workflow-dispatcher.md).
 
 #### IWorkflowRuntime
 
