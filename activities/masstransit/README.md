@@ -7,6 +7,10 @@ the types you register with the MassTransit feature.
 Use this integration when workflows need to publish strongly typed application
 messages or wait for messages that arrive through a MassTransit bus.
 
+For `release/3.8.0`, prefer concrete class or record contracts for the message
+types you register. Elsa's generated receive activity accepts a message only
+when the runtime type exactly matches the configured `MessageType`.
+
 ## What this feature adds
 
 After you call `UseMassTransit(...)` and register one or more message types
@@ -173,6 +177,22 @@ This matters operationally because the same broker can host both your
 application messages and Elsa's own internal dispatcher traffic without those
 concerns being the same feature.
 
+## Contract guidance
+
+`AddMessageType<T>()` accepts reference types, but the runtime behavior is more
+specific than that:
+
+* `MassTransitActivityTypeProvider` creates a receive trigger for every
+  registered message type
+* `Publish {MessageType}` is created only when the registered type is a class
+* `MessageReceived` resumes only when `message.GetType() == MessageType`
+
+In practice, that means concrete classes and records are the safest contracts
+for both publishing and receiving in `release/3.8.0`. If you register an
+interface or other abstraction, Elsa still creates the receive activity
+descriptor, but the runtime message must still match the configured type
+exactly.
+
 ## How receiving works
 
 When MassTransit receives a registered message type, Elsa's generated
@@ -194,8 +214,10 @@ start every workflow that contains it. To start new workflow instances from a
 message, configure the activity as a start trigger, just as you would with
 other Elsa triggers.
 
-MassTransit correlation IDs are passed through in the stimulus metadata, so
-message-bus correlation can flow into your workflow design when needed.
+For new workflow instances, the MassTransit `CorrelationId` is forwarded in the
+stimulus metadata and becomes the trigger invocation's correlation ID. For
+existing waiting workflows, Elsa uses that correlation ID to narrow bookmark
+matching when one is present.
 
 ## How publishing works
 
@@ -205,7 +227,8 @@ calls `bus.Publish(...)` with the configured message payload.
 Two details matter in practice:
 
 * the publish activity exists only for class message types; if you register an
-  interface, Elsa creates the receive trigger but not the publish activity
+  interface or other non-class reference type, Elsa does not generate the
+  publish activity
 * the message input is converted to the configured CLR type before publishing,
   so the payload must be compatible with the registered message type
 
