@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-08)
+## Slice Inventory (2026-07-09)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -56,6 +56,7 @@ acceptance criterion below is already complete.
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
+
 ### Recommended next slice
 
 - `DOC-038` Distributed tracing: the execution model is now documented, but
@@ -91,6 +92,14 @@ acceptance criterion below is already complete.
 - `DOC-057` Elsa API permission reference: add a compact map of common Elsa API
   and Studio operations to `permissions` claim values, plus starter role
   templates for external identity providers.
+
+### Most recent completed slice
+
+- `DOC-024` MassTransit communication:
+  completed on 2026-07-09 by tightening the MassTransit message-activity docs
+  around `release/3.8.0` runtime behavior, especially concrete contract
+  guidance, exact-type message matching, generated activity descriptors,
+  transport-backed consumer topology, and correlation flow.
 
 ## Critical Priority (Must Have - Block Users)
 

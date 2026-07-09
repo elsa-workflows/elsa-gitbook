@@ -17,8 +17,12 @@ public record OrderCreated(string OrderId, string ProductId, int Quantity);
 
 {% endcode %}
 
-`OrderCreated` is a class, so Elsa will generate both a receive trigger and a
-publish activity for it.
+`OrderCreated` is a concrete record class, so Elsa will generate both a receive
+trigger and a publish activity for it.
+
+That detail matters in `release/3.8.0`: the generated `MessageReceived`
+activity compares the incoming message's exact runtime type to the configured
+`MessageType`, so concrete record or class contracts are the safest choice.
 
 ## 2. Register the message type and configure MassTransit
 
@@ -137,8 +141,7 @@ public class PublishOrderWorkflow : WorkflowBase
 In Studio, the equivalent activity is `Publish Order Created`.
 
 Because `OrderCreated` is a class, Elsa generates both the trigger and publish
-activities. If you register an interface instead, Elsa generates only the
-receive trigger.
+activities.
 
 ## 5. Deployment notes
 
@@ -158,6 +161,8 @@ receive trigger.
   runs during startup.
 * If messages publish but workflows do not start, verify consumers are enabled
   on the running node and that the trigger is marked as a start trigger.
+* If a message reaches MassTransit but Elsa does not resume the workflow,
+  verify the registered contract is the concrete runtime type being consumed.
 * If you use a real broker, verify the relevant RabbitMQ or Azure Service Bus
   transport package is installed and configured.
 * If correlation matters, confirm the producer sets a MassTransit
