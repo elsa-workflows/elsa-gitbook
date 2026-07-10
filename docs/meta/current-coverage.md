@@ -87,9 +87,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Introduction** (`multitenancy/introduction.md`)
 - **Setup** (`multitenancy/setup.md`)
 
-### OPERATE (6 pages)
+### OPERATE (7 pages)
 
 - **Monitoring & Observability** (`operate/monitoring-observability.md`)
+- **Distributed Tracing** (`operate/distributed-tracing.md`)
 - **Incidents** (`operate/incidents/README.md`)
 - **Configuration** (`operate/incidents/configuration.md`)
 - **Strategies** (`operate/incidents/strategies.md`)
@@ -148,6 +149,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Workflow instance variables
 - ✅ Activation strategies
 - ✅ Incidents and strategies
+- ✅ Monitoring and distributed tracing guidance
 
 ### HTTP Workflows
 - ✅ Programmatic approach
@@ -196,7 +198,7 @@ Based on the current structure, the following core concepts are documented:
 5. **Observability & Troubleshooting**
    - ❌ No debugging guide
    - ❌ No troubleshooting common issues
-   - ⚠️ Monitoring/observability guide now exists, but related guides still need deeper consistency work
+   - ⚠️ Monitoring and distributed tracing guides now exist, but related guides still need deeper consistency work
 
 6. **Migration & Versioning**
    - ❌ No migration guide from v2 to v3
@@ -212,7 +214,7 @@ Based on the current structure, the following core concepts are documented:
    - ⚠️ HTTP workflows guide exists but could be expanded
    - ❌ No workflow testing guide
    - ❌ No data persistence patterns guide
-   - ❌ No security best practices
+   - ⚠️ Security guidance now includes dedicated guides for endpoint security and external identity providers, but role-oriented permission recipes are still missing
    - ❌ No workflow design patterns
 
 ## Documentation Quality Notes

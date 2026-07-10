@@ -21,6 +21,9 @@ Use this mapping:
 - For readiness and liveness, use health checks such as `/health/live` and
   `/health/ready` in `Elsa.Server.Web`.
 
+If you need a dedicated tracing setup guide, see
+[Distributed Tracing](distributed-tracing.md).
+
 ## Start with the workflow runtime signals
 
 When you investigate one workflow instance, start with Elsa's own runtime
@@ -257,6 +260,7 @@ answer:
 
 ## Related guides
 
+- [Distributed Tracing](distributed-tracing.md)
 - [Incidents](incidents/README.md)
 - [Log Persistence](../optimize/log-persistence.md)
 - [Performance & Scaling Guide](../guides/performance/README.md)
