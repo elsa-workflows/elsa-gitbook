@@ -1,58 +1,27 @@
 ---
 description: >-
-  Practical examples for tuning Elsa Workflows throughput, including commit strategies, clustering optimizations, and resource management.
+  Small, release-backed Elsa 3.8.0 configuration examples for testing commit,
+  worker, and transactional-outbox tradeoffs under load.
 ---
 
-# Throughput Tuning Examples
+# Throughput tuning examples
 
-This document provides practical examples for optimizing Elsa Workflows throughput in high-volume scenarios.
+These are starting configurations, not production targets. Benchmark each
+change against your own workflow shape, persistence provider, and downstream
+services. Keep recovery tests in the benchmark: throughput is only useful when
+the workflow remains correct after a restart or fault.
 
-## Commit Strategy Configuration
+## Register selectable commit strategies
 
-### High-Throughput Configuration
-
-For maximum throughput with short-lived workflows, minimize commits:
+This configuration registers the standard strategy names and a named periodic
+strategy. A workflow definition can select any registered name through
+`WorkflowOptions.CommitStrategyName` or the Elsa Studio **Properties →
+Settings → Commit Strategy** selector.
 
 ```csharp
 using Elsa.Extensions;
 using Elsa.Workflows.CommitStates;
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflows(workflows =>
-    {
-        // Configure commit strategies for high throughput
-        workflows.UseCommitStrategies(strategies =>
-        {
-            // Only commit when workflow completes - minimal I/O
-            strategies.UseWorkflowExecutedStrategy();
-        });
-    });
-    
-    // Additional performance settings
-    elsa.UseWorkflowRuntime(runtime =>
-    {
-        runtime.UseDistributedRuntime();  // Enable for clustering
-    });
-});
-
-var app = builder.Build();
-app.Run();
-```
-
-**Code Reference:** `src/modules/Elsa.Workflows.Core/CommitStates/Strategies/Workflows/WorkflowExecutedWorkflowStrategy.cs`
-
-### Long-Running Workflow Configuration
-
-For long-running workflows, use periodic commits to balance durability and performance:
-
-```csharp
-using Elsa.Extensions;
-using Elsa.Workflows.CommitStates;
-
-var builder = WebApplication.CreateBuilder(args);
+using Elsa.Workflows.CommitStates.Strategies;
 
 builder.Services.AddElsa(elsa =>
 {
@@ -60,358 +29,104 @@ builder.Services.AddElsa(elsa =>
     {
         workflows.UseCommitStrategies(strategies =>
         {
-            // Commit every 30 seconds during execution
-            strategies.UsePeriodicStrategy(TimeSpan.FromSeconds(30));
-            
-            // Also commit when workflow suspends (for bookmarks)
-            strategies.UseWorkflowExecutedStrategy();
-        });
-    });
-});
-
-var app = builder.Build();
-app.Run();
-```
-
-**Code Reference:** `src/modules/Elsa.Workflows.Core/CommitStates/Strategies/Workflows/PeriodicWorkflowStrategy.cs`
-
-### Per-Workflow Strategy Selection
-
-Different workflows can use different commit strategies based on their requirements:
-
-```csharp
-using Elsa.Workflows;
-using Elsa.Workflows.Models;
-
-// High-throughput workflow - commit only on completion
-public class BatchProcessingWorkflow : WorkflowBase
-{
-    protected override void Build(IWorkflowBuilder builder)
-    {
-        builder.WorkflowOptions.CommitStrategyName = "WorkflowExecuted";
-        
-        builder.Root = new Sequence
-        {
-            Activities =
-            {
-                new ForEach<string>
-                {
-                    // TODO: Implement GetBatchItems() to return your batch data
-                    Items = new(context => GetBatchItems()),
-                    Body = new ProcessItem() // Custom activity placeholder
-                }
-            }
-        };
-    }
-}
-
-// Critical workflow - commit after each activity
-public class PaymentWorkflow : WorkflowBase
-{
-    protected override void Build(IWorkflowBuilder builder)
-    {
-        builder.WorkflowOptions.CommitStrategyName = "ActivityExecuted";
-        
-        builder.Root = new Sequence
-        {
-            Activities =
-            {
-                // The following are placeholder custom activities. Implement these in your project.
-                new ValidatePayment(),
-                new ChargeCard(),
-                new SendReceipt()
-            }
-        };
-    }
-}
-```
-
-**Code Reference:** `src/modules/Elsa.Workflows.Core/Models/WorkflowOptions.cs`
-
-## Clustering and Scheduler Tuning
-
-### Quartz Scheduler Configuration for High Volume
-
-When running in a cluster with high scheduling load:
-
-```csharp
-using Elsa.Extensions;
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflowRuntime(runtime =>
-    {
-        runtime.UseDistributedRuntime();
-    });
-    
-    elsa.UseScheduling(scheduling =>
-    {
-        scheduling.UseQuartzScheduler();
-    });
-    
-    elsa.UseQuartz(quartz =>
-    {
-        quartz.UsePostgreSql(
-            builder.Configuration.GetConnectionString("PostgreSql")!);
-    });
-});
-
-// Configure Quartz with high-throughput settings
-builder.Services.Configure<QuartzOptions>(options =>
-{
-    options["quartz.threadPool.threadCount"] = "20";  // Increase thread pool
-    options["quartz.jobStore.misfireThreshold"] = "60000";  // 1 minute misfire threshold
-    options["quartz.jobStore.clustered"] = "true";
-    options["quartz.jobStore.clusterCheckinInterval"] = "15000";  // 15 second check-in
-});
-
-var app = builder.Build();
-app.Run();
-```
-
-### Distributed Lock Optimization
-
-Reduce lock contention in clustered environments:
-
-```csharp
-using Elsa.Extensions;
-using Medallion.Threading.Redis;
-using StackExchange.Redis;
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflowRuntime(runtime =>
-    {
-        runtime.UseDistributedRuntime();
-        
-        // Configure Redis-based distributed locking
-        runtime.DistributedLockProvider = sp =>
-        {
-            var redis = sp.GetRequiredService<IConnectionMultiplexer>();
-            var options = new RedisDistributedSynchronizationProviderOptions
-            {
-                Expiry = TimeSpan.FromSeconds(15),
-                MinimumDatabaseExpiry = TimeSpan.FromSeconds(5)
-            };
-            return new RedisDistributedSynchronizationProvider(
-                redis.GetDatabase(),
-                options);
-        };
-    });
-});
-
-// Configure Redis connection with optimizations
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-{
-    var options = ConfigurationOptions.Parse(
-        builder.Configuration.GetConnectionString("Redis")!);
-    options.AbortOnConnectFail = false;
-    options.ConnectRetry = 3;
-    options.SyncTimeout = 5000;  // 5 second sync timeout
-    return ConnectionMultiplexer.Connect(options);
-});
-
-var app = builder.Build();
-app.Run();
-```
-
-### Lock Contention Monitoring
-
-Monitor lock acquisition to identify bottlenecks:
-
-```csharp
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-
-public class LockMetrics
-{
-    private static readonly Meter Meter = new("Elsa.Locking", "1.0.0");
-    private static readonly Histogram<double> LockAcquisitionTime = 
-        Meter.CreateHistogram<double>("elsa.lock.acquisition.time", "ms");
-    private static readonly Counter<long> LockTimeouts = 
-        Meter.CreateCounter<long>("elsa.lock.timeouts", "count");
-
-    public void RecordLockAcquisition(double milliseconds, string lockType)
-    {
-        LockAcquisitionTime.Record(milliseconds,
-            new KeyValuePair<string, object?>("lock.type", lockType));
-    }
-
-    public void RecordLockTimeout(string lockType)
-    {
-        LockTimeouts.Add(1,
-            new KeyValuePair<string, object?>("lock.type", lockType));
-    }
-}
-```
-
-## Database Tuning
-
-### Connection Pool Configuration
-
-Optimize database connection pooling for high concurrency:
-
-```csharp
-using Npgsql;
-// PostgreSQL connection string with optimized pool settings
-var connectionString = new NpgsqlConnectionStringBuilder
-{
-    Host = "postgres-host",
-    Database = "elsa",
-    Username = "elsa",
-    Password = "your-password",
-    MaxPoolSize = 100,           // Increase for high concurrency
-    MinPoolSize = 10,            // Keep minimum connections warm
-    ConnectionIdleLifetime = 300, // 5 minutes idle lifetime
-    CommandTimeout = 60          // 1 minute command timeout
-}.ToString();
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflowManagement(management =>
-    {
-        management.UseEntityFrameworkCore(ef =>
-        {
-            ef.UsePostgreSql(connectionString);
+            strategies.AddStandardStrategies();
+            strategies.Add(
+                "Periodic30Seconds",
+                "Every 30 seconds",
+                "Commit workflow state at least every 30 seconds during execution.",
+                new PeriodicWorkflowStrategy(TimeSpan.FromSeconds(30)));
         });
     });
 });
 ```
 
-### Batch Operations
+Use `WorkflowExecuted` as a test candidate for short workflows only after
+verifying the state that must survive a failure before completion. Use
+`ActivityExecuted` when persistence after each completed activity is more
+important than the additional writes. Test a named periodic strategy for
+long-running workflows that need a bounded recovery interval. In this example,
+the stored strategy name is `Periodic30Seconds`; Studio shows `Every 30
+seconds`.
 
-For bulk workflow operations, use batch APIs:
+## Set a host fallback
 
-```csharp
-using Elsa.Workflows.Management;
-using Elsa.Workflows.Management.Filters;
-
-// Example: Bulk delete completed workflows
-public class WorkflowCleanupJob
-{
-    private readonly IWorkflowInstanceStore _store;
-    
-    public WorkflowCleanupJob(IWorkflowInstanceStore store)
-    {
-        _store = store;
-    }
-    
-    public async Task CleanupCompletedWorkflowsAsync(CancellationToken cancellationToken)
-    {
-        var filter = new WorkflowInstanceFilter
-        {
-            WorkflowStatus = WorkflowStatus.Finished,
-            TimestampFilters = new[]
-            {
-                new TimestampFilter
-                {
-                    Column = "FinishedAt",
-                    Operator = TimestampFilterOperator.LessThan,
-                    Timestamp = DateTimeOffset.UtcNow.AddDays(-30)
-                }
-            }
-        };
-        
-        // Delete in batches to avoid long-running transactions
-        var batchSize = 1000;
-        long deletedCount;
-        
-        do
-        {
-            deletedCount = await _store.DeleteAsync(filter, batchSize, cancellationToken);
-        } while (deletedCount == batchSize);
-    }
-}
-```
-
-## Observability Setup
-
-### Comprehensive Monitoring Configuration
-
-Set up end-to-end observability for performance monitoring:
+Definitions with no commit-strategy selection use the host fallback. This is
+not added to the Studio/API registry, so register a named strategy separately
+when authors should be able to choose it.
 
 ```csharp
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Configure OpenTelemetry
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing =>
-    {
-        tracing
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddNpgsqlInstrumentation()        // Database tracing
-            .AddRedisInstrumentation()         // Redis tracing
-            .AddSource("Elsa.Workflows")       // Elsa workflow tracing
-            .AddOtlpExporter();
-    })
-    .WithMetrics(metrics =>
-    {
-        metrics
-            .AddAspNetCoreInstrumentation()
-            .AddRuntimeInstrumentation()
-            .AddMeter("Elsa.CustomMetrics")    // Custom Elsa metrics
-            .AddMeter("Elsa.Locking")          // Lock metrics
-            .AddOtlpExporter();
-    });
+using Elsa.Extensions;
+using Elsa.Workflows.CommitStates.Strategies;
 
 builder.Services.AddElsa(elsa =>
 {
     elsa.UseWorkflows(workflows =>
     {
-        workflows.UseCommitStrategies(strategies =>
-        {
-            strategies.UsePeriodicStrategy(TimeSpan.FromSeconds(30));
-            strategies.UseWorkflowExecutedStrategy();
-        });
-    });
-    
-    elsa.UseWorkflowRuntime(runtime =>
-    {
-        runtime.UseDistributedRuntime();
+        workflows.WithDefaultWorkflowCommitStrategy(
+            new PeriodicWorkflowStrategy(TimeSpan.FromSeconds(30)));
     });
 });
-
-var app = builder.Build();
-app.Run();
 ```
 
-### Key Metrics to Monitor
+## Increase only the measured worker queue
 
-| Metric | Description | Alert Threshold |
-|--------|-------------|-----------------|
-| `elsa.activities.executed` | Activities executed per second | N/A (baseline) |
-| `elsa.activity.duration` | Activity execution duration | P95 > 5000ms |
-| `elsa.lock.acquisition.time` | Lock acquisition latency | P95 > 500ms |
-| `elsa.lock.timeouts` | Lock acquisition failures | > 10/minute |
-| `db.connection.pool.active` | Active DB connections | > 80% of max pool |
+The three mediator queues default to four workers each. If command processing
+is the proven bottleneck, begin with a modest command-only change and compare
+the result with the baseline.
 
-## Performance Checklist
+```csharp
+using Elsa.Mediator.Options;
 
-Before deploying to production, verify:
+builder.Services.Configure<MediatorOptions>(options =>
+{
+    options.CommandWorkerCount = 8;
+    options.JobWorkerCount = 4;
+    options.NotificationWorkerCount = 4;
+});
+```
 
-- [ ] **Commit Strategy Selected**: Choose appropriate strategy for each workflow type
-- [ ] **Clustering Configured**: `UseDistributedRuntime()` enabled for multi-node deployments
-- [ ] **Distributed Locks**: Redis or database-backed locks configured
-- [ ] **Quartz Clustering**: Enabled for scheduled workflows
-- [ ] **Connection Pools**: Sized appropriately for expected concurrency
-- [ ] **Monitoring**: OpenTelemetry tracing and metrics configured
-- [ ] **Retention**: Workflow instance cleanup policies in place
+The command path is relevant to background workflow dispatch. Do not increase
+the other counts merely to match it: notifications and jobs can put additional
+load on the same persistence and external dependencies.
 
-## Related Documentation
+## Use the transactional outbox for in-workflow dispatch
 
-- [Performance Guide](README.md) - Main performance documentation
-- [Source File References](README-REFERENCES.md) - elsa-core file paths
-- [Clustering Guide](../clustering/README.md) - Distributed deployment patterns
-- [Quartz Cluster Configuration](../clustering/examples/quartz-cluster-config.md) - Detailed Quartz setup
+Enable the outbox when dispatching another workflow must be coordinated with
+the current workflow's state commit. It is not a free throughput feature: it
+adds persisted outbox work, so measure both successful dispatch latency and
+recovery behavior.
 
----
+```csharp
+using Elsa.Workflows.Runtime.Options;
 
-**Last Updated:** 2025-11-28
+builder.Services.Configure<WorkflowDispatcherOptions>(options =>
+{
+    options.UseTransactionalOutbox = true;
+    options.ProcessOutboxAfterCommit = true;
+    options.OutboxProcessorBatchSize = 100;
+});
+```
+
+If the immediate delivery work is itself a measurable commit-path bottleneck,
+test `ProcessOutboxAfterCommit = false`. Delivery will then rely on the
+recurring processor, so validate the resulting dispatch delay and restart
+behavior before adopting it.
+
+## Compare results consistently
+
+For every run, capture:
+
+- completed workflows per interval and end-to-end latency;
+- `elsa.workflow.started`, `elsa.workflow.completed`, and
+  `elsa.workflow.faulted` rates;
+- `elsa.activity.duration` percentiles and the slowest activity spans;
+- database resource use and commit latency; and
+- the result of a forced-restart recovery test.
+
+Use the same traffic mix for each run. Change one variable, retain the result
+only if it improves the system rather than shifting pressure to the database or
+a downstream dependency.
+
+See [Performance tuning](../README.md) for the decision guide and
+[Distributed tracing](../../../operate/distributed-tracing.md) for Elsa's
+OpenTelemetry instrumentation.
