@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-10)
+## Slice Inventory (2026-07-11)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -41,6 +41,7 @@ acceptance criterion below is already complete.
 - `DOC-027` Execution model
 - `DOC-022` Scaling and performance
 - `DOC-038` Distributed tracing
+- `DOC-039` Performance tuning
 - `DOC-028` Studio customization
 - `DOC-029` Custom UI hints
 - `DOC-030` Custom UI components
@@ -52,17 +53,15 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-039` Performance tuning
 - `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
 
 ### Recommended next slice
 
-- `DOC-039` Performance tuning: distributed tracing is now covered, but
-  production teams still need a release-backed tuning guide that connects
-  worker count, dispatcher behavior, persistence tradeoffs, and telemetry into
-  concrete scale-up decisions.
+- `DOC-043` Hangfire integration: performance tuning is now covered, but teams
+  using Hangfire still need release-backed setup, scheduling, storage, and
+  operating guidance.
 
 ### Newly discovered follow-on topics
 
@@ -92,6 +91,9 @@ acceptance criterion below is already complete.
 - `DOC-057` Elsa API permission reference: add a compact map of common Elsa API
   and Studio operations to `permissions` claim values, plus starter role
   templates for external identity providers.
+- `DOC-058` Workflow dispatch outbox operations: add a focused guide for
+  transactional-outbox delivery, retries, cleanup, and diagnosing delayed
+  cross-workflow dispatch.
 
 ### Most recent completed slice
 
@@ -100,15 +102,18 @@ acceptance criterion below is already complete.
   `Elsa.Workflows` instrumentation from the `Elsa.Diagnostics.OpenTelemetry`
   collector, documents OTLP routes and permissions, and clarifies the
   host-specific status of gRPC and `Elsa.OpenTelemetry`.
+- `DOC-039` Performance tuning:
+  completed on 2026-07-11 with release-backed commit-strategy, mediator-worker,
+  transactional-outbox, and telemetry guidance. The prior non-existent
+  commit-strategy APIs and unverified tuning recipes were removed.
 
 ## Critical Priority (Must Have - Block Users)
 
 ### Current slice note
 
-- `DOC-039` Performance tuning:
-  add a release-backed guide for runtime throughput tuning, worker counts,
-  dispatcher and queue considerations, persistence pressure, and the telemetry
-  signals operators should watch while scaling.
+- `DOC-043` Hangfire integration:
+  next recommended slice; document the release-backed scheduler integration,
+  storage configuration, worker options, and operational tradeoffs.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

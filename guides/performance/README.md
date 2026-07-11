@@ -1,374 +1,177 @@
 ---
 description: >-
-  Comprehensive guide to optimizing Elsa Workflows for high-throughput scenarios, covering commit strategies, state persistence tuning, observability, and performance best practices.
+  Release-backed guidance for measuring and tuning Elsa 3.8.0 throughput without
+  trading away workflow durability or operational visibility by accident.
 ---
 
-# Performance & Scaling Guide
+# Performance tuning
 
-## Executive Summary
+Tune Elsa from measurements, not from a generic worker-count target. A useful
+baseline includes representative workflow definitions, production-like
+persistence, and traffic that contains both new starts and resume work. Record
+throughput, end-to-end latency, database pressure, and the rate of incidents
+before changing one setting at a time.
 
-This guide covers performance optimization techniques for Elsa Workflows 3.x, focusing on workflow state persistence, commit strategies, observability, and tuning for high-throughput scenarios. These optimizations are essential for production deployments handling large volumes of workflow executions.
+In `release/3.8.0`, the main controls are:
 
-### Key Performance Considerations
+1. how often workflow state is committed;
+2. how much mediator work the host processes concurrently;
+3. whether in-workflow dispatch uses the transactional outbox; and
+4. the persistence, logging, and trace data retained for each execution.
 
-1. **State Persistence**: Control when and how workflow state is persisted to the database
-2. **Commit Strategies**: Choose optimal commit points to balance durability and throughput
-3. **Observability**: Monitor performance with built-in tracing and custom metrics
-4. **Resource Management**: Tune database connections, locks, and scheduling
+## Start with the bottleneck
 
-## Workflow Commit Strategies
+Use the workflow and activity spans from `Elsa.Workflows` to distinguish slow
+activity work from dispatcher, persistence, or downstream-service pressure.
+The built-in meter publishes `elsa.workflow.started`,
+`elsa.workflow.completed`, `elsa.workflow.faulted`, and
+`elsa.activity.duration`. The accompanying spans include workflow and activity
+identifiers, status, correlation ID, and tenant ID. See [Distributed
+Tracing](../../operate/distributed-tracing.md) for exporter setup.
 
-Elsa Workflows provides a flexible commit strategy system that controls when workflow state is persisted during execution. This is critical for balancing durability against performance.
+| Observation | Investigate before increasing concurrency |
+| --- | --- |
+| Activity durations rise while arrivals stay steady | the activity's downstream dependency, connection pool, or resource limit |
+| Workflow duration rises around commits | database latency, state size, bookmarks, variables, and log persistence |
+| Work arrives faster than it completes | command, job, or notification worker saturation; then downstream capacity |
+| Cross-workflow dispatch is slow or unreliable after a commit | transactional-outbox settings and the outbox store |
 
-### Understanding Commit Strategies
+Do not treat a faster benchmark as sufficient. Re-run failure and restart cases
+after every tuning change: a commit policy defines the recovery boundary.
 
-A **commit strategy** determines when the workflow engine persists workflow instance state to the database. More frequent commits increase durability (less work lost on failure) but decrease throughput (more database writes). Less frequent commits improve throughput but may lose more work on failure.
+## Choose a commit policy deliberately
 
-**Code References:**
-- `src/modules/Elsa.Workflows.Core/CommitStates/Extensions/ModuleExtensions.cs` - Registration extensions
-- `src/modules/Elsa.Workflows.Core/CommitStates/CommitStrategiesFeature.cs` - Feature configuration
-- `src/modules/Elsa.Workflows.Core/Features/WorkflowsFeature.cs` - WorkflowsFeature integration
+A commit persists more than the workflow row. Elsa's default commit handler
+persists bookmark changes, activity execution logs, workflow execution logs,
+variables, and workflow state, then runs deferred work. More commits therefore
+usually improve durability and state visibility while adding persistence work.
 
-### Registering Commit Strategies
-
-Use the `UseCommitStrategies` extension method on `WorkflowsFeature` to configure commit strategies:
+`UseCommitStrategies` registers strategies that a workflow definition can
+select. Registering a strategy does not make it the default; set a fallback
+explicitly when definitions without a selection need one.
 
 ```csharp
 using Elsa.Extensions;
 using Elsa.Workflows.CommitStates;
+using Elsa.Workflows.CommitStates.Strategies;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflows(workflows =>
-    {
-        // Register commit strategies
-        workflows.UseCommitStrategies(strategies =>
-        {
-            // Register built-in workflow-level strategies
-            strategies.UseWorkflowExecutingStrategy();   // Commit when workflow starts executing
-            strategies.UseWorkflowExecutedStrategy();    // Commit when workflow finishes executing
-            
-            // Register built-in activity-level strategies
-            strategies.UseActivityExecutingStrategy();   // Commit before each activity executes
-            strategies.UseActivityExecutedStrategy();    // Commit after each activity executes
-            
-            // Register time-based periodic strategy
-            strategies.UsePeriodicStrategy(TimeSpan.FromSeconds(30)); // Commit every 30 seconds
-        });
-    });
-});
-
-var app = builder.Build();
-app.Run();
-```
-
-### Built-in Commit Strategies
-
-Elsa provides the following built-in commit strategies in `src/modules/Elsa.Workflows.Core/CommitStates/Strategies/Workflows/`:
-
-| Strategy | Description | Use Case |
-|----------|-------------|----------|
-| `WorkflowExecutingWorkflowStrategy` | Commits when workflow starts | Capture initial state before execution |
-| `WorkflowExecutedWorkflowStrategy` | Commits when workflow completes | Minimal commits, highest throughput |
-| `ActivityExecutingWorkflowStrategy` | Commits before each activity | Maximum durability, lower throughput |
-| `ActivityExecutedWorkflowStrategy` | Commits after each activity | Balance of durability and visibility |
-| `PeriodicWorkflowStrategy` | Commits at regular time intervals | Predictable commit timing |
-
-**Code Reference:** `src/modules/Elsa.Workflows.Core/CommitStates/Strategies/Workflows/PeriodicWorkflowStrategy.cs`
-
-### Selecting a Strategy Per Workflow
-
-You can configure a specific commit strategy for individual workflows using `WorkflowOptions.CommitStrategyName`:
-
-**Programmatic (Core):**
-```csharp
-using Elsa.Workflows;
-using Elsa.Workflows.Models;
-
-public class HighThroughputWorkflow : WorkflowBase
-{
-    protected override void Build(IWorkflowBuilder builder)
-    {
-        // Use workflow-executed strategy for minimal commits
-        builder.WorkflowOptions.CommitStrategyName = "WorkflowExecuted";
-        
-        builder.Root = new Sequence
-        {
-            Activities =
-            {
-                new WriteLine("Step 1"),
-                new WriteLine("Step 2"),
-                new WriteLine("Step 3")
-            }
-        };
-    }
-}
-```
-
-**Code Reference:** `src/modules/Elsa.Workflows.Core/Models/WorkflowOptions.cs`
-
-**Via API Client:**
-```csharp
-using Elsa.Api.Client.Resources.WorkflowDefinitions.Models;
-
-var workflowOptions = new WorkflowOptions
-{
-    CommitStrategyName = "ActivityExecuted"
-};
-```
-
-**Code Reference:** `src/clients/Elsa.Api.Client/Resources/WorkflowDefinitions/Models/WorkflowOptions.cs`
-
-**Via Elsa Studio:**
-
-In Elsa Studio, you can set the commit strategy in the workflow definition settings under the "Advanced" or "Options" tab.
-
-### Custom Commit Strategy: Commit Every N Activities
-
-Elsa does not include a built-in "commit every N activities" strategy, but you can implement a custom `IWorkflowCommitStrategy`. Here's a minimal outline:
-
-```csharp
-using Elsa.Workflows;
-using Elsa.Workflows.CommitStates;
-
-/// <summary>
-/// Custom commit strategy that commits every N activities.
-/// Uses WorkflowExecutionContext.TransientProperties to track activity count.
-/// </summary>
-public class CommitEveryNActivitiesStrategy : IWorkflowCommitStrategy
-{
-    private const string ActivityCountKey = "CommitEveryN:ActivityCount";
-    private readonly int _n;
-
-    public CommitEveryNActivitiesStrategy(int n)
-    {
-        _n = n;
-    }
-
-    public string Name => $"CommitEvery{_n}Activities";
-
-    public ValueTask<bool> ShouldCommitAsync(WorkflowCommitStateContext context)
-    {
-        var executionContext = context.WorkflowExecutionContext;
-        
-        // Get current count from transient properties
-        var count = executionContext.TransientProperties
-            .GetValueOrDefault(ActivityCountKey, 0);
-        
-        // Increment on ActivityExecuted events
-        if (context.CommitEvent == WorkflowCommitEvent.ActivityExecuted)
-        {
-            count++;
-            executionContext.TransientProperties[ActivityCountKey] = count;
-            
-            // Commit every N activities
-            if (count >= _n)
-            {
-                executionContext.TransientProperties[ActivityCountKey] = 0;
-                return new ValueTask<bool>(true);
-            }
-        }
-        
-        return new ValueTask<bool>(false);
-    }
-}
-```
-
-**Registration:**
-```csharp
 builder.Services.AddElsa(elsa =>
 {
     elsa.UseWorkflows(workflows =>
     {
         workflows.UseCommitStrategies(strategies =>
         {
-            // Register custom strategy using the AddStrategy extension method
-            // The factory pattern allows for dependency injection
-            strategies.AddStrategy<CommitEveryNActivitiesStrategy>(
-                sp => new CommitEveryNActivitiesStrategy(10)); // Commit every 10 activities
+            strategies.AddStandardStrategies();
+            strategies.Add(
+                "Periodic10Seconds",
+                "Every 10 seconds",
+                "Commit workflow state at least every 10 seconds during execution.",
+                new PeriodicWorkflowStrategy(TimeSpan.FromSeconds(10)));
         });
+
+        // Fallback for definitions with no CommitStrategyName.
+        workflows.WithDefaultWorkflowCommitStrategy(
+            new PeriodicWorkflowStrategy(TimeSpan.FromSeconds(10)));
     });
 });
 ```
 
-> **Note:** This is a simplified outline. The `AddStrategy<T>` method registers a custom `IWorkflowCommitStrategy` with the DI container. A production implementation should handle edge cases like workflow completion, suspension, and error states.
+`AddStandardStrategies()` registers these workflow strategy names:
 
-## Observability and Monitoring
+| Name | When it commits | Typical fit |
+| --- | --- | --- |
+| `WorkflowExecuting` | when workflow execution starts | capture initial state early |
+| `WorkflowExecuted` | when workflow execution ends | short workflows where reduced write volume matters |
+| `ActivityExecuting` | before each activity executes | higher durability and diagnostic visibility |
+| `ActivityExecuted` | after each activity executes | workflows needing state after each completed activity |
 
-### Built-in OpenTelemetry instrumentation
+`PeriodicWorkflowStrategy` starts with a commit, then commits when its interval
+has elapsed. Give it a stable registry name and a meaningful display name with
+the four-argument `Add(...)` overload. `CommitStrategyName` stores the stable
+name (`Periodic10Seconds` in the example), while Studio shows the display name.
+This also avoids overwriting one periodic interval with another. It is a good
+starting point for long-running workflows only after you test its recovery
+behavior and database cost under realistic load.
 
-In `release/3.8.0`, workflow traces and metrics come from `Elsa.Workflows` itself via `WorkflowInstrumentation.ActivitySourceName` and `WorkflowInstrumentation.MeterName`.
+### Select the policy per workflow
 
-**Configuration:**
-```csharp
-using Elsa.Extensions;
-using OpenTelemetry.Trace;
+Set `WorkflowOptions.CommitStrategyName` to the registered name. In Elsa
+Studio, open the workflow's **Properties**, choose **Settings**, and select
+**Commit Strategy**. Studio loads the available strategies from the backend and
+saves the selected name in the workflow definition; the empty **Default**
+selection uses the host fallback.
 
-var builder = WebApplication.CreateBuilder(args);
+Use a per-workflow policy when one workload needs durability after every step
+while another is short-lived and can safely reduce persistence churn. Avoid
+inventing method calls such as `UseWorkflowExecutedStrategy()` or
+`UsePeriodicStrategy()`—they are not part of the 3.8.0 API.
 
-// Configure OpenTelemetry tracing
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing =>
-    {
-        tracing
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddSource("Elsa.Workflows")  // Add Elsa's activity source
-            .AddOtlpExporter();  // Export to OTLP-compatible backend
-    });
+## Increase worker counts carefully
 
-var app = builder.Build();
-app.Run();
-```
-
-**What's Traced:**
-- Workflow execution spans (start, complete, fault)
-- Activity execution spans (per activity)
-- Bookmark creation and resumption
-- HTTP workflow triggers
-
-### User-Defined Metrics
-
-For custom performance metrics beyond built-in tracing, you can implement your own metrics collection:
+Elsa's mediator has independent command, notification, and job worker counts,
+each defaulting to four. Change only the queue that matches measured backlog;
+raising all three multiplies concurrent work against the same database and
+external systems.
 
 ```csharp
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using Elsa.Workflows.Pipelines.ActivityExecution;
+using Elsa.Mediator.Options;
 
-public class MetricsMiddleware : IActivityExecutionMiddleware
+builder.Services.Configure<MediatorOptions>(options =>
 {
-    private static readonly Meter Meter = new("Elsa.CustomMetrics", "1.0.0");
-    private static readonly Counter<long> ActivitiesExecuted = 
-        Meter.CreateCounter<long>("elsa.activities.executed", "count");
-    private static readonly Histogram<double> ActivityDuration = 
-        Meter.CreateHistogram<double>("elsa.activity.duration", "ms");
-
-    private readonly ActivityMiddlewareDelegate _next;
-
-    public MetricsMiddleware(ActivityMiddlewareDelegate next)
-    {
-        _next = next;
-    }
-
-    public async ValueTask InvokeAsync(ActivityExecutionContext context)
-    {
-        var stopwatch = Stopwatch.StartNew();
-        
-        try
-        {
-            await _next(context);
-        }
-        finally
-        {
-            stopwatch.Stop();
-            
-            ActivitiesExecuted.Add(1, 
-                new KeyValuePair<string, object?>("activity.type", context.Activity.Type));
-            ActivityDuration.Record(stopwatch.Elapsed.TotalMilliseconds,
-                new KeyValuePair<string, object?>("activity.type", context.Activity.Type));
-        }
-    }
-}
-```
-
-> **Important Distinction:**
-> - **Built-in OpenTelemetry instrumentation** provides distributed tracing for debugging and understanding execution flow
-> - **User-defined metrics** are for custom performance monitoring, alerting, and capacity planning
-
-For the complete release-backed observability story, including Studio diagnostics modules and OTLP collection, see [Monitoring & Observability](../../operate/monitoring-observability.md).
-
-## Performance Tuning Best Practices
-
-### 1. Choose the Right Commit Strategy
-
-| Scenario | Recommended Strategy |
-|----------|---------------------|
-| High throughput, short-lived workflows | `WorkflowExecutedWorkflowStrategy` |
-| Long-running workflows with many activities | `PeriodicWorkflowStrategy` (e.g., every 30s) |
-| Critical workflows requiring durability | `ActivityExecutedWorkflowStrategy` |
-| Development/debugging | `ActivityExecutingWorkflowStrategy` |
-
-### 2. Database Optimization
-
-- **Connection Pooling:** Ensure adequate connection pool size for concurrent workflows
-- **Indexes:** Verify indexes on workflow instance and bookmark tables
-- **Batching:** Consider batch operations for bulk workflow management
-
-```csharp
-// Example: Configure EF Core with optimized settings
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseWorkflowManagement(management =>
-    {
-        management.UseEntityFrameworkCore(ef =>
-        {
-            ef.UseSqlServer(connectionString, options =>
-            {
-                options.CommandTimeout(60);  // Increase for large workflows
-                options.EnableRetryOnFailure(3);
-            });
-        });
-    });
+    options.CommandWorkerCount = 8;
+    options.JobWorkerCount = 4;
+    options.NotificationWorkerCount = 4;
 });
 ```
 
-### 3. Reduce Lock Contention
+The background workflow dispatcher queues work through the command path and
+returns before that work is executed. Start with a small increase, watch
+activity duration, database saturation, and faults, then keep or revert it.
+More workers are not a substitute for a slow activity implementation or an
+undersized downstream service.
 
-For clustered deployments, minimize lock contention:
+## Decide whether dispatch needs an outbox
 
-- Use workflow correlation IDs effectively to distribute load
-- Consider workflow partitioning strategies
-- Monitor lock acquisition times
-
-See [Clustering Guide](../clustering/README.md) for detailed distributed locking configuration.
-
-### 4. Scheduler Optimization
-
-For workflows with timers and delays:
-
-- Configure appropriate Quartz thread pool sizes
-- Use database-backed job store for clustering
-- Monitor scheduler queue depth
+For dispatch initiated during workflow execution, `WorkflowDispatcherOptions`
+can enable a transactional outbox. With `UseTransactionalOutbox` enabled, Elsa
+writes eligible dispatches with the workflow state commit and delivers them
+afterward. This makes recovery behavior more robust, but adds persistence and
+delivery work to the path.
 
 ```csharp
-builder.Services.AddElsa(elsa =>
+using Elsa.Workflows.Runtime.Options;
+
+builder.Services.Configure<WorkflowDispatcherOptions>(options =>
 {
-    elsa.UseScheduling(scheduling =>
-    {
-        scheduling.UseQuartzScheduler();
-    });
-    
-    elsa.UseQuartz(quartz =>
-    {
-        quartz.UsePostgreSql(connectionString);
-    });
+    options.UseTransactionalOutbox = true;
+    options.ProcessOutboxAfterCommit = true;
+    options.OutboxProcessorBatchSize = 100;
 });
 ```
 
-See `examples/throughput-tuning.md` for detailed tuning examples.
+`ProcessOutboxAfterCommit` defaults to `true`: disable it only when you accept
+waiting for the recurring outbox sweep in exchange for lower commit-path work.
+Tune `OutboxProcessorBatchSize` from observed backlog and database capacity;
+do not increase it blindly.
 
-## Key Configuration Reference
+## A safe tuning loop
 
-**Code Reference:** `src/modules/Elsa/Features/ElsaFeature.cs`
+1. Establish a baseline with representative starts, resumes, faults, and
+   restarts.
+2. Identify one bottleneck in traces, metrics, and persistence telemetry.
+3. Change one commit policy, worker count, or outbox setting.
+4. Re-run the same load and recovery test; compare throughput, latency,
+   database pressure, and incident rate.
+5. Keep the change only when the whole operating profile improves.
 
-| Configuration | Purpose | Default |
-|--------------|---------|---------|
-| `UseCommitStrategies()` | Register commit strategies | None (must be configured) |
-| `WorkflowOptions.CommitStrategyName` | Select strategy per workflow | Inherits from default |
-| `UseDistributedRuntime()` | Enable distributed execution | Disabled |
-| `UseQuartzScheduler()` | Use Quartz for scheduling | Default scheduler |
+For distributed topology and locking prerequisites, see [Distributed
+Hosting](../../hosting/distributed-hosting.md). For retaining less execution-log
+data, see [Log Persistence](../../optimize/log-persistence.md) and make that a
+separate measurement-driven decision.
 
-## Related Documentation
+## Related guides
 
-- [Throughput Tuning Examples](examples/throughput-tuning.md) - Practical tuning scenarios
-- [Source File References](README-REFERENCES.md) - elsa-core file paths
-- [Clustering Guide](../clustering/README.md) - Distributed deployment
-- [Log Persistence](../../optimize/log-persistence.md) - Activity log optimization
-- [Retention](../../optimize/retention.md) - Data retention policies
-
----
-
-**Last Updated:** 2025-11-28
+- [Throughput tuning examples](examples/throughput-tuning.md)
+- [Worker count](../../optimize/workers.md)
+- [Distributed tracing](../../operate/distributed-tracing.md)
+- [Source references](README-REFERENCES.md)
