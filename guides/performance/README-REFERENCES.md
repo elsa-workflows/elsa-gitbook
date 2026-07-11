@@ -5,7 +5,7 @@ The performance guidance in this directory is grounded in these
 
 | Concern | Source location | What it establishes |
 | --- | --- | --- |
-| Commit registration and defaults | `src/modules/Elsa.Workflows.Core/CommitStates/CommitStrategiesFeature.cs` and `CommitStates/Extensions/ModuleExtensions.cs` | `AddStandardStrategies()`, `Add(...)`, and `WithDefaultWorkflowCommitStrategy(...)` are the supported configuration surface. |
+| Commit registration and defaults | `src/modules/Elsa.Workflows.Core/CommitStates/CommitStrategiesFeature.cs` and `src/modules/Elsa.Workflows.Core/CommitStates/Extensions/ModuleExtensions.cs` | `AddStandardStrategies()`, `Add(...)`, and `WithDefaultWorkflowCommitStrategy(...)` are the supported configuration surface. |
 | Standard strategy names | `src/modules/Elsa.Workflows.Core/CommitStates/Helpers/ObjectMetadataDescriber.cs` | Registry names are derived from strategy types, yielding names such as `WorkflowExecuted`. |
 | Periodic behavior | `src/modules/Elsa.Workflows.Core/CommitStates/Strategies/Workflows/PeriodicWorkflowStrategy.cs` | A periodic strategy commits initially and after its configured interval. |
 | Commit cost | `src/modules/Elsa.Workflows.Runtime/Services/DefaultCommitStateHandler.cs` | A commit persists bookmarks, execution logs, variables, and workflow state. |
