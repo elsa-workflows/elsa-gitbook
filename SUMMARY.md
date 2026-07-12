@@ -71,6 +71,7 @@
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)
   * [Using a Trigger](guides/running-workflows/using-a-trigger.md)
   * [Timer and Scheduled Workflows](guides/running-workflows/timer-and-scheduled-workflows.md)
+  * [Hangfire Integration](guides/running-workflows/hangfire-integration.md)
   * [Long-Running Workflows](guides/running-workflows/long-running-workflows.md)
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
   * [Bulk Dispatch Workflows Activity](guides/running-workflows/bulk-dispatch-workflows.md)

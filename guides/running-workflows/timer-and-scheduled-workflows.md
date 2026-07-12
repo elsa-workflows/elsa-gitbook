@@ -117,6 +117,12 @@ Elsa 3.8.0 validates cron expressions through the `Cronos` parser using the six-
 * `0 0 9 * * MON-FRI` means 09:00:00 UTC on weekdays.
 * `0 */15 * * * *` means every 15 minutes.
 
+When you replace the local scheduler with Hangfire, Elsa still validates a
+published cron trigger with its Cronos parser and then passes the expression to
+Hangfire's recurring-job manager. Make sure it satisfies both systems; do not
+assume the local scheduler's six-field parser rules apply unchanged. See
+[Hangfire Integration](hangfire-integration.md).
+
 By default in 3.8.0, invalid cron expressions block publishing because workflow publishing fails on validation errors. If you intentionally want publishing to continue while surfacing validation warnings, disable that behavior in workflow management options:
 
 ```csharp
@@ -255,6 +261,8 @@ builder.Services.AddElsa(elsa =>
 ```
 
 In `release/3.8.0`, Hangfire replaces the scheduling feature's `WorkflowScheduler` with `HangfireWorkflowScheduler`.
+For durable storage, worker configuration, operational boundaries, and verification,
+see [Hangfire Integration](hangfire-integration.md).
 
 ## Operational notes
 

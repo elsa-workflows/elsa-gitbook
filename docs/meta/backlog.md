@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-11)
+## Slice Inventory (2026-07-12)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -53,15 +53,13 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-043` Hangfire integration
 - `DOC-047` API reference
 - `DOC-048` Activity reference
 
 ### Recommended next slice
 
-- `DOC-043` Hangfire integration: performance tuning is now covered, but teams
-  using Hangfire still need release-backed setup, scheduling, storage, and
-  operating guidance.
+- `DOC-047` API reference: Hangfire integration is now covered, but developers
+  still need a release-backed map of the most-used Elsa API surfaces.
 
 ### Newly discovered follow-on topics
 
@@ -97,6 +95,10 @@ acceptance criterion below is already complete.
 
 ### Most recent completed slice
 
+- `DOC-043` Hangfire integration:
+  completed on 2026-07-12 with a release-backed setup and operations guide that
+  documents durable storage, worker settings, tenancy, optional background
+  activity scheduling, and scheduler cleanup limitations.
 - `DOC-038` Distributed tracing:
   completed on 2026-07-10 with a release-backed guide that separates
   `Elsa.Workflows` instrumentation from the `Elsa.Diagnostics.OpenTelemetry`
@@ -109,11 +111,11 @@ acceptance criterion below is already complete.
 
 ## Critical Priority (Must Have - Block Users)
 
-### Current slice note
+### Latest slice note
 
 - `DOC-043` Hangfire integration:
-  next recommended slice; document the release-backed scheduler integration,
-  storage configuration, worker options, and operational tradeoffs.
+  completed on 2026-07-12; see
+  [Hangfire Integration](../../guides/running-workflows/hangfire-integration.md).
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
