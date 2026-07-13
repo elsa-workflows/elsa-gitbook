@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-12)
+## Slice Inventory (2026-07-13)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -50,16 +50,17 @@ acceptance criterion below is already complete.
 - `DOC-042` Bulk dispatch workflows activity
 - `DOC-049` Studio custom-elements embedding cookbook
 - `DOC-053` Alterations operational guide hardening
+- `DOC-047` API reference
 
 ### Available next slices
 
-- `DOC-047` API reference
 - `DOC-048` Activity reference
 
 ### Recommended next slice
 
-- `DOC-047` API reference: Hangfire integration is now covered, but developers
-  still need a release-backed map of the most-used Elsa API surfaces.
+- `DOC-048` Activity reference: build a task-oriented index of the activity
+  catalogue and route readers to the existing detailed activity guides, then
+  add release-backed coverage for the most-used missing categories.
 
 ### Newly discovered follow-on topics
 
@@ -99,6 +100,10 @@ acceptance criterion below is already complete.
   completed on 2026-07-12 with a release-backed setup and operations guide that
   documents durable storage, worker settings, tenancy, optional background
   activity scheduling, and scheduler cleanup limitations.
+- `DOC-047` API reference:
+  completed on 2026-07-13 with a release-backed API & Client map covering
+  management routes, client interfaces, permission claims, and the anonymous
+  bookmark-resume callback contract.
 - `DOC-038` Distributed tracing:
   completed on 2026-07-10 with a release-backed guide that separates
   `Elsa.Workflows` instrumentation from the `Elsa.Diagnostics.OpenTelemetry`
@@ -113,9 +118,9 @@ acceptance criterion below is already complete.
 
 ### Latest slice note
 
-- `DOC-043` Hangfire integration:
-  completed on 2026-07-12; see
-  [Hangfire Integration](../../guides/running-workflows/hangfire-integration.md).
+- `DOC-047` API reference: completed on 2026-07-13. See
+  [API & Client](../../guides/api-client/README.md) for the 3.8 API map,
+  least-privilege permission guidance, and bookmark-resume contract.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
