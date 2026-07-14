@@ -86,6 +86,7 @@
 
 ## Activities
 
+* [Activity Reference](activities/activity-reference.md)
 * [Common Properties](activities/common-properties.md)
 * [Blocking Activities & Triggers](activities/blocking-and-triggers/README.md)
 * [Control Flow](activities/control-flow/README.md)
