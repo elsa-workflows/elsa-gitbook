@@ -51,16 +51,17 @@ acceptance criterion below is already complete.
 - `DOC-049` Studio custom-elements embedding cookbook
 - `DOC-053` Alterations operational guide hardening
 - `DOC-047` API reference
+- `DOC-048` Activity reference
 
 ### Available next slices
 
-- `DOC-048` Activity reference
+No original backlog slices remain. Continue with the prioritized follow-on
+topics below.
 
 ### Recommended next slice
 
-- `DOC-048` Activity reference: build a task-oriented index of the activity
-  catalogue and route readers to the existing detailed activity guides, then
-  add release-backed coverage for the most-used missing categories.
+- `DOC-052` Workflow state and journal API cookbook: gives operators the next
+  highest-value cross-persona workflow for investigating a live instance.
 
 ### Newly discovered follow-on topics
 
@@ -96,6 +97,10 @@ acceptance criterion below is already complete.
 
 ### Most recent completed slice
 
+- `DOC-048` Activity reference:
+  completed on 2026-07-14 with a release-backed task map of core workflow,
+  scheduling, HTTP, composition, and extensibility activities, including the
+  module-aware activity-picker behavior in Elsa Studio.
 - `DOC-043` Hangfire integration:
   completed on 2026-07-12 with a release-backed setup and operations guide that
   documents durable storage, worker settings, tenancy, optional background
@@ -118,9 +123,10 @@ acceptance criterion below is already complete.
 
 ### Latest slice note
 
-- `DOC-047` API reference: completed on 2026-07-13. See
-  [API & Client](../../guides/api-client/README.md) for the 3.8 API map,
-  least-privilege permission guidance, and bookmark-resume contract.
+- `DOC-048` Activity reference: completed on 2026-07-14. See
+  [Activity Reference](../../activities/activity-reference.md) for the
+  release-backed activity map, task-based selection guide, and module-aware
+  Studio guidance.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
