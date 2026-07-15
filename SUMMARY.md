@@ -118,6 +118,7 @@
 
 * [Monitoring & Observability](operate/monitoring-observability.md)
 * [Distributed Tracing](operate/distributed-tracing.md)
+* [Investigate a Workflow Instance](operate/workflow-state-and-journal.md)
 * [Variables](operate/workflow-instance-variables.md)
 * [Activation Strategies](operate/workflow-activation-strategies.md)
 * [Incidents](operate/incidents/README.md)

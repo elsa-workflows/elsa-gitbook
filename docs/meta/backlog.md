@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-13)
+## Slice Inventory (2026-07-15)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -52,6 +52,7 @@ acceptance criterion below is already complete.
 - `DOC-053` Alterations operational guide hardening
 - `DOC-047` API reference
 - `DOC-048` Activity reference
+- `DOC-052` Workflow state and journal API cookbook
 
 ### Available next slices
 
@@ -60,8 +61,9 @@ topics below.
 
 ### Recommended next slice
 
-- `DOC-052` Workflow state and journal API cookbook: gives operators the next
-  highest-value cross-persona workflow for investigating a live instance.
+- `DOC-051` Activity and workflow testing cookbook: gives custom activity and
+  workflow authors a release-backed path to test behavior without reverse
+  engineering fixture setup from source.
 
 ### Newly discovered follow-on topics
 
@@ -72,9 +74,6 @@ topics below.
   `Elsa.Testing.Shared`, `ActivityTestFixture`, and `WorkflowTestFixture`
   so custom activity authors can validate behavior without reverse
   engineering test setup from source.
-- `DOC-052` Workflow state and journal API cookbook: add an operations-facing
-  guide for inspecting workflow state, filtered journal entries, activity
-  executions, and variable mutation endpoints when diagnosing live instances.
 - `DOC-054` Standalone versus modular configuration matrix: add a compact
   reference that maps `AddElsa(...)` host settings to `CShells` feature
   settings so teams can migrate between hosting models without reverse
@@ -97,6 +96,10 @@ topics below.
 
 ### Most recent completed slice
 
+- `DOC-052` Workflow state and journal API cookbook:
+  completed on 2026-07-15 with a release-backed operational playbook for
+  listing, reading, and diagnosing live instances through Studio and the API,
+  including journal filters, activity records, and controlled variable changes.
 - `DOC-048` Activity reference:
   completed on 2026-07-14 with a release-backed task map of core workflow,
   scheduling, HTTP, composition, and extensibility activities, including the
@@ -123,10 +126,9 @@ topics below.
 
 ### Latest slice note
 
-- `DOC-048` Activity reference: completed on 2026-07-14. See
-  [Activity Reference](../../activities/activity-reference.md) for the
-  release-backed activity map, task-based selection guide, and module-aware
-  Studio guidance.
+- `DOC-052` Workflow state and journal API cookbook: completed on 2026-07-15.
+  See [Investigate a Workflow Instance](../../operate/workflow-state-and-journal.md)
+  for the release-backed operations playbook.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

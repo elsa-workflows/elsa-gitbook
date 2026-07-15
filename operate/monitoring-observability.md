@@ -258,6 +258,10 @@ answer:
 5. If the problem spans multiple services, inspect exported OTLP traces and metrics.
 6. If the host may be unhealthy, verify `/health/ready` before retrying or scaling.
 
+For the instance and journal route shapes, filters, permission split, and
+activity call-stack workflow, see [Investigate a Workflow
+Instance](workflow-state-and-journal.md).
+
 ## Related guides
 
 - [Distributed Tracing](distributed-tracing.md)

@@ -16,6 +16,10 @@ If you need the broader model first, read [Workflow Context](../getting-started/
 
 This page is specifically about live instance variable inspection and mutation.
 
+For the wider operator workflow—finding an instance, reading its journal, and
+inspecting the activity that produced a value—see [Investigate a Workflow
+Instance](workflow-state-and-journal.md).
+
 Use it when you need to:
 
 - inspect the current values of persisted workflow variables
