@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-15)
+## Slice Inventory (2026-07-16)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -53,6 +53,7 @@ acceptance criterion below is already complete.
 - `DOC-047` API reference
 - `DOC-048` Activity reference
 - `DOC-052` Workflow state and journal API cookbook
+- `DOC-051` Activity and workflow testing cookbook
 
 ### Available next slices
 
@@ -61,9 +62,9 @@ topics below.
 
 ### Recommended next slice
 
-- `DOC-051` Activity and workflow testing cookbook: gives custom activity and
-  workflow authors a release-backed path to test behavior without reverse
-  engineering fixture setup from source.
+- `DOC-050` Studio platform integration: add a focused guide for
+  `AddPlatformIntegrationModule`, workflow-submission widgets, and when to use
+  that integration path instead of custom-elements embedding alone.
 
 ### Newly discovered follow-on topics
 
@@ -96,6 +97,10 @@ topics below.
 
 ### Most recent completed slice
 
+- `DOC-051` Activity and workflow testing cookbook:
+  completed on 2026-07-16 with a compact, release-backed path for unit-testing
+  activities, testing workflow routing through the journal, and escalating to
+  host integration tests and runtime investigation when appropriate.
 - `DOC-052` Workflow state and journal API cookbook:
   completed on 2026-07-15 with a release-backed operational playbook for
   listing, reading, and diagnosing live instances through Studio and the API,
@@ -126,9 +131,9 @@ topics below.
 
 ### Latest slice note
 
-- `DOC-052` Workflow state and journal API cookbook: completed on 2026-07-15.
-  See [Investigate a Workflow Instance](../../operate/workflow-state-and-journal.md)
-  for the release-backed operations playbook.
+- `DOC-051` Activity and workflow testing cookbook: completed on 2026-07-16.
+  See [Testing & Debugging Workflows](../../guides/testing-debugging.md) for
+  the release-backed activity and workflow testing path.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect
