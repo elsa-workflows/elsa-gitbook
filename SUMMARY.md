@@ -81,6 +81,7 @@
   * [Custom UI Components](guides/studio/custom-ui-components.md)
   * [Integration](guides/studio/integration/README.md)
     * [Custom Elements Embedding](guides/studio/integration/custom-elements.md)
+    * [Platform Artifact Submission](guides/studio/integration/platform-integration.md)
 * [Workflow Patterns](guides/patterns/README.md)
 * [Troubleshooting](guides/troubleshooting/README.md)
 

@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-16)
+## Slice Inventory (2026-07-17)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -49,6 +49,7 @@ acceptance criterion below is already complete.
 - `DOC-041` Loading workflows from JSON
 - `DOC-042` Bulk dispatch workflows activity
 - `DOC-049` Studio custom-elements embedding cookbook
+- `DOC-050` Studio platform integration
 - `DOC-053` Alterations operational guide hardening
 - `DOC-047` API reference
 - `DOC-048` Activity reference
@@ -62,19 +63,13 @@ topics below.
 
 ### Recommended next slice
 
-- `DOC-050` Studio platform integration: add a focused guide for
-  `AddPlatformIntegrationModule`, workflow-submission widgets, and when to use
-  that integration path instead of custom-elements embedding alone.
+- `DOC-054` Standalone versus modular configuration matrix: add a compact
+  reference that maps `AddElsa(...)` host settings to `CShells` feature
+  settings so teams can migrate between hosting models without reverse
+  engineering sample apps.
 
 ### Newly discovered follow-on topics
 
-- `DOC-050` Studio platform integration: add a focused guide for
-  `AddPlatformIntegrationModule`, workflow submission widgets, and when to
-  use that integration path instead of custom-elements embedding alone.
-- `DOC-051` Activity and workflow testing cookbook: add a focused guide for
-  `Elsa.Testing.Shared`, `ActivityTestFixture`, and `WorkflowTestFixture`
-  so custom activity authors can validate behavior without reverse
-  engineering test setup from source.
 - `DOC-054` Standalone versus modular configuration matrix: add a compact
   reference that maps `AddElsa(...)` host settings to `CShells` feature
   settings so teams can migrate between hosting models without reverse
@@ -97,6 +92,10 @@ topics below.
 
 ### Most recent completed slice
 
+- `DOC-050` Studio platform integration:
+  completed on 2026-07-17 with a release-backed guide for opt-in Studio-host
+  registration, manual and automatic artifact submission, payload-reference
+  constraints, and the separation from custom-elements embedding.
 - `DOC-051` Activity and workflow testing cookbook:
   completed on 2026-07-16 with a compact, release-backed path for unit-testing
   activities, testing workflow routing through the journal, and escalating to
@@ -131,9 +130,10 @@ topics below.
 
 ### Latest slice note
 
-- `DOC-051` Activity and workflow testing cookbook: completed on 2026-07-16.
-  See [Testing & Debugging Workflows](../../guides/testing-debugging.md) for
-  the release-backed activity and workflow testing path.
+- `DOC-050` Studio platform integration: completed on 2026-07-17 with a
+  release-backed guide for opt-in Studio-host registration, workflow-artifact
+  submission, payload-reference constraints, and its separation from
+  custom-elements embedding.
 
 ### DOC-001: V2 to V3 Migration Guide
 - **Persona**: Backend Integrator, Architect

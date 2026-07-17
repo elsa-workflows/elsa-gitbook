@@ -150,7 +150,9 @@ Examples from the released source include:
 - workflow definition labels widgets
 - console log widgets in workflow instance views
 - dashboard widgets and dashboard companion widgets
-- platform submission widgets from `AddPlatformIntegrationModule`
+- platform submission widgets from `AddPlatformIntegrationModule`; see
+  [Platform Artifact Submission](integration/platform-integration.md) when a
+  Studio host needs to register workflow artifacts with Elsa Platform
 
 Use widgets for:
 
