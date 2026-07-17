@@ -19,6 +19,11 @@ In Elsa 3.8.0, Elsa Studio is shipped in three integration shapes:
 
 If you are integrating Elsa Studio into React, Angular, MVC, Razor Pages, or another host application, the supported route in the source tree is the custom-elements host. The repository also includes a React wrapper around those custom elements.
 
+If you own a custom Studio host and need to register workflow-definition
+artifacts with Elsa Platform, add the opt-in
+[Platform Artifact Submission](platform-integration.md) module. It is separate
+from custom-elements embedding and is not enabled by the stock Studio hosts.
+
 ## Choose the Right Host Model
 
 Use the standalone hosts when Studio should run as its own application.
