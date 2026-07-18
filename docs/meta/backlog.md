@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-17)
+## Slice Inventory (2026-07-18)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -55,6 +55,7 @@ acceptance criterion below is already complete.
 - `DOC-048` Activity reference
 - `DOC-052` Workflow state and journal API cookbook
 - `DOC-051` Activity and workflow testing cookbook
+- `DOC-054` Standalone versus modular configuration matrix
 
 ### Available next slices
 
@@ -63,17 +64,22 @@ topics below.
 
 ### Recommended next slice
 
-- `DOC-054` Standalone versus modular configuration matrix: add a compact
-  reference that maps `AddElsa(...)` host settings to `CShells` feature
-  settings so teams can migrate between hosting models without reverse
-  engineering sample apps.
+- `DOC-055` Message broker topology cookbook: document queue naming, temporary
+  endpoint lifetime, consumer placement, and cleanup tradeoffs across the
+  broker integrations.
+
+### Current run selection (2026-07-18)
+
+- Selected and completed `DOC-054`, the highest-priority configuration gap in
+  the follow-on inventory.
+- Added a release-backed matrix for the standalone `AddElsa(...)` host and the
+  CShells-based modular server, including feature activation, shell-scoped
+  settings, identity paths, persistence, and the shipped configuration-shape
+  caveat.
+- No additional topic was discovered during source validation.
 
 ### Newly discovered follow-on topics
 
-- `DOC-054` Standalone versus modular configuration matrix: add a compact
-  reference that maps `AddElsa(...)` host settings to `CShells` feature
-  settings so teams can migrate between hosting models without reverse
-  engineering sample apps.
 - `DOC-055` Message broker topology cookbook: add an operations-facing guide
   for queue naming, temporary endpoint lifetime, consumer placement, and broker
   cleanup tradeoffs across MassTransit, Azure Service Bus activities, and
@@ -92,6 +98,10 @@ topics below.
 
 ### Most recent completed slice
 
+- `DOC-054` Standalone versus modular configuration matrix:
+  completed on 2026-07-18 with a release-backed guide mapping code-first
+  `AddElsa(...)` composition to CShells feature activation and shell-scoped
+  settings, including identity and configuration-shape caveats.
 - `DOC-050` Studio platform integration:
   completed on 2026-07-17 with a release-backed guide for opt-in Studio-host
   registration, manual and automatic artifact submission, payload-reference
