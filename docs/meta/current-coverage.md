@@ -66,13 +66,14 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (9 pages)
+### GUIDES (10 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
 - **Designer** (`guides/http-workflows/designer.md`)
 - **Programmatic** (`guides/http-workflows/programmatic.md`)
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
+- **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
@@ -146,6 +147,7 @@ Based on the current structure, the following core concepts are documented:
 
 ### Hosting & Operations
 - ✅ Distributed hosting
+- ✅ Standalone and CShells-based modular host configuration matrix
 - ✅ Docker and Docker Compose examples
 - ✅ Workflow instance variables
 - ✅ Activation strategies
