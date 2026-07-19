@@ -5,6 +5,7 @@ This section provides guides for integrating Elsa Workflows with other technolog
 ## Guides in This Section
 
 * [Blazor Dashboard](blazor-dashboard.md) - Integrating Elsa Studio with Blazor Server applications, covering hosting patterns and authentication configuration.
+* [Message Broker Topology](message-broker-topology.md) - Choosing endpoint ownership, consumer placement, temporary-resource cleanup, and distributed cache invalidation.
 
 ## Related Documentation
 

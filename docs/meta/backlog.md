@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-18)
+## Slice Inventory (2026-07-19)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -56,6 +56,7 @@ acceptance criterion below is already complete.
 - `DOC-052` Workflow state and journal API cookbook
 - `DOC-051` Activity and workflow testing cookbook
 - `DOC-054` Standalone versus modular configuration matrix
+- `DOC-055` Message broker topology cookbook
 
 ### Available next slices
 
@@ -64,19 +65,21 @@ topics below.
 
 ### Recommended next slice
 
-- `DOC-055` Message broker topology cookbook: document queue naming, temporary
-  endpoint lifetime, consumer placement, and cleanup tradeoffs across the
-  broker integrations.
+- `DOC-056` Custom resilience extensibility: add a focused guide for
+  `IResilienceStrategy`, `AddResilienceStrategyType<T>()`, and
+  `WithRetryAttemptRecorder(...)` so teams can persist retry diagnostics and
+  introduce non-HTTP resilience policies without reverse engineering tests and
+  feature registration.
 
-### Current run selection (2026-07-18)
+### Current run selection (2026-07-19)
 
-- Selected and completed `DOC-054`, the highest-priority configuration gap in
-  the follow-on inventory.
-- Added a release-backed matrix for the standalone `AddElsa(...)` host and the
-  CShells-based modular server, including feature activation, shell-scoped
-  settings, identity paths, persistence, and the shipped configuration-shape
-  caveat.
-- No additional topic was discovered during source validation.
+- Selected and completed `DOC-055`, the recommended message-broker topology
+  follow-on slice.
+- Added a release-backed cookbook for MassTransit endpoint naming, workflow
+  dispatcher channels, temporary consumers, API/worker placement, Azure Service
+  Bus activity resources, Azure cleanup scope, and per-node cache invalidation.
+- No additional topic was discovered during source validation; `DOC-056` through
+  `DOC-058` remain available.
 
 ### Newly discovered follow-on topics
 
@@ -97,6 +100,12 @@ topics below.
   cross-workflow dispatch.
 
 ### Most recent completed slice
+
+- `DOC-055` Message broker topology cookbook:
+  completed on 2026-07-19 with a release-backed guide comparing the MassTransit
+  message-activity, workflow-dispatcher, Azure Service Bus activity, and
+  distributed-cache topologies, including naming, placement, lifetime, and
+  cleanup tradeoffs.
 
 - `DOC-054` Standalone versus modular configuration matrix:
   completed on 2026-07-18 with a release-backed guide mapping code-first

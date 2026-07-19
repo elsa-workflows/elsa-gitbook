@@ -177,6 +177,9 @@ This matters operationally because the same broker can host both your
 application messages and Elsa's own internal dispatcher traffic without those
 concerns being the same feature.
 
+For queue naming, temporary endpoint lifetime, API/worker consumer placement,
+and broker cleanup tradeoffs, see the [Message Broker Topology cookbook](../../guides/integration/message-broker-topology.md).
+
 ## Contract guidance
 
 `AddMessageType<T>()` accepts reference types, but the runtime behavior is more
