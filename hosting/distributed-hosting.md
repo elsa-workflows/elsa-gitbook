@@ -98,6 +98,9 @@ separate from the [MassTransit message-type activities](../activities/masstransi
 which expose application message contracts such as `OrderCreated` as workflow
 activities.
 
+For the resulting per-node cache consumer topology and temporary endpoint
+lifecycle, see the [Message Broker Topology cookbook](../guides/integration/message-broker-topology.md).
+
 ### 4. Quartz.NET Clustered Mode
 
 When deploying multiple Elsa instances in a distributed environment, scheduled jobs (timers, delays, cron triggers) must execute only once across the cluster to prevent duplicate executions. Quartz.NET clustering ensures this by using a shared database to coordinate job execution across nodes.

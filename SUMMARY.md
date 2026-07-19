@@ -48,6 +48,7 @@
 * [Kubernetes Deployment](guides/kubernetes-deployment.md)
 * [Integration](guides/integration/README.md)
   * [Blazor Dashboard](guides/integration/blazor-dashboard.md)
+  * [Message Broker Topology](guides/integration/message-broker-topology.md)
 * [Clustering](guides/clustering/README.md)
 * [Performance & Scaling](guides/performance/README.md)
   * [Throughput Tuning](guides/performance/examples/throughput-tuning.md)
