@@ -63,23 +63,26 @@ acceptance criterion below is already complete.
 No original backlog slices remain. Continue with the prioritized follow-on
 topics below.
 
+- `DOC-057` Elsa API permission reference: add a compact map of common Elsa API
+  and Studio operations to `permissions` claim values, plus starter role
+  templates for external identity providers.
+- `DOC-058` Workflow dispatch outbox operations: add a focused guide for
+  transactional-outbox delivery, retries, cleanup, and diagnosing delayed
+  cross-workflow dispatch.
+
 ### Recommended next slice
 
-- `DOC-056` Custom resilience extensibility: add a focused guide for
-  `IResilienceStrategy`, `AddResilienceStrategyType<T>()`, and
-  `WithRetryAttemptRecorder(...)` so teams can persist retry diagnostics and
-  introduce non-HTTP resilience policies without reverse engineering tests and
-  feature registration.
+- `DOC-057` Elsa API permission reference
 
-### Current run selection (2026-07-19)
+### Current run selection (2026-07-20)
 
-- Selected and completed `DOC-055`, the recommended message-broker topology
+- Selected and completed `DOC-056`, the recommended custom-resilience
   follow-on slice.
-- Added a release-backed cookbook for MassTransit endpoint naming, workflow
-  dispatcher channels, temporary consumers, API/worker placement, Azure Service
-  Bus activity resources, Azure cleanup scope, and per-node cache invalidation.
-- No additional topic was discovered during source validation; `DOC-056` through
-  `DOC-058` remain available.
+- Added a release-backed guide for custom Polly strategies, serializer type
+  registration versus catalog configuration, resilient activity integration,
+  Studio behavior, and retry recorder/reader persistence tradeoffs.
+- `DOC-057` and `DOC-058` remain available for later runs; no new topic has been
+  been added during this source review.
 
 ### Newly discovered follow-on topics
 
@@ -100,6 +103,11 @@ topics below.
   cross-workflow dispatch.
 
 ### Most recent completed slice
+
+- `DOC-056` Custom resilience extensibility:
+  completed on 2026-07-20 with a release-backed guide for custom Polly
+  strategies, `Resilience:Strategies` configuration, `IResilientActivity`
+  integration, Studio gating, and retry-attempt recording limitations.
 
 - `DOC-055` Message broker topology cookbook:
   completed on 2026-07-19 with a release-backed guide comparing the MassTransit

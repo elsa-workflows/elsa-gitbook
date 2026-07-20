@@ -115,6 +115,9 @@ In `release/3.8.0`:
 - the HTTP module registers `HttpResilienceStrategy` as an available strategy
   type
 
+For custom strategy types, configuration, resilient activities, and retry
+recorders, see [Custom resilience strategies](../../guides/extensibility/custom-resilience-strategies.md).
+
 This is the right fit for transient downstream failures such as `429`,
 `503`, timeouts, or short network interruptions.
 
