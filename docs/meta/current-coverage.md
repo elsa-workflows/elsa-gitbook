@@ -34,9 +34,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Liquid** (`expressions/liquid.md`)
 - **Python** (`expressions/python.md`)
 
-### EXTENSIBILITY (2 pages)
+### EXTENSIBILITY (3 pages)
 
 - **This topic covers extending Elsa with your own custom activities.** (`extensibility/custom-activities.md`)
+- **Add custom Polly-based resilience strategies and retry diagnostics to Elsa 3.8.0 workflows.** (`guides/extensibility/custom-resilience-strategies.md`)
 - **>-** (`extensibility/reusable-triggers-3.5-preview.md`)
 
 ### FEATURES (7 pages)
@@ -161,6 +162,7 @@ Based on the current structure, the following core concepts are documented:
 
 ### Extensibility
 - ✅ Custom activities
+- ✅ Custom resilience strategies and retry-attempt recording
 - ✅ Reusable triggers (preview)
 
 ### Advanced Features
