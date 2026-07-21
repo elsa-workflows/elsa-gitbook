@@ -196,6 +196,8 @@ ASP.NET Core role policies such as `RequireRole("Admin")` are useful for your ow
 
 Permission names are not limited to constants in `PermissionNames`. Shared constants include `*`, `ManageWorkflowRuntime`, expression execution permissions, and bookmark dead-letter permissions. Many endpoints use explicit strings through `ConfigurePermissions(...)`, and feature modules can define their own constants.
 
+For the release-backed route map and least-privilege role templates, see [Elsa API Permissions](security/permission-reference.md).
+
 | Scenario | Permissions |
 | --- | --- |
 | Full Elsa API access | `*` |
@@ -209,7 +211,7 @@ Permission names are not limited to constants in `PermissionNames`. Shared const
 | Cancel or delete workflow instances | `cancel:workflow-instances`, `delete:workflow-instances` |
 | Runtime administration | `ManageWorkflowRuntime` |
 
-For read-only workflow instance and execution result screens, start with `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. The current runtime status endpoint requires `ManageWorkflowRuntime`, which also grants pause, resume, and force-drain authority.
+For read-only workflow instance and execution result screens, start with `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. The runtime status endpoint accepts `read:workflow-runtime` or `ManageWorkflowRuntime`; pause, resume, and force-drain endpoints require `ManageWorkflowRuntime`.
 
 For workflow routes handled by the `HttpEndpoint` activity, authorization is configured separately with the activity's `Authorize` and `Policy` settings. See [HTTP Endpoint Security](security/http-endpoint-security.md).
 ## OIDC Configuration

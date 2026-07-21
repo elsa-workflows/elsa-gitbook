@@ -148,6 +148,8 @@ ASP.NET Core policies such as `RequireRole("Admin")` protect custom host endpoin
 
 Common read-only workflow access uses `read:workflow-definitions`, `read:workflow-instances`, and `read:activity-execution`. Use `*` only for full administrative access. For workflow ingress routes handled by the `HttpEndpoint` activity, see [HTTP Endpoint Security](http-endpoint-security.md).
 
+For the route-by-route permission map, Studio capability notes, and least-privilege role templates, see [Elsa API Permissions](permission-reference.md).
+
 **Important:**
 - **Never commit secrets** to source control
 - Use environment variables or secret managers (Azure Key Vault, AWS Secrets Manager, HashiCorp Vault)

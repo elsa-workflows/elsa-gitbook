@@ -67,7 +67,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (10 pages)
+### GUIDES (11 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -75,6 +75,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Programmatic** (`guides/http-workflows/programmatic.md`)
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
 - **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
+- **Elsa API Permissions** (`guides/security/permission-reference.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
@@ -168,6 +169,7 @@ Based on the current structure, the following core concepts are documented:
 ### Advanced Features
 - ✅ Multitenancy setup
 - ✅ Authentication
+- ✅ Elsa API permission reference with Studio capability and role templates
 - ✅ Alterations and alteration plans
 - ✅ Log persistence and retention
 - ✅ Logging framework
@@ -220,7 +222,8 @@ Based on the current structure, the following core concepts are documented:
    - ⚠️ HTTP workflows guide exists but could be expanded
    - ❌ No workflow testing guide
    - ❌ No data persistence patterns guide
-   - ⚠️ Security guidance now includes dedicated guides for endpoint security and external identity providers, but role-oriented permission recipes are still missing
+   - ✅ Security guidance now includes endpoint security, external identity
+     providers, and role-oriented permission recipes
    - ❌ No workflow design patterns
 
 ## Documentation Quality Notes

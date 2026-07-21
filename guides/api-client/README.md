@@ -39,6 +39,8 @@ do not reuse a Studio administrator token for background services.
 Configure authentication and claims before calling these endpoints. See
 [Authentication & Authorization](../authentication.md) and
 [External Identity Providers](../security/external-identity-providers.md).
+For a route map and least-privilege role templates, see [Elsa API
+Permissions](../security/permission-reference.md).
 
 The exception is `GET`/`POST /bookmarks/resume`. Elsa deliberately allows this
 route anonymously because the encrypted `t` token identifies the bookmark and
