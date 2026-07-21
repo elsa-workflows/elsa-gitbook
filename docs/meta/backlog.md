@@ -57,22 +57,30 @@ acceptance criterion below is already complete.
 - `DOC-051` Activity and workflow testing cookbook
 - `DOC-054` Standalone versus modular configuration matrix
 - `DOC-055` Message broker topology cookbook
+- `DOC-056` Custom resilience extensibility
+- `DOC-057` Elsa API permission reference
 
 ### Available next slices
 
 No original backlog slices remain. Continue with the prioritized follow-on
 topics below.
 
-- `DOC-057` Elsa API permission reference: add a compact map of common Elsa API
-  and Studio operations to `permissions` claim values, plus starter role
-  templates for external identity providers.
 - `DOC-058` Workflow dispatch outbox operations: add a focused guide for
   transactional-outbox delivery, retries, cleanup, and diagnosing delayed
   cross-workflow dispatch.
 
 ### Recommended next slice
 
-- `DOC-057` Elsa API permission reference
+- `DOC-058` Workflow dispatch outbox operations
+
+### Current run selection (2026-07-21)
+
+- Selected and completed `DOC-057`, the Elsa API permission reference.
+- Added a compact permission-to-operation map, Studio-facing capability
+  guidance, and least-privilege role templates grounded in the remote
+  `origin/release/3.8.0` source branches.
+- `DOC-058` remains available for the next run; no new topic was added during
+  this source review.
 
 ### Current run selection (2026-07-20)
 
@@ -81,28 +89,20 @@ topics below.
 - Added a release-backed guide for custom Polly strategies, serializer type
   registration versus catalog configuration, resilient activity integration,
   Studio behavior, and retry recorder/reader persistence tradeoffs.
-- `DOC-057` and `DOC-058` remain available for later runs; no new topic has been
-  been added during this source review.
+- `DOC-057` was selected for the 2026-07-21 run; `DOC-058` remains available.
 
 ### Newly discovered follow-on topics
 
-- `DOC-055` Message broker topology cookbook: add an operations-facing guide
-  for queue naming, temporary endpoint lifetime, consumer placement, and broker
-  cleanup tradeoffs across MassTransit, Azure Service Bus activities, and
-  distributed cache invalidation.
-- `DOC-056` Custom resilience extensibility: add a focused guide for
-  `IResilienceStrategy`, `AddResilienceStrategyType<T>()`, and
-  `WithRetryAttemptRecorder(...)` so teams can persist retry diagnostics and
-  introduce non-HTTP resilience policies without reverse engineering tests and
-  feature registration.
-- `DOC-057` Elsa API permission reference: add a compact map of common Elsa API
-  and Studio operations to `permissions` claim values, plus starter role
-  templates for external identity providers.
 - `DOC-058` Workflow dispatch outbox operations: add a focused guide for
   transactional-outbox delivery, retries, cleanup, and diagnosing delayed
   cross-workflow dispatch.
 
 ### Most recent completed slice
+
+- `DOC-057` Elsa API permission reference:
+  completed on 2026-07-21 with a release-backed map of core and module
+  permissions, Studio capability behavior, role templates, and authorization
+  boundary caveats.
 
 - `DOC-056` Custom resilience extensibility:
   completed on 2026-07-20 with a release-backed guide for custom Polly
