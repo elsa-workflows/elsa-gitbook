@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-19)
+## Slice Inventory (2026-07-22)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -59,19 +59,32 @@ acceptance criterion below is already complete.
 - `DOC-055` Message broker topology cookbook
 - `DOC-056` Custom resilience extensibility
 - `DOC-057` Elsa API permission reference
+- `DOC-058` Workflow dispatch outbox operations
 
 ### Available next slices
 
 No original backlog slices remain. Continue with the prioritized follow-on
 topics below.
 
-- `DOC-058` Workflow dispatch outbox operations: add a focused guide for
-  transactional-outbox delivery, retries, cleanup, and diagnosing delayed
-  cross-workflow dispatch.
+- `DOC-059` Runtime coordination storage: add a focused production guide for
+  the key-value and distributed-lock providers used by outbox, worker, and
+  multi-node runtime coordination.
 
 ### Recommended next slice
 
-- `DOC-058` Workflow dispatch outbox operations
+- `DOC-059` Runtime coordination storage
+
+### Current run selection (2026-07-22)
+
+- Selected and completed `DOC-058`, the workflow dispatch outbox operations
+  guide. The release source confirms a distinct runtime path for dispatches
+  made during workflow execution, with post-commit processing, retry limits,
+  orphan cleanup, and batch controls that are not covered by the existing
+  performance guidance.
+- Added `DOC-059` during source review: the default key-value store and local
+  file lock are unsafe durability/coordination defaults for production, and
+  the existing docs do not bring those runtime-provider choices together for
+  the outbox and other multi-node coordination paths.
 
 ### Current run selection (2026-07-21)
 
@@ -93,9 +106,9 @@ topics below.
 
 ### Newly discovered follow-on topics
 
-- `DOC-058` Workflow dispatch outbox operations: add a focused guide for
-  transactional-outbox delivery, retries, cleanup, and diagnosing delayed
-  cross-workflow dispatch.
+- `DOC-059` Runtime coordination storage: add a focused production guide for
+  the key-value and distributed-lock providers used by outbox, worker, and
+  multi-node runtime coordination.
 
 ### Most recent completed slice
 
@@ -103,6 +116,10 @@ topics below.
   completed on 2026-07-21 with a release-backed map of core and module
   permissions, Studio capability behavior, role templates, and authorization
   boundary caveats.
+
+- `DOC-058` Workflow dispatch outbox operations:
+  completed on 2026-07-22 with release-backed configuration, delivery,
+  retry, cleanup, locking, durability, and diagnosis guidance.
 
 - `DOC-056` Custom resilience extensibility:
   completed on 2026-07-20 with a release-backed guide for custom Polly

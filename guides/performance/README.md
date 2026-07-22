@@ -136,7 +136,11 @@ For dispatch initiated during workflow execution, `WorkflowDispatcherOptions`
 can enable a transactional outbox. With `UseTransactionalOutbox` enabled, Elsa
 writes eligible dispatches with the workflow state commit and delivers them
 afterward. This makes recovery behavior more robust, but adds persistence and
-delivery work to the path.
+delivery work to the path. See the [Workflow dispatch outbox][outbox guide]
+for the delivery lifecycle, retry limits, orphan cleanup, and duplicate-
+delivery caveats.
+
+[outbox guide]: ../architecture/workflow-dispatch-outbox.md
 
 ```csharp
 using Elsa.Workflows.Runtime.Options;
