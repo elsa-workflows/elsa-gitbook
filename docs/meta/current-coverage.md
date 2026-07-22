@@ -75,6 +75,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Programmatic** (`guides/http-workflows/programmatic.md`)
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
 - **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
+- **Workflow Dispatch Outbox** (`guides/architecture/workflow-dispatch-outbox.md`)
 - **Elsa API Permissions** (`guides/security/permission-reference.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)

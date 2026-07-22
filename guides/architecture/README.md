@@ -64,7 +64,9 @@ await workflowDispatcher.DispatchAsync(
 For the release-backed lifecycle that connects execution, dispatch, triggers,
 bookmarks, persistence, and resume behavior, see
 [Execution Model](execution-model.md). For a deeper dive into dispatching, see
-[Workflow Dispatcher Architecture](workflow-dispatcher.md).
+[Workflow Dispatcher Architecture](workflow-dispatcher.md). For transactional
+delivery of dispatches made during workflow execution, see [Workflow Dispatch
+Outbox](workflow-dispatch-outbox.md).
 
 #### IWorkflowRuntime
 
@@ -361,6 +363,7 @@ For detailed information on creating custom modules and plugins, see the [Module
 To dive deeper into specific aspects of Elsa's architecture:
 
 * [**Workflow Dispatcher Architecture**](workflow-dispatcher.md) - Deep dive into `IWorkflowDispatcher` and dispatching patterns
+* [**Workflow Dispatch Outbox**](workflow-dispatch-outbox.md) - Coordinate in-workflow dispatch with committed state and recover delayed delivery
 * [**Modules and Plugins**](../extensibility/modules-and-plugins.md) - Learn how to extend Elsa with custom modules and activities
 * [**Custom Activities**](../../extensibility/custom-activities.md) - Create domain-specific activities
 * [**Multitenancy Setup**](../../multitenancy/setup.md) - Configure multitenancy in your application

@@ -34,6 +34,7 @@
 * [Architecture](guides/architecture/README.md)
   * [Execution Model](guides/architecture/execution-model.md)
   * [Workflow Dispatcher Architecture](guides/architecture/workflow-dispatcher.md)
+  * [Workflow Dispatch Outbox](guides/architecture/workflow-dispatch-outbox.md)
   * [Standalone and Modular Hosting](guides/architecture/standalone-and-modular-hosting.md)
 * [Onboarding](guides/onboarding/README.md)
   * [Hosting Elsa in an Existing App](guides/onboarding/hosting-elsa-in-existing-app.md)
