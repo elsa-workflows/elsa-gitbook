@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-22)
+## Slice Inventory (2026-07-23)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -60,19 +60,28 @@ acceptance criterion below is already complete.
 - `DOC-056` Custom resilience extensibility
 - `DOC-057` Elsa API permission reference
 - `DOC-058` Workflow dispatch outbox operations
+- `DOC-059` Runtime coordination storage
 
 ### Available next slices
 
 No original backlog slices remain. Continue with the prioritized follow-on
 topics below.
 
-- `DOC-059` Runtime coordination storage: add a focused production guide for
-  the key-value and distributed-lock providers used by outbox, worker, and
-  multi-node runtime coordination.
+- `DOC-060` Readiness and health checks: add a concise operator guide for
+  persistence, distributed-lock, and host-readiness probes.
 
 ### Recommended next slice
 
-- `DOC-059` Runtime coordination storage
+- `DOC-060` Readiness and health checks
+
+### Current run selection (2026-07-23)
+
+- Selected and completed `DOC-059` Runtime coordination storage with a
+  release-backed guide covering the key-value and distributed-lock providers
+  used by outbox, worker, and multi-node runtime coordination.
+- Added `DOC-060` during source review because the release exposes a useful
+  distributed-lock readiness probe, but the GitBook has no focused guide for
+  composing it with persistence and host-readiness checks.
 
 ### Current run selection (2026-07-22)
 
@@ -106,9 +115,9 @@ topics below.
 
 ### Newly discovered follow-on topics
 
-- `DOC-059` Runtime coordination storage: add a focused production guide for
-  the key-value and distributed-lock providers used by outbox, worker, and
-  multi-node runtime coordination.
+- `DOC-060` Readiness and health checks: add a concise operator guide for
+  `AddElsaReadinessChecks`, persistence probes, distributed-lock probes, and
+  deployment readiness behavior.
 
 ### Most recent completed slice
 
@@ -116,6 +125,11 @@ topics below.
   completed on 2026-07-21 with a release-backed map of core and module
   permissions, Studio capability behavior, role templates, and authorization
   boundary caveats.
+
+- `DOC-059` Runtime coordination storage:
+  completed on 2026-07-23 with a release-backed guide separating durable
+  key-value storage from cross-node distributed locking, mapping both to
+  outbox and runtime consumers, and documenting readiness validation.
 
 - `DOC-058` Workflow dispatch outbox operations:
   completed on 2026-07-22 with release-backed configuration, delivery,
