@@ -92,9 +92,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Introduction** (`multitenancy/introduction.md`)
 - **Setup** (`multitenancy/setup.md`)
 
-### OPERATE (8 pages)
+### OPERATE (9 pages)
 
 - **Monitoring & Observability** (`operate/monitoring-observability.md`)
+- **Readiness and Health Checks** (`operate/readiness-and-health-checks.md`)
 - **Distributed Tracing** (`operate/distributed-tracing.md`)
 - **Investigate a Workflow Instance** (`operate/workflow-state-and-journal.md`)
 - **Incidents** (`operate/incidents/README.md`)
@@ -157,6 +158,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Activation strategies
 - ✅ Incidents and strategies
 - ✅ Monitoring and distributed tracing guidance
+- ✅ Runtime, persistence, and distributed-lock readiness guidance
 - ✅ Workflow-instance state, journal, activity-execution, and variable investigation guidance
 
 ### HTTP Workflows
