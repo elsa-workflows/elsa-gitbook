@@ -198,6 +198,10 @@ builder.Services
     .AddElsaReadinessChecks(includeDistributedLocks: true);
 ```
 
+For the complete runtime, persistence, and endpoint contract—including the
+sample's `/health/live` and `/health/ready` mappings—see [Readiness and Health
+Checks](../../operate/readiness-and-health-checks.md).
+
 The readiness probe confirms that the configured provider can reach and acquire
 a probe lock; it does not prove that the provider is configured with the right
 business-level topology. Keep the two-node concurrency test in your deployment

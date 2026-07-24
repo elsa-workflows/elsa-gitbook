@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-23)
+## Slice Inventory (2026-07-24)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -61,18 +61,27 @@ acceptance criterion below is already complete.
 - `DOC-057` Elsa API permission reference
 - `DOC-058` Workflow dispatch outbox operations
 - `DOC-059` Runtime coordination storage
+- `DOC-060` Readiness and health checks
 
 ### Available next slices
 
-No original backlog slices remain. Continue with the prioritized follow-on
-topics below.
-
-- `DOC-060` Readiness and health checks: add a concise operator guide for
-  persistence, distributed-lock, and host-readiness probes.
+No original or currently validated follow-on slices remain. Continue the
+inventory from `origin/main` on the next run and add a new topic only when
+release-source review identifies a distinct, high-value gap.
 
 ### Recommended next slice
 
-- `DOC-060` Readiness and health checks
+No next slice is preselected; re-inventory the released source and current
+documentation before selecting one.
+
+### Current run selection (2026-07-24)
+
+- Selected and completed `DOC-060` Readiness and health checks with a
+  release-backed operator guide for runtime, persistence, distributed-lock,
+  liveness, and readiness behavior.
+- No new distinct follow-on topic was discovered during this run's source
+  review; the existing monitoring, deployment, and runtime-coordination guides
+  now link to the focused health-check contract.
 
 ### Current run selection (2026-07-23)
 
@@ -80,7 +89,7 @@ topics below.
   release-backed guide covering the key-value and distributed-lock providers
   used by outbox, worker, and multi-node runtime coordination.
 - Added `DOC-060` during source review because the release exposes a useful
-  distributed-lock readiness probe, but the GitBook has no focused guide for
+  distributed-lock readiness probe, but the GitBook had no focused guide for
   composing it with persistence and host-readiness checks.
 
 ### Current run selection (2026-07-22)
@@ -115,11 +124,13 @@ topics below.
 
 ### Newly discovered follow-on topics
 
-- `DOC-060` Readiness and health checks: add a concise operator guide for
-  `AddElsaReadinessChecks`, persistence probes, distributed-lock probes, and
-  deployment readiness behavior.
+No new follow-on topic was added during this source review.
 
 ### Most recent completed slice
+
+- `DOC-060` Readiness and health checks:
+  completed on 2026-07-24 with a release-backed operator guide for runtime,
+  persistence, distributed-lock, liveness, and readiness behavior.
 
 - `DOC-057` Elsa API permission reference:
   completed on 2026-07-21 with a release-backed map of core and module

@@ -21,6 +21,9 @@ Use this mapping:
 - For readiness and liveness, use health checks such as `/health/live` and
   `/health/ready` in `Elsa.Server.Web`.
 
+For the registration, endpoint mapping, probe semantics, and deployment
+guidance behind those endpoints, see [Readiness and Health Checks](readiness-and-health-checks.md).
+
 If you need a dedicated tracing setup guide, see
 [Distributed Tracing](distributed-tracing.md).
 
