@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-24)
+## Slice Inventory (2026-07-25)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -62,17 +62,30 @@ acceptance criterion below is already complete.
 - `DOC-058` Workflow dispatch outbox operations
 - `DOC-059` Runtime coordination storage
 - `DOC-060` Readiness and health checks
+- `DOC-061` Workflow definition version lifecycle
 
 ### Available next slices
 
-No original or currently validated follow-on slices remain. Continue the
-inventory from `origin/main` on the next run and add a new topic only when
-release-source review identifies a distinct, high-value gap.
+- `DOC-062` Brokered external authentication and Studio administration
+- `DOC-063` Extension package manifests and infrastructure metadata
 
 ### Recommended next slice
 
-No next slice is preselected; re-inventory the released source and current
-documentation before selecting one.
+`DOC-062` Brokered external authentication and Studio administration: explain
+the optional external-authentication broker, upstream OIDC connection
+management, Server-vs-WASM setup, permissions, and multi-node security.
+
+### Current run selection (2026-07-25)
+
+- Selected and completed `DOC-061` Workflow definition version lifecycle.
+  Release-source
+  review found that Core exposes distinct `Latest`, `Published`, `Draft`,
+  `AllVersions`, and specific-version selectors, while Studio presents latest
+  and published versions separately and lets users inspect, delete, or roll
+  back version history. The GitBook had no focused lifecycle guide.
+- Added a release-backed guide grounded in the Core management/API
+  implementation and Studio version-history/editor behavior, with links to
+  the existing alterations guide for migrating already-running instances.
 
 ### Current run selection (2026-07-24)
 
@@ -124,7 +137,14 @@ documentation before selecting one.
 
 ### Newly discovered follow-on topics
 
-No new follow-on topic was added during this source review.
+- `DOC-062` Brokered external authentication and Studio administration: add a
+  Server-vs-WASM guide for the optional external-authentication broker,
+  upstream OIDC connection management, callback configuration, permissions,
+  tenant-scoped identity links, and multi-node security requirements.
+- `DOC-063` Extension package manifests and infrastructure metadata: explain
+  the release extension annotations for runtime kind, infrastructure hints,
+  secret/advanced settings, and restart requirements without implying that
+  Studio provisions infrastructure automatically.
 
 ### Most recent completed slice
 
