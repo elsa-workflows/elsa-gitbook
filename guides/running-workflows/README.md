@@ -17,6 +17,9 @@ In this guide, we will see an example of each of these methods.
 If you need to start one child workflow from another workflow, see [Dispatch Workflow Activity](dispatch-workflow-activity.md). If you need to start one child workflow per item in a collection, see [Bulk Dispatch Workflows Activity](bulk-dispatch-workflows.md). If you need time-based starts or waits, see [Timer and Scheduled Workflows](timer-and-scheduled-workflows.md).
 If you need the release-backed runtime mental model behind these options, see
 [Execution Model](../architecture/execution-model.md).
+If you need to understand how Studio drafts become published versions and
+which definition version an API call selects, see
+[Workflow Definition Version Lifecycle](workflow-definition-lifecycle.md).
 
 ## Before you start﻿ <a href="#before-you-start" id="before-you-start"></a>
 

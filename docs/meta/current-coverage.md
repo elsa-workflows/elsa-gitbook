@@ -67,7 +67,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (11 pages)
+### GUIDES (12 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -81,6 +81,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
+- **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
 
 ### HOSTING (1 pages)
@@ -136,6 +137,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Outcomes and correlation IDs
 - ✅ Running workflows (multiple methods)
 - ✅ Loading workflows from JSON
+- ✅ Workflow definition version lifecycle and Studio history operations
 
 ### Activities
 - ✅ Common activity properties
