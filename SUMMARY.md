@@ -45,6 +45,7 @@
   * [Elsa API Permissions](guides/security/permission-reference.md)
   * [HTTP Endpoint Security](guides/security/http-endpoint-security.md)
   * [External Identity Providers](guides/security/external-identity-providers.md)
+  * [Brokered External Authentication](guides/security/brokered-external-authentication.md)
 * [Deployment](guides/deployment/README.md)
   * [Configuration Management](guides/deployment/configuration-management.md)
   * [Kubernetes Basics](guides/deployment/kubernetes.md)
