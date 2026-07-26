@@ -21,6 +21,11 @@ Elsa 3.8 ships first-class Studio support for OpenID Connect, and Elsa Server
 authorizes API calls based on ASP.NET Core authentication plus Elsa-specific
 `permissions` claims.
 
+If Elsa should own the upstream authorization-code flow, connection lifecycle,
+identity links, or Studio SSO administration, use the [Brokered External
+Authentication](brokered-external-authentication.md) guide instead. The broker
+is an opt-in path distinct from direct bearer-token validation.
+
 ## What Elsa 3.8 Actually Expects
 
 ### Elsa Server
@@ -309,3 +314,4 @@ that extra call.
 - [Authentication & Authorization Guide](../authentication.md)
 - [Studio Designer Integration](../studio/integration/README.md)
 - [Blazor Dashboard Integration](../integration/blazor-dashboard.md)
+- [Brokered External Authentication](brokered-external-authentication.md)

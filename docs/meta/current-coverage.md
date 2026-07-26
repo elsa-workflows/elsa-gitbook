@@ -67,7 +67,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (12 pages)
+### GUIDES (15 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -78,6 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Workflow Dispatch Outbox** (`guides/architecture/workflow-dispatch-outbox.md`)
 - **Runtime Coordination Storage** (`guides/architecture/runtime-coordination-storage.md`)
 - **Elsa API Permissions** (`guides/security/permission-reference.md`)
+- **Brokered External Authentication** (`guides/security/brokered-external-authentication.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
@@ -151,6 +152,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Content visualizers (preview)
 - ✅ Activity pickers (preview)
 - ✅ Localization
+- ✅ Brokered external authentication administration and Server/WASM client setup
 
 ### Hosting & Operations
 - ✅ Distributed hosting
@@ -175,6 +177,7 @@ Based on the current structure, the following core concepts are documented:
 ### Advanced Features
 - ✅ Multitenancy setup
 - ✅ Authentication
+- ✅ Brokered external authentication and Studio SSO administration
 - ✅ Elsa API permission reference with Studio capability and role templates
 - ✅ Alterations and alteration plans
 - ✅ Log persistence and retention

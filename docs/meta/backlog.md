@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-25)
+## Slice Inventory (2026-07-26)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -63,17 +63,29 @@ acceptance criterion below is already complete.
 - `DOC-059` Runtime coordination storage
 - `DOC-060` Readiness and health checks
 - `DOC-061` Workflow definition version lifecycle
+- `DOC-062` Brokered external authentication and Studio administration
 
 ### Available next slices
 
-- `DOC-062` Brokered external authentication and Studio administration
 - `DOC-063` Extension package manifests and infrastructure metadata
 
 ### Recommended next slice
 
-`DOC-062` Brokered external authentication and Studio administration: explain
-the optional external-authentication broker, upstream OIDC connection
-management, Server-vs-WASM setup, permissions, and multi-node security.
+`DOC-063` Extension package manifests and infrastructure metadata: explain the
+release extension annotations for runtime kind, infrastructure hints,
+secret/advanced settings, and restart requirements without implying that
+Studio provisions infrastructure automatically.
+
+### Current run selection (2026-07-26)
+
+- Selected and completed `DOC-062` Brokered external authentication and Studio administration.
+  Release-source review found a distinct optional broker for upstream OIDC
+  connections, local-login and external-login flows, tenant-scoped identity
+  links, permission mapping, and separate Server/WASM hosting behavior. The
+  existing external identity provider guide covers direct bearer-token
+  validation but not this brokered Studio administration path.
+- No additional distinct follow-on topic was discovered during this source
+  review; `DOC-063` remains the next available slice.
 
 ### Current run selection (2026-07-25)
 
@@ -137,16 +149,17 @@ management, Server-vs-WASM setup, permissions, and multi-node security.
 
 ### Newly discovered follow-on topics
 
-- `DOC-062` Brokered external authentication and Studio administration: add a
-  Server-vs-WASM guide for the optional external-authentication broker,
-  upstream OIDC connection management, callback configuration, permissions,
-  tenant-scoped identity links, and multi-node security requirements.
 - `DOC-063` Extension package manifests and infrastructure metadata: explain
   the release extension annotations for runtime kind, infrastructure hints,
   secret/advanced settings, and restart requirements without implying that
   Studio provisions infrastructure automatically.
 
 ### Most recent completed slice
+
+- `DOC-062` Brokered external authentication and Studio administration:
+  completed on 2026-07-26 with a release-backed guide for the optional broker,
+  upstream OIDC connection management, Studio Server/WASM setup, permissions,
+  tenant-scoped identity links, and multi-node security requirements.
 
 - `DOC-060` Readiness and health checks:
   completed on 2026-07-24 with a release-backed operator guide for runtime,
