@@ -64,10 +64,12 @@ acceptance criterion below is already complete.
 - `DOC-060` Readiness and health checks
 - `DOC-061` Workflow definition version lifecycle
 - `DOC-062` Brokered external authentication and Studio administration
+- `DOC-063` Extension package manifests and infrastructure metadata
 
 ### Available next slices
 
-- `DOC-063` Extension package manifests and infrastructure metadata
+- No distinct follow-on slice is currently selected. Re-inventory the source
+  and GitBook before the next run.
 
 ### Recommended next slice
 
@@ -75,6 +77,17 @@ acceptance criterion below is already complete.
 release extension annotations for runtime kind, infrastructure hints,
 secret/advanced settings, and restart requirements without implying that
 Studio provisions infrastructure automatically.
+
+### Current run selection (2026-07-27)
+
+- Selected and completed `DOC-063` Extension package manifests and
+  infrastructure metadata. Added a release-backed guide covering generated
+  `elsa-package.json` output, Server/Studio runtime compatibility hints,
+  infrastructure requirements, deploy-time settings, packaging checks, and
+  the boundary between package metadata and Studio provisioning.
+- No additional distinct follow-on topic was discovered during the source
+  review; re-inventory the GitBook and release source before selecting the next
+  slice.
 
 ### Current run selection (2026-07-26)
 
@@ -155,6 +168,10 @@ Studio provisions infrastructure automatically.
   Studio provisions infrastructure automatically.
 
 ### Most recent completed slice
+
+- `DOC-063` Extension package manifests and infrastructure metadata:
+  completed on 2026-07-27 with a release-backed guide for runtime kind,
+  infrastructure, setting, build/pack, and Studio-boundary metadata.
 
 - `DOC-062` Brokered external authentication and Studio administration:
   completed on 2026-07-26 with a release-backed guide for the optional broker,

@@ -37,6 +37,11 @@ That means two things:
    `appsettings.json`, environment-specific JSON files, user secrets, command
    line arguments, and environment variables for server-side hosts.
 
+Extension package manifests describe settings for tooling and operators, but
+they do not bind configuration or provision infrastructure. For the
+`elsa-package.json` contract and a modular-shell mapping example, see [Package
+manifests for extensions](../plugins-modules/package-manifests.md).
+
 ## The Three Main Host Shapes
 
 ### 1. Standalone Elsa Server (`AddElsa(...)`)

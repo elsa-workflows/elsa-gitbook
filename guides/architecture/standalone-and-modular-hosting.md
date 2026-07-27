@@ -146,6 +146,13 @@ available. A `UseX(...)` call must be translated to the corresponding shell
 feature, and any callback logic must be replaced by settings that the shell
 feature actually exposes.
 
+When a NuGet extension includes an `elsa-package.json` manifest, use it as a
+metadata and packaging aid. It describes runtime compatibility,
+infrastructure requirements, and deploy-time settings; the shell still has to
+register the feature and bind its settings. See [Package manifests for
+extensions](../plugins-modules/package-manifests.md) for the annotation and
+build contract.
+
 ## Configuration-shape warning
 
 The 3.8.0 source tree contains both `src/apps/Elsa.ModularServer.Web/appsettings.json`

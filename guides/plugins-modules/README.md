@@ -37,6 +37,7 @@ This architecture enables you to:
   - [Activity Attributes](#activity-attributes)
   - [Registering Activities](#registering-activities)
 - [Packaging & Distribution](#packaging--distribution)
+  - [Package manifests for extensions](package-manifests.md)
 - [Advanced Topics](#advanced-topics)
 - [Complete Examples](#complete-examples)
 
@@ -367,6 +368,11 @@ This scans for all types marked with `[Activity]` and registers them with the ac
 
 ## Packaging & Distribution
 
+For the release-backed package metadata contract, see [Package manifests for
+extensions](package-manifests.md). It covers runtime compatibility,
+infrastructure requirements, deploy-time settings, and the build/pack checks
+needed before publishing a NuGet extension.
+
 To share your custom modules, package them as NuGet packages:
 
 ### 1. Create a Class Library Project
@@ -554,7 +560,7 @@ For complete, working examples, see:
 
 - [Custom Activities Guide](../../extensibility/custom-activities.md) - Detailed activity creation guide
 - [Elsa Core Repository](https://github.com/elsa-workflows/elsa-core) - Official source code and examples
-- [Feature Documentation](../../features/README.md) - Built-in features reference
+- [Alterations Feature Guide](../../features/alterations/README.md) - Built-in alterations reference
 
 ## Support
 

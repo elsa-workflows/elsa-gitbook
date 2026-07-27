@@ -71,6 +71,7 @@
 * [External Application Interaction](guides/external-application-interaction.md)
 * [Loading Workflows from JSON](guides/loading-workflows-from-json.md)
 * [Plugins & Modules](guides/plugins-modules/README.md)
+  * [Package Manifests for Extensions](guides/plugins-modules/package-manifests.md)
 * [Extensibility](guides/extensibility/modules-and-plugins.md)
 * [Testing & Debugging Workflows](guides/testing-debugging.md)
 * [Running Workflows](guides/running-workflows/README.md)
