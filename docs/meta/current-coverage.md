@@ -67,7 +67,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (15 pages)
+### GUIDES (16 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -84,6 +84,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
 - **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
+- **Package Manifests for Extensions** (`guides/plugins-modules/package-manifests.md`)
 
 ### HOSTING (1 pages)
 
@@ -171,6 +172,7 @@ Based on the current structure, the following core concepts are documented:
 
 ### Extensibility
 - ✅ Custom activities
+- ✅ Extension package manifests, runtime compatibility, infrastructure hints, and deploy-time settings
 - ✅ Custom resilience strategies and retry-attempt recording
 - ✅ Reusable triggers (preview)
 
