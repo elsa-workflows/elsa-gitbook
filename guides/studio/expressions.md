@@ -308,7 +308,10 @@ Python expressions are executed through Python.NET in Elsa 3.8. Keep them for in
 
 Studio can also surface feature-specific expression types beyond the core set above.
 
-For example, Elsa's secrets feature contributes a `Secret` expression descriptor with its own custom UI instead of a code editor. The general rule is:
+For example, Elsa's secrets feature contributes a `Secret` expression descriptor
+with its own custom UI instead of a code editor. See [Secrets management](../security/secrets-management.md)
+for the store choices, lifecycle, permissions, and runtime reference contract.
+The general rule is:
 
 - if a backend feature registers an expression descriptor and marks it browsable, Studio can show it.
 - if the descriptor provides a custom `UIHint`, Studio renders that custom picker/editor instead of Monaco.

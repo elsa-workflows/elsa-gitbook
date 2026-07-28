@@ -318,4 +318,4 @@ builder.Services.AddDbContext<ManagementDbContext>(options =>
 
 * [Docker Deployment](containers/docker-compose/persistent-database.md)
 * [Authentication Setup](../guides/authentication.md)
-* [Workflow Persistence](../guides/workflow-persistence.md)
+* [Workflow Persistence](../guides/persistence/README.md)

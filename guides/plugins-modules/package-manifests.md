@@ -182,7 +182,10 @@ The metadata fields used by the 3.8 generator include:
 `Secret` and `Sensitive` are manifest hints, not secret storage. Keep
 connection strings, tokens, and passwords in environment variables, a secret
 manager, or another deployment-specific provider. The feature code must still
-bind the value to the configuration section it actually uses.
+bind the value to the configuration section it actually uses. If the value is
+intended to be a named Elsa workflow secret, see the [Secrets management
+guide](../security/secrets-management.md) for the separate runtime feature and
+its Studio picker.
 
 For a modular host, the manifest setting name is not by itself the full
 configuration path. The host places feature settings under the shell's

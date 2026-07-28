@@ -317,7 +317,7 @@ To handle errors gracefully, consider:
 
 1. **Wrap risky operations**: Use try-catch patterns in custom activities
 2. **Design for fault tolerance**: Check for errors after the `Parallel` activity completes
-3. **Use incident strategies**: Configure Elsa's [incident handling](../../operate/incidents/README.md) to automatically retry or continue on fault
+3. **Use incident strategies**: Configure Elsa's [incident handling](../operate/incidents/README.md) to automatically retry or continue on fault
 
 ### Performance Considerations
 

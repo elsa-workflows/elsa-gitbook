@@ -242,5 +242,5 @@ This structure is ideal for querying in log aggregation systems:
 
 ## Related Documentation
 
-- [Logging Framework](../../features/logging-framework.md) - Elsa's activity logging
-- [Troubleshooting Guide](README.md) - Main troubleshooting reference
+- [Logging Framework](../../../features/logging-framework.md) - Elsa's activity logging
+- [Troubleshooting Guide](../README.md) - Main troubleshooting reference
