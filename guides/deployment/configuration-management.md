@@ -42,6 +42,12 @@ they do not bind configuration or provision infrastructure. For the
 `elsa-package.json` contract and a modular-shell mapping example, see [Package
 manifests for extensions](../plugins-modules/package-manifests.md).
 
+For named values resolved by workflows, see [Secrets
+management](../security/secrets-management.md). Elsa's configuration-backed
+secret store reads from host configuration; it is distinct from the
+deployment-managed environment variables, user secrets, or external vaults
+that supply those values.
+
 ## The Three Main Host Shapes
 
 ### 1. Standalone Elsa Server (`AddElsa(...)`)

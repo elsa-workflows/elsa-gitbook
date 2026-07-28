@@ -343,6 +343,12 @@ Ingress rate limiting is more scalable and protects against DDoS before traffic 
 
 ## Secrets Management
 
+For Elsa's named secret lifecycle, encrypted/configuration-backed stores,
+runtime `Secret` references, and the Studio secret picker, see [Secrets
+Management](secrets-management.md). The general deployment and host-secret
+guidance below remains applicable to identity keys, connection strings, and
+infrastructure-managed secrets.
+
 ### Storing Sensitive Configuration
 
 **Do:**

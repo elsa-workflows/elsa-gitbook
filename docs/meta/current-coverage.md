@@ -67,7 +67,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (16 pages)
+### GUIDES (17 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -79,6 +79,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Runtime Coordination Storage** (`guides/architecture/runtime-coordination-storage.md`)
 - **Elsa API Permissions** (`guides/security/permission-reference.md`)
 - **Brokered External Authentication** (`guides/security/brokered-external-authentication.md`)
+- **Secrets Management** (`guides/security/secrets-management.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
@@ -234,7 +235,7 @@ Based on the current structure, the following core concepts are documented:
    - ❌ No workflow testing guide
    - ❌ No data persistence patterns guide
    - ✅ Security guidance now includes endpoint security, external identity
-     providers, and role-oriented permission recipes
+     providers, role-oriented permission recipes, and Elsa Secrets management
    - ❌ No workflow design patterns
 
 ## Documentation Quality Notes

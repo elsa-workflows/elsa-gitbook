@@ -150,6 +150,10 @@ role. These are the permission values declared by common release modules:
 | Resilience diagnostics | `read:resilience:strategies`, `read:resilience:retries` | `exec:resilience:simulate-response` |
 | Authenticated event trigger | — | `trigger:event` |
 
+For the secret lifecycle, built-in stores, Studio picker, and runtime
+reference contract behind these claims, see the [Secrets management
+guide](secrets-management.md).
+
 Some module endpoints also advertise namespace wildcards such as `read:*` or
 `exec:*`. Check the exact endpoint in the version you deploy before replacing
 named claims with a wildcard.

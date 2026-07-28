@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-26)
+## Slice Inventory (2026-07-28)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -65,18 +65,26 @@ acceptance criterion below is already complete.
 - `DOC-061` Workflow definition version lifecycle
 - `DOC-062` Brokered external authentication and Studio administration
 - `DOC-063` Extension package manifests and infrastructure metadata
+- `DOC-064` Secrets management and Studio secret picker
 
 ### Available next slices
 
-- No distinct follow-on slice is currently selected. Re-inventory the source
-  and GitBook before the next run.
+- `DOC-031` Custom icons
+- `DOC-032` Workflow providers
+- `DOC-033` Custom types
+- `DOC-034` DropIns
+- `DOC-035` Webhook extensibility
+- `DOC-036` Activity type providers
+- `DOC-037` Alterations
+- `DOC-044` Community resources
+- `DOC-045` Case studies
+- `DOC-046` FAQ
 
 ### Recommended next slice
 
-`DOC-063` Extension package manifests and infrastructure metadata: explain the
-release extension annotations for runtime kind, infrastructure hints,
-secret/advanced settings, and restart requirements without implying that
-Studio provisions infrastructure automatically.
+`DOC-036` Activity type providers: explain how generated activity descriptors
+are registered, refreshed, surfaced in Studio, and kept executable and stable
+for persisted workflows. This is distinct from custom activity implementation.
 
 ### Current run selection (2026-07-27)
 
@@ -166,8 +174,29 @@ Studio provisions infrastructure automatically.
   the release extension annotations for runtime kind, infrastructure hints,
   secret/advanced settings, and restart requirements without implying that
   Studio provisions infrastructure automatically.
+- `DOC-064` Secrets management and Studio secret picker: document the Core
+  Secrets module, protected references and expressions, lifecycle operations,
+  permissions, and Studio's secret-management and activity-property picker
+  behavior. Clarify that the release's built-in repositories are not a claim
+  of integration with an external vault.
+
+### Current run selection (2026-07-28)
+
+- Selected and completed `DOC-064` Secrets management and Studio secret picker. Release
+  source review found a distinct cross-persona gap: Core exposes versioned
+  secrets, protected references, secret expressions, lifecycle endpoints, and
+  a file/in-memory repository, while Studio exposes a secret-management page
+  and secret picker for activity inputs. The GitBook had no focused guide for
+  using or securing this feature.
+- No further distinct follow-on topic was added during implementation; `DOC-036`
+  Activity type providers is now the recommended next slice.
 
 ### Most recent completed slice
+
+- `DOC-064` Secrets management and Studio secret picker:
+  completed on 2026-07-28 with a release-backed guide for encrypted and
+  configuration-backed stores, secret references and expressions, lifecycle
+  operations, permissions, Studio management, and the secret picker.
 
 - `DOC-063` Extension package manifests and infrastructure metadata:
   completed on 2026-07-27 with a release-backed guide for runtime kind,
