@@ -117,6 +117,7 @@
 ## Extensibility
 
 * [Custom Activities](extensibility/custom-activities.md)
+* [Activity Type Providers](guides/extensibility/activity-type-providers.md)
 * [Custom Resilience Strategies](guides/extensibility/custom-resilience-strategies.md)
 * [Reusable Triggers](extensibility/reusable-triggers-3.5-preview.md)
 
