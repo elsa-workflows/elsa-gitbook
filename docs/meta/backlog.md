@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-28)
+## Slice Inventory (2026-07-29)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -66,6 +66,7 @@ acceptance criterion below is already complete.
 - `DOC-062` Brokered external authentication and Studio administration
 - `DOC-063` Extension package manifests and infrastructure metadata
 - `DOC-064` Secrets management and Studio secret picker
+- `DOC-036` Activity type providers
 
 ### Available next slices
 
@@ -74,7 +75,6 @@ acceptance criterion below is already complete.
 - `DOC-033` Custom types
 - `DOC-034` DropIns
 - `DOC-035` Webhook extensibility
-- `DOC-036` Activity type providers
 - `DOC-037` Alterations
 - `DOC-044` Community resources
 - `DOC-045` Case studies
@@ -82,9 +82,16 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-`DOC-036` Activity type providers: explain how generated activity descriptors
-are registered, refreshed, surfaced in Studio, and kept executable and stable
-for persisted workflows. This is distinct from custom activity implementation.
+Re-inventory the release source and GitBook before selecting the next slice.
+
+### Current run selection (2026-07-29)
+
+- Selected and completed `DOC-036` Activity type providers. The release-backed
+  guide covers the provider contract, descriptor registration and refresh
+  behavior, Studio's catalog consumption, dynamic-provider patterns, and the
+  stability requirements for custom activity types used by persisted workflows.
+- No additional distinct follow-on topic was identified during the source
+  review; re-inventory the release source and GitBook before the next slice.
 
 ### Current run selection (2026-07-27)
 
@@ -192,6 +199,11 @@ for persisted workflows. This is distinct from custom activity implementation.
   Activity type providers is now the recommended next slice.
 
 ### Most recent completed slice
+
+- `DOC-036` Activity type providers: completed on 2026-07-29 with a
+  release-backed guide covering the provider contract, descriptor registry
+  refresh, server API and Studio consumption, dynamic-provider patterns,
+  versioning, tenant scope, and troubleshooting.
 
 - `DOC-064` Secrets management and Studio secret picker:
   completed on 2026-07-28 with a release-backed guide for encrypted and

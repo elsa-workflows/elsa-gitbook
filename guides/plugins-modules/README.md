@@ -115,6 +115,10 @@ Similar to `AddActivitiesFrom<T>()`, but registers workflow definitions:
 Module.AddWorkflowsFrom<MyFeature>();
 ```
 
+If the activity list is generated from runtime or external data, use an
+[`IActivityProvider`](../extensibility/activity-type-providers.md) instead of
+scanning a fixed assembly.
+
 ## Creating a Custom Feature
 
 Let's walk through creating a custom feature step by step.

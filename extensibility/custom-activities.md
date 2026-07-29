@@ -389,6 +389,9 @@ services.AddActivitiesFrom<MyFeature>();
 That path writes into `ManagementOptions` and is the service-collection
 equivalent of workflow management feature registration.
 
+If your activity types are generated from external metadata or change at
+runtime, see [Activity Type Providers](../guides/extensibility/activity-type-providers.md).
+
 ## Activity Hosts
 
 If your use case maps naturally to method-based activities, Elsa also

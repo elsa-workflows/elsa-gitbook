@@ -173,6 +173,7 @@ Based on the current structure, the following core concepts are documented:
 
 ### Extensibility
 - ✅ Custom activities
+- ✅ Activity type providers and descriptor refresh
 - ✅ Extension package manifests, runtime compatibility, infrastructure hints, and deploy-time settings
 - ✅ Custom resilience strategies and retry-attempt recording
 - ✅ Reusable triggers (preview)
