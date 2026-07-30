@@ -4,6 +4,10 @@ An [alteration](../../getting-started/concepts/#alteration) represents a change 
 
 Using alterations, you can change the state of a running workflow instance without republishing the workflow definition. In `release/3.8.0`, Elsa exposes alterations through server APIs and Elsa Studio.
 
+For the task-oriented path through immediate execution, filtered plans, Studio,
+durability, and retry operations, start with [Alter a Running Workflow
+Instance](../../guides/running-workflows/altering-workflow-instances.md).
+
 ## What Elsa ships in `release/3.8.0`
 
 Enabling `UseAlterations()` adds:
@@ -22,7 +26,7 @@ Use alterations when you need to correct or steer existing workflow instances. T
 * updating a variable on a live instance
 * scheduling an activity so a stalled workflow can continue
 * canceling a workflow or a specific running activity
-* migrating a running instance to a newer published workflow version
+* migrating a running instance to a specific version of the same definition
 
 ## Alteration Types <a href="#alteration-types" id="alteration-types"></a>
 
@@ -32,7 +36,8 @@ Elsa Workflows supports the following alteration types:
 * **CancelActivity**: Cancels a specific running activity instance, or all running instances of an activity ID.
 * **ScheduleActivity**: Schedules an activity for execution by activity ID or activity instance ID.
 * **ModifyVariable**: Modifies a workflow variable by variable ID.
-* **Migrate**: Migrates a workflow instance to a newer published version of the same workflow definition.
+* **Migrate**: Migrates a workflow instance to a specific version of the same
+  workflow definition.
 
 ## Two execution modes
 
@@ -52,7 +57,7 @@ Use these pages for each mode:
 | --- | --- |
 | You already know the exact workflow instance IDs and need the response now | `POST /alterations/run` or `IAlterationRunner` |
 | You need Elsa to find matching workflow instances from filters and process them in the background | alteration plans |
-| You need to retry faulted activities for known workflow instances | `POST /alterations/workflows/retry` |
+| You need to retry faulted activities for known workflow instances | `GET` or `POST /alterations/workflows/retry` |
 | You want designers or operators to stage alterations for one running instance visually and inspect resulting plans later | Elsa Studio alterations module |
 
 ## Elsa Studio

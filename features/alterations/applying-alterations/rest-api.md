@@ -73,7 +73,12 @@ After the runner finishes, the endpoint automatically dispatches any successful 
 
 ## Retry faulted activities
 
-`release/3.8.0` also exposes `POST /alterations/workflows/retry` for retrying faulted activities on specified workflow instances.
+`release/3.8.0` exposes `GET` and `POST /alterations/workflows/retry` for
+retrying faulted activities on specified workflow instances. Prefer `POST` for
+operational scripts and send one workflow instance ID per request. The 3.8.0
+handler loops over loaded instances while passing the full request ID
+collection to the runner, which can repeat work and result entries when
+several IDs are batched.
 
 If you omit `activityIds`, Elsa retries all incident activity IDs recorded on each specified workflow instance.
 
@@ -105,4 +110,7 @@ Host: localhost:5001
 }
 ```
 
-The response shape matches `/alterations/run` by returning one result per targeted workflow instance.
+The response shape matches `/alterations/run` for a single targeted workflow
+instance. See [Alter a Running Workflow Instance](../../../guides/running-workflows/altering-workflow-instances.md)
+for the release-specific batching caveat and the choice between immediate
+execution, plans, and Studio.

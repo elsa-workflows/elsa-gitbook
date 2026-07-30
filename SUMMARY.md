@@ -77,6 +77,7 @@
 * [Testing & Debugging Workflows](guides/testing-debugging.md)
 * [Running Workflows](guides/running-workflows/README.md)
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)
+  * [Altering a Running Workflow Instance](guides/running-workflows/altering-workflow-instances.md)
   * [Using a Trigger](guides/running-workflows/using-a-trigger.md)
   * [Timer and Scheduled Workflows](guides/running-workflows/timer-and-scheduled-workflows.md)
   * [Workflow Definition Version Lifecycle](guides/running-workflows/workflow-definition-lifecycle.md)
