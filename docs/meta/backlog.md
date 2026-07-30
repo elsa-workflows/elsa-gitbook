@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-29)
+## Slice Inventory (2026-07-30)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -67,6 +67,7 @@ acceptance criterion below is already complete.
 - `DOC-063` Extension package manifests and infrastructure metadata
 - `DOC-064` Secrets management and Studio secret picker
 - `DOC-036` Activity type providers
+- `DOC-037` Alterations
 
 ### Available next slices
 
@@ -75,14 +76,30 @@ acceptance criterion below is already complete.
 - `DOC-033` Custom types
 - `DOC-034` DropIns
 - `DOC-035` Webhook extensibility
-- `DOC-037` Alterations
 - `DOC-044` Community resources
 - `DOC-045` Case studies
 - `DOC-046` FAQ
 
 ### Recommended next slice
 
-Re-inventory the release source and GitBook before selecting the next slice.
+Re-inventory the release source and GitBook before selecting the next
+automation slice. The remaining candidates are `DOC-031` through `DOC-035`,
+`DOC-044`, `DOC-045`, and `DOC-046`.
+
+### Current run selection (2026-07-30)
+
+- Selected and completed `DOC-037` Alterations. Added a task-oriented,
+  release-backed guide that connects immediate execution, filtered plans,
+  Studio staging, retry behavior, durability, and custom handlers. Corrected
+  the existing retry reference for the `GET`/`POST` contract and the
+  multi-instance batching caveat in `release/3.8.0`.
+- Core's remote `release/3.8.0` ref advanced from `7e82a55` to `edb5f7c`
+  during review; the alteration implementation paths used here were
+  unchanged. Studio remains at `ef6a39d`, and Extensions has no advertised
+  upstream `release/3.8.0` branch, so its local release snapshot remains
+  pinned to `d407e96`.
+- No additional distinct follow-on topic was identified during the source
+  review; re-inventory before selecting the next slice.
 
 ### Current run selection (2026-07-29)
 
@@ -199,6 +216,11 @@ Re-inventory the release source and GitBook before selecting the next slice.
   Activity type providers is now the recommended next slice.
 
 ### Most recent completed slice
+
+- `DOC-037` Alterations: completed on 2026-07-30 with a release-backed
+  operational guide for execution-mode choice, immediate and planned
+  alterations, Studio staging, retry behavior, durability, and extension
+  boundaries.
 
 - `DOC-036` Activity type providers: completed on 2026-07-29 with a
   release-backed guide covering the provider contract, descriptor registry

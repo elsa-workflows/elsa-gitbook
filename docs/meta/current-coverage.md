@@ -83,6 +83,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
+- **Altering a Running Workflow Instance** (`guides/running-workflows/altering-workflow-instances.md`)
 - **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
 - **Package Manifests for Extensions** (`guides/plugins-modules/package-manifests.md`)
@@ -184,6 +185,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Brokered external authentication and Studio SSO administration
 - ✅ Elsa API permission reference with Studio capability and role templates
 - ✅ Alterations and alteration plans
+- ✅ Release-backed operational guide for immediate alterations, filtered
+  plans, Studio staging, retry behavior, and durability
 - ✅ Log persistence and retention
 - ✅ Logging framework
 
