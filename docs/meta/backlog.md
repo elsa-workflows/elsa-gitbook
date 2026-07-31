@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-30)
+## Slice Inventory (2026-07-31)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -67,6 +67,7 @@ acceptance criterion below is already complete.
 - `DOC-063` Extension package manifests and infrastructure metadata
 - `DOC-064` Secrets management and Studio secret picker
 - `DOC-036` Activity type providers
+- `DOC-035` Webhook extensibility
 - `DOC-037` Alterations
 
 ### Available next slices
@@ -75,7 +76,6 @@ acceptance criterion below is already complete.
 - `DOC-032` Workflow providers
 - `DOC-033` Custom types
 - `DOC-034` DropIns
-- `DOC-035` Webhook extensibility
 - `DOC-044` Community resources
 - `DOC-045` Case studies
 - `DOC-046` FAQ
@@ -83,8 +83,22 @@ acceptance criterion below is already complete.
 ### Recommended next slice
 
 Re-inventory the release source and GitBook before selecting the next
-automation slice. The remaining candidates are `DOC-031` through `DOC-035`,
-`DOC-044`, `DOC-045`, and `DOC-046`.
+automation slice. The remaining candidates are `DOC-031` through `DOC-034`,
+`DOC-044` through `DOC-046`, and newly discovered `DOC-065`.
+
+### Current run selection (2026-07-31)
+
+- Selected `DOC-035` Webhook extensibility after re-inventorying the remaining
+  candidates against the GitBook and `release/3.8.0` source. The existing
+  external-application guide is stale: the release exposes inbound custom
+  webhook sources and dynamic event activities, while `POST /webhooks` is
+  anonymous and needs an explicit application/front-door security warning.
+- Added `DOC-065` JavaScript type-definition providers as a newly discovered
+  follow-on topic. The release has a distinct `ITypeDefinitionProvider` and
+  Studio IntelliSense path that should not be conflated with CLR type
+  registration or workflow-provider imports.
+- Completed the guide and self-review with no remaining high-priority
+  documentation findings. No additional distinct follow-on topic was found.
 
 ### Current run selection (2026-07-30)
 
@@ -194,6 +208,11 @@ automation slice. The remaining candidates are `DOC-031` through `DOC-035`,
 
 ### Newly discovered follow-on topics
 
+- `DOC-065` JavaScript IntelliSense and custom type-definition providers:
+  explain `ITypeDefinitionProvider`, `AddTypeDefinitionProvider<T>()`, the
+  type-definition endpoint, and Studio's Monaco integration separately from
+  runtime CLR registration and variable type aliases.
+
 - `DOC-063` Extension package manifests and infrastructure metadata: explain
   the release extension annotations for runtime kind, infrastructure hints,
   secret/advanced settings, and restart requirements without implying that
@@ -216,6 +235,11 @@ automation slice. The remaining candidates are `DOC-031` through `DOC-035`,
   Activity type providers is now the recommended next slice.
 
 ### Most recent completed slice
+
+- `DOC-035` Webhook extensibility: completed on 2026-07-31 with a
+  release-backed guide for inbound event sources, generated trigger
+  activities, typed payloads, outbound `RunTask` sinks, and the anonymous
+  endpoint's application-owned security boundary.
 
 - `DOC-037` Alterations: completed on 2026-07-30 with a release-backed
   operational guide for execution-mode choice, immediate and planned
