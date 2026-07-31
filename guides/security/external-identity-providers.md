@@ -7,6 +7,12 @@ description: >-
 
 This guide covers integrating Elsa Server with external identity providers (IdP) for authentication and authorization. By integrating with an external IdP, you can leverage existing user directories, enable Single Sign-On (SSO), and centralize identity management across your organization.
 
+{% hint style="info" %}
+**Choosing an authentication path**
+
+[External Authentication](external-authentication/README.md) is the strategic successor for new deployments: Elsa Server brokers one or more providers and issues the credentials consumed by Studio. Direct Studio OIDC remains supported throughout Elsa 3.x and is not formally deprecated in Elsa 3.8.
+{% endhint %}
+
 ## Overview
 
 Elsa Server supports integration with any identity provider that implements standard authentication protocols:

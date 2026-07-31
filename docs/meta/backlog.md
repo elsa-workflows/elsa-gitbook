@@ -75,6 +75,10 @@ acceptance criterion below is already complete.
 - `DOC-052` Workflow state and journal API cookbook: add an operations-facing
   guide for inspecting workflow state, filtered journal entries, activity
   executions, and variable mutation endpoints when diagnosing live instances.
+- `DOC-055` External Authentication extension authoring: document custom
+  protocol adapters, unlinked-identity policies, user matchers, permission
+  grant sources, descriptor schemas, and custom Studio editors as the next
+  follow-on to the Elsa 3.8 External Authentication operations guide.
 
 ## Critical Priority (Must Have - Block Users)
 
