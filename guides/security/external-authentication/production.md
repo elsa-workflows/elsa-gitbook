@@ -29,12 +29,18 @@ Enable one provider-specific persistence feature in addition to Identity persist
 
 ```json
 {
-  "Features": {
-    "SqliteIdentityPersistence": {
-      "ConnectionString": "Data Source=/var/lib/elsa/elsa.db;Cache=Shared"
-    },
-    "SqliteExternalAuthenticationPersistence": {
-      "ConnectionString": "Data Source=/var/lib/elsa/elsa.db;Cache=Shared"
+  "CShells": {
+    "Shells": {
+      "Default": {
+        "Features": {
+          "SqliteIdentityPersistence": {
+            "ConnectionString": "Data Source=/var/lib/elsa/elsa.db;Cache=Shared"
+          },
+          "SqliteExternalAuthenticationPersistence": {
+            "ConnectionString": "Data Source=/var/lib/elsa/elsa.db;Cache=Shared"
+          }
+        }
+      }
     }
   }
 }
@@ -84,7 +90,22 @@ Use the key storage and protection method appropriate to your platform (for exam
 
 ### Public routing
 
-Every node must serve the same public Elsa base address and API route prefix. Configure load balancing so an upstream callback may reach any healthy node; correct shared persistence and Data Protection remove the need for sticky sessions. Ensure reverse proxies forward the public scheme and host correctly, and test the actual externally visible callback URL.
+Every Elsa Server broker node must serve the same public base address and API
+route prefix. Configure load balancing so an upstream callback may reach any
+healthy broker node; correct shared persistence and Data Protection remove the
+need for broker session affinity. Ensure reverse proxies forward the public
+scheme and host correctly, and test the actual externally visible callback URL.
+Studio Server scale-out has a separate requirement described below.
+
+### Blazor Server Studio scale-out
+
+Broker persistence applies to Elsa Server, not to the Studio host's own login
+cookie. In this preview, the Blazor Server package stores authentication tickets
+in a node-local `IMemoryCache` ticket store. A scaled-out Studio Server
+deployment must therefore use session affinity, or replace the configured
+ASP.NET Core `ITicketStore` with a shared implementation. Share the Studio
+host's Data Protection key ring in either case. WebAssembly Studio does not use
+this server-side ticket store.
 
 ## Secret management and rotation
 
@@ -144,7 +165,7 @@ Useful symptoms and first checks:
 | --- | --- |
 | Callback fails after load balancing | Shared Data Protection keys, durable broker state, same `SharedKeyBase64`, and public callback URL on every node. |
 | Sign-in works only until restart | Dedicated External Authentication persistence feature and migrations are missing. |
-| Connection does not appear in Studio | It is disabled, archived, shadowed by configuration, outside tenant scope, or not allowed by the client/connection state. |
+| Connection does not appear in Studio | The connection is disabled, invalid, archived, shadowed, or outside the tenant context; alternatively, the Authentication Client is unavailable. |
 | Provider rejects redirect URI | Register Elsa's derived callback exactly; do not use Studio's direct-OIDC callback for the upstream provider. |
 | `flow_changed` after a configuration edit | A connection material revision or secret generation changed during a pending login; restart sign-in. |
 | User is authenticated but lacks access | Review the identity link/unlinked policy, configured grant sources, and final permission allow/deny boundaries. |

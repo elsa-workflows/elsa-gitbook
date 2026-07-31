@@ -99,8 +99,8 @@ Check these in order:
    client ID.
 2. `Backend:Url` reaches the Elsa API used by the configured Authentication
    Client.
-3. The Elsa Server connection is enabled and valid, and its scope/policy makes
-   it discoverable for the Studio client.
+3. The Elsa Server connection is enabled, valid, unarchived, unshadowed, and
+   effective in the request's tenant context.
 4. The Server External Authentication feature is enabled/advertised.
 5. The login-method request for the Studio client completes successfully.
 
@@ -130,7 +130,8 @@ tenant and client:
 
 - it is enabled, valid, and not archived;
 - a database override is not shadowing the configuration-owned record;
-- the connection is allowed for this Authentication Client and tenant context;
+- the Authentication Client itself is enabled and the request uses its exact
+  registered callback and expected tenant context;
 - the adapter module is installed and its flow is available in this preview
   build.
 

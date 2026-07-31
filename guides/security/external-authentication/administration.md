@@ -210,6 +210,13 @@ who understand the identity source; it is not a general user-profile editor.
 `external-authentication:sessions:read`. It supports filters for user ID,
 connection key, and active/revoked status, plus cursor paging.
 
+{% hint style="warning" %}
+In the current 3.8 preview, Studio labels and sends the connection filter as
+**Connection ID**, while the Elsa Server endpoint expects `connectionKey`.
+Leave that Studio filter empty or query the REST API with `connectionKey` until
+the preview clients are aligned.
+{% endhint %}
+
 The page intentionally shows only safe metadata: session ID, user ID, tenant
 ID, connection key, start time, last refresh time, expiry, revocation time, and
 status. It never exposes tokens, external subjects, or claim snapshots.

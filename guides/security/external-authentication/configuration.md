@@ -13,7 +13,9 @@ External Authentication has two configuration boundaries:
 - **Deployment-owned configuration** defines Authentication Clients, configuration-owned connections, adapter and extension allowlists, callback base URL, provider egress policy, permission boundaries, and recovery policy.
 - **Database-owned connections** are optional records managed through the APIs and Studio. They let authorized administrators create, test, preview, enable, disable, archive, and restore identity-provider connections without changing deployment configuration.
 
-Configuration is read from `ExternalAuthentication`. In a CShells feature block, the same settings are nested below `Features:ExternalAuthentication`.
+Configuration is read from `ExternalAuthentication`. In a CShells host, the
+same settings are nested below
+`CShells:Shells:<shell-name>:Features:ExternalAuthentication`.
 
 ## Minimal OpenID Connect configuration
 

@@ -36,7 +36,9 @@ Add the Feedz source to `NuGet.config` alongside NuGet.org:
 </configuration>
 ```
 
-Install preview packages and confirm that NuGet resolves a matching `3.8.0-preview.*` build for every Elsa package. Pin the resolved build centrally for repeatable deployments; do not mix preview packages with a released 3.x package set.
+Install preview packages and keep all Elsa Core packages on one compatible
+`3.8.0-preview.*` build. Pin the resolved build centrally for repeatable
+deployments; do not mix preview packages with a released 3.x package set.
 
 ## Choose packages
 
@@ -130,19 +132,29 @@ CShells hosts discover External Authentication through shell features. Ensure th
 
 ```json
 {
-  "Features": {
-    "ExternalAuthentication": {
-      "Redirects": {
-        "ExternalCallbackBaseUri": "https://elsa.example.com/elsa/api/"
+  "CShells": {
+    "Shells": {
+      "Default": {
+        "Features": {
+          "ExternalAuthentication": {
+            "Redirects": {
+              "ExternalCallbackBaseUri": "https://elsa.example.com/elsa/api/"
+            }
+          },
+          "OpenIdConnectExternalAuthentication": {},
+          "SqlServerExternalAuthenticationPersistence": {
+            "ConnectionString": "<external-authentication-database-connection-string>"
+          }
+        }
       }
-    },
-    "OpenIdConnectExternalAuthentication": {},
-    "SqlServerExternalAuthenticationPersistence": {
-      "ConnectionString": "<external-authentication-database-connection-string>"
     }
   }
 }
 ```
+
+Replace `Default` with the configured shell name when the host uses another
+shell. The feature-local settings path is therefore
+`CShells:Shells:<shell-name>:Features:ExternalAuthentication`.
 
 The persistence feature names are `SqliteExternalAuthenticationPersistence`, `SqlServerExternalAuthenticationPersistence`, `PostgreSqlExternalAuthenticationPersistence`, `MySqlExternalAuthenticationPersistence`, and `OracleExternalAuthenticationPersistence`.
 

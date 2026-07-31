@@ -96,7 +96,10 @@ POST   /external-authentication/identity-links/{linkId}/replace
 DELETE /external-authentication/identity-links/{linkId}
 ```
 
-These operations require `external-authentication:links:manage`. The issuer and subject are accepted only over TLS. Elsa normalizes and immediately transforms the subject to a keyed hash; the raw subject is never returned.
+These operations require `external-authentication:links:manage`. The issuer must
+be an absolute HTTPS URI. Serve the management API only over TLS because the
+request contains the upstream subject. Elsa normalizes and immediately
+transforms the subject to a keyed hash; the raw subject is never returned.
 
 Create and replace requests identify the Elsa User, immutable connection key, validated issuer, and provider subject. Replacing a link is atomic and gives the replacement a new ID.
 
