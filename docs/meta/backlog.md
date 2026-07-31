@@ -350,6 +350,11 @@ and `DOC-044` through `DOC-046`.
   transactional-outbox, and telemetry guidance. The prior non-existent
   commit-strategy APIs and unverified tuning recipes were removed.
 
+- `DOC-066` External Authentication extension authoring: document custom
+  protocol adapters, unlinked-identity policies, user matchers, permission
+  grant sources, descriptor schemas, and custom Studio editors as the next
+  follow-on to the Elsa 3.8 External Authentication operations guide.
+
 ## Critical Priority (Must Have - Block Users)
 
 ### Latest slice note

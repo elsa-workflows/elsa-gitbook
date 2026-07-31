@@ -9,7 +9,15 @@ description: >-
 This guide covers the identity-provider integration points that are actually
 present in `release/3.8.0` across `elsa-core` and `elsa-studio`.
 
-Use it when:
+{% hint style="info" %}
+**Choosing an authentication path**
+
+[External Authentication](external-authentication/README.md) is the strategic successor for new deployments: Elsa Server brokers one or more providers and issues the credentials consumed by Studio. Direct Studio OIDC remains supported throughout Elsa 3.x and is not formally deprecated in Elsa 3.8.
+{% endhint %}
+
+## Overview
+
+Use direct OIDC when:
 
 - Elsa Server should trust tokens issued by an external provider instead of
   Elsa's built-in identity system.
