@@ -55,6 +55,32 @@ The upstream provider client and the Elsa **Authentication Client** are separate
 - The provider client describes Elsa Server to the OIDC provider and owns the provider client ID, client secret, scopes, and Elsa callback URI.
 - The Elsa Authentication Client describes Studio to the broker and owns Studio's exact callback, logout callback, allowed return paths, origin, and confidential-client secret where applicable. It grants no Elsa permissions.
 
+## Development quickstart
+
+Use this shortest safe path for an isolated development environment:
+
+1. Add the Feedz preview source and install the Core foundation plus the OIDC
+   adapter as shown in [Installation](installation.md#configure-the-preview-feed).
+2. Enable Elsa Identity, External Authentication, and the OIDC adapter. Use the
+   in-memory stores only for this first single-node run.
+3. Configure one OIDC connection, one Studio Authentication Client, the public
+   Elsa callback base URI, and a local Elsa login using the
+   [minimal configuration](configuration.md#minimal-openid-connect-configuration).
+4. Register the normal and preview callback URIs displayed by Elsa with the
+   provider. The [Keycloak walkthrough](keycloak.md) shows the complete provider
+   side.
+5. Configure either Studio Server or Studio WebAssembly using
+   [Studio integration](studio-integration.md#packages-and-host-selection).
+   Neither host model is preferred; use the client type that matches the host.
+6. Start Elsa Server and Studio, sign in through the retained local recovery
+   account, then open **Administration → Identity & access → Identity provider
+   connections**.
+7. Validate and test the connection, run Preview sign-in, enable the connection,
+   sign out, and complete a normal provider sign-in with a non-admin test user.
+
+Before retaining data, restarting the host, or adding another node, replace the
+development stores with [durable persistence and shared keys](production.md).
+
 ## Choose Your Path
 
 | You are... | Start here |
@@ -99,4 +125,4 @@ In the current 3.8 preview UI, these resources appear under **Administration →
 
 ## Scope of This Guide
 
-This section documents deployment and operation of the built-in OIDC capability. The extension contracts for custom protocol adapters, policies, user matchers, permission grant sources, descriptor schemas, and custom Studio editors are introduced where relevant, but authoring those extensions is reserved for a dedicated developer guide.
+This section documents deployment and operation of the built-in OIDC capability. The extension contracts for custom protocol adapters, policies, user matchers, permission grant sources, descriptor schemas, and custom Studio editors are introduced where relevant, but authoring those extensions is reserved for a dedicated developer guide. That developer guide is the planned topic for the next documentation session (`DOC-055`).

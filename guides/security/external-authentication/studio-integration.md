@@ -28,7 +28,7 @@ existing direct `OpenIdConnect` or `ElsaIdentity` modes.
 
 Complete the Elsa Server External Authentication setup first:
 
-1. Install matching Elsa 3.8 preview Core and Studio packages from the
+1. Install compatible Elsa 3.8 preview Core and Studio packages from the
    Feedz.io preview feed.
 2. Enable and configure External Authentication in Elsa Server, including at
    least one enabled, valid connection or a broker-local sign-in path.
@@ -56,8 +56,27 @@ dotnet add package Elsa.Studio.ExternalAuthentication.BlazorServer --prerelease
 dotnet add package Elsa.Studio.ExternalAuthentication.BlazorWasm --prerelease
 ```
 
-Confirm that every Elsa Core and Studio package resolved to the same
-`3.8.0-preview.*` build, then pin that resolved build for repeatable restores.
+{% hint style="warning" %}
+Core and Studio previews are published independently. A new Core preview can
+appear before the Studio preview that contains these modules. Verify that all
+three Studio package IDs resolve before changing a host:
+
+```bash
+dotnet package search Elsa.Studio.ExternalAuthentication \
+  --source https://f.feedz.io/elsa-workflows/elsa-3/nuget/index.json \
+  --prerelease
+```
+
+If the search returns no packages, the Studio modules are not yet available in
+the current Feedz snapshot. Wait for a later Elsa Studio 3.8 preview or build
+the matching `elsa-studio` 3.8 source; do not substitute the direct-OIDC
+packages.
+{% endhint %}
+
+Keep all Elsa Core packages on one Core preview build and all Elsa Studio
+packages on one Studio preview build. Their numeric preview suffixes are
+independent, so they do not need to be identical. Pin both tested versions for
+repeatable restores and validate them together.
 
 | Hosting model | Packages | Broker client type |
 | --- | --- | --- |
