@@ -70,9 +70,11 @@ acceptance criterion below is already complete.
 - `DOC-035` Webhook extensibility
 - `DOC-037` Alterations
 - `DOC-065` JavaScript type-definition providers
+- `DOC-066` External Authentication extension authoring
 
 ### Available next slices
 
+- `DOC-066` External Authentication extension authoring
 - `DOC-031` Custom icons
 - `DOC-032` Workflow providers
 - `DOC-033` Custom types
@@ -83,9 +85,10 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-Re-inventory the release source and GitBook before selecting the next
-automation slice. The remaining candidates are `DOC-031` through `DOC-034`
-and `DOC-044` through `DOC-046`.
+Document `DOC-066`, External Authentication extension authoring, in the next
+documentation session. Cover custom protocol adapters, policies, user
+matchers, permission grant sources, descriptor schemas, and custom Studio
+editors.
 
 ### Current run selection (2026-08-01)
 
@@ -349,6 +352,11 @@ and `DOC-044` through `DOC-046`.
   completed on 2026-07-11 with release-backed commit-strategy, mediator-worker,
   transactional-outbox, and telemetry guidance. The prior non-existent
   commit-strategy APIs and unverified tuning recipes were removed.
+
+- `DOC-066` External Authentication extension authoring: document custom
+  protocol adapters, unlinked-identity policies, user matchers, permission
+  grant sources, descriptor schemas, and custom Studio editors as the next
+  follow-on to the Elsa 3.8 External Authentication operations guide.
 
 ## Critical Priority (Must Have - Block Users)
 
