@@ -67,7 +67,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (17 pages)
+### GUIDES (18 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -86,6 +86,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Altering a Running Workflow Instance** (`guides/running-workflows/altering-workflow-instances.md`)
 - **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
+- **JavaScript IntelliSense Type Definitions** (`guides/studio/javascript-type-definition-providers.md`)
 - **Package Manifests for Extensions** (`guides/plugins-modules/package-manifests.md`)
 
 ### HOSTING (1 pages)
@@ -156,6 +157,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Activity pickers (preview)
 - ✅ Localization
 - ✅ Brokered external authentication administration and Server/WASM client setup
+- ✅ JavaScript IntelliSense type-definition providers
 
 ### Hosting & Operations
 - ✅ Distributed hosting
@@ -179,6 +181,7 @@ Based on the current structure, the following core concepts are documented:
   security boundary
 - ✅ Extension package manifests, runtime compatibility, infrastructure hints, and deploy-time settings
 - ✅ Custom resilience strategies and retry-attempt recording
+- ✅ JavaScript IntelliSense type-definition providers
 - ✅ Reusable triggers (preview)
 
 ### Advanced Features
