@@ -298,5 +298,5 @@ This guide does not assume a first-class Angular, MVC, or Razor Pages Studio hos
 
 - [Studio User Guide](../README.md)
 - [Expressions](../expressions.md)
-- [Authentication & Authorization](../../authentication.md)
-- [External Identity Providers](../../security/external-identity-providers.md)
+- [Authentication & Authorization](../../authentication/README.md)
+- [Direct OpenID Connect](../../authentication/direct-openid-connect.md)

@@ -171,7 +171,7 @@ them.
 - [Hosting Elsa in an Existing App](../onboarding/hosting-elsa-in-existing-app.md)
 - [Modules and Plugins](../extensibility/modules-and-plugins.md)
 - [Configuration Management](../deployment/configuration-management.md)
-- [Authentication & Authorization](../authentication.md)
+- [Authentication & Authorization](../authentication/README.md)
 
 ## Release source references
 

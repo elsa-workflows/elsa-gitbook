@@ -3155,7 +3155,7 @@ After deploying Elsa Workflows to Kubernetes:
 
 * [Distributed Hosting Guide](../hosting/distributed-hosting.md) - Configure distributed runtime
 * [Database Configuration](../getting-started/database-configuration.md) - Database setup details
-* [Authentication Guide](authentication.md) - Secure your deployment
+* [Authentication Guide](authentication/README.md) - Secure your deployment
 * [Docker Compose Guide](../getting-started/containers/docker-compose/docker-quickstart.md) - Local testing
 * [Elsa Server Application Type](../application-types/elsa-server.md) - Server configuration
 * [Elsa Studio Application Type](../application-types/elsa-studio.md) - Studio configuration

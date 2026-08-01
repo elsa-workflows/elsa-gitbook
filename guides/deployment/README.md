@@ -11,5 +11,5 @@ This section covers deploying Elsa Workflows to various environments and platfor
 
 - [Kubernetes Deployment (Full Guide)](../kubernetes-deployment.md) - Comprehensive Kubernetes deployment guide with Helm charts, autoscaling, and monitoring
 - [Clustering](../clustering/README.md) - Multi-node deployment patterns
-- [Security & Authentication](../security/README.md) - Securing your deployments
+- [Security & Hardening](../security/README.md) - Securing your deployments
 - [Database Configuration](../../getting-started/database-configuration.md) - Persistence setup

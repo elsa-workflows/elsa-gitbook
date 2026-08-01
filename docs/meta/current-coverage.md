@@ -23,9 +23,16 @@ The documentation currently contains a broad set of markdown pages organized int
 - **>-** (`application-types/elsa-server.md`)
 - **>-** (`application-types/elsa-studio.md`)
 
-### AUTHENTICATION (1 pages)
+### AUTHENTICATION & AUTHORIZATION (8 guide entry points)
 
-- **Authentication** (`authentication/authentication.md`)
+- **Authentication & Authorization** (`guides/authentication/README.md`)
+- **Elsa Identity** (`guides/authentication/elsa-identity.md`)
+- **API Keys** (`guides/authentication/api-keys.md`)
+- **Direct OpenID Connect** (`guides/authentication/direct-openid-connect.md`)
+- **External Authentication** (`guides/authentication/external-authentication/README.md`)
+- **Elsa API Permissions** (`guides/authentication/permissions.md`)
+- **Custom Authentication** (`guides/authentication/custom-authentication.md`)
+- **Disable Authentication in Development** (`guides/authentication/disable-authentication.md`)
 
 ### EXPRESSIONS (4 pages)
 
@@ -67,7 +74,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (18 pages)
+### GUIDES (21 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -77,8 +84,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
 - **Workflow Dispatch Outbox** (`guides/architecture/workflow-dispatch-outbox.md`)
 - **Runtime Coordination Storage** (`guides/architecture/runtime-coordination-storage.md`)
-- **Elsa API Permissions** (`guides/security/permission-reference.md`)
-- **Brokered External Authentication** (`guides/security/brokered-external-authentication.md`)
+- **Security & Hardening** (`guides/security/README.md`)
+- **Production Hardening** (`guides/security/production-hardening.md`)
+- **HTTP Endpoint Security** (`guides/security/http-endpoint-security.md`)
+- **Bookmark Resume Tokens** (`guides/security/bookmark-resume-tokens.md`)
 - **Secrets Management** (`guides/security/secrets-management.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
@@ -156,7 +165,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Content visualizers (preview)
 - ✅ Activity pickers (preview)
 - ✅ Localization
-- ✅ Brokered external authentication administration and Server/WASM client setup
+- ✅ External Authentication administration and Server/WASM client setup
 - ✅ JavaScript IntelliSense type-definition providers
 
 ### Hosting & Operations
@@ -187,7 +196,7 @@ Based on the current structure, the following core concepts are documented:
 ### Advanced Features
 - ✅ Multitenancy setup
 - ✅ Authentication
-- ✅ Brokered external authentication and Studio SSO administration
+- ✅ External Authentication and Studio SSO administration
 - ✅ Elsa API permission reference with Studio capability and role templates
 - ✅ Alterations and alteration plans
 - ✅ Release-backed operational guide for immediate alterations, filtered
@@ -243,8 +252,8 @@ Based on the current structure, the following core concepts are documented:
    - ⚠️ HTTP workflows guide exists but could be expanded
    - ❌ No workflow testing guide
    - ❌ No data persistence patterns guide
-   - ✅ Security guidance now includes endpoint security, external identity
-     providers, role-oriented permission recipes, and Elsa Secrets management
+   - ✅ Security guidance now includes endpoint security, bookmark resume
+     tokens, production hardening, and Elsa Secrets management
    - ❌ No workflow design patterns
 
 ## Documentation Quality Notes

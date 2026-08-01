@@ -495,19 +495,23 @@ app.UseSwaggerUI(options =>
 
 ## Authentication and Authorization
 
-For production deployments, you'll need to secure Elsa's API endpoints. This section provides a high-level overview; see the [Security & Authentication Guide](../security/README.md) for detailed configuration.
+For production deployments, you'll need to secure Elsa's API endpoints. This
+section provides a high-level overview; see
+[Authentication & Authorization](../authentication/README.md) for identity and
+access configuration, then [Security & Hardening](../security/README.md) for
+transport, ingress, secrets, and operational controls.
 
 ### Quick Overview
 
 **Development (Disable Auth):**
-- See [Disable Authentication in Dev](../security/disable-auth.md)
+- See [Disable Authentication in Development](../authentication/disable-authentication.md)
 - Not recommended for production
 
 **Production Options:**
 - **Elsa.Identity**: Built-in identity system with user management
 - **API Keys**: Simple token-based authentication
 - **OIDC/OAuth2**: Integration with Azure AD, Auth0, Keycloak, etc.
-- See [External Identity Providers](../security/external-identity-providers.md)
+- See [Direct OpenID Connect](../authentication/direct-openid-connect.md)
 
 ### Basic Identity Setup
 
@@ -603,7 +607,7 @@ Now that Elsa is integrated into your app:
 
 1. **Create your first workflow**: Use [Elsa Studio](../../application-types/elsa-studio.md) or programmatic workflow definitions
 2. **Add workflow activities**: Extend Elsa with [Custom Activities](../../extensibility/custom-activities.md)
-3. **Secure your deployment**: Configure [authentication and authorization](../security/README.md)
+3. **Secure your deployment**: Configure [authentication and authorization](../authentication/README.md)
 4. **Deploy to production**: Follow the [Kubernetes Deployment Guide](../deployment/kubernetes.md) or [Clustering Guide](../clustering/README.md)
 5. **Monitor workflows**: Set up observability and logging
 
@@ -612,7 +616,7 @@ Now that Elsa is integrated into your app:
 - [Elsa Server Setup](../../application-types/elsa-server.md)
 - [Database Configuration](../../getting-started/database-configuration.md)
 - [Persistence Guide](../persistence/README.md)
-- [Security & Authentication](../security/README.md)
+- [Security & Hardening](../security/README.md)
 - [Blazor Dashboard Integration](../integration/blazor-dashboard.md)
 - [Troubleshooting Guide](../troubleshooting/README.md)
 

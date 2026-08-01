@@ -207,10 +207,10 @@ For error codes and troubleshooting:
 - See [Troubleshooting Guide](../troubleshooting/README.md) (DOC-017)
 - Reference: `src/modules/Elsa.Workflows.Core/Middleware/Activities/DefaultActivityInvokerMiddleware.cs`
 
-### Security & Authentication
+### Security & Hardening
 
 For authentication and tokenized URLs:
-- See [Security & Authentication Guide](../security/README.md) (DOC-020)
+- See [Security & Hardening Guide](../security/README.md) (DOC-020)
 - Reference: `src/apps/Elsa.Server.Web/Program.cs`
 
 ### Performance & Commit Strategies

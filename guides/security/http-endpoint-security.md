@@ -137,7 +137,7 @@ Check the reverse proxy or ingress configuration for:
 
 ## Related Guides
 
-- [Authentication & Authorization](../authentication.md)
-- [Security & Authentication](README.md)
-- [External Identity Providers](external-identity-providers.md)
+- [Authentication & Authorization](../authentication/README.md)
+- [Security & Hardening](README.md)
+- [Direct OpenID Connect](../authentication/direct-openid-connect.md)
 - [HTTP Workflows](../http-workflows/README.md)

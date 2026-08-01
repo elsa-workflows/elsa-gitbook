@@ -11,6 +11,6 @@ This section provides guides for integrating Elsa Workflows with other technolog
 
 - [Elsa Studio](../../application-types/elsa-studio.md) - Studio application overview
 - [Hosting Elsa in an Existing App](../onboarding/hosting-elsa-in-existing-app.md) - General integration guide
-- [Security & Authentication](../security/README.md) - Authentication configuration
+- [Security & Hardening](../security/README.md) - Deployment security guidance
 - [HTTP Workflows](../http-workflows/README.md) - Building HTTP-triggered workflows
 - [External Application Interaction](../external-application-interaction.md) - Integrating workflows with external systems
