@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-07-31)
+## Slice Inventory (2026-08-01)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -69,6 +69,7 @@ acceptance criterion below is already complete.
 - `DOC-036` Activity type providers
 - `DOC-035` Webhook extensibility
 - `DOC-037` Alterations
+- `DOC-065` JavaScript type-definition providers
 
 ### Available next slices
 
@@ -83,8 +84,25 @@ acceptance criterion below is already complete.
 ### Recommended next slice
 
 Re-inventory the release source and GitBook before selecting the next
-automation slice. The remaining candidates are `DOC-031` through `DOC-034`,
-`DOC-044` through `DOC-046`, and newly discovered `DOC-065`.
+automation slice. The remaining candidates are `DOC-031` through `DOC-034`
+and `DOC-044` through `DOC-046`.
+
+### Current run selection (2026-08-01)
+
+- Selected and completed `DOC-065` JavaScript type-definition providers after
+  re-inventorying the remaining candidates against the GitBook and
+  `release/3.8.0` source. The existing JavaScript and Studio expression pages
+  explained runtime syntax but did not explain how custom TypeScript
+  declarations reach Studio's Monaco editor.
+- Added a focused developer/Studio guide, linked it from the expression
+  documentation, and included release-source references for the Core provider
+  contract, endpoint, and Studio Monaco handler.
+- Core's remote `release/3.8.0` ref advanced from `7e82a55` to `edb5f7c` during
+  review; the cited JavaScript type-definition paths were unchanged. Studio
+  remains at `ef6a39d`, and Extensions has no advertised upstream
+  `release/3.8.0` branch.
+- No additional distinct follow-on topic was found during this source review;
+  re-inventory before selecting the next slice.
 
 ### Current run selection (2026-07-31)
 

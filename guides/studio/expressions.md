@@ -382,3 +382,4 @@ That is normal. `Default` uses the activity's UI hint. Switch the syntax picker 
 
 - [Workflow Instance Variables](../../operate/workflow-instance-variables.md)
 - [Using Elsa Studio](../running-workflows/using-elsa-studio.md)
+- [JavaScript IntelliSense type definitions](javascript-type-definition-providers.md)

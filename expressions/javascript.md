@@ -313,3 +313,10 @@ Converts a stream to a base64 string.
 ```javascript
 streamToBase64(value: Stream): string;
 ```
+
+## Extending Studio IntelliSense
+
+If your application adds custom JavaScript functions or types, see
+[JavaScript IntelliSense type definitions](../guides/studio/javascript-type-definition-providers.md)
+for the release-backed provider contracts and the distinction between editor
+declarations and runtime configuration.
