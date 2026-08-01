@@ -700,24 +700,24 @@ For production deployments, follow security best practices:
 5. **Audit access**: Log all workflow modifications
 
 For detailed security configuration, see:
-- [Security & Authentication Guide](../security/README.md)
-- [External Identity Providers](../security/external-identity-providers.md)
-- [Disable Auth in Dev](../security/disable-auth.md) (development only)
+- [Security & Hardening Guide](../security/README.md)
+- [Direct OpenID Connect](../authentication/direct-openid-connect.md)
+- [Disable Authentication in Development](../authentication/disable-authentication.md) (development only)
 
 ## Next Steps
 
 - **Customize Studio**: Configure themes, localization, and plugins
 - **Add Custom Activities**: Extend workflow designer with [Custom Activities](../../extensibility/custom-activities.md)
 - **Deploy to Production**: Follow [Kubernetes Deployment](../deployment/kubernetes.md) guide
-- **Integrate with Identity Provider**: Set up [External Identity Providers](../security/external-identity-providers.md)
+- **Integrate with Identity Provider**: Set up [Direct OpenID Connect](../authentication/direct-openid-connect.md)
 - **Run Workflows**: Learn about [Running Workflows](../running-workflows/README.md)
 
 ## Related Documentation
 
 - [Hosting Elsa in an Existing App](../onboarding/hosting-elsa-in-existing-app.md)
 - [Elsa Studio Application Type](../../application-types/elsa-studio.md)
-- [Security & Authentication](../security/README.md)
-- [External Identity Providers](../security/external-identity-providers.md)
+- [Security & Hardening](../security/README.md)
+- [Direct OpenID Connect](../authentication/direct-openid-connect.md)
 - [Troubleshooting Guide](../troubleshooting/README.md)
 
 ---

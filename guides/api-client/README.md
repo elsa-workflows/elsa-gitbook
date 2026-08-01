@@ -37,10 +37,10 @@ is enabled. For example, listing workflow definitions requires
 do not reuse a Studio administrator token for background services.
 
 Configure authentication and claims before calling these endpoints. See
-[Authentication & Authorization](../authentication.md) and
-[External Identity Providers](../security/external-identity-providers.md).
+[Authentication & Authorization](../authentication/README.md) and
+[Direct OpenID Connect](../authentication/direct-openid-connect.md).
 For a route map and least-privilege role templates, see [Elsa API
-Permissions](../security/permission-reference.md).
+Permissions](../authentication/permissions.md).
 
 The exception is `GET`/`POST /bookmarks/resume`. Elsa deliberately allows this
 route anonymously because the encrypted `t` token identifies the bookmark and

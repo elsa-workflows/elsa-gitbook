@@ -245,7 +245,7 @@ The corresponding routes are:
 Grant the smallest set that matches the user or service's job. A workflow
 designer who only needs to select existing secrets needs the read path and
 the appropriate workflow-definition permissions; creating or rotating secrets
-is a separate administrative capability. See [Elsa API Permissions](permission-reference.md)
+is a separate administrative capability. See [Elsa API Permissions](../authentication/permissions.md)
 for the broader permission model.
 
 ## Operational checklist
@@ -264,6 +264,6 @@ for the broader permission model.
   ordinary workflow variables unnecessarily.
 
 For OIDC client secrets and other host authentication settings, use the
-[authentication](../authentication.md) and [external identity provider](external-identity-providers.md)
+[authentication](../authentication/README.md) and [direct OpenID Connect](../authentication/direct-openid-connect.md)
 guides. For deployment-managed Kubernetes or cloud secrets, use the deployment
 guides rather than the Elsa Secrets API.

@@ -392,7 +392,7 @@ public async Task ResumeBookmark_WithExpiredToken_ShouldFailValidation()
 
 ## Related Documentation
 
-- [Security & Authentication Guide](../README.md) - Full security reference
+- [Security & Hardening Guide](../README.md) - Full security reference
 - [CORS and Ingress Configuration](ingress-cors-snippet.md) - Network security
 - [Troubleshooting Guide](../../troubleshooting/README.md) (DOC-017) - Diagnosing token issues
 - [Clustering Guide](../../clustering/README.md) (DOC-015) - Distributed locking for resume

@@ -1692,7 +1692,7 @@ Now that you've mastered HTTP workflows, explore these advanced topics:
 
 * [**External Application Interaction**](../external-application-interaction.md): Integrate with external services
 * [**Custom Activities**](../../extensibility/custom-activities.md): Create reusable workflow components
-* [**Authentication**](../authentication.md): Secure your workflows
+* [**Authentication**](../authentication/README.md): Secure your workflows
 * [**Testing & Debugging**](../testing-debugging.md): Advanced debugging techniques
 * [**Distributed Hosting**](../../hosting/distributed-hosting.md): Scale your workflows
 

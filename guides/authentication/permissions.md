@@ -4,7 +4,7 @@ description: >-
   and least-privilege role templates in Elsa 3.8.0.
 ---
 
-# Elsa API permissions
+# Elsa API Permissions
 
 Elsa API authorization is claim-based. When API security is enabled, Elsa
 endpoints look for claims with the type `permissions`. Each claim value is an
@@ -16,10 +16,10 @@ identity providers, API-key applications, and Studio users. It covers the
 common routes in the `release/3.8.0` API; modules can add more permissions of
 their own.
 
-For authentication middleware, tokens, and external provider setup, see the
-[Authentication & Authorization Guide](../authentication.md) and [External
-Identity Providers](external-identity-providers.md). For the .NET API client,
-see [API & Client](../api-client/README.md).
+For authentication middleware, tokens, and external provider setup, see
+[Authentication & Authorization](README.md) and
+[Direct OpenID Connect](direct-openid-connect.md). For the .NET API client, see
+[API & Client](../api-client/README.md).
 
 ## How permissions are applied
 
@@ -151,8 +151,8 @@ role. These are the permission values declared by common release modules:
 | Authenticated event trigger | — | `trigger:event` |
 
 For the secret lifecycle, built-in stores, Studio picker, and runtime
-reference contract behind these claims, see the [Secrets management
-guide](secrets-management.md).
+reference contract behind these claims, see the [Secrets Management
+guide](../security/secrets-management.md).
 
 Some module endpoints also advertise namespace wildcards such as `read:*` or
 `exec:*`. Check the exact endpoint in the version you deploy before replacing
@@ -225,11 +225,11 @@ Elsa API permissions do not apply to every URL hosted by an Elsa application:
 
 - Workflow routes handled by the `HttpEndpoint` activity use the activity's
   `Authorize` and `Policy` settings. See [HTTP Endpoint
-  Security](http-endpoint-security.md).
+  Security](../security/http-endpoint-security.md).
 - Bookmark-resume endpoints are intentionally anonymous in the release API;
   the encrypted resume token is the capability. Treat it as a secret and
   generate it with a bounded lifetime. See [API & Client](../api-client/README.md)
-  and [resume-token guidance](examples/resume-endpoint-notes.md).
+  and [Bookmark Resume Tokens](../security/bookmark-resume-tokens.md).
 - Custom host controllers and pages can use ordinary ASP.NET Core policies,
   roles, or claims independently of Elsa API permissions.
 

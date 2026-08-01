@@ -927,7 +927,7 @@ For automatic scaling based on CPU/memory usage, see the [Full Kubernetes Deploy
 
 - **Scale Your Deployment**: Configure [Horizontal Pod Autoscaling](../kubernetes-deployment.md#horizontal-pod-autoscaling)
 - **Add Monitoring**: Set up [Prometheus and Grafana](../kubernetes-deployment.md#monitoring-with-prometheus--grafana)
-- **Secure Your Cluster**: Configure [authentication and authorization](../security/README.md)
+- **Secure Your Cluster**: Configure [authentication and authorization](../authentication/README.md)
 - **Integrate with Studio**: Set up [Blazor Dashboard](../integration/blazor-dashboard.md)
 - **Production Hardening**: Follow the [Production Checklist](../kubernetes-deployment.md#production-best-practices)
 
@@ -936,7 +936,7 @@ For automatic scaling based on CPU/memory usage, see the [Full Kubernetes Deploy
 - [Full Kubernetes Deployment Guide](../kubernetes-deployment.md) - Complete reference with Helm charts, autoscaling, and monitoring
 - [Database Configuration](../../getting-started/database-configuration.md) - Detailed persistence setup
 - [Clustering Guide](../clustering/README.md) - Multi-node deployment patterns
-- [Security & Authentication](../security/README.md) - Securing your Kubernetes deployment
+- [Security & Hardening](../security/README.md) - Securing your Kubernetes deployment
 - [Troubleshooting](../troubleshooting/README.md) - Common issues and solutions
 
 ---

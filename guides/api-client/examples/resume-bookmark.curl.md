@@ -89,7 +89,7 @@ Tokens become invalid when:
 - The workflow instance is deleted
 - The token was generated with a lifetime or expiration time and that time has passed
 
-See [Security & Authentication Guide](../../security/README.md) (DOC-020) for token security best practices.
+See [Security & Hardening Guide](../../security/README.md) (DOC-020) for token security best practices.
 
 ### Rate Limiting
 

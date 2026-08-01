@@ -533,7 +533,7 @@ For advanced configuration, consult official documentation:
 
 ## Related Documentation
 
-- [Security & Authentication Guide](../README.md) - Full security reference
+- [Security & Hardening Guide](../README.md) - Full security reference
 - [Resume Endpoint Security](resume-endpoint-notes.md) - Token security best practices
 - [Clustering Guide](../../clustering/README.md) (DOC-015) - Multi-node architecture
 - [Troubleshooting Guide](../../troubleshooting/README.md) (DOC-017) - Diagnosing network issues

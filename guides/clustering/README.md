@@ -1442,7 +1442,7 @@ _[Screenshot: PostgreSQL query result showing Quartz cluster state with multiple
 - [Distributed Hosting](../../hosting/distributed-hosting.md) - Core distributed runtime concepts
 - [Kubernetes Deployment Guide](../kubernetes-deployment.md) - General Kubernetes deployment
 - [Database Configuration](../../getting-started/database-configuration.md) - Database setup
-- [Authentication Guide](../authentication.md) - Securing your deployment
+- [Authentication Guide](../authentication/README.md) - Securing your deployment
 
 ## Example Code Repository
 

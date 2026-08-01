@@ -338,7 +338,7 @@ solution.
 ## Related Guides
 
 * [Database Configuration](../../getting-started/database-configuration.md)
-* [Authentication & Authorization](../authentication.md)
-* [Security & Authentication](../security/README.md)
+* [Authentication & Authorization](../authentication/README.md)
+* [Security & Hardening](../security/README.md)
 * [Deployment](README.md)
 * [Studio Integration](../studio/integration/README.md)

@@ -336,37 +336,38 @@
     ]
   },
   {
-    "path": "authentication/authentication.md",
-    "title": "Authentication",
+    "path": "guides/authentication/README.md",
+    "title": "Authentication & Authorization",
     "frontmatter": {},
     "headings": [
       {
         "level": 1,
-        "text": "Authentication"
+        "text": "Authentication & Authorization"
       },
       {
         "level": 2,
-        "text": "Configuring Authentication for Elsa HTTP API"
-      },
-      {
-        "level": 3,
-        "text": "Overview"
+        "text": "Choose an authentication path"
       },
       {
         "level": 2,
-        "text": "Authentication Modes"
+        "text": "Understand the security boundaries"
       },
       {
         "level": 3,
-        "text": "No Authentication"
+        "text": "Elsa Server API"
       },
       {
         "level": 3,
-        "text": "Using Elsa.Identity"
+        "text": "Elsa Studio"
       },
       {
         "level": 3,
-        "text": "Using OIDC (OpenID Connect)"
+        "text": "Workflow HTTP endpoints"
+      },
+      {
+        "level": 3,
+        "level": 2,
+        "text": "Recommended reading paths"
       }
     ]
   },

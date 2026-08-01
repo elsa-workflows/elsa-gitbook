@@ -49,7 +49,7 @@ Major restructuring needed:
 | `extensibility/custom-activities.md` | `/docs/extensibility/custom-activities.md` | **Complete Rewrite** | Critical |
 | `hosting/distributed-hosting.md` | `/docs/deployment/clustering.md` | **Expand** | High |
 | `studio/` | `/docs/using-studio/` | **Expand Significantly** | High |
-| `authentication/authentication.md` | `/docs/deployment/authentication.md` | **Expand** | Critical |
+| `guides/authentication/README.md` | `/docs/deployment/authentication.md` | **Expand** | Critical |
 
 ## Pages to Deprecate/Archive
 

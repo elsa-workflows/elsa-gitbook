@@ -4,7 +4,7 @@ description: >-
   Connect identity providers in Elsa 3.8.
 ---
 
-# External Identity Providers
+# Direct OpenID Connect
 
 This guide covers the identity-provider integration points that are actually
 present in `release/3.8.0` across `elsa-core` and `elsa-studio`.
@@ -30,9 +30,9 @@ authorizes API calls based on ASP.NET Core authentication plus Elsa-specific
 `permissions` claims.
 
 If Elsa should own the upstream authorization-code flow, connection lifecycle,
-identity links, or Studio SSO administration, use the [Brokered External
-Authentication](brokered-external-authentication.md) guide instead. The broker
-is an opt-in path distinct from direct bearer-token validation.
+identity links, or Studio SSO administration, use
+[External Authentication](external-authentication/README.md) instead. The
+broker is an opt-in path distinct from direct bearer-token validation.
 
 ## What Elsa 3.8 Actually Expects
 
@@ -318,8 +318,8 @@ that extra call.
 
 ## Related Guides
 
-- [Security & Authentication Guide](README.md)
-- [Authentication & Authorization Guide](../authentication.md)
+- [Security & Hardening](../security/README.md)
+- [Authentication & Authorization](README.md)
 - [Studio Designer Integration](../studio/integration/README.md)
 - [Blazor Dashboard Integration](../integration/blazor-dashboard.md)
-- [Brokered External Authentication](brokered-external-authentication.md)
+- [External Authentication](external-authentication/README.md)

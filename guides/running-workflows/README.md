@@ -154,7 +154,9 @@ The method for obtaining API keys depends on your Elsa Server setup:
 - **Custom Authentication**: Refer to your organization's authentication provider
 - **Development/Testing**: API keys may be pre-configured in `appsettings.json` or generated via Elsa Studio
 
-For detailed information about configuring authentication, setting up API keys, and implementing custom authentication schemes, see the [Security and Authentication Guide](../security/README.md).
+For detailed information about configuring authentication, setting up API
+keys, and implementing custom authentication schemes, see
+[Authentication & Authorization](../authentication/README.md).
 
 > **Important**: The `Authorization` header examples in this guide use `ApiKey YOUR_API_KEY` as a placeholder. Replace this with your actual authentication scheme and credentials based on your Elsa Server configuration. The authorization format and credentials depend on how authentication is configured in your Elsa Server instance.
 
