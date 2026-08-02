@@ -74,7 +74,6 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-066` External Authentication extension authoring
 - `DOC-031` Custom icons
 - `DOC-032` Workflow providers
 - `DOC-033` Custom types
@@ -85,10 +84,21 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-Document `DOC-066`, External Authentication extension authoring, in the next
-documentation session. Cover custom protocol adapters, policies, user
-matchers, permission grant sources, descriptor schemas, and custom Studio
-editors.
+Document `DOC-031`, Custom icons, in the next documentation session.
+
+### Current run selection (2026-08-02)
+
+- Selected and completed `DOC-066` External Authentication extension authoring
+  after re-inventorying the latest `origin/main` contents. The existing
+  operations guide intentionally deferred custom adapters, policies, matchers,
+  grant sources, descriptors, migrations, and Studio custom editors.
+- Added a focused developer/Studio guide and linked it from the External
+  Authentication section.
+- Validated the contracts against `elsa-core` `origin/release/3.8.0` at
+  `edb5f7c` and `elsa-studio` `origin/release/3.8.0` at `456794c`. The
+  extensions checkout has no upstream `origin/release/3.8.0` ref; no
+  extension-repository source was needed for these contracts.
+- No additional distinct follow-on topic was found during this source review.
 
 ### Current run selection (2026-08-01)
 

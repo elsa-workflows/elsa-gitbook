@@ -125,4 +125,4 @@ In the current 3.8 preview UI, these resources appear under **Administration →
 
 ## Scope of This Guide
 
-This section documents deployment and operation of the built-in OIDC capability. The extension contracts for custom protocol adapters, policies, user matchers, permission grant sources, descriptor schemas, and custom Studio editors are introduced where relevant, but authoring those extensions is reserved for a dedicated developer guide. That developer guide is the planned topic for the next documentation session (`DOC-066`).
+This section documents deployment and operation of the built-in OIDC capability. For custom protocol adapters, policies, user matchers, permission grant sources, descriptor schemas, and custom Studio editors, see [External Authentication extensibility](extensibility.md).
