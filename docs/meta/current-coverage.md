@@ -23,13 +23,14 @@ The documentation currently contains a broad set of markdown pages organized int
 - **>-** (`application-types/elsa-server.md`)
 - **>-** (`application-types/elsa-studio.md`)
 
-### AUTHENTICATION & AUTHORIZATION (8 guide entry points)
+### AUTHENTICATION & AUTHORIZATION (9 guide entry points)
 
 - **Authentication & Authorization** (`guides/authentication/README.md`)
 - **Elsa Identity** (`guides/authentication/elsa-identity.md`)
 - **API Keys** (`guides/authentication/api-keys.md`)
 - **Direct OpenID Connect** (`guides/authentication/direct-openid-connect.md`)
 - **External Authentication** (`guides/authentication/external-authentication/README.md`)
+- **External Authentication extensibility** (`guides/authentication/external-authentication/extensibility.md`)
 - **Elsa API Permissions** (`guides/authentication/permissions.md`)
 - **Custom Authentication** (`guides/authentication/custom-authentication.md`)
 - **Disable Authentication in Development** (`guides/authentication/disable-authentication.md`)
@@ -166,7 +167,9 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Activity pickers (preview)
 - ✅ Localization
 - ✅ External Authentication administration and Server/WASM client setup
+- ✅ External Authentication server extension contracts and Studio custom editors
 - ✅ JavaScript IntelliSense type-definition providers
+- ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility
 
 ### Hosting & Operations
 - ✅ Distributed hosting

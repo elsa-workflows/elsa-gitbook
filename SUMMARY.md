@@ -49,6 +49,7 @@
     * [Keycloak Walkthrough](guides/authentication/external-authentication/keycloak.md)
     * [Studio Integration](guides/authentication/external-authentication/studio-integration.md)
     * [Administration](guides/authentication/external-authentication/administration.md)
+    * [Extensibility](guides/authentication/external-authentication/extensibility.md)
     * [Production and Security](guides/authentication/external-authentication/production.md)
     * [REST API](guides/authentication/external-authentication/api.md)
     * [Migrate from Direct OIDC](guides/authentication/external-authentication/migration-from-direct-oidc.md)
