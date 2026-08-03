@@ -31,6 +31,7 @@ injection and feature modules.
 | Add app-bar UI | `IAppBarService` from an `IFeature` | `DefaultAppBarService` |
 | Add panels, tabs, or editor widgets | `IWidget` or `IWidgetRegistry` | `DefaultWidgetRegistry` |
 | Change the workflow activity picker | Replace `IActivityPickerComponentProvider` | workflows module plus host override |
+| Add icons for custom activities | `IActivityDisplaySettingsProvider` | `AddActivityDisplaySettingsProvider<T>` |
 | Render a new input editor | Studio `IUIHintHandler` plus backend `UIHint` metadata | `AddDefaultUIHintHandlers`, `ActivityDescriber` |
 | Decorate an existing input editor | `IUIFieldExtensionHandler` | `FieldExtension.razor` |
 
@@ -256,6 +257,9 @@ the stock shell without forking its pages.
 
 Use UI hint handlers and field extensions when the change belongs inside
 the workflow inspector rather than the shell.
+
+For custom activity icons, see
+[Custom Activity Icons](../extensibility/custom-icons.md).
 
 ## Related Guides
 

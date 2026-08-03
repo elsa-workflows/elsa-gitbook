@@ -131,7 +131,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Introducing Elsa Workflows 3** (`README.md`)
 - **Table of contents** (`SUMMARY.md`)
 
-### STUDIO (8 pages)
+### STUDIO (9 pages)
 
 - **This section displays the available customization options for Elsa Studio.** (`studio/design/README.md`)
 - **Activity Pickers (3.7-preview)** (`studio/design/activity-pickers-3.7-preview.md`)
@@ -141,6 +141,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Content Visualisers (3.6-preview)** (`studio/workflow-editor/content-visualisers-3.6-preview.md`)
 - **Field Extensions** (`studio/workflow-editor/field-extensions.md`)
 - **UI Hints** (`studio/workflow-editor/ui-hints.md`)
+- **Custom Activity Icons** (`guides/extensibility/custom-icons.md`)
 
 ## Key Concepts Documented
 
@@ -169,6 +170,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ External Authentication administration and Server/WASM client setup
 - ✅ External Authentication server extension contracts and Studio custom editors
 - ✅ JavaScript IntelliSense type-definition providers
+- ✅ Custom activity icons through Studio display-settings providers
 - ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility
 
 ### Hosting & Operations

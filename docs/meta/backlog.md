@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-01)
+## Slice Inventory (2026-08-03)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -71,10 +71,10 @@ acceptance criterion below is already complete.
 - `DOC-037` Alterations
 - `DOC-065` JavaScript type-definition providers
 - `DOC-066` External Authentication extension authoring
+- `DOC-031` Custom icons
 
 ### Available next slices
 
-- `DOC-031` Custom icons
 - `DOC-032` Workflow providers
 - `DOC-033` Custom types
 - `DOC-034` DropIns
@@ -84,7 +84,25 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-Document `DOC-031`, Custom icons, in the next documentation session.
+Document `DOC-032`, Workflow providers, in the next documentation session.
+
+### Current run selection (2026-08-03)
+
+- Selected `DOC-031` Custom icons after re-inventorying the published
+  `origin/main` contents. The remaining candidates are `DOC-032` through
+  `DOC-034` and `DOC-044` through `DOC-046`; custom activity metadata and
+  Studio customization are documented, but the release-backed icon asset and
+  registration path is not.
+- Initial inventory found no additional distinct slice. Source review confirmed
+  that this topic is a Studio display-settings provider rather than a runtime
+  metadata or package-asset feature.
+- Validation target: `release/3.8.0` in `elsa-core`, `elsa-studio`, and
+  `elsa-extensions`.
+- Presentation target: a concise developer guide with the end-to-end asset
+  path, a minimal registration example, and troubleshooting for missing icons.
+- Completed by adding `guides/extensibility/custom-icons.md`, linking it from
+  Studio customization, custom activities, and `SUMMARY.md`, and validating
+  the provider contract against the release source.
 
 ### Current run selection (2026-08-02)
 
