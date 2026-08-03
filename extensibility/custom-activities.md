@@ -128,6 +128,9 @@ especially useful for custom activities:
 For the built-in hints and how Studio resolves them, see
 [UI Hints](../studio/workflow-editor/ui-hints.md).
 
+To change how a custom activity appears in Studio's picker and designer, see
+[Custom Activity Icons](../guides/extensibility/custom-icons.md).
+
 ## Outputs
 
 You can expose additional outputs by declaring `Output<T>` properties and

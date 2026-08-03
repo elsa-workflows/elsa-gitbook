@@ -103,6 +103,7 @@
 * [Studio User Guide](guides/studio/README.md)
   * [Expressions](guides/studio/expressions.md)
   * [JavaScript IntelliSense Type Definitions](guides/studio/javascript-type-definition-providers.md)
+  * [Custom Activity Icons](guides/extensibility/custom-icons.md)
   * [Customization](guides/studio/customization.md)
   * [Custom UI Components](guides/studio/custom-ui-components.md)
   * [Integration](guides/studio/integration/README.md)
