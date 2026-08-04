@@ -208,7 +208,8 @@ dotnet add package Elsa.WorkflowProviders.BlobStorage
 
 > **Note:** Earlier documentation may have incorrectly referenced `Elsa.WorkflowProviders.FluentStorage`. The correct package name is `Elsa.WorkflowProviders.BlobStorage`.
 
-For detailed configuration and usage of blob storage providers, please refer to the Elsa Core repository documentation.
+For provider behavior, reload operations, and custom external sources, see
+[Workflow Providers](extensibility/workflow-providers.md).
 
 ## Summary <a href="#summary" id="summary"></a>
 
