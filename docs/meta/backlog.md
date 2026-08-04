@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-03)
+## Slice Inventory (2026-08-04)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -72,6 +72,7 @@ acceptance criterion below is already complete.
 - `DOC-065` JavaScript type-definition providers
 - `DOC-066` External Authentication extension authoring
 - `DOC-031` Custom icons
+- `DOC-032` Workflow providers
 
 ### Available next slices
 
@@ -84,7 +85,29 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-Document `DOC-032`, Workflow providers, in the next documentation session.
+Document `DOC-033`, Custom types, after the current workflow-provider slice.
+
+### Current run selection (2026-08-04)
+
+- Selected `DOC-032` Workflow providers after re-inventorying the published
+  `origin/main` contents. The remaining candidates are `DOC-033`, `DOC-034`,
+  and `DOC-044` through `DOC-046`; the GitBook explains workflow-definition
+  import and registration in several places but has no focused guide for
+  implementing or composing `IWorkflowsProvider` sources.
+- Initial inventory found no additional distinct slice. Source review confirmed
+  that provider precedence, reload/refresh behavior, and the boundary between
+  providers and workflow stores belong in this slice rather than a new one.
+- Validation target: the exact remote `origin/release/3.8.0` commits in
+  `elsa-core`, `elsa-studio`, and `elsa-extensions`.
+- Presentation target: a concise developer and architect guide that explains
+  when to use a workflow provider, shows a minimal provider and registration
+  path, and covers reload/refresh and operational trade-offs.
+- Completed by adding `guides/extensibility/workflow-providers.md`, linking it
+  from the extensibility navigation and JSON-loading guide, and documenting
+  the release-backed provider, materializer, tenant, version, Studio, and
+  reload/refresh contracts.
+- No additional distinct follow-on topic was discovered during this source
+  review; `DOC-033` remains the next recommended slice.
 
 ### Current run selection (2026-08-03)
 
