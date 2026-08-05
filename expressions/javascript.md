@@ -51,6 +51,10 @@ services.AddElsa(elsa =>
 ```
 {% endcode %}
 
+For the distinction between a JavaScript runtime type, a workflow-JSON type
+alias, and a Studio variable type, see
+[Registering Custom Types](../guides/extensibility/custom-types.md).
+
 {% hint style="info" %}
 Elsa uses [Jint](https://github.com/sebastienros/jint) to implement the JavaScript expression evaluator.
 {% endhint %}

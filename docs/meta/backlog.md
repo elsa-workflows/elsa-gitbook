@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-04)
+## Slice Inventory (2026-08-05)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -73,19 +73,45 @@ acceptance criterion below is already complete.
 - `DOC-066` External Authentication extension authoring
 - `DOC-031` Custom icons
 - `DOC-032` Workflow providers
+- `DOC-033` Custom types
+- `DOC-043` Hangfire integration
 
 ### Available next slices
 
-- `DOC-032` Workflow providers
-- `DOC-033` Custom types
 - `DOC-034` DropIns
 - `DOC-044` Community resources
 - `DOC-045` Case studies
 - `DOC-046` FAQ
+- `DOC-067` Weaver and AI workflow assistance
 
 ### Recommended next slice
 
-Document `DOC-033`, Custom types, after the current workflow-provider slice.
+Document `DOC-034`, DropIns, after the current custom-types slice.
+
+### Current run selection (2026-08-05)
+
+- Selected `DOC-033` Custom types after re-inventorying the published
+  `origin/main` contents. The remaining candidates are `DOC-034` and
+  `DOC-044` through `DOC-046`; the GitBook explains activity and workflow
+  registration in several places but has no focused guide for registering
+  custom CLR types for serialization and expression/runtime use.
+- Initial inventory found no additional distinct slice. Source review will
+  distinguish runtime serializer type registration from Studio JavaScript
+  type-definition providers and from activity-type providers.
+- Validation target: the exact remote `origin/release/3.8.0` commits in
+  `elsa-core`, `elsa-studio`, and `elsa-extensions`.
+- Presentation target: a concise developer guide that explains when custom
+  type registration is needed, shows the registration path and a safe
+  example, and clarifies trust, persistence, expression, and Studio
+  boundaries.
+- Completed by adding `guides/extensibility/custom-types.md`, linking it from
+  extensibility, workflow-provider, and JavaScript expression documentation,
+  and validating the separate Studio, expression, serialization, and Jint
+  contracts against the 3.8.0 release source.
+- Source review also found a new distinct `DOC-067` Weaver/AI workflow
+  assistance slice spanning Core's AI host and proposal APIs and Studio's
+  Weaver module. It is available for a later run; `DOC-034` remains the next
+  recommended slice.
 
 ### Current run selection (2026-08-04)
 
@@ -882,6 +908,17 @@ Document `DOC-033`, Custom types, after the current workflow-provider slice.
 - **Lifecycle Stage**: Install, Extend
 - **Description**: Dedicated cookbook for embedding Elsa Studio components into existing web apps using the custom-elements host, including backend credentials, tenant headers, and framework wrappers.
 - **Estimated Effort**: 1-2 days
+
+### DOC-067: Weaver and AI Workflow Assistance
+
+- **Persona**: Workflow Designer, Backend Integrator, CTO
+- **Lifecycle Stage**: Explore, Govern, Operate
+- **Description**: Explain Elsa's release-backed AI host, Weaver Studio module,
+  grounding and proposal APIs, permissions, provider configuration, audit
+  boundaries, and safe workflow-draft review.
+- **Evidence**: Core `Elsa.AI.Host` and Studio `Elsa.Studio.AI` modules in
+  `release/3.8.0`.
+- **Estimated Effort**: 2-3 days
 
 ## Implementation Roadmap
 
