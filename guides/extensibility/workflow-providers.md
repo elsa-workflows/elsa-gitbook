@@ -25,6 +25,7 @@ Studio sees them through the ordinary workflow-definition API.
 | Studio definitions | Persistence and workflow-definition API |
 | Load one JSON document and run it immediately | [Loading Workflows from JSON](../loading-workflows-from-json.md) |
 | Supply dynamic activity types to the Studio picker | [`IActivityProvider`](activity-type-providers.md) |
+| Register CLR types used by workflow data | [Registering Custom Types](custom-types.md) |
 
 `IWorkflowsProvider` supplies already materialized `Workflow` objects. It is
 not a replacement for `IWorkflowDefinitionStore`, and it does not itself

@@ -42,9 +42,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Liquid** (`expressions/liquid.md`)
 - **Python** (`expressions/python.md`)
 
-### EXTENSIBILITY (4 pages)
+### EXTENSIBILITY (5 pages)
 
 - **This topic covers extending Elsa with your own custom activities.** (`extensibility/custom-activities.md`)
+- **Registering Custom Types** (`guides/extensibility/custom-types.md`)
 - **Add custom Polly-based resilience strategies and retry diagnostics to Elsa 3.8.0 workflows.** (`guides/extensibility/custom-resilience-strategies.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
 - **>-** (`extensibility/reusable-triggers-3.5-preview.md`)
@@ -76,13 +77,14 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (22 pages)
+### GUIDES (24 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
 - **Designer** (`guides/http-workflows/designer.md`)
 - **Programmatic** (`guides/http-workflows/programmatic.md`)
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
+- **Hangfire Integration** (`guides/running-workflows/hangfire-integration.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
 - **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
 - **Workflow Dispatch Outbox** (`guides/architecture/workflow-dispatch-outbox.md`)
@@ -193,6 +195,7 @@ Based on the current structure, the following core concepts are documented:
 ### Extensibility
 - ✅ Custom activities
 - ✅ Workflow providers for code-first, external, and file-backed definitions
+- ✅ Custom CLR type registration and Studio integration
 - ✅ Activity type providers and descriptor refresh
 - ✅ Inbound webhook event activities, outbound webhook sinks, and the endpoint
   security boundary
