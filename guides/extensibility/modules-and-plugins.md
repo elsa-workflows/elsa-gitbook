@@ -598,6 +598,8 @@ builder.Services.AddElsa(elsa => elsa
 
 ## Further Reading
 
+- [DropIns](dropins.md) for independently deployed server-side extension
+  assemblies and packages.
 - **[Custom Activities](../../extensibility/custom-activities.md)** - Detailed guide on creating activities
 - **[Plugins & Modules](../plugins-modules/README.md)** - Extended guide with more examples
 - **[Architecture Overview](../architecture/README.md)** - Understanding Elsa's architecture

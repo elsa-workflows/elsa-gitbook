@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-05)
+## Slice Inventory (2026-08-06)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -75,10 +75,10 @@ acceptance criterion below is already complete.
 - `DOC-032` Workflow providers
 - `DOC-033` Custom types
 - `DOC-043` Hangfire integration
+- `DOC-034` DropIns
 
 ### Available next slices
 
-- `DOC-034` DropIns
 - `DOC-044` Community resources
 - `DOC-045` Case studies
 - `DOC-046` FAQ
@@ -86,7 +86,25 @@ acceptance criterion below is already complete.
 
 ### Recommended next slice
 
-Document `DOC-034`, DropIns, after the current custom-types slice.
+Document `DOC-044`, Community resources, as the next remaining candidate.
+
+### Current run selection (2026-08-06)
+
+- Selected and completed `DOC-034` DropIns after re-inventorying the published
+  `origin/main` contents. The remaining candidates are `DOC-044` through
+  `DOC-046`; `DOC-067` is a newly discovered source-backed
+  AI/Weaver topic reserved for a later run.
+- The current GitBook has no focused guide for the DropIns module. This slice
+  will explain when to use DropIns instead of ordinary package references or
+  explicit module registration, how the release discovers assemblies, and
+  which host and deployment constraints matter.
+- Validation target: the exact remote `origin/release/3.8.0` commits in
+  `elsa-core`, `elsa-studio`, and `elsa-extensions`.
+- Presentation target: a concise developer guide with a minimal DropIn
+  package example, host configuration, discovery lifecycle, and
+  troubleshooting/operational boundaries.
+- Completed by adding `guides/extensibility/dropins.md`, linking it from the
+  extensibility and plugins/modules navigation, and updating coverage metadata.
 
 ### Current run selection (2026-08-05)
 
