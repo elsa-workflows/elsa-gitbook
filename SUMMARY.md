@@ -89,6 +89,7 @@
 * [Plugins & Modules](guides/plugins-modules/README.md)
   * [Package Manifests for Extensions](guides/plugins-modules/package-manifests.md)
 * [Extensibility](guides/extensibility/modules-and-plugins.md)
+  * [DropIns](guides/extensibility/dropins.md)
 * [Testing & Debugging Workflows](guides/testing-debugging.md)
 * [Running Workflows](guides/running-workflows/README.md)
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)

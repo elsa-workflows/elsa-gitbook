@@ -412,7 +412,7 @@ sections:
       - id: dropins
         title: DropIns Module
         path: /docs/extensibility/dropins.md
-        status: missing
+        status: covered
         priority: low
         notes: "Issue #31"
       

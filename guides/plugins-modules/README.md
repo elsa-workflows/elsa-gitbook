@@ -21,6 +21,11 @@ This architecture enables you to:
 - Maintain clean separation of concerns in large applications
 - Configure complex functionality through simple, fluent APIs
 
+For independently deployed, server-side extension artifacts, see the
+[DropIns guide](../extensibility/dropins.md). DropIns are discovered from a
+trusted directory and have a distinct install/configure lifecycle; they are not
+the same as normal compile-time module registration.
+
 ## Table of Contents
 
 - [Key Concepts](#key-concepts)
@@ -38,6 +43,7 @@ This architecture enables you to:
   - [Registering Activities](#registering-activities)
 - [Packaging & Distribution](#packaging--distribution)
   - [Package manifests for extensions](package-manifests.md)
+- [Runtime DropIns](../extensibility/dropins.md)
 - [Advanced Topics](#advanced-topics)
 - [Complete Examples](#complete-examples)
 

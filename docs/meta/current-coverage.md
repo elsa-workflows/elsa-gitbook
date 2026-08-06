@@ -42,12 +42,13 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Liquid** (`expressions/liquid.md`)
 - **Python** (`expressions/python.md`)
 
-### EXTENSIBILITY (5 pages)
+### EXTENSIBILITY (6 pages)
 
 - **This topic covers extending Elsa with your own custom activities.** (`extensibility/custom-activities.md`)
 - **Registering Custom Types** (`guides/extensibility/custom-types.md`)
 - **Add custom Polly-based resilience strategies and retry diagnostics to Elsa 3.8.0 workflows.** (`guides/extensibility/custom-resilience-strategies.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
+- **DropIns** (`guides/extensibility/dropins.md`)
 - **>-** (`extensibility/reusable-triggers-3.5-preview.md`)
 
 ### FEATURES (7 pages)
@@ -197,6 +198,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Workflow providers for code-first, external, and file-backed definitions
 - ✅ Custom CLR type registration and Studio integration
 - ✅ Activity type providers and descriptor refresh
+- ✅ Server-side DropIns packaging, discovery, lifecycle, and deployment boundaries
 - ✅ Inbound webhook event activities, outbound webhook sinks, and the endpoint
   security boundary
 - ✅ Extension package manifests, runtime compatibility, infrastructure hints, and deploy-time settings
