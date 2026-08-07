@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-06)
+## Slice Inventory (2026-08-07)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -76,17 +76,36 @@ acceptance criterion below is already complete.
 - `DOC-033` Custom types
 - `DOC-043` Hangfire integration
 - `DOC-034` DropIns
+- `DOC-044` Community resources
 
 ### Available next slices
 
-- `DOC-044` Community resources
 - `DOC-045` Case studies
 - `DOC-046` FAQ
 - `DOC-067` Weaver and AI workflow assistance
 
 ### Recommended next slice
 
-Document `DOC-044`, Community resources, as the next remaining candidate.
+Document `DOC-045`, Case studies, as the next remaining candidate.
+
+### Current run plan (2026-08-07)
+
+- Selected and completed `DOC-044` Community resources after re-inventorying
+  the published `origin/main` contents. The remaining candidates are
+  `DOC-045` Case studies, `DOC-046` FAQ, and the newly discovered `DOC-067`
+  Weaver and AI workflow assistance topic.
+- Added `guides/community-resources.md`, a concise cross-persona support and
+  discovery guide that routes users to the right official channel for
+  learning, release checking, questions, bug reports, feature proposals,
+  extension discovery, and contributions.
+- Validation target: the exact remote `origin/release/3.8.0` commits in
+  `elsa-core`, `elsa-studio`, and `elsa-extensions`, plus live checks for the
+  official external links included in the guide.
+- Presentation target: a decision-oriented resource map with a support
+  etiquette checklist and source/release hygiene guidance, rather than a
+  catalogue of unverified third-party projects.
+- Source review found no additional distinct topic beyond the already tracked
+  `DOC-067` Weaver and AI workflow assistance slice.
 
 ### Current run selection (2026-08-06)
 

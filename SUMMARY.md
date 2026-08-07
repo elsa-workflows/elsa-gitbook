@@ -112,6 +112,7 @@
     * [Platform Artifact Submission](guides/studio/integration/platform-integration.md)
 * [Workflow Patterns](guides/patterns/README.md)
 * [Troubleshooting](guides/troubleshooting/README.md)
+* [Community & Resources](guides/community-resources.md)
 
 ## Activities
 

@@ -574,7 +574,5 @@ For complete, working examples, see:
 
 ## Support
 
-For questions and support:
-- [GitHub Discussions](https://github.com/elsa-workflows/elsa-core/discussions)
-- [GitHub Issues](https://github.com/elsa-workflows/elsa-core/issues)
-- [Official Documentation](https://elsa-workflows.github.io/elsa-core/)
+For the current support-channel map, release-checking guidance, and question
+checklist, see [Community & Resources](../community-resources.md).
