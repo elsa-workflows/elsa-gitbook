@@ -78,7 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (24 pages)
+### GUIDES (25 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -103,6 +103,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
 - **JavaScript IntelliSense Type Definitions** (`guides/studio/javascript-type-definition-providers.md`)
 - **Package Manifests for Extensions** (`guides/plugins-modules/package-manifests.md`)
+- **Community & Resources** (`guides/community-resources.md`)
 
 ### HOSTING (1 pages)
 
@@ -206,7 +207,13 @@ Based on the current structure, the following core concepts are documented:
 - ✅ JavaScript IntelliSense type-definition providers
 - ✅ Reusable triggers (preview)
 
+### Community and support
+
+- ✅ Official documentation, repositories, samples, support-channel routing,
+  release checking, and contribution guidance
+
 ### Advanced Features
+
 - ✅ Multitenancy setup
 - ✅ Authentication
 - ✅ External Authentication and Studio SSO administration
