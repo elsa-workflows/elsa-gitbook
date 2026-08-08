@@ -113,6 +113,7 @@
 * [Workflow Patterns](guides/patterns/README.md)
 * [Troubleshooting](guides/troubleshooting/README.md)
 * [Community & Resources](guides/community-resources.md)
+* [Adoption Evidence and Case Studies](guides/case-studies.md)
 
 ## Activities
 
