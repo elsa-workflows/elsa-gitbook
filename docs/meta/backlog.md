@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-07)
+## Slice Inventory (2026-08-08)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -77,16 +77,41 @@ acceptance criterion below is already complete.
 - `DOC-043` Hangfire integration
 - `DOC-034` DropIns
 - `DOC-044` Community resources
+- `DOC-045` Adoption evidence and case studies
 
 ### Available next slices
 
-- `DOC-045` Case studies
 - `DOC-046` FAQ
 - `DOC-067` Weaver and AI workflow assistance
 
 ### Recommended next slice
 
-Document `DOC-045`, Case studies, as the next remaining candidate.
+Document `DOC-046`, FAQ, as the next remaining candidate. `DOC-067` remains
+available as a source-backed follow-on for a later run.
+
+### Current run plan (2026-08-08)
+
+- Selected `DOC-045` Case studies after re-inventorying the published
+  `origin/main` contents. The remaining candidates are `DOC-046` FAQ and the
+  source-backed `DOC-067` Weaver and AI workflow assistance topic.
+- Add a concise case-studies and adoption-evidence guide that distinguishes
+  named public references, official sample applications, and generic Elsa
+  architecture patterns. Link each claim to its public source and give
+  architects a decision-oriented way to evaluate fit without treating samples
+  as production customer references.
+- Validation target: `origin/release/3.8.0` in `elsa-core`, `elsa-studio`, and
+  `elsa-extensions` for any runtime, Studio, package, and deployment claims;
+  the originating GitHub issue and linked public evidence for adoption claims.
+- Presentation target: a compact evidence table followed by scenario cards and
+  an evaluation checklist for CTOs, architects, integrators, designers, and
+  domain specialists.
+- No additional distinct topic was discovered during the inventory; `DOC-067`
+  remains tracked for a later source-backed run.
+- Completed by adding `guides/case-studies.md`, linking it from `SUMMARY.md`,
+  and updating the coverage inventory. Because no named production customer
+  evidence is published in the current official documentation, the guide
+  labels the anonymous ERP discussion and release reference hosts accurately
+  instead of presenting them as customer case studies.
 
 ### Current run plan (2026-08-07)
 
@@ -370,6 +395,12 @@ Document `DOC-045`, Case studies, as the next remaining candidate.
   Activity type providers is now the recommended next slice.
 
 ### Most recent completed slice
+
+- `DOC-045` Adoption evidence and case studies: completed on 2026-08-08 with
+  an evidence-first guide that distinguishes named public references,
+  anonymous architecture descriptions, official reference hosts, and
+  generic adoption patterns. It also adds a permission-aware contribution
+  template for future named case studies.
 
 - `DOC-035` Webhook extensibility: completed on 2026-07-31 with a
   release-backed guide for inbound event sources, generated trigger
