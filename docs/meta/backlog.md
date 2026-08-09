@@ -89,6 +89,17 @@ acceptance criterion below is already complete.
 Document `DOC-067`, Weaver and AI workflow assistance, as the next remaining
 candidate.
 
+### Previous run plan (2026-08-08)
+
+- Selected and completed `DOC-045` Case studies after re-inventorying the
+  published `origin/main` contents. The remaining candidates were `DOC-046`
+  FAQ and the source-backed `DOC-067` Weaver and AI workflow assistance topic.
+- Added `guides/case-studies.md`, linking it from `SUMMARY.md`, and updated
+  the coverage inventory. Because no named production customer evidence is
+  published in the current official documentation, the guide labels the
+  anonymous ERP discussion and release reference hosts accurately instead of
+  presenting them as customer case studies.
+
 ### Current run plan (2026-08-09)
 
 - Selected and completed `DOC-046` FAQ after re-inventorying the published
@@ -388,6 +399,12 @@ candidate.
   Activity type providers is now the recommended next slice.
 
 ### Most recent completed slice
+
+- `DOC-045` Adoption evidence and case studies: completed on 2026-08-08 with
+  an evidence-first guide that distinguishes named public references,
+  anonymous architecture descriptions, official reference hosts, and
+  generic adoption patterns. It also adds a permission-aware contribution
+  template for future named case studies.
 
 - `DOC-035` Webhook extensibility: completed on 2026-07-31 with a
   release-backed guide for inbound event sources, generated trigger

@@ -114,6 +114,7 @@
 * [Troubleshooting](guides/troubleshooting/README.md)
 * [Frequently Asked Questions](guides/faq.md)
 * [Community & Resources](guides/community-resources.md)
+* [Adoption Evidence and Case Studies](guides/case-studies.md)
 
 ## Activities
 

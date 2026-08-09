@@ -78,7 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (26 pages)
+### GUIDES (27 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -105,6 +105,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Package Manifests for Extensions** (`guides/plugins-modules/package-manifests.md`)
 - **Community & Resources** (`guides/community-resources.md`)
 - **Frequently Asked Questions** (`guides/faq.md`)
+- **Adoption Evidence and Case Studies** (`guides/case-studies.md`)
 
 ### HOSTING (1 pages)
 
@@ -212,6 +213,8 @@ Based on the current structure, the following core concepts are documented:
 
 - ✅ Official documentation, repositories, samples, support-channel routing,
   release checking, and contribution guidance
+- ✅ Public adoption evidence boundaries, reference architectures, and a
+  permission-aware case-study contribution template
 
 ### Advanced Features
 
