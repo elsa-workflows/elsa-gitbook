@@ -7,6 +7,9 @@ description: >-
 
 This guide helps operators and developers diagnose and resolve common Elsa Workflows issues. Each section is organized by symptom and provides step-by-step checks, root causes, and fixes grounded in Elsa's runtime behavior.
 
+For short answers and links to the right task-specific guide, see the
+[Frequently Asked Questions](../faq.md).
+
 ## Quick Start Checklist
 
 Before diving into specific symptoms, verify these foundational items:

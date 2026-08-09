@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-08)
+## Slice Inventory (2026-08-09)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -77,43 +77,47 @@ acceptance criterion below is already complete.
 - `DOC-043` Hangfire integration
 - `DOC-034` DropIns
 - `DOC-044` Community resources
-- `DOC-045` Adoption evidence and case studies
+- `DOC-045` Case studies
+- `DOC-046` FAQ
 
 ### Available next slices
 
-- `DOC-046` FAQ
 - `DOC-067` Weaver and AI workflow assistance
 
 ### Recommended next slice
 
-Document `DOC-046`, FAQ, as the next remaining candidate. `DOC-067` remains
-available as a source-backed follow-on for a later run.
+Document `DOC-067`, Weaver and AI workflow assistance, as the next remaining
+candidate.
 
-### Current run plan (2026-08-08)
+### Previous run plan (2026-08-08)
 
-- Selected `DOC-045` Case studies after re-inventorying the published
-  `origin/main` contents. The remaining candidates are `DOC-046` FAQ and the
-  source-backed `DOC-067` Weaver and AI workflow assistance topic.
-- Add a concise case-studies and adoption-evidence guide that distinguishes
-  named public references, official sample applications, and generic Elsa
-  architecture patterns. Link each claim to its public source and give
-  architects a decision-oriented way to evaluate fit without treating samples
-  as production customer references.
-- Validation target: `origin/release/3.8.0` in `elsa-core`, `elsa-studio`, and
-  `elsa-extensions` for any runtime, Studio, package, and deployment claims;
-  the originating GitHub issue and linked public evidence for adoption claims.
-- Presentation target: a compact evidence table followed by scenario cards and
-  an evaluation checklist for CTOs, architects, integrators, designers, and
-  domain specialists.
-- No additional distinct topic was discovered during the inventory; `DOC-067`
-  remains tracked for a later source-backed run.
-- Completed by adding `guides/case-studies.md`, linking it from `SUMMARY.md`,
-  and updating the coverage inventory. Because no named production customer
-  evidence is published in the current official documentation, the guide
-  labels the anonymous ERP discussion and release reference hosts accurately
-  instead of presenting them as customer case studies.
+- Selected and completed `DOC-045` Case studies after re-inventorying the
+  published `origin/main` contents. The remaining candidates were `DOC-046`
+  FAQ and the source-backed `DOC-067` Weaver and AI workflow assistance topic.
+- Added `guides/case-studies.md`, linking it from `SUMMARY.md`, and updated
+  the coverage inventory. Because no named production customer evidence is
+  published in the current official documentation, the guide labels the
+  anonymous ERP discussion and release reference hosts accurately instead of
+  presenting them as customer case studies.
 
-### Current run plan (2026-08-07)
+### Current run plan (2026-08-09)
+
+- Selected and completed `DOC-046` FAQ after re-inventorying the published
+  `origin/main` contents. `DOC-067` Weaver and AI workflow assistance remains
+  available for a later run.
+- Added `guides/faq.md`, a concise, decision-oriented FAQ that routes common
+  process-designer, domain-specialist, technical-user, and operator questions
+  to the existing release-backed guides. Linked it from `SUMMARY.md` and the
+  troubleshooting guide, and updated current coverage.
+- Validation target: the exact `release/3.8.0` commits in `elsa-core`,
+  `elsa-studio`, and `elsa-extensions`, plus repository navigation and link
+  checks.
+- Presentation target met: a symptom/question map with short answers and clear
+  next actions, not a duplicate reference manual.
+- Source review has not identified another distinct topic beyond the already
+  tracked `DOC-067` Weaver and AI workflow assistance slice.
+
+### Previous run plan (2026-08-07)
 
 - Selected and completed `DOC-044` Community resources after re-inventorying
   the published `origin/main` contents. The remaining candidates are
