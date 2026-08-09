@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-07)
+## Slice Inventory (2026-08-09)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -77,18 +77,36 @@ acceptance criterion below is already complete.
 - `DOC-043` Hangfire integration
 - `DOC-034` DropIns
 - `DOC-044` Community resources
+- `DOC-045` Case studies
+- `DOC-046` FAQ
 
 ### Available next slices
 
-- `DOC-045` Case studies
-- `DOC-046` FAQ
 - `DOC-067` Weaver and AI workflow assistance
 
 ### Recommended next slice
 
-Document `DOC-045`, Case studies, as the next remaining candidate.
+Document `DOC-067`, Weaver and AI workflow assistance, as the next remaining
+candidate.
 
-### Current run plan (2026-08-07)
+### Current run plan (2026-08-09)
+
+- Selected and completed `DOC-046` FAQ after re-inventorying the published
+  `origin/main` contents. `DOC-067` Weaver and AI workflow assistance remains
+  available for a later run.
+- Added `guides/faq.md`, a concise, decision-oriented FAQ that routes common
+  process-designer, domain-specialist, technical-user, and operator questions
+  to the existing release-backed guides. Linked it from `SUMMARY.md` and the
+  troubleshooting guide, and updated current coverage.
+- Validation target: the exact `release/3.8.0` commits in `elsa-core`,
+  `elsa-studio`, and `elsa-extensions`, plus repository navigation and link
+  checks.
+- Presentation target met: a symptom/question map with short answers and clear
+  next actions, not a duplicate reference manual.
+- Source review has not identified another distinct topic beyond the already
+  tracked `DOC-067` Weaver and AI workflow assistance slice.
+
+### Previous run plan (2026-08-07)
 
 - Selected and completed `DOC-044` Community resources after re-inventorying
   the published `origin/main` contents. The remaining candidates are
