@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-09)
+## Slice Inventory (2026-08-10)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -79,15 +79,37 @@ acceptance criterion below is already complete.
 - `DOC-044` Community resources
 - `DOC-045` Case studies
 - `DOC-046` FAQ
+- `DOC-067` Weaver and AI workflow assistance
 
 ### Available next slices
 
-- `DOC-067` Weaver and AI workflow assistance
+No named slices remain from the current inventory.
 
 ### Recommended next slice
 
-Document `DOC-067`, Weaver and AI workflow assistance, as the next remaining
-candidate.
+Re-inventory the documentation and release source on the next run. No
+additional distinct topic was found during this inventory beyond `DOC-067`.
+
+### Current run plan (2026-08-10)
+
+- Select and complete `DOC-067` Weaver and AI workflow assistance from the
+  fresh `origin/main` worktree.
+- Cover the user-facing purpose and boundaries, release-backed host and
+  provider setup, grounding and proposal lifecycle, permissions and tenant
+  isolation, Studio Weaver behavior, and operational/security cautions.
+- Validate all claims and examples against the exact `release/3.8.0` source
+  commits in Core, Studio, and Extensions; update the coverage inventory and
+  slice plan after the documentation change.
+
+### Current run completion (2026-08-10)
+
+- Added `guides/ai-workflow-assistance.md`, linked it from `SUMMARY.md` and
+  the Studio user guide, and updated `docs/meta/current-coverage.md`.
+- Documented the release-backed AI Host, Weaver module, Copilot provider,
+  optional durable AI persistence, grounding/tool governance, tenant and
+  permission boundaries, and the current absence of proposal action routes.
+- No additional distinct follow-on topic was discovered; the next run should
+  inventory the source again instead of assuming a new slice.
 
 ### Previous run plan (2026-08-08)
 
