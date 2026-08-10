@@ -130,6 +130,7 @@ Explore these guides to learn more about using Elsa Studio effectively:
 - **[Custom Activity Icons](../extensibility/custom-icons.md)**: Add Studio-side icons for custom activities
 - **[Custom UI Components](custom-ui-components.md)**: Create custom property editors for activity inputs
 - **[Integration](integration/README.md)**: Integrate Elsa Studio into React, Angular, Blazor, or MVC applications
+- **[Weaver and AI Workflow Assistance](../ai-workflow-assistance.md)**: Configure grounded AI assistance, review proposal boundaries, and troubleshoot the server/Studio connection
 - **[Studio Tour & Troubleshooting](../../studio/studio-tour-troubleshooting.md)**: Detailed walkthrough of the Studio interface with troubleshooting tips
 - **[Workflow Editor](../../studio/workflow-editor/README.md)**: Advanced features of the workflow editor
 - **[Running Workflows](../running-workflows/using-elsa-studio.md)**: How to execute and test your workflows

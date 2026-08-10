@@ -78,7 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (27 pages)
+### GUIDES (28 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -101,6 +101,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Altering a Running Workflow Instance** (`guides/running-workflows/altering-workflow-instances.md`)
 - **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
+- **Weaver and AI Workflow Assistance** (`guides/ai-workflow-assistance.md`)
 - **JavaScript IntelliSense Type Definitions** (`guides/studio/javascript-type-definition-providers.md`)
 - **Package Manifests for Extensions** (`guides/plugins-modules/package-manifests.md`)
 - **Community & Resources** (`guides/community-resources.md`)
@@ -179,6 +180,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ External Authentication server extension contracts and Studio custom editors
 - ✅ JavaScript IntelliSense type-definition providers
 - ✅ Custom activity icons through Studio display-settings providers
+- ✅ Weaver AI workspace integration, grounded context, tool governance, and
+  current proposal-review boundary
 - ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility
 
 ### Hosting & Operations
@@ -227,6 +230,8 @@ Based on the current structure, the following core concepts are documented:
   plans, Studio staging, retry behavior, and durability
 - ✅ Log persistence and retention
 - ✅ Logging framework
+- ✅ Weaver AI Host and Studio workflow assistance guide, including provider,
+  persistence, permissions, and audit boundaries
 
 ### Expressions
 - ✅ C#, JavaScript, Python, Liquid
