@@ -78,7 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (28 pages)
+### GUIDES (29 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -107,6 +107,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Community & Resources** (`guides/community-resources.md`)
 - **Frequently Asked Questions** (`guides/faq.md`)
 - **Adoption Evidence and Case Studies** (`guides/case-studies.md`)
+- **Workflow-definition Labels** (`guides/workflow-definition-labels.md`)
 
 ### HOSTING (1 pages)
 
@@ -232,6 +233,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Logging framework
 - ✅ Weaver AI Host and Studio workflow assistance guide, including provider,
   persistence, permissions, and audit boundaries
+- ✅ Workflow-definition labels, Studio management, API assignment, filtering,
+  persistence, and permission boundaries
 
 ### Expressions
 - ✅ C#, JavaScript, Python, Liquid
