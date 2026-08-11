@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-10)
+## Slice Inventory (2026-08-11)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -80,6 +80,7 @@ acceptance criterion below is already complete.
 - `DOC-045` Case studies
 - `DOC-046` FAQ
 - `DOC-067` Weaver and AI workflow assistance
+- `DOC-068` Workflow-definition labels
 
 ### Available next slices
 
@@ -88,18 +89,29 @@ No named slices remain from the current inventory.
 ### Recommended next slice
 
 Re-inventory the documentation and release source on the next run. No
-additional distinct topic was found during this inventory beyond `DOC-067`.
+additional distinct topic was confirmed beyond the completed `DOC-068` slice.
 
-### Current run plan (2026-08-10)
+### Current run plan (2026-08-11)
 
-- Select and complete `DOC-067` Weaver and AI workflow assistance from the
-  fresh `origin/main` worktree.
-- Cover the user-facing purpose and boundaries, release-backed host and
-  provider setup, grounding and proposal lifecycle, permissions and tenant
-  isolation, Studio Weaver behavior, and operational/security cautions.
+- Select and complete `DOC-068` Workflow-definition labels from the fresh
+  `origin/main` worktree.
+- Cover the user-facing purpose and boundaries, release-backed Core and
+  Studio module setup, label CRUD and assignment APIs, definition-list
+  filtering, persistence choices, permissions, and tenant-aware cautions.
 - Validate all claims and examples against the exact `release/3.8.0` source
   commits in Core, Studio, and Extensions; update the coverage inventory and
   slice plan after the documentation change.
+
+### Current run selection (2026-08-11)
+
+- The previous inventory completed `DOC-067` and left no named slices.
+- Source review found the distinct `DOC-068` gap: Core exposes the Labels
+  feature and definition-label/filter endpoints, Studio exposes the Labels
+  administration module and workflow-definition editor widget, and the
+  GitBook has no dedicated label guide.
+- Presentation target: a task-oriented guide that starts with the Studio
+  user path, then explains host/API/persistence setup and the definition-level
+  filtering contract.
 
 ### Current run completion (2026-08-10)
 
@@ -110,6 +122,17 @@ additional distinct topic was found during this inventory beyond `DOC-067`.
   permission boundaries, and the current absence of proposal action routes.
 - No additional distinct follow-on topic was discovered; the next run should
   inventory the source again instead of assuming a new slice.
+
+### Current run completion (2026-08-11)
+
+- Added `guides/workflow-definition-labels.md`, linked it from `SUMMARY.md`,
+  and updated current coverage metadata.
+- Documented Core and Studio opt-in setup, definition-version associations,
+  label CRUD and assignment routes, repeatable definition-list filtering,
+  EF Core and MongoDB persistence, permissions, tenant boundaries, and
+  troubleshooting.
+- The next run should re-inventory the source rather than assume another
+  named slice is available.
 
 ### Previous run plan (2026-08-08)
 
@@ -408,6 +431,10 @@ additional distinct topic was found during this inventory beyond `DOC-067`.
   permissions, and Studio's secret-management and activity-property picker
   behavior. Clarify that the release's built-in repositories are not a claim
   of integration with an external vault.
+- `DOC-068` Workflow-definition labels: document the Core Labels feature,
+  definition-label endpoints and list filtering, Studio's optional Labels
+  module and editor widget, persistence providers, permissions, and the
+  distinction between definition metadata and runtime-instance state.
 
 ### Current run selection (2026-07-28)
 

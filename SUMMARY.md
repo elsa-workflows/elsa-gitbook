@@ -73,6 +73,7 @@
 * [Performance & Scaling](guides/performance/README.md)
   * [Throughput Tuning](guides/performance/examples/throughput-tuning.md)
 * [API & Client](guides/api-client/README.md)
+* [Workflow-definition labels](guides/workflow-definition-labels.md)
 * [Persistence](guides/persistence/README.md)
   * [SQL Server](guides/persistence/sql-server.md)
   * [EF Core Migrations](guides/persistence/ef-migrations.md)
