@@ -78,7 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (30 pages)
+### GUIDES (31 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -103,6 +103,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
 - **Weaver and AI Workflow Assistance** (`guides/ai-workflow-assistance.md`)
+- **Agents Activities and Studio Administration** (`guides/ai-agents.md`)
 - **JavaScript IntelliSense Type Definitions** (`guides/studio/javascript-type-definition-providers.md`)
 - **Package Manifests for Extensions** (`guides/plugins-modules/package-manifests.md`)
 - **Community & Resources** (`guides/community-resources.md`)
@@ -238,6 +239,8 @@ Based on the current structure, the following core concepts are documented:
   persistence, permissions, and audit boundaries
 - ✅ Workflow-definition labels, Studio management, API assignment, filtering,
   persistence, and permission boundaries
+- ✅ Agents runtime activities, provider/API composition, persistence choices,
+  Studio administration, and security boundaries
 
 ### Expressions
 - ✅ C#, JavaScript, Python, Liquid
