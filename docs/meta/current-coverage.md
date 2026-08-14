@@ -78,7 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (29 pages)
+### GUIDES (30 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -95,6 +95,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **HTTP Endpoint Security** (`guides/security/http-endpoint-security.md`)
 - **Bookmark Resume Tokens** (`guides/security/bookmark-resume-tokens.md`)
 - **Secrets Management** (`guides/security/secrets-management.md`)
+- **Elasticsearch Setup** (`guides/persistence/examples/elasticsearch-setup.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
@@ -194,6 +195,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Incidents and strategies
 - ✅ Monitoring and distributed tracing guidance
 - ✅ Runtime, persistence, and distributed-lock readiness guidance
+- ✅ Elasticsearch workflow-instance and execution-log persistence setup,
+  provider boundaries, index lifecycle, and release-backed limitations
 - ✅ Workflow-instance state, journal, activity-execution, and variable investigation guidance
 
 ### HTTP Workflows
