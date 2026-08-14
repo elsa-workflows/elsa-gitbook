@@ -80,6 +80,7 @@
   * [EF Core Setup](guides/persistence/examples/efcore-setup.md)
   * [MongoDB Setup](guides/persistence/examples/mongodb-setup.md)
   * [Dapper Setup](guides/persistence/examples/dapper-setup.md)
+  * [Elasticsearch Setup](guides/persistence/examples/elasticsearch-setup.md)
   * [Indexing Notes](guides/persistence/examples/indexing-notes.md)
 * [HTTP Workflows](guides/http-workflows/README.md)
   * [Tutorial](guides/http-workflows/tutorial.md)

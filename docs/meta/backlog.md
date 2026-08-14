@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-11)
+## Slice Inventory (2026-08-14)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -81,15 +81,77 @@ acceptance criterion below is already complete.
 - `DOC-046` FAQ
 - `DOC-067` Weaver and AI workflow assistance
 - `DOC-068` Workflow-definition labels
+- `DOC-069` Elasticsearch persistence provider
 
 ### Available next slices
 
-No named slices remain from the current inventory.
+- `DOC-070` Runtime Agents activities and Studio administration
 
 ### Recommended next slice
 
-Re-inventory the documentation and release source on the next run. No
-additional distinct topic was confirmed beyond the completed `DOC-068` slice.
+`DOC-070` Runtime Agents activities and Studio administration. The release
+extension contains runtime agent activities, provider and skill APIs, agent
+persistence options, and an optional Studio administration module; this is
+separate from the Core/Weaver guidance in `DOC-067`.
+
+### Newly discovered slices
+
+- `DOC-069` Elasticsearch persistence provider — `elsa-extensions`
+  `release/3.8.0` contains `Elsa.Persistence.Elasticsearch`, including
+  `UseElasticsearch`, configurable endpoint/authentication/index naming, a
+  workflow-instance store, and an execution-log store. The source also leaves
+  important boundaries that the guide must state: not every runtime/management
+  store is replaced, several workflow-instance filters are TODO, and the
+  release source has no caller for the optional index-configuration hook.
+- `DOC-070` Runtime Agents activities and Studio administration —
+  `elsa-extensions` release `3.8.0` contains `Elsa.Agents.*` runtime activities,
+  provider registration, agent/skill APIs, persistence options, and
+  `Elsa.Studio.Agents`. This is distinct from the Core/Weaver guide in
+  `DOC-067`; validate the compiled contracts rather than the extension README
+  examples, which contain claims not present in the release source.
+
+### Current run plan (2026-08-14)
+
+- Select and complete `DOC-069` Elasticsearch persistence provider from the
+  fresh `origin/main` worktree.
+- Add a concise setup and decision guide covering packages, endpoint and
+  authentication configuration, management/runtime registration, index naming,
+  supported stores, deployment/index lifecycle, limitations, and
+  troubleshooting.
+- Update persistence navigation, provider comparison, coverage metadata, and
+  this slice inventory. Validate all claims and examples against the exact
+  `release/3.8.0` source refs in Core, Studio, and Extensions.
+
+### Current run selection (2026-08-14)
+
+- The previous inventory completed `DOC-068` and left no named slices.
+- Release-source review found the distinct `DOC-069` gap: the Extensions
+  release ships Elasticsearch persistence for workflow instances and execution
+  logs, but no dedicated documentation explains how it composes with Elsa's
+  management/runtime features or which filters and index lifecycle behavior
+  are actually supported.
+- Presentation target: a task-oriented provider guide plus a short update to
+  the persistence comparison, with explicit production caveats rather than
+  implying Elasticsearch replaces every Elsa store.
+- Newly discovered follow-on: keep `DOC-070` available for the next inventory;
+  do not combine the runtime Agents activity contract with this persistence
+  slice.
+
+### Current run completion (2026-08-14)
+
+- Added `guides/persistence/examples/elasticsearch-setup.md`, linked it from
+  `SUMMARY.md`, updated the persistence provider comparison, and recorded the
+  guide in current coverage.
+- Documented the release-backed package and registration points, the two
+  supported stores, endpoint/authentication options, default and custom index
+  naming, index lifecycle responsibilities, Studio/server boundary, and
+  workflow-instance filter/timestamp limitations.
+- Self-review fixed two broken relative links, corrected the coverage count,
+  and added the companion-store durability warning. The final review found no
+  remaining factual, source-grounding, link, navigation, structure, regression,
+  or formatting high-priority issues.
+- `DOC-070` Runtime Agents activities and Studio administration is the next
+  available slice. No user input is required.
 
 ### Current run plan (2026-08-11)
 

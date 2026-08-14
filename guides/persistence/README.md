@@ -1,7 +1,7 @@
 ---
 description: >-
   Comprehensive guide to choosing, configuring, and tuning persistence providers
-  for Elsa Workflows v3, covering EF Core, MongoDB, and Dapper, along with
+  for Elsa Workflows v3, covering EF Core, MongoDB, Dapper, and Elasticsearch, along with
   retention, migrations, and operational best prac
 ---
 
@@ -11,7 +11,7 @@ description: >-
 
 Elsa Workflows uses persistence providers to store workflow definitions, workflow instances, bookmarks, and execution logs. Choosing the right persistence strategy is critical for performance, scalability, and operational requirements. This guide covers:
 
-* **Provider selection** — When to choose EF Core, MongoDB, or Dapper
+* **Provider selection** — When to choose EF Core, MongoDB, Dapper, or Elasticsearch
 * **Configuration patterns** — Connection strings, migrations, and store registration
 * **Indexing recommendations** — Essential indexes for common queries
 * **Retention & cleanup** — Managing completed workflows and bookmark cleanup
@@ -37,7 +37,8 @@ Elsa organizes persistence into logical stores, each responsible for a specific 
 
 ## Persistence Providers
 
-Elsa supports three primary persistence providers:
+Elsa supports several persistence providers. The provider is selected per
+store, so a deployment can combine providers when a specific workload needs it.
 
 ### Entity Framework Core (EF Core)
 
@@ -122,6 +123,20 @@ See [MongoDB Setup Example](examples/mongodb-setup.md) for configuration details
 * Scenarios requiring custom query optimization
 
 See [Dapper Setup Example](examples/dapper-setup.md) for configuration details.
+
+### Elasticsearch
+
+**Best for:** Deployments that already operate Elasticsearch and want
+workflow-instance and execution-log stores backed by Elasticsearch.
+
+**Important boundary:** The 3.8.0 extension does not replace every Elsa store.
+It wires `IWorkflowInstanceStore` and `IWorkflowExecutionLogStore`; configure
+workflow definitions, bookmarks, inbox messages, and other stores separately.
+The release store also has filter and timestamp-update limitations, so validate
+your operational queries before choosing it as the primary persistence path.
+
+See [Elasticsearch Setup Example](examples/elasticsearch-setup.md) for the
+registration, index, authentication, and deployment guidance.
 
 ## Configuration Patterns
 
