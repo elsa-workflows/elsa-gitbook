@@ -163,12 +163,12 @@ itself is generated dynamically or is not present in the activity picker.
 
 This page was checked against the following `release/3.8.0` implementations:
 
-- [Studio display settings contract](https://github.com/elsa-workflows/elsa-studio/blob/a067420e196245e0f5ecd755d318fa1de16364f2/src/modules/Elsa.Studio.Workflows.Core/UI/Contracts/IActivityDisplaySettingsProvider.cs)
-- [Studio display settings model](https://github.com/elsa-workflows/elsa-studio/blob/a067420e196245e0f5ecd755d318fa1de16364f2/src/modules/Elsa.Studio.Workflows.Core/UI/Models/ActivityDisplaySettings.cs)
-- [Studio display settings registry contract](https://github.com/elsa-workflows/elsa-studio/blob/a067420e196245e0f5ecd755d318fa1de16364f2/src/modules/Elsa.Studio.Workflows.Core/UI/Contracts/IActivityDisplaySettingsRegistry.cs)
-- [Studio display settings registry](https://github.com/elsa-workflows/elsa-studio/blob/a067420e196245e0f5ecd755d318fa1de16364f2/src/modules/Elsa.Studio.Workflows.Core/Domain/Services/DefaultActivityDisplaySettingsRegistry.cs)
-- [Studio provider registration](https://github.com/elsa-workflows/elsa-studio/blob/a067420e196245e0f5ecd755d318fa1de16364f2/src/modules/Elsa.Studio.Workflows.Core/Extensions/ServiceCollectionExtensions.cs)
-- [Studio tree activity picker](https://github.com/elsa-workflows/elsa-studio/blob/a067420e196245e0f5ecd755d318fa1de16364f2/src/modules/Elsa.Studio.Workflows/ActivityPickers/Treeview/ActivityPicker.razor.cs)
-- [Studio icon color handling](https://github.com/elsa-workflows/elsa-studio/blob/a067420e196245e0f5ecd755d318fa1de16364f2/src/modules/Elsa.Studio.Workflows/ActivityPickers/Treeview/ActivityTreeItem.cs)
-- [Core activity descriptor](https://github.com/elsa-workflows/elsa-core/blob/e59a0f172166efc24244f8fc49d8e8c33f05166b/src/modules/Elsa.Workflows.Core/Models/ActivityDescriptor.cs)
+- [Studio display settings contract](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.Workflows.Core/UI/Contracts/IActivityDisplaySettingsProvider.cs)
+- [Studio display settings model](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.Workflows.Core/UI/Models/ActivityDisplaySettings.cs)
+- [Studio display settings registry contract](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.Workflows.Core/UI/Contracts/IActivityDisplaySettingsRegistry.cs)
+- [Studio display settings registry](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.Workflows.Core/Domain/Services/DefaultActivityDisplaySettingsRegistry.cs)
+- [Studio provider registration](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.Workflows.Core/Extensions/ServiceCollectionExtensions.cs)
+- [Studio tree activity picker](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.Workflows/ActivityPickers/Treeview/ActivityPicker.razor.cs)
+- [Studio icon color handling](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.Workflows/ActivityPickers/Treeview/ActivityTreeItem.cs)
+- [Core activity descriptor](https://github.com/elsa-workflows/elsa-core/blob/c58fe8770ff7ba39be74b58cd4b1e6017ee5e140/src/modules/Elsa.Workflows.Core/Models/ActivityDescriptor.cs)
 - [Extensions Agents provider example](https://github.com/elsa-workflows/elsa-extensions/blob/335a26495318f6ee1528bf2723b7333c753ce9a2/src/modules/agents/Elsa.Studio.Agents/UI/Providers/DefaultActivityDisplaySettingsProvider.cs)

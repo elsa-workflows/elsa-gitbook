@@ -94,6 +94,7 @@
   * [DropIns](guides/extensibility/dropins.md)
 * [Testing & Debugging Workflows](guides/testing-debugging.md)
 * [Weaver and AI Workflow Assistance](guides/ai-workflow-assistance.md)
+* [Agents Activities and Studio Administration](guides/ai-agents.md)
 * [Running Workflows](guides/running-workflows/README.md)
   * [Using Elsa Studio](guides/running-workflows/using-elsa-studio.md)
   * [Altering a Running Workflow Instance](guides/running-workflows/altering-workflow-instances.md)

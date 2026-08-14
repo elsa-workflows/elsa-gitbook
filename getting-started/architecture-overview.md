@@ -1196,8 +1196,8 @@ This architecture guide is based on the following official Elsa sources:
 - Studio modules and extensibility
 
 **Official Documentation:**
-- [Getting Started Guides](../getting-started/)
-- [Application Types](../application-types/)
+- [Getting Started Guides](hello-world.md)
+- [Application Types](../application-types/elsa-server.md)
 - [Distributed Hosting](../hosting/distributed-hosting.md)
 - [Custom Activities](../extensibility/custom-activities.md)
 
