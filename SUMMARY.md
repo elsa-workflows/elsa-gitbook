@@ -37,6 +37,7 @@
   * [Workflow Dispatch Outbox](guides/architecture/workflow-dispatch-outbox.md)
   * [Runtime Coordination Storage](guides/architecture/runtime-coordination-storage.md)
   * [Standalone and Modular Hosting](guides/architecture/standalone-and-modular-hosting.md)
+  * [Proto.Actor Workflow Runtime](guides/architecture/protoactor-workflow-runtime.md)
 * [Onboarding](guides/onboarding/README.md)
   * [Hosting Elsa in an Existing App](guides/onboarding/hosting-elsa-in-existing-app.md)
 * [Authentication & Authorization](guides/authentication/README.md)

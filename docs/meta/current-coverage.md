@@ -78,7 +78,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (31 pages)
+### GUIDES (32 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -90,6 +90,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
 - **Workflow Dispatch Outbox** (`guides/architecture/workflow-dispatch-outbox.md`)
 - **Runtime Coordination Storage** (`guides/architecture/runtime-coordination-storage.md`)
+- **Proto.Actor Workflow Runtime** (`guides/architecture/protoactor-workflow-runtime.md`)
 - **Security & Hardening** (`guides/security/README.md`)
 - **Production Hardening** (`guides/security/production-hardening.md`)
 - **HTTP Endpoint Security** (`guides/security/http-endpoint-security.md`)
@@ -241,6 +242,8 @@ Based on the current structure, the following core concepts are documented:
   persistence, and permission boundaries
 - ✅ Agents runtime activities, provider/API composition, persistence choices,
   Studio administration, and security boundaries
+- ✅ Proto.Actor workflow runtime, actor-cluster hosting, separate persistence,
+  tenant propagation, and 3.8.0 client limitations
 
 ### Expressions
 - ✅ C#, JavaScript, Python, Liquid

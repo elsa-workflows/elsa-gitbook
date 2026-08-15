@@ -185,6 +185,11 @@ Elsa supports **multitenancy** - running multiple isolated tenants in a single d
 
 For detailed multitenancy setup, see the [Multitenancy Introduction](../../multitenancy/introduction.md) guide.
 
+For actor-based workflow coordination across hosts, see the
+[Proto.Actor Workflow Runtime](protoactor-workflow-runtime.md) guide. It
+documents the additional cluster, remote transport, actor persistence, and
+release-specific client limitations.
+
 ## System Architecture (Mindmap)
 
 Here's a textual representation of Elsa's core functionality and surrounding modules:
