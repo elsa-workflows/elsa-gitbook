@@ -22,6 +22,10 @@ By default, Elsa uses the `LocalWorkflowRuntime`, which is not suitable for dist
 
 Both options ensure that workflow instances are executed in a synchronized manner, preventing multiple processes from acting on the same instance concurrently.
 
+For the release-specific Proto.Actor setup, including cluster discovery,
+remote addressing, tenant propagation, separate actor persistence, and the
+3.8.0 client limitations, see the [Proto.Actor workflow runtime guide](../guides/architecture/protoactor-workflow-runtime.md).
+
 To enable the **Distributed Workflow Runtime**, configure Elsa as follows:
 
 ```csharp

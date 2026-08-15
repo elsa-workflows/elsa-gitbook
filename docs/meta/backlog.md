@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-14)
+## Slice Inventory (2026-08-15)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -86,12 +86,13 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-No named slice remains; the next run should re-inventory the documentation and
-the latest release source for a new gap.
+- `DOC-072` Studio activity port providers
+- `DOC-073` Connections extension and activity connection management
+- `DOC-074` Workflow-trigger OpenAPI exposure
 
 ### Recommended next slice
 
-No recommended slice remains until the next source-backed inventory.
+- `DOC-072` Studio activity port providers
 
 ### Newly discovered slices
 
@@ -108,30 +109,68 @@ No recommended slice remains until the next source-backed inventory.
   `Elsa.Studio.Agents`. This is distinct from the Core/Weaver guide in
   `DOC-067`; validate the compiled contracts rather than the extension README
   examples, which contain claims not present in the release source.
+- `DOC-071` ProtoActor workflow runtime and actor-cluster hosting —
+  `elsa-extensions` release `3.8.0` contains the
+  `Elsa.Workflows.Runtime.ProtoActor` and `Elsa.Actors.ProtoActor` modules.
+  The GitBook only mentions `ProtoActorWorkflowRuntime` in the distributed
+  hosting page; it does not explain `UseProtoActor`, cluster providers,
+  remote addressing, persistence, tenant propagation, or the release's
+  incomplete client methods.
+- `DOC-073` Connections extension and activity connection management —
+  `elsa-extensions` release `3.8.0` contains `Elsa.Connections.*`, including
+  connection descriptors, activity middleware, API endpoints, and in-memory
+  or EF Core stores. The GitBook has no focused guide explaining how an
+  activity declares a connection, how the runtime resolves it, or which
+  persistence and security boundaries apply.
+- `DOC-072` Studio activity port providers — `elsa-studio` release `3.8.0`
+  contains `IActivityPortProvider`, priority-based provider selection, and
+  built-in providers for dynamic outcomes, Switch, HTTP, and related
+  activities. Existing custom-activity guidance does not explain this
+  Studio-only dynamic port contract or how to author a custom provider.
+- `DOC-074` Workflow-trigger OpenAPI exposure — `elsa-extensions` release
+  `3.8.0` contains an opt-in `Elsa.Http.OpenApi` module that exports workflow
+  HTTP triggers to `/openapi.json` and `/documentation`. The workbench does
+  not enable it automatically, and the mapping/security boundary needs a
+  focused guide.
 
-### Current run plan (2026-08-14)
+### Current run plan (2026-08-15)
 
-- Select and complete `DOC-070` Runtime Agents activities and Studio
-  administration from the fresh `origin/main` worktree.
-- Add a concise cross-persona guide covering runtime activities, registration
-  and invocation, persistence, API permissions, Studio setup, and
-  operational/security limits.
+- Select and complete `DOC-071` ProtoActor workflow runtime and actor-cluster
+  hosting from the fresh `origin/main` worktree.
+- Add a concise architecture and operations guide covering the runtime
+  boundary, host registration, cluster provider and remote configuration,
+  persistence, tenant propagation, and release limitations.
 - Update navigation, coverage metadata, and this slice inventory. Validate all
   claims and examples against the exact `release/3.8.0` source refs in Core,
   Studio, and Extensions.
 
-### Current run selection (2026-08-14)
+### Current run selection (2026-08-15)
 
-- The previous inventory completed `DOC-069`; `DOC-070` is the remaining
-  named slice.
-- Release-source review confirms the distinct `DOC-070` gap: the Extensions
-  release ships runtime agent activities, provider and skill APIs, persistence
-  options, and an optional Studio administration module, but the GitBook has
-  no dedicated guide.
-- Presentation target: a task-oriented guide that starts with the runtime
-  contract, then explains host setup, Studio usage, API entry points, and
-  explicit security and operational limits.
-- No additional distinct source-backed topic was discovered before this run.
+- The previous inventory completed `DOC-070`; release-source review found two
+  new gaps, and `DOC-071` is selected because ProtoActor changes the workflow
+  runtime and cluster topology for architects and operators.
+- The Extensions release ships `UseProtoActor` on both the module and workflow
+  runtime features, a default in-memory cluster provider, configurable remote
+  addressing, optional actor persistence, and tenant-aware actor middleware.
+  The release client still throws `NotImplementedException` for delete and
+  instance-existence operations, so the guide must state that boundary.
+- Presentation target: a decision-oriented architecture guide with a minimal
+  host setup, production configuration checklist, and explicit limitations;
+  it should distinguish ProtoActor runtime coordination from workflow data
+  persistence, distributed locking, and MassTransit dispatch.
+
+### Current run completion (2026-08-15)
+
+- Added `guides/architecture/protoactor-workflow-runtime.md`, linked it from
+  `SUMMARY.md`, the architecture overview, and distributed-hosting guidance,
+  and updated current coverage.
+- Documented the release-backed `UseProtoActor` registrations, cluster and
+  remote configuration, default providers, actor versus workflow persistence,
+  tenant propagation, Studio boundary, and the unsupported 3.8.0 client
+  operations.
+- Delegated inventory also found Studio activity port providers, generic
+  connection-backed activities, and workflow-trigger OpenAPI exposure. These
+  are recorded as `DOC-072` through `DOC-074`; `DOC-072` is recommended next.
 
 ### Current run completion (2026-08-14)
 
