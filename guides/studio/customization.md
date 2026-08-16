@@ -32,6 +32,7 @@ injection and feature modules.
 | Add panels, tabs, or editor widgets | `IWidget` or `IWidgetRegistry` | `DefaultWidgetRegistry` |
 | Change the workflow activity picker | Replace `IActivityPickerComponentProvider` | workflows module plus host override |
 | Add icons for custom activities | `IActivityDisplaySettingsProvider` | `AddActivityDisplaySettingsProvider<T>` |
+| Add activity ports | `IActivityPortProvider` | `AddActivityPortProvider<T>` |
 | Render a new input editor | Studio `IUIHintHandler` plus backend `UIHint` metadata | `AddDefaultUIHintHandlers`, `ActivityDescriber` |
 | Decorate an existing input editor | `IUIFieldExtensionHandler` | `FieldExtension.razor` |
 
@@ -175,6 +176,9 @@ The server host replaces it with
 
 If you need a different activity browsing experience, replace
 `IActivityPickerComponentProvider` in your host.
+
+For dynamic outcomes or embedded child activities, use an
+`IActivityPortProvider`; see [Activity Port Providers](../extensibility/activity-port-providers.md).
 
 ### Input Editors
 

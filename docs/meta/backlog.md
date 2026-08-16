@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-15)
+## Slice Inventory (2026-08-16)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -83,94 +83,77 @@ acceptance criterion below is already complete.
 - `DOC-068` Workflow-definition labels
 - `DOC-069` Elasticsearch persistence provider
 - `DOC-070` Runtime Agents activities and Studio administration
+- `DOC-071` Proto.Actor workflow runtime and actor-cluster hosting
+- `DOC-072` Studio activity port providers
 
 ### Available next slices
 
-- `DOC-072` Studio activity port providers
 - `DOC-073` Connections extension and activity connection management
 - `DOC-074` Workflow-trigger OpenAPI exposure
 
 ### Recommended next slice
 
-- `DOC-072` Studio activity port providers
+- `DOC-073` Connections extension and activity connection management
 
 ### Newly discovered slices
 
-- `DOC-069` Elasticsearch persistence provider — `elsa-extensions`
-  `release/3.8.0` contains `Elsa.Persistence.Elasticsearch`, including
-  `UseElasticsearch`, configurable endpoint/authentication/index naming, a
-  workflow-instance store, and an execution-log store. The source also leaves
-  important boundaries that the guide must state: not every runtime/management
-  store is replaced, several workflow-instance filters are TODO, and the
-  release source has no caller for the optional index-configuration hook.
-- `DOC-070` Runtime Agents activities and Studio administration —
-  `elsa-extensions` release `3.8.0` contains `Elsa.Agents.*` runtime activities,
-  provider registration, agent/skill APIs, persistence options, and
-  `Elsa.Studio.Agents`. This is distinct from the Core/Weaver guide in
-  `DOC-067`; validate the compiled contracts rather than the extension README
-  examples, which contain claims not present in the release source.
-- `DOC-071` ProtoActor workflow runtime and actor-cluster hosting —
-  `elsa-extensions` release `3.8.0` contains the
-  `Elsa.Workflows.Runtime.ProtoActor` and `Elsa.Actors.ProtoActor` modules.
-  The GitBook only mentions `ProtoActorWorkflowRuntime` in the distributed
-  hosting page; it does not explain `UseProtoActor`, cluster providers,
-  remote addressing, persistence, tenant propagation, or the release's
-  incomplete client methods.
 - `DOC-073` Connections extension and activity connection management —
   `elsa-extensions` release `3.8.0` contains `Elsa.Connections.*`, including
   connection descriptors, activity middleware, API endpoints, and in-memory
   or EF Core stores. The GitBook has no focused guide explaining how an
   activity declares a connection, how the runtime resolves it, or which
   persistence and security boundaries apply.
-- `DOC-072` Studio activity port providers — `elsa-studio` release `3.8.0`
-  contains `IActivityPortProvider`, priority-based provider selection, and
-  built-in providers for dynamic outcomes, Switch, HTTP, and related
-  activities. Existing custom-activity guidance does not explain this
-  Studio-only dynamic port contract or how to author a custom provider.
 - `DOC-074` Workflow-trigger OpenAPI exposure — `elsa-extensions` release
   `3.8.0` contains an opt-in `Elsa.Http.OpenApi` module that exports workflow
   HTTP triggers to `/openapi.json` and `/documentation`. The workbench does
   not enable it automatically, and the mapping/security boundary needs a
   focused guide.
 
-### Current run plan (2026-08-15)
+### Current run plan (2026-08-16)
 
-- Select and complete `DOC-071` ProtoActor workflow runtime and actor-cluster
-  hosting from the fresh `origin/main` worktree.
-- Add a concise architecture and operations guide covering the runtime
-  boundary, host registration, cluster provider and remote configuration,
-  persistence, tenant propagation, and release limitations.
+- Select and complete `DOC-072` Studio activity port providers from the fresh
+  `origin/main` worktree.
+- Add a concise Studio and extensibility guide covering provider selection,
+  dynamic and embedded ports, custom provider registration, and release
+  limitations.
 - Update navigation, coverage metadata, and this slice inventory. Validate all
   claims and examples against the exact `release/3.8.0` source refs in Core,
   Studio, and Extensions.
 
-### Current run selection (2026-08-15)
+### Current run selection (2026-08-16)
 
-- The previous inventory completed `DOC-070`; release-source review found two
-  new gaps, and `DOC-071` is selected because ProtoActor changes the workflow
-  runtime and cluster topology for architects and operators.
-- The Extensions release ships `UseProtoActor` on both the module and workflow
-  runtime features, a default in-memory cluster provider, configurable remote
-  addressing, optional actor persistence, and tenant-aware actor middleware.
-  The release client still throws `NotImplementedException` for delete and
-  instance-existence operations, so the guide must state that boundary.
-- Presentation target: a decision-oriented architecture guide with a minimal
-  host setup, production configuration checklist, and explicit limitations;
-  it should distinguish ProtoActor runtime coordination from workflow data
-  persistence, distributed locking, and MassTransit dispatch.
+- The previous inventory completed `DOC-071`; release-source review confirms
+  `DOC-072` as the next distinct gap, followed by generic Connections and
+  workflow-trigger OpenAPI export (`DOC-073` and `DOC-074`).
+- Studio release `3.8.0` selects one `IActivityPortProvider` by support and
+  priority, ships providers for dynamic outcomes, Switch, HTTP, and related
+  activities, and exposes `AddActivityPortProvider<T>` for custom providers.
+- Presentation target: a decision-oriented guide for Studio users and custom
+  activity authors with a minimal provider example, registration placement,
+  dynamic/embedded port guidance, and explicit Studio-only boundaries.
 
-### Current run completion (2026-08-15)
+### Current run completion (2026-08-16)
 
-- Added `guides/architecture/protoactor-workflow-runtime.md`, linked it from
-  `SUMMARY.md`, the architecture overview, and distributed-hosting guidance,
-  and updated current coverage.
-- Documented the release-backed `UseProtoActor` registrations, cluster and
-  remote configuration, default providers, actor versus workflow persistence,
-  tenant propagation, Studio boundary, and the unsupported 3.8.0 client
-  operations.
-- Delegated inventory also found Studio activity port providers, generic
-  connection-backed activities, and workflow-trigger OpenAPI exposure. These
-  are recorded as `DOC-072` through `DOC-074`; `DOC-072` is recommended next.
+- Added `guides/extensibility/activity-port-providers.md`, linked it from
+  `SUMMARY.md`, custom activities, and Studio customization guidance, and
+  updated current coverage.
+- Documented the release-backed Studio contract, priority selection and
+  descriptor fallback, built-in dynamic/embedded port providers, custom
+  provider registration, and the Studio/runtime boundary.
+- Validated Core `5fd3a074c950fd539a06ef5407a7ae9d879a3afc`, Studio
+  `bee3c1605fd2c5937fed3621b2860465a2f8c448`, and Extensions
+  `335a26495318f6ee1528bf2723b7333c753ce9a2` release refs. Core and
+  Extensions contain no activity-port provider contract; the relevant
+  implementation is Studio-only.
+- Self-review fixed an over-wide built-in-provider table and a non-self-
+  contained sample; final review found no remaining high-priority factual,
+  source-grounding, navigation, link, structure, regression, or formatting
+  issues.
+- Checks passed: release-source assertions, targeted Markdownlint, repository-
+  wide local-link validation, all `SUMMARY.md` targets, balanced fences,
+  source-link HTTP checks, and staged/working-tree `git diff --check`.
+- The next available slice is `DOC-073` Connections extension and activity
+  connection management; no additional distinct topic was found this run.
 
 ### Current run completion (2026-08-14)
 

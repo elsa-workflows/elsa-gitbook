@@ -131,6 +131,10 @@ For the built-in hints and how Studio resolves them, see
 To change how a custom activity appears in Studio's picker and designer, see
 [Custom Activity Icons](../guides/extensibility/custom-icons.md).
 
+If the activity has dynamic outcomes or embedded child activities, see
+[Activity Port Providers](../guides/extensibility/activity-port-providers.md)
+for the Studio-side port contract.
+
 ## Outputs
 
 You can expose additional outputs by declaring `Output<T>` properties and
