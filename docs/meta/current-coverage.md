@@ -42,9 +42,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Liquid** (`expressions/liquid.md`)
 - **Python** (`expressions/python.md`)
 
-### EXTENSIBILITY (6 pages)
+### EXTENSIBILITY (7 pages)
 
 - **This topic covers extending Elsa with your own custom activities.** (`extensibility/custom-activities.md`)
+- **Activity Port Providers** (`guides/extensibility/activity-port-providers.md`)
 - **Registering Custom Types** (`guides/extensibility/custom-types.md`)
 - **Add custom Polly-based resilience strategies and retry diagnostics to Elsa 3.8.0 workflows.** (`guides/extensibility/custom-resilience-strategies.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
@@ -144,7 +145,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Introducing Elsa Workflows 3** (`README.md`)
 - **Table of contents** (`SUMMARY.md`)
 
-### STUDIO (9 pages)
+### STUDIO (10 pages)
 
 - **This section displays the available customization options for Elsa Studio.** (`studio/design/README.md`)
 - **Activity Pickers (3.7-preview)** (`studio/design/activity-pickers-3.7-preview.md`)
@@ -154,6 +155,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Content Visualisers (3.6-preview)** (`studio/workflow-editor/content-visualisers-3.6-preview.md`)
 - **Field Extensions** (`studio/workflow-editor/field-extensions.md`)
 - **UI Hints** (`studio/workflow-editor/ui-hints.md`)
+- **Activity Port Providers** (`guides/extensibility/activity-port-providers.md`)
 - **Custom Activity Icons** (`guides/extensibility/custom-icons.md`)
 
 ## Key Concepts Documented
@@ -184,6 +186,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ External Authentication server extension contracts and Studio custom editors
 - ✅ JavaScript IntelliSense type-definition providers
 - ✅ Custom activity icons through Studio display-settings providers
+- ✅ Studio activity port providers for dynamic outcomes and embedded activities
 - ✅ Weaver AI workspace integration, grounded context, tool governance, and
   current proposal-review boundary
 - ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility

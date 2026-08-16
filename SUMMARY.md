@@ -144,6 +144,7 @@
 ## Extensibility
 
 * [Custom Activities](extensibility/custom-activities.md)
+* [Activity Port Providers](guides/extensibility/activity-port-providers.md)
 * [Registering Custom Types](guides/extensibility/custom-types.md)
 * [Workflow Providers](guides/extensibility/workflow-providers.md)
 * [Activity Type Providers](guides/extensibility/activity-type-providers.md)
