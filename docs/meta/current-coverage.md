@@ -42,9 +42,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Liquid** (`expressions/liquid.md`)
 - **Python** (`expressions/python.md`)
 
-### EXTENSIBILITY (7 pages)
+### EXTENSIBILITY (8 pages)
 
 - **This topic covers extending Elsa with your own custom activities.** (`extensibility/custom-activities.md`)
+- **Connections for activities** (`guides/extensibility/connections.md`)
 - **Activity Port Providers** (`guides/extensibility/activity-port-providers.md`)
 - **Registering Custom Types** (`guides/extensibility/custom-types.md`)
 - **Add custom Polly-based resilience strategies and retry diagnostics to Elsa 3.8.0 workflows.** (`guides/extensibility/custom-resilience-strategies.md`)
@@ -88,6 +89,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
 - **Hangfire Integration** (`guides/running-workflows/hangfire-integration.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
+- **Connections for activities** (`guides/extensibility/connections.md`)
 - **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
 - **Workflow Dispatch Outbox** (`guides/architecture/workflow-dispatch-outbox.md`)
 - **Runtime Coordination Storage** (`guides/architecture/runtime-coordination-storage.md`)
@@ -210,6 +212,8 @@ Based on the current structure, the following core concepts are documented:
 
 ### Extensibility
 - ✅ Custom activities
+- ✅ Named connection configuration for activities, runtime injection, API
+  descriptors, persistence choices, and tenant/security boundaries
 - ✅ Workflow providers for code-first, external, and file-backed definitions
 - ✅ Custom CLR type registration and Studio integration
 - ✅ Activity type providers and descriptor refresh
@@ -270,7 +274,8 @@ Based on the current structure, the following core concepts are documented:
 3. **Elsa Studio**
    - ❌ No comprehensive Studio tour/walkthrough
    - ❌ Limited designer usage documentation
-   - ❌ No connection configuration guide
+   - ⚠️ No built-in generic Connections administration module in the 3.8.0
+     Studio release; custom hosts must provide the client UI
 
 4. **Deployment & Scaling**
    - ⚠️ Distributed hosting mentioned but lacks detail

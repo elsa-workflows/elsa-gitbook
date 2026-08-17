@@ -135,6 +135,11 @@ If the activity has dynamic outcomes or embedded child activities, see
 [Activity Port Providers](../guides/extensibility/activity-port-providers.md)
 for the Studio-side port contract.
 
+If several activities should share named external-system settings, see
+[Connections for activities](../guides/extensibility/connections.md). That
+extension keeps the selected connection name in the workflow and resolves
+the typed settings at execution time.
+
 ## Outputs
 
 You can expose additional outputs by declaring `Output<T>` properties and

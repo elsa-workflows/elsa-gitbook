@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-16)
+## Slice Inventory (2026-08-17)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -88,12 +88,54 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-073` Connections extension and activity connection management
 - `DOC-074` Workflow-trigger OpenAPI exposure
 
 ### Recommended next slice
 
-- `DOC-073` Connections extension and activity connection management
+- `DOC-074` Workflow-trigger OpenAPI exposure
+
+### Current run plan (2026-08-17)
+
+- Select and complete `DOC-073` Connections extension and activity connection
+  management from a fresh `origin/main` worktree.
+- Cover the activity-authoring contract, runtime resolution flow, Studio/API
+  boundary, persistence choices, tenant behavior, and permissions using the
+  exact `release/3.8.0` source.
+- Keep `DOC-074` workflow-trigger OpenAPI exposure available for the next run;
+  source review found no additional distinct topic to add this run.
+
+### Current run selection (2026-08-17)
+
+- The published inventory confirms DOC-001 through DOC-072 are covered or
+  substantially covered. `DOC-073` is selected because the release contains
+  the focused `Elsa.Connections.*` module family but the GitBook has no guide
+  explaining how connection-backed activities are authored and operated.
+- The guide will use a decision-oriented format for activity authors,
+  technical users, Studio users, and operators: package/setup, declaration,
+  execution flow, persistence/tenancy, API permissions, and troubleshooting.
+
+### Current run completion (2026-08-17)
+
+- Added `guides/extensibility/connections.md`, linked it from `SUMMARY.md` and
+  the custom activities guide, and updated the coverage inventory.
+- Documented the 3.8.0 Connections framework contract: package composition,
+  connection descriptors, activity attributes, runtime middleware resolution,
+  API routes and permissions, Studio boundary, in-memory versus EF Core
+  persistence, tenancy, and sensitive-configuration handling.
+- Validated Core `5fd3a074c950fd539a06ef5407a7ae9d879a3afc`, Studio
+  `3905f930b893303c93073ac4b51c9245f410eaf4`, and Extensions
+  `335a26495318f6ee1528bf2723b7333c753ce9a2` on `release/3.8.0`.
+- Self-review found and fixed a misleading authenticated-endpoint label and
+  clarified the descriptor route's `ActivityType` parameter plus the absence
+  of a shipped concrete connection provider/activity. Final review found no
+  remaining high-priority factual, source-grounding, link, navigation,
+  structure, regression, or formatting issues.
+- Checks passed: release-source assertions, local-link validation, all
+  `SUMMARY.md` targets, balanced Markdown fences, source-link HTTP checks,
+  and staged `git diff --check`. Markdownlint, Vale, Lychee, and a local
+  GitBook build are not installed or configured in this repository.
+- `DOC-074` Workflow-trigger OpenAPI exposure is now the recommended next
+  slice; no additional distinct topic was discovered during implementation.
 
 ### Newly discovered slices
 
