@@ -80,7 +80,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (32 pages)
+### GUIDES (33 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -106,6 +106,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Altering a Running Workflow Instance** (`guides/running-workflows/altering-workflow-instances.md`)
 - **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
+- **OpenAPI for HTTP workflow triggers** (`guides/http-workflows/openapi.md`)
 - **Weaver and AI Workflow Assistance** (`guides/ai-workflow-assistance.md`)
 - **Agents Activities and Studio Administration** (`guides/ai-agents.md`)
 - **JavaScript IntelliSense Type Definitions** (`guides/studio/javascript-type-definition-providers.md`)

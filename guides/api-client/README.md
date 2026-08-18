@@ -105,7 +105,9 @@ public sealed class WorkflowCatalog(IWorkflowDefinitionsApi definitions)
 The table lists the principal routes rather than every bulk, import, export,
 reload, and administration endpoint. When your host exposes OpenAPI, use the
 document from the exact Elsa version you run for full schemas, optional fields,
-and the complete route set.
+and the complete route set. For the optional workflow-trigger document, see
+[OpenAPI for HTTP workflow triggers](../http-workflows/openapi.md); it is a
+route catalogue and does not provide complete request/response schemas.
 
 ## Execute versus dispatch
 

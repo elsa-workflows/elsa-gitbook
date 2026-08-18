@@ -8,3 +8,5 @@ In this guide, we'll take a look at a workflow that can receive HTTP requests, s
 * SetVariable
 
 For securing inbound workflow routes exposed by `HttpEndpoint`, see [HTTP Endpoint Security](../security/http-endpoint-security.md).
+
+To publish a live route catalogue for HTTP workflow triggers, see [OpenAPI for HTTP workflow triggers](openapi.md).
