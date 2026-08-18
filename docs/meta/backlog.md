@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-17)
+## Slice Inventory (2026-08-18)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -85,57 +85,65 @@ acceptance criterion below is already complete.
 - `DOC-070` Runtime Agents activities and Studio administration
 - `DOC-071` Proto.Actor workflow runtime and actor-cluster hosting
 - `DOC-072` Studio activity port providers
+- `DOC-073` Connections extension and activity connection management
+- `DOC-074` Workflow-trigger OpenAPI exposure
 
 ### Available next slices
 
-- `DOC-074` Workflow-trigger OpenAPI exposure
+- No named release-backed slice remains in the current inventory. Re-inventory
+  the source repositories before selecting the next slice.
 
 ### Recommended next slice
 
-- `DOC-074` Workflow-trigger OpenAPI exposure
+- Re-inventory the release source and GitBook for a new, distinct gap.
 
-### Current run plan (2026-08-17)
+### Current run plan (2026-08-18)
 
-- Select and complete `DOC-073` Connections extension and activity connection
-  management from a fresh `origin/main` worktree.
-- Cover the activity-authoring contract, runtime resolution flow, Studio/API
-  boundary, persistence choices, tenant behavior, and permissions using the
-  exact `release/3.8.0` source.
-- Keep `DOC-074` workflow-trigger OpenAPI exposure available for the next run;
-  source review found no additional distinct topic to add this run.
+- Select and complete `DOC-074` workflow-trigger OpenAPI exposure from a fresh
+  `origin/main` worktree.
+- Cover package/setup, endpoint mapping, generated-document behavior,
+  security and deployment boundaries, and the fit with existing HTTP workflow
+  documentation using the exact `release/3.8.0` source.
+- Re-check the remaining legacy candidates and source-backed follow-on topics;
+  no additional distinct topic was found during inventory.
 
-### Current run selection (2026-08-17)
+### Current run selection (2026-08-18)
 
-- The published inventory confirms DOC-001 through DOC-072 are covered or
-  substantially covered. `DOC-073` is selected because the release contains
-  the focused `Elsa.Connections.*` module family but the GitBook has no guide
-  explaining how connection-backed activities are authored and operated.
-- The guide will use a decision-oriented format for activity authors,
-  technical users, Studio users, and operators: package/setup, declaration,
-  execution flow, persistence/tenancy, API permissions, and troubleshooting.
+- The published inventory confirms DOC-001 through DOC-073 are covered or
+  substantially covered. `DOC-074` is selected because the release contains
+  an opt-in `Elsa.Http.OpenApi` integration, but the GitBook has no guide
+  explaining how workflow HTTP triggers become an OpenAPI document or what
+  the generated document does and does not describe.
+- The guide will use a decision-oriented format for host developers,
+  API consumers, process designers, and operators: setup, mapping, generated
+  output, security/deployment boundaries, and troubleshooting.
 
-### Current run completion (2026-08-17)
+### Current run completion (2026-08-18)
 
-- Added `guides/extensibility/connections.md`, linked it from `SUMMARY.md` and
-  the custom activities guide, and updated the coverage inventory.
-- Documented the 3.8.0 Connections framework contract: package composition,
-  connection descriptors, activity attributes, runtime middleware resolution,
-  API routes and permissions, Studio boundary, in-memory versus EF Core
-  persistence, tenancy, and sensitive-configuration handling.
-- Validated Core `5fd3a074c950fd539a06ef5407a7ae9d879a3afc`, Studio
+- Added `guides/http-workflows/openapi.md`, linked it from `SUMMARY.md`, the
+  HTTP workflows guide, and the API & Client guide, and updated the coverage
+  inventory.
+- Documented the 3.8.0 `Elsa.Http.OpenApi` package/setup, dynamic trigger
+  extraction, minimal OpenAPI output, base-path mismatch, duplicate-route
+  overwrite behavior, Studio boundary, security, tenant, CDN, and operational
+  limitations.
+- Validated Core `f6c35cf1eb5558348a61352fc4eba5925731118d`, Studio
   `3905f930b893303c93073ac4b51c9245f410eaf4`, and Extensions
-  `335a26495318f6ee1528bf2723b7333c753ce9a2` on `release/3.8.0`.
-- Self-review found and fixed a misleading authenticated-endpoint label and
-  clarified the descriptor route's `ActivityType` parameter plus the absence
-  of a shipped concrete connection provider/activity. Final review found no
-  remaining high-priority factual, source-grounding, link, navigation,
-  structure, regression, or formatting issues.
-- Checks passed: release-source assertions, local-link validation, all
-  `SUMMARY.md` targets, balanced Markdown fences, source-link HTTP checks,
-  and staged `git diff --check`. Markdownlint, Vale, Lychee, and a local
-  GitBook build are not installed or configured in this repository.
-- `DOC-074` Workflow-trigger OpenAPI exposure is now the recommended next
-  slice; no additional distinct topic was discovered during implementation.
+  `335a26495318f6ee1528bf2723b7333c753ce9a2` on `release/3.8.0`. Core
+  advanced from the ref used in the previous run; Studio and Extensions did
+  not change.
+- Self-review found and fixed the copied sample's unnecessary auth middleware,
+  the duplicate-route winner wording, and missing caveats about trigger-store
+  publication state, custom/tenant route providers, and store tenancy. Final
+  review found no remaining high-priority factual, source-grounding, link,
+  navigation, structure, regression, or formatting issues.
+- Checks passed: release-source assertions, Studio no-consumer verification,
+  local-link validation, all `SUMMARY.md` targets, balanced Markdown fences,
+  six cited source-link HTTP checks, and staged/working-tree `git diff --check`.
+  Markdownlint, Vale, Lychee, and a local GitBook build are not installed or
+  configured in this repository.
+- No additional distinct source-backed topic was discovered during the run;
+  re-inventory before selecting the next slice.
 
 ### Newly discovered slices
 

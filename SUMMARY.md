@@ -87,6 +87,7 @@
   * [Tutorial](guides/http-workflows/tutorial.md)
   * [Programmatic](guides/http-workflows/programmatic.md)
   * [Designer](guides/http-workflows/designer.md)
+  * [OpenAPI for HTTP workflow triggers](guides/http-workflows/openapi.md)
 * [External Application Interaction](guides/external-application-interaction.md)
 * [Loading Workflows from JSON](guides/loading-workflows-from-json.md)
 * [Plugins & Modules](guides/plugins-modules/README.md)
