@@ -74,6 +74,7 @@ Additional installed modules contribute their own categories. They only appear
 after the corresponding module is installed and configured.
 
 - [MassTransit](masstransit/README.md) explains message send, publish, and receive patterns.
+- [Email](email.md) explains SMTP setup, the Send Email activity, attachments, and error handling.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 

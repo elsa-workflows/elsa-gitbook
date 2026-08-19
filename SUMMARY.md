@@ -132,6 +132,7 @@
 * [Parallel Execution](activities/parallel-execution.md)
 * [MassTransit](activities/masstransit/README.md)
   * [Tutorial](activities/masstransit/tutorial.md)
+* [Email](activities/email.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 

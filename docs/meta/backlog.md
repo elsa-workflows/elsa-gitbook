@@ -87,36 +87,51 @@ acceptance criterion below is already complete.
 - `DOC-072` Studio activity port providers
 - `DOC-073` Connections extension and activity connection management
 - `DOC-074` Workflow-trigger OpenAPI exposure
+- `DOC-075` Email activity and SMTP delivery
 
 ### Available next slices
 
-- No named release-backed slice remains in the current inventory. Re-inventory
-  the source repositories before selecting the next slice.
+- `DOC-076` CSV data activity
+- `DOC-077` GitHub DevOps activities and triggers
+- `DOC-078` OpenTelemetry workflow and activity tracing
 
 ### Recommended next slice
 
-- Re-inventory the release source and GitBook for a new, distinct gap.
+- `DOC-076` CSV data activity
 
-### Current run plan (2026-08-18)
+### Current run plan (2026-08-19)
 
-- Select and complete `DOC-074` workflow-trigger OpenAPI exposure from a fresh
+- Select and complete `DOC-075` Email activity and SMTP delivery from a fresh
   `origin/main` worktree.
-- Cover package/setup, endpoint mapping, generated-document behavior,
-  security and deployment boundaries, and the fit with existing HTTP workflow
-  documentation using the exact `release/3.8.0` source.
-- Re-check the remaining legacy candidates and source-backed follow-on topics;
-  no additional distinct topic was found during inventory.
+- Cover package/setup, SMTP options, the `SendEmail` activity inputs and error
+  path, supported attachments, Studio/runtime boundaries, and production
+  security using the exact `release/3.8.0` source.
+- Keep `DOC-076` through `DOC-078` available for later slices and continue
+  re-inventorying for newly discovered release-backed topics.
 
-### Current run selection (2026-08-18)
+### Current run selection (2026-08-19)
 
-- The published inventory confirms DOC-001 through DOC-073 are covered or
-  substantially covered. `DOC-074` is selected because the release contains
-  an opt-in `Elsa.Http.OpenApi` integration, but the GitBook has no guide
-  explaining how workflow HTTP triggers become an OpenAPI document or what
-  the generated document does and does not describe.
-- The guide will use a decision-oriented format for host developers,
-  API consumers, process designers, and operators: setup, mapping, generated
-  output, security/deployment boundaries, and troubleshooting.
+- The published inventory confirms DOC-001 through DOC-074 are covered or
+  substantially covered. `DOC-075` is selected because the Extensions release
+  ships `Elsa.Email` and a `SendEmail` activity, but the GitBook has no focused
+  guide explaining SMTP setup, activity behavior, attachments, or failure
+  handling.
+- The guide will use a task-oriented format for process designers and host
+  developers: install/register, configure SMTP, use the activity, choose an
+  attachment representation, handle errors, and harden secrets and network
+  access.
+
+### Current run completion (2026-08-19)
+
+- Added `activities/email.md`, linked it from `SUMMARY.md`, the activity
+  reference, and the packages guide, and updated current coverage.
+- Documented the release-backed `Elsa.Email` setup, `SmtpOptions`, MailKit
+  delivery, `SendEmail` inputs, HTML body behavior, attachment forms,
+  server-side URL/file access, SMTP error-port scope, custom transport hook,
+  Studio boundary, and deployment security guidance.
+- Validated Extensions `335a26495318f6ee1528bf2723b7333c753ce9a2` on
+  `release/3.8.0`; Core and Studio were inspected for the host/designer
+  boundary. DOC-076 through DOC-078 remain available for later runs.
 
 ### Current run completion (2026-08-18)
 
@@ -146,6 +161,22 @@ acceptance criterion below is already complete.
   re-inventory before selecting the next slice.
 
 ### Newly discovered slices
+
+- `DOC-075` Email activity and SMTP delivery — `elsa-extensions` release
+  `3.8.0` contains `Elsa.Email`, including `UseEmail`, `SmtpOptions`, the
+  `SendEmail` activity, MailKit delivery, and local/URL/stream/byte-array
+  attachments. The GitBook has no focused email guide.
+- `DOC-076` CSV data activity — `elsa-extensions` release `3.8.0` contains
+  `Elsa.Data.Csv` and `ReadCsv`, with delimiter/header handling and optional
+  typed mapping. The GitBook has no CSV activity guide.
+- `DOC-077` GitHub DevOps activities and triggers — `elsa-extensions`
+  release `3.8.0` contains `Elsa.DevOps.GitHub`, a GitHub client factory,
+  repository/issue/pull-request activities, GraphQL support, and a webhook
+  trigger. The GitBook has no GitHub integration guide.
+- `DOC-078` OpenTelemetry workflow and activity tracing — `elsa-extensions`
+  release `3.8.0` contains opt-in workflow/activity tracing middleware and
+  error-span handlers. Existing tracing guidance does not document this
+  release-specific extension setup and span behavior.
 
 - `DOC-073` Connections extension and activity connection management —
   `elsa-extensions` release `3.8.0` contains `Elsa.Connections.*`, including
