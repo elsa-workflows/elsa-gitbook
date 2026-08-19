@@ -577,11 +577,12 @@ builder.Services.AddElsa(elsa => elsa
 builder.Services.AddElsa(elsa => elsa
     .UseEmail(email =>
     {
-        email.ConfigureOptions(options =>
+        email.ConfigureOptions = options =>
         {
-            options.SmtpHost = "smtp.example.com";
-            options.SmtpPort = 587;
-        });
+            options.Host = "smtp.example.com";
+            options.Port = 587;
+            options.DefaultSender = "workflow@example.com";
+        };
     })
 );
 ```
@@ -600,6 +601,8 @@ builder.Services.AddElsa(elsa => elsa
 
 - [DropIns](dropins.md) for independently deployed server-side extension
   assemblies and packages.
+- [Send email from a workflow](../../activities/email.md) for SMTP options,
+  attachments, error handling, and production guidance.
 - **[Custom Activities](../../extensibility/custom-activities.md)** - Detailed guide on creating activities
 - **[Plugins & Modules](../plugins-modules/README.md)** - Extended guide with more examples
 - **[Architecture Overview](../architecture/README.md)** - Understanding Elsa's architecture

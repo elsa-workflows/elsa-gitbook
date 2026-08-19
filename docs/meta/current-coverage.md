@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (7 pages)
+### ACTIVITIES (8 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -16,6 +16,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Emits log entries to a configurable set of log targets called sinks** (`activities/diagnostics/log.md`)
 - **MassTransit** (`activities/masstransit/README.md`)
 - **Tutorial** (`activities/masstransit/tutorial.md`)
+- **Send email from a workflow** (`activities/email.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -177,6 +178,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Common activity properties
 - ✅ Control flow activities (Decision)
 - ✅ MassTransit integration
+- ✅ Email activity, SMTP configuration, attachments, and send-failure handling
 - ✅ Diagnostics activities
 
 ### Elsa Studio
