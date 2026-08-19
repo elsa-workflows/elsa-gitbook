@@ -129,6 +129,9 @@ acceptance criterion below is already complete.
   delivery, `SendEmail` inputs, HTML body behavior, attachment forms,
   server-side URL/file access, SMTP error-port scope, custom transport hook,
   Studio boundary, and deployment security guidance.
+- Corrected a stale Email example in `guides/extensibility/modules-and-plugins.md`
+  that used nonexistent `SmtpHost` and `SmtpPort` properties, and linked it to
+  the new activity guide.
 - Validated Extensions `335a26495318f6ee1528bf2723b7333c753ce9a2` on
   `release/3.8.0`; Core and Studio were inspected for the host/designer
   boundary. DOC-076 through DOC-078 remain available for later runs.
