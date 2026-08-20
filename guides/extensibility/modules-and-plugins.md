@@ -41,6 +41,7 @@ builder.Services.AddElsa(elsa => elsa
     .UseWorkflowRuntime()      // Adds workflow runtime feature
     .UseHttp()                 // Adds HTTP activities and triggers
     .UseEmail()                // Adds email activities
+    .UseCsv()                  // Adds CSV data activities
     .UseJavaScript()           // Adds JavaScript expression support
     .UseMyCustomModule()       // Your custom module
 );
@@ -603,6 +604,8 @@ builder.Services.AddElsa(elsa => elsa
   assemblies and packages.
 - [Send email from a workflow](../../activities/email.md) for SMTP options,
   attachments, error handling, and production guidance.
+- [Read CSV data in a workflow](../../activities/csv.md) for input forms,
+  delimiters, typed mapping, and memory behavior.
 - **[Custom Activities](../../extensibility/custom-activities.md)** - Detailed guide on creating activities
 - **[Plugins & Modules](../plugins-modules/README.md)** - Extended guide with more examples
 - **[Architecture Overview](../architecture/README.md)** - Understanding Elsa's architecture
