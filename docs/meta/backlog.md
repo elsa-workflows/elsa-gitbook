@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-18)
+## Slice Inventory (2026-08-20)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -94,32 +94,65 @@ acceptance criterion below is already complete.
 - `DOC-076` CSV data activity
 - `DOC-077` GitHub DevOps activities and triggers
 - `DOC-078` OpenTelemetry workflow and activity tracing
+- `DOC-079` Workflow Contexts
+- `DOC-080` Slack communication activities
 
 ### Recommended next slice
 
-- `DOC-076` CSV data activity
+- `DOC-077` GitHub DevOps activities and triggers
 
-### Current run plan (2026-08-19)
+### Current run plan (2026-08-20)
 
-- Select and complete `DOC-075` Email activity and SMTP delivery from a fresh
-  `origin/main` worktree.
-- Cover package/setup, SMTP options, the `SendEmail` activity inputs and error
-  path, supported attachments, Studio/runtime boundaries, and production
-  security using the exact `release/3.8.0` source.
-- Keep `DOC-076` through `DOC-078` available for later slices and continue
-  re-inventorying for newly discovered release-backed topics.
+- Select and complete `DOC-076` CSV data activity from a fresh `origin/main`
+  worktree.
+- Cover package/setup, `ReadCsv` inputs and outputs, delimiter/header handling,
+  typed mapping, stream ownership, Studio/runtime boundaries, and practical
+  validation and security guidance using the exact `release/3.8.0` source.
+- Keep `DOC-077` and `DOC-078` available for later slices while checking the
+  release source for newly discovered documentation gaps.
 
-### Current run selection (2026-08-19)
+### Current run selection (2026-08-20)
 
-- The published inventory confirms DOC-001 through DOC-074 are covered or
-  substantially covered. `DOC-075` is selected because the Extensions release
-  ships `Elsa.Email` and a `SendEmail` activity, but the GitBook has no focused
-  guide explaining SMTP setup, activity behavior, attachments, or failure
-  handling.
+- The published inventory confirms DOC-001 through DOC-075 are covered or
+  substantially covered. `DOC-076` is selected because the Extensions release
+  ships `Elsa.Data.Csv` and `ReadCsv`, but the GitBook has no focused guide
+  explaining CSV parsing, header/delimiter behavior, or typed row mapping.
 - The guide will use a task-oriented format for process designers and host
-  developers: install/register, configure SMTP, use the activity, choose an
-  attachment representation, handle errors, and harden secrets and network
-  access.
+  developers: install/register, choose input and output representations,
+  configure parsing, map typed rows, handle stream lifetime, and validate
+  untrusted data.
+
+### Current run completion (2026-08-20)
+
+- Added `activities/csv.md`, linked it from `SUMMARY.md`, the activity
+  reference, package guidance, and the modules-and-plugins registration
+  example, and updated current coverage.
+- Documented the release-backed `Elsa.Data.Csv` setup, `ReadCsv` inputs and
+  output shapes, header and delimiter handling, typed CsvHelper mapping,
+  UTF-8 byte-array handling, stream disposal, full materialization, Studio
+  boundaries, and untrusted-input guidance.
+- Called out the release README's misleading URL-input implication in the
+  GitBook guide: the implementation treats strings as CSV text and performs
+  no URL download.
+- Validated Core `f6c35cf1eb5558348a61352fc4eba5925731118d`, Studio
+  `3905f930b893303c93073ac4b51c9245f410eaf4`, and Extensions
+  `335a26495318f6ee1528bf2723b7333c753ce9a2` on `release/3.8.0`; no requested
+  release branch changed during the run.
+- No additional topic was required to scope the current slice. A release
+  module inventory did identify follow-on candidates `DOC-079` Workflow
+  Contexts and `DOC-080` Slack communication activities; both remain for a
+  later inventory after DOC-077 and DOC-078.
+
+### Newly discovered follow-on slices (2026-08-20)
+
+- `DOC-079` Workflow Contexts — Core and Studio release modules provide
+  workflow/activity context provider contracts, a context-setting activity,
+  provider-type endpoints, and a Studio editor/picker. The registration and
+  load/save lifecycle needs a separate source-alignment pass before a guide is
+  written.
+- `DOC-080` Slack communication activities — the Extensions release contains
+  `Elsa.Slack`, a client factory, channel/message/user/file/reaction/reminder
+  activities, and event triggers. The GitBook has no dedicated Slack guide.
 
 ### Current run completion (2026-08-19)
 

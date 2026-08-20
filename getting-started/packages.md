@@ -1,6 +1,9 @@
 # Packages
 
-Elsa is available as a collection of NuGet packages. Some packages are required for executing workflows, while others provide integrations with systems like service buses, cloud services, and additional features such as [email delivery](../activities/email.md).
+Elsa is available as a collection of NuGet packages. Some packages are
+required for executing workflows, while others provide integrations with
+systems like service buses, cloud services, and additional features such as
+[email delivery](../activities/email.md) and [CSV processing](../activities/csv.md).
 
 ## **Main Package**
 

@@ -133,6 +133,7 @@
 * [MassTransit](activities/masstransit/README.md)
   * [Tutorial](activities/masstransit/tutorial.md)
 * [Email](activities/email.md)
+* [CSV](activities/csv.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 

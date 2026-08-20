@@ -179,6 +179,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Control flow activities (Decision)
 - ✅ MassTransit integration
 - ✅ Email activity, SMTP configuration, attachments, and send-failure handling
+- ✅ CSV activity, input representations, delimiter/header handling, typed mapping, and memory behavior
 - ✅ Diagnostics activities
 
 ### Elsa Studio
