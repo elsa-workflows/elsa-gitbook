@@ -42,6 +42,7 @@ builder.Services.AddElsa(elsa => elsa
     .UseHttp()                 // Adds HTTP activities and triggers
     .UseEmail()                // Adds email activities
     .UseCsv()                  // Adds CSV data activities
+    .UseGitHub()               // Adds server-side GitHub activities
     .UseJavaScript()           // Adds JavaScript expression support
     .UseMyCustomModule()       // Your custom module
 );
@@ -606,6 +607,8 @@ builder.Services.AddElsa(elsa => elsa
   attachments, error handling, and production guidance.
 - [Read CSV data in a workflow](../../activities/csv.md) for input forms,
   delimiters, typed mapping, and memory behavior.
+- [GitHub activities](../../activities/github.md) for server-side GitHub
+  actions, token handling, GraphQL, and the 3.8.0 watcher limitation.
 - **[Custom Activities](../../extensibility/custom-activities.md)** - Detailed guide on creating activities
 - **[Plugins & Modules](../plugins-modules/README.md)** - Extended guide with more examples
 - **[Architecture Overview](../architecture/README.md)** - Understanding Elsa's architecture
