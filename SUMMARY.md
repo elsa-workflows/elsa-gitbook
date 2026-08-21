@@ -134,6 +134,7 @@
   * [Tutorial](activities/masstransit/tutorial.md)
 * [Email](activities/email.md)
 * [CSV](activities/csv.md)
+* [GitHub](activities/github.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 
