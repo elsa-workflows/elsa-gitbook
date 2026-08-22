@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-21)
+## Slice Inventory (2026-08-22)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -90,43 +90,68 @@ acceptance criterion below is already complete.
 - `DOC-075` Email activity and SMTP delivery
 - `DOC-076` CSV data activity
 - `DOC-077` GitHub DevOps activities and triggers
+- `DOC-078` OpenTelemetry workflow and activity tracing
 
 ### Available next slices
 
-- `DOC-078` OpenTelemetry workflow and activity tracing
 - `DOC-079` Workflow Contexts
 - `DOC-080` Slack communication activities
 
 ### Recommended next slice
 
-- `DOC-078` OpenTelemetry workflow and activity tracing
+- `DOC-079` Workflow Contexts
 
-### Current run plan (2026-08-21)
+### Current run plan (2026-08-22)
 
-- Select and complete `DOC-077` GitHub DevOps activities and triggers from a
-  fresh `origin/main` worktree.
-- Cover package/setup, token/client resolution, supported activity groups,
-  GraphQL usage, webhook watcher boundaries, Studio/runtime boundaries, and
-  production security using the exact `release/3.8.0` source.
-- Keep `DOC-078` through `DOC-080` available while checking the release source
-  for newly discovered documentation gaps.
+- Select and complete `DOC-078` OpenTelemetry workflow and activity tracing
+  from a fresh `origin/main` worktree.
+- Cover package/setup, pipeline registration, workflow and activity span
+  behavior, remote-parent options, error handlers, Studio boundaries, and
+  exporter/collector boundaries using the exact `release/3.8.0` source.
+- Keep `DOC-079` and `DOC-080` available while checking the release source for
+  newly discovered documentation gaps.
 
-### Current run selection (2026-08-21)
+### Current run selection (2026-08-22)
 
-- The published inventory confirms DOC-001 through DOC-076 are covered or
-  substantially covered. `DOC-077` is selected because the Extensions release
-  ships `Elsa.DevOps.GitHub`, but the GitBook has no focused guide for its
-  GitHub client, repository/issue/pull-request activities, GraphQL activity,
-  or GitHub event watchers.
-- The guide will use a task-oriented format for technical users and process
-  designers: install/register, provide a token, choose an activity group,
-  evaluate the watcher boundary, handle outputs and failures, and protect
-  credentials.
-- Release review found no additional distinct topic beyond the available
-  `DOC-078` OpenTelemetry extension tracing, `DOC-079` Workflow Context
-  providers, and `DOC-080` Slack activities. OpenTelemetry is already covered
-  at the core/diagnostics level; Workflow Context provider lifecycle needs a
+- The published inventory confirms DOC-001 through DOC-077 are covered or
+  substantially covered. `DOC-078` is selected because the Extensions release
+  ships an opt-in `Elsa.OpenTelemetry` package with workflow/activity pipeline
+  middleware and error-span handler contracts that are not explained by the
+  existing collector/distributed-tracing guide.
+- The guide will use a task-oriented format for technical users and operators:
+  install/register the package, add both pipeline middleware components,
+  subscribe an exporter to the `Elsa.Workflows` source, understand emitted
+  spans and errors, and decide whether a separate Elsa Studio collector is
+  needed.
+- Release review found no additional distinct source-backed topic beyond the
+  available `DOC-079` Workflow Context providers and `DOC-080` Slack
+  activities. Workflow Context provider lifecycle still needs a separate
   source-alignment pass before selection.
+
+### Current release validation (2026-08-22)
+
+- Core `release/3.8.0`: `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`
+- Studio `release/3.8.0`: `935edd5cef34ea189376a72408dfe708f62bbfe5`
+- Extensions `release/3.8.0`: `335a26495318f6ee1528bf2723b7333c753ce9a2`
+- Core and Studio advanced since the previous completed run; Extensions did
+  not change. No new distinct candidate was found during this inventory.
+
+### Current run completion (2026-08-22)
+
+- Added `guides/extensibility/opentelemetry-tracing.md`, linked it from
+  `SUMMARY.md` and package guidance, and updated the coverage metadata.
+- Documented the release-backed `Elsa.OpenTelemetry` package, explicit
+  workflow/activity pipeline middleware registration, the `Elsa.Workflows`
+  activity source, span names/tags/status events, remote-parent options,
+  ordered fault handlers, Studio/collector boundaries, and troubleshooting.
+- Corrected `operate/distributed-tracing.md` and related observability
+  references to distinguish core `WorkflowInstrumentation` spans/metrics,
+  the optional additional `Elsa.OpenTelemetry` span layer, and the separate
+  diagnostics collector.
+- Validated Core `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`, Studio
+  `935edd5cef34ea189376a72408dfe708f62bbfe5`, and Extensions
+  `335a26495318f6ee1528bf2723b7333c753ce9a2` on `release/3.8.0`.
+- DOC-079 and DOC-080 remain available; DOC-079 is recommended next.
 
 ### Current run completion (2026-08-21)
 

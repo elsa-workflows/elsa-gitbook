@@ -590,24 +590,16 @@ builder.Services.AddOpenTelemetry()
 
 ### Tracing and telemetry
 
-For distributed tracing of workflow execution including persistence operations:
-
-```csharp
-using Elsa.Workflows.Telemetry;
-
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing =>
-    {
-        tracing.AddAspNetCoreInstrumentation();
-        tracing.AddHttpClientInstrumentation();
-        tracing.AddSource(WorkflowInstrumentation.ActivitySourceName);
-        tracing.AddOtlpExporter();
-    });
-```
+For distributed tracing of workflow execution alongside persistence telemetry,
+use the optional `Elsa.OpenTelemetry` extension and register its workflow and
+activity pipeline middleware. See [OpenTelemetry workflow and activity tracing](../extensibility/opentelemetry-tracing.md)
+for the release-backed setup and span fields.
 
 See [Performance & Scaling Guide](../performance/) and [Monitoring & Observability](../../operate/monitoring-observability.md) for the release-backed observability setup.
 
-> **Note:** Elsa provides built-in OpenTelemetry instrumentation through `Elsa.Workflows`. Custom metrics beyond the built-in counters and histograms are still user-defined.
+> **Note:** Core `WorkflowInstrumentation` emits baseline workflow/activity
+> spans and a workflow meter. The `Elsa.OpenTelemetry` extension adds another
+> span layer through the same activity source; it does not add another meter.
 
 ## Common Pitfalls
 

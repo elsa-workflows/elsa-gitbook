@@ -675,21 +675,38 @@ See [Clustering Guide](../clustering/) for configuration.
 
 #### Tracing with OpenTelemetry
 
-In `release/3.8.0`, Elsa publishes workflow tracing through `Elsa.Workflows`.
-
-* **ActivitySource**: `Elsa.Workflows`
-* **Instrumentation**: workflow and activity execution spans plus built-in metrics
+In `release/3.8.0`, core `Elsa.Workflows` instrumentation publishes baseline
+workflow/activity spans and metrics. The optional `Elsa.OpenTelemetry`
+extension adds a second span layer through the same activity source. Register
+both extension middleware components only when you want that additional layer.
 
 ```csharp
+using Elsa.Extensions;
+using Elsa.OpenTelemetry.Middleware;
 using Elsa.Workflows.Telemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing => tracing.AddSource(WorkflowInstrumentation.ActivitySourceName));
+    .WithTracing(tracing => tracing.AddSource(WorkflowInstrumentation.ActivitySourceName))
+    .WithMetrics(metrics => metrics.AddMeter(WorkflowInstrumentation.MeterName));
+
+builder.Services.AddElsa(elsa => elsa
+    .UseWorkflows(workflows =>
+    {
+        workflows.WithDefaultWorkflowExecutionPipeline(pipeline =>
+            pipeline.UseWorkflowExecutionTracing());
+        workflows.WithDefaultActivityExecutionPipeline(pipeline =>
+            pipeline.UseActivityExecutionTracing());
+    })
+    .UseOpenTelemetry());
 ```
 
 #### Metrics
 
-Elsa does not emit built-in metrics; you must implement custom metrics based on your needs:
+Core `WorkflowInstrumentation` provides the built-in Elsa workflow meter. The
+extension does not add another meter; configure application and host metrics
+separately when you need them:
 
 * Count workflow completions by definition
 * Track average execution time

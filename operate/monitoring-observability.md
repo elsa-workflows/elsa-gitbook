@@ -16,8 +16,9 @@ Use this mapping:
   and activity execution records.
 - For host application logs, use the Structured Logs or Console Logs diagnostics
   modules in Studio.
-- For exported traces, metrics, and OTLP logs, use
-  `Elsa.Workflows` OpenTelemetry instrumentation and your OTLP backend.
+- For baseline workflow/activity spans and metrics, use core
+  `Elsa.Workflows` instrumentation. Add the `Elsa.OpenTelemetry` extension
+  when you also need its additional span layer and error handlers.
 - For readiness and liveness, use health checks such as `/health/live` and
   `/health/ready` in `Elsa.Server.Web`.
 
@@ -161,45 +162,54 @@ app.UseStructuredLogs();
 app.UseConsoleLogs();
 ```
 
-## Export traces and metrics with OpenTelemetry
+## Export workflow telemetry with OpenTelemetry
 
-In `release/3.8.0`, workflow tracing and metrics come from `Elsa.Workflows`
-itself. The core instrumentation publishes:
-
-- `ActivitySource`: `Elsa.Workflows`
-- `Meter`: `Elsa.Workflows`
-
-This is the release-backed way to export workflow traces and metrics to
-OTLP-compatible tooling.
+In `release/3.8.0`, core `Elsa.Workflows` instrumentation automatically emits
+baseline workflow/activity spans and metrics. The optional
+`Elsa.OpenTelemetry` extension creates an additional workflow/activity span
+layer from explicit execution-pipeline middleware. Both use the
+`Elsa.Workflows` activity source.
 
 ```csharp
+using Elsa.Extensions;
+using Elsa.OpenTelemetry.Middleware;
 using Elsa.Workflows.Telemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
         .AddSource(WorkflowInstrumentation.ActivitySourceName)
         .AddOtlpExporter())
     .WithMetrics(metrics => metrics
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
         .AddMeter(WorkflowInstrumentation.MeterName)
         .AddOtlpExporter());
+
+builder.Services.AddElsa(elsa => elsa
+    .UseWorkflows(workflows =>
+    {
+        workflows.WithDefaultWorkflowExecutionPipeline(pipeline =>
+            pipeline.UseWorkflowExecutionTracing());
+        workflows.WithDefaultActivityExecutionPipeline(pipeline =>
+            pipeline.UseActivityExecutionTracing());
+    })
+    .UseOpenTelemetry());
 ```
 
-The built-in workflow instrumentation includes workflow and activity spans plus
-counters and histograms such as workflow started, completed, faulted, and
-activity duration.
+`UseOpenTelemetry()` alone does not install the extension's additional tracing
+middleware. For exact span layers, tags, status events, remote-parent options,
+and error-handler customization, see [OpenTelemetry workflow and activity tracing](../guides/extensibility/opentelemetry-tracing.md).
+
+Core provides the workflow meter; add your application's meters and host
+instrumentation separately when you need additional metrics.
 
 ## Studio OpenTelemetry diagnostics are collector-side
 
 Elsa 3.8.0 also includes `Elsa.Diagnostics.OpenTelemetry`, but it serves a
-different purpose from `Elsa.Workflows` instrumentation.
+different purpose from the `Elsa.OpenTelemetry` span middleware.
 
-- `Elsa.Workflows` produces traces and metrics.
+- Core `Elsa.Workflows` instrumentation produces baseline spans and metrics;
+  `Elsa.OpenTelemetry` adds a second span layer.
 - `Elsa.Diagnostics.OpenTelemetry` ingests, stores, queries, and streams OTLP
   telemetry for Studio.
 
@@ -222,28 +232,16 @@ be protected with an API key through
 `OpenTelemetryDiagnosticsOptions.ApiKey`, using the `x-otlp-api-key` header by
 default.
 
-If you use the modular sample host, `Elsa.ModularServer.Web` already shows the
-intended setup for this release:
+## Choose the right OpenTelemetry component
 
-- it exports logs, traces, and metrics with OpenTelemetry;
-- it uses `WorkflowInstrumentation.ActivitySourceName` and
-  `WorkflowInstrumentation.MeterName`;
-- it enables the `StructuredLogs`, `ConsoleLogs`, and `OpenTelemetry` shell
-  features in configuration.
-
-## Avoid the stale `Elsa.OpenTelemetry` guidance
-
-If you encounter older documentation or examples that tell you to use
-`Elsa.OpenTelemetry` from `elsa-extensions`, treat that guidance as outdated
-for `release/3.8.0`.
-
-For this release branch:
-
-- use `Elsa.Workflows` instrumentation for emitting traces and metrics;
-- use `Elsa.Diagnostics.OpenTelemetry` for collector and Studio diagnostics
-  scenarios;
-- use `Elsa.Diagnostics.StructuredLogs` and `Elsa.Diagnostics.ConsoleLogs` for
-  host log inspection in Studio.
+- Use `Elsa.OpenTelemetry` from `elsa-extensions` to create workflow and
+  activity spans.
+- Use `Elsa.Diagnostics.OpenTelemetry` in the server to ingest OTLP data for
+  Studio diagnostics.
+- Use the separate `Elsa.Studio.Diagnostics.OpenTelemetry` module in Studio to
+  query and stream the server's diagnostics data.
+- Use `Elsa.Diagnostics.StructuredLogs` and
+  `Elsa.Diagnostics.ConsoleLogs` for host log inspection in Studio.
 
 ## Recommended operator flow
 

@@ -153,6 +153,7 @@
 * [Registering Custom Types](guides/extensibility/custom-types.md)
 * [Workflow Providers](guides/extensibility/workflow-providers.md)
 * [Activity Type Providers](guides/extensibility/activity-type-providers.md)
+* [OpenTelemetry Workflow and Activity Tracing](guides/extensibility/opentelemetry-tracing.md)
 * [Custom Resilience Strategies](guides/extensibility/custom-resilience-strategies.md)
 * [Reusable Triggers](extensibility/reusable-triggers-3.5-preview.md)
 

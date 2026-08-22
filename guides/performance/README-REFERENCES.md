@@ -14,7 +14,7 @@ The performance guidance in this directory is grounded in these
 | Mediator worker counts | `src/common/Elsa.Mediator/Options/MediatorOptions.cs` | Command, notification, and job worker counts each default to four. |
 | Background dispatch | `src/modules/Elsa.Workflows.Runtime/Services/BackgroundWorkflowDispatcher.cs` | Background dispatch uses the command path and returns before execution completes. |
 | Transactional outbox | `src/modules/Elsa.Workflows.Runtime/Options/WorkflowDispatcherOptions.cs` | Outbox enablement, immediate processing, and batch-size controls. |
-| Workflow telemetry | `src/modules/Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` | The `Elsa.Workflows` activity source and meter emit workflow/activity telemetry. |
+| Workflow telemetry | `src/modules/Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` plus `elsa-extensions/src/modules/diagnostics/Elsa.OpenTelemetry/Middleware/OpenTelemetryTracingWorkflowExecutionMiddleware.cs` and `OpenTelemetryTracingActivityExecutionMiddleware.cs` | Core emits baseline workflow/activity spans and metrics; the optional `Elsa.OpenTelemetry` middleware adds spans through the same source when both pipeline components are registered. |
 
 When updating these docs, validate the examples against the latest released
 source branch before changing the release label.

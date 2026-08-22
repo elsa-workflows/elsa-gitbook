@@ -183,9 +183,10 @@ This document provides exact source file references in the elsa-core and elsa-ex
 **Path:** `src/modules/diagnostics/Elsa.OpenTelemetry/`
 
 **Key Files:**
-- `OpenTelemetryMiddleware.cs` — Tracing middleware for workflow execution
-- `ActivitySource.cs` — Elsa's ActivitySource for OpenTelemetry
-- `Extensions/` — Registration extensions
+- `src/modules/Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` — Core workflow/activity spans, meter, counters, and duration histogram
+- `src/modules/diagnostics/Elsa.OpenTelemetry/Middleware/OpenTelemetryTracingWorkflowExecutionMiddleware.cs` — Optional workflow tracing middleware
+- `src/modules/diagnostics/Elsa.OpenTelemetry/Middleware/OpenTelemetryTracingActivityExecutionMiddleware.cs` — Optional activity tracing middleware
+- `src/modules/diagnostics/Elsa.OpenTelemetry/Extensions/ModuleExtensions.cs` — Registration extension
 
 **Purpose:** OpenTelemetry integration for distributed tracing and observability.
 

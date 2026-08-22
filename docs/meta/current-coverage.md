@@ -44,7 +44,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Liquid** (`expressions/liquid.md`)
 - **Python** (`expressions/python.md`)
 
-### EXTENSIBILITY (8 pages)
+### EXTENSIBILITY (9 pages)
 
 - **This topic covers extending Elsa with your own custom activities.** (`extensibility/custom-activities.md`)
 - **Connections for activities** (`guides/extensibility/connections.md`)
@@ -52,6 +52,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Registering Custom Types** (`guides/extensibility/custom-types.md`)
 - **Add custom Polly-based resilience strategies and retry diagnostics to Elsa 3.8.0 workflows.** (`guides/extensibility/custom-resilience-strategies.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
+- **OpenTelemetry Workflow and Activity Tracing** (`guides/extensibility/opentelemetry-tracing.md`)
 - **DropIns** (`guides/extensibility/dropins.md`)
 - **>-** (`extensibility/reusable-triggers-3.5-preview.md`)
 
@@ -207,6 +208,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Activation strategies
 - ✅ Incidents and strategies
 - ✅ Monitoring and distributed tracing guidance
+- ✅ Elsa.OpenTelemetry workflow/activity middleware, span contracts, error handlers, and Studio/collector boundaries
 - ✅ Runtime, persistence, and distributed-lock readiness guidance
 - ✅ Elasticsearch workflow-instance and execution-log persistence setup,
   provider boundaries, index lifecycle, and release-backed limitations

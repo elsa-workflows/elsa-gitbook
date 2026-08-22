@@ -434,32 +434,48 @@ In workflows, the workflow instance ID and correlation ID are automatically adde
 
 ## OpenTelemetry tracing and diagnostics
 
-In `release/3.8.0`, Elsa emits workflow traces through `Elsa.Workflows` and exposes separate Studio diagnostics modules for structured logs, console logs, and OTLP collection.
+In `release/3.8.0`, core instrumentation emits baseline workflow and activity
+spans through the `Elsa.Workflows` activity source. The optional
+`Elsa.OpenTelemetry` extension adds a second span layer and error handlers.
+Separate Studio diagnostics modules provide structured logs, console logs, and
+OTLP collection.
 
 **Quick Setup:**
 ```csharp
-using Elsa.Workflows.Telemetry;
+using Elsa.Extensions;
+using Elsa.OpenTelemetry.Middleware;
 
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing =>
     {
         tracing.AddAspNetCoreInstrumentation();
         tracing.AddHttpClientInstrumentation();
-        tracing.AddSource(WorkflowInstrumentation.ActivitySourceName);
+        tracing.AddSource("Elsa.Workflows");
         tracing.AddOtlpExporter();
     });
+
+builder.Services.AddElsa(elsa => elsa
+    .UseWorkflows(workflows =>
+    {
+        workflows.WithDefaultWorkflowExecutionPipeline(pipeline =>
+            pipeline.UseWorkflowExecutionTracing());
+        workflows.WithDefaultActivityExecutionPipeline(pipeline =>
+            pipeline.UseActivityExecutionTracing());
+    })
+    .UseOpenTelemetry());
 ```
 
 **What's Traced:**
 - Workflow execution spans
-- Activity execution spans (with inputs/outputs)
-- HTTP trigger processing
-- Background job execution
+- Activity execution spans
+- Workflow and activity status events, incidents, and identity tags
 
-For the complete release-backed setup, see [Monitoring & Observability](../../operate/monitoring-observability.md).
+For the complete release-backed setup and error-handler behavior, see
+[OpenTelemetry workflow and activity tracing](../extensibility/opentelemetry-tracing.md).
 
 **Code Reference:**
-- `src/modules/Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` - Defines Elsa's `ActivitySource`, `Meter`, counters, and histograms.
+- `src/modules/Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` - Defines core workflow/activity spans and metrics.
+- `elsa-extensions/src/modules/diagnostics/Elsa.OpenTelemetry/*` - Defines the optional additional workflow/activity tracing middleware and error-span handlers.
 - `src/modules/Elsa.Diagnostics.OpenTelemetry/*` - Provides OTLP ingestion, query APIs, and the Studio diagnostics collector surface.
 
 ---

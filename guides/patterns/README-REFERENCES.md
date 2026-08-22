@@ -41,15 +41,21 @@ This document lists the exact elsa-core and elsa-extensions file paths reference
 |-----------|-------------|
 | `src/modules/Elsa.Workflows.Core/Models/Incident.cs` | Incident model for tracking activity faults and exceptions |
 
+### OpenTelemetry instrumentation
+
+| File Path | Description |
+|-----------|-------------|
+| `src/modules/Elsa.Workflows.Core/Telemetry/WorkflowInstrumentation.cs` | Core `Elsa.Workflows` activity source, meter, workflow/activity spans, counters, and duration histogram |
+
 ## elsa-extensions References
 
 ### OpenTelemetry
 
 | File Path | Description |
 |-----------|-------------|
-| `src/Elsa.OpenTelemetry/ActivitySource.cs` | Defines the `Elsa` ActivitySource for workflow execution tracing |
-| `src/Elsa.OpenTelemetry/Middleware/TracingMiddleware.cs` | HTTP middleware that adds tracing spans for workflow API calls |
-| `src/Elsa.OpenTelemetry/Extensions/ServiceCollectionExtensions.cs` | Provides `UseOpenTelemetry()` extension for configuration |
+| `src/modules/diagnostics/Elsa.OpenTelemetry/Middleware/OpenTelemetryTracingWorkflowExecutionMiddleware.cs` | Adds the optional workflow span middleware and remote-parent handling |
+| `src/modules/diagnostics/Elsa.OpenTelemetry/Middleware/OpenTelemetryTracingActivityExecutionMiddleware.cs` | Adds the optional activity span middleware and activity metadata |
+| `src/modules/diagnostics/Elsa.OpenTelemetry/Extensions/ModuleExtensions.cs` | Provides the `UseOpenTelemetry()` extension for configuring error handlers and options |
 
 ## elsa-api-client References
 
