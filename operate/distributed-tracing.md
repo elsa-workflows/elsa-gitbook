@@ -1,112 +1,81 @@
 ---
 description: >-
   Release-backed guide to tracing Elsa 3.8.0 workflows with
-  Elsa.Workflows instrumentation and the OpenTelemetry diagnostics collector.
+  Elsa.OpenTelemetry workflow/activity middleware and the OpenTelemetry
+  diagnostics collector.
 ---
 
 # Distributed Tracing
 
 In `release/3.8.0`, Elsa has two distinct OpenTelemetry stories:
 
-- `Elsa.Workflows` emits workflow and activity spans plus workflow metrics.
+- Core `Elsa.Workflows` instrumentation emits baseline workflow/activity spans
+  and metrics.
+- `Elsa.OpenTelemetry` adds workflow/activity spans from explicit Elsa
+  execution-pipeline middleware.
 - `Elsa.Diagnostics.OpenTelemetry` ingests OTLP data so Elsa Studio can query
   and stream traces, metrics, and logs.
 
 Treat those as complementary parts of one tracing setup:
 
-1. your Elsa host emits telemetry;
+1. your Elsa host emits workflow/activity telemetry;
 2. your OTLP backend stores and correlates it;
 3. Elsa's diagnostics collector can optionally receive the same OTLP traffic
    for Studio diagnostics.
 
-## What Elsa emits directly
+## Server-side workflow and activity spans
 
-The release-backed instrumentation surface is `Elsa.Workflows`.
+Core instrumentation uses an `ActivitySource` and `Meter` both named
+`Elsa.Workflows`. It emits `workflow.execute` and `activity.execute` spans,
+the `elsa.workflow.started`, `elsa.workflow.completed`, and
+`elsa.workflow.faulted` counters, and the `elsa.activity.duration` histogram.
 
-- `ActivitySource`: `Elsa.Workflows`
-- `Meter`: `Elsa.Workflows`
-
-`WorkflowInstrumentation` in `elsa-core` emits:
-
-- workflow spans with operation name `workflow.execute`;
-- activity spans with operation name `activity.execute`;
-- counters for `elsa.workflow.started`, `elsa.workflow.completed`, and
-  `elsa.workflow.faulted`;
-- a histogram for `elsa.activity.duration`.
-
-Key workflow span tags include:
-
-- `workflow.instance.id`
-- `workflow.definition.id`
-- `workflow.definition.version`
-- `workflow.definition.version.id`
-- `workflow.status`
-- `workflow.substatus`
-- `workflow.name`
-- `workflow.parent.instance.id`
-- `workflow.correlation.id`
-- `elsa.tenant.id`
-
-Key activity span tags include:
-
-- `workflow.activity.id`
-- `workflow.activity.name`
-- `workflow.activity.type`
-- `workflow.activity.version`
-- `workflow.activity.execution.id`
-- `workflow.activity.status`
-- `workflow.activity.parent.execution.id`
-- `workflow.activity.scheduled.by.execution.id`
-- `workflow.activity.outcome`
-
-When execution faults, the instrumentation marks the span as error and adds a
-standard `exception.type` tag.
-
-## Basic exporter setup
-
-To export Elsa workflow spans and metrics from your host, subscribe to the
-`Elsa.Workflows` source and meter:
+The optional `Elsa.OpenTelemetry` extension package adds another workflow and
+activity span layer. It uses the same source, but the module does not register
+its middleware or an exporter for you. Add both pipeline components and
+subscribe your OpenTelemetry provider to the source and meter:
 
 ```csharp
+using Elsa.Extensions;
+using Elsa.OpenTelemetry.Middleware;
 using Elsa.Workflows.Telemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
         .AddSource(WorkflowInstrumentation.ActivitySourceName)
         .AddOtlpExporter())
     .WithMetrics(metrics => metrics
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
         .AddMeter(WorkflowInstrumentation.MeterName)
         .AddOtlpExporter());
+
+builder.Services.AddElsa(elsa => elsa
+    .UseWorkflows(workflows =>
+    {
+        workflows.WithDefaultWorkflowExecutionPipeline(pipeline =>
+            pipeline.UseWorkflowExecutionTracing());
+        workflows.WithDefaultActivityExecutionPipeline(pipeline =>
+            pipeline.UseActivityExecutionTracing());
+    })
+    .UseOpenTelemetry());
 ```
 
-Use this path when you want traces in systems such as Jaeger, Grafana Tempo,
-Honeycomb, Datadog, or any other OTLP-compatible backend.
+The extension middleware adds one workflow span and one span per executed
+activity when the provider is listening to `Elsa.Workflows`. With core
+instrumentation also active, both the core and extension span layers are
+exported. For exact extension span names, tags, status events, remote-parent
+behavior, and custom error handlers, see
+[OpenTelemetry workflow and activity tracing](../guides/extensibility/opentelemetry-tracing.md).
 
-## What to expect in traces
-
-For the built-in `Elsa.Workflows` instrumentation:
-
-- one workflow execution cycle creates one workflow span;
-- each executed activity creates an activity span;
-- faulted executions set the span status to error;
-- cancellations are treated separately from faults;
-- parent workflow instance IDs and correlation IDs flow into span tags when
-  present.
-
-This makes `CorrelationId`, parent-child workflow dispatch, and activity
-timings directly queryable in your tracing backend.
+The extension does not add another meter; core metrics come from
+`WorkflowInstrumentation`. Configure other host instrumentation separately if
+your application needs it.
 
 ## Elsa Studio collector and trace viewer
 
-`Elsa.Diagnostics.OpenTelemetry` does not replace the `Elsa.Workflows`
-instrumentation. It adds a diagnostics collector and Studio-facing query
-surface.
+`Elsa.Diagnostics.OpenTelemetry` does not replace the `Elsa.OpenTelemetry`
+middleware. It adds a diagnostics collector and Studio-facing query surface.
 
 In `release/3.8.0`, the collector maps these HTTP/protobuf ingestion routes by
 default:
@@ -200,27 +169,19 @@ What the code does in `release/3.8.0`:
 So for a portable setup across Elsa hosts, use the HTTP/protobuf OTLP routes
 unless your host explicitly adds the gRPC binding.
 
-## Older `Elsa.OpenTelemetry` extension package
+## `Elsa.OpenTelemetry` middleware
 
-The `elsa-extensions` repository still contains an `Elsa.OpenTelemetry` module
-that adds workflow and activity execution middleware with its own
-`ActivitySource`.
+`Elsa.OpenTelemetry` is the release/3.8.0 extension package that supplies the
+workflow and activity execution middleware. It is not enabled by
+`UseOpenTelemetry()` alone: add `UseWorkflowExecutionTracing()` and
+`UseActivityExecutionTracing()` to the pipelines you want to instrument.
 
-That middleware:
-
-- creates workflow spans named `execute workflow {name}`;
-- creates activity spans named `execute activity {type}`;
-- records incident details and correlation IDs on spans;
-- supports `UseNewRootActivityForRemoteParent` and
-  `UseDummyParentActivityAsRootSpan`.
-
-You will still see it used in the `Elsa.Server.Web` workbench host in
-`elsa-extensions`, but for general `release/3.8.0` guidance the stable
-baseline is still `Elsa.Workflows` instrumentation plus, optionally, the
-diagnostics collector.
-
-Use the extension middleware only when you are intentionally adopting that
-host-specific tracing behavior and understand its trace-root options.
+The [OpenTelemetry workflow and activity tracing guide](../guides/extensibility/opentelemetry-tracing.md)
+covers the emitted span names and tags, error-handler ordering, remote-parent
+options, and the Studio boundary. The package's `ActivitySource` is named
+`Elsa.Workflows`; core instrumentation and the extension therefore share one
+exporter subscription. The extension adds spans and error handling but does not
+replace the core `WorkflowInstrumentation` metrics/API.
 
 ## Recommended deployment patterns
 
@@ -230,7 +191,7 @@ Use one of these patterns:
 
 Use this when operators work primarily in your external observability stack.
 
-- Export `Elsa.Workflows` spans and metrics directly to your OTLP backend.
+- Export `Elsa.Workflows` spans directly to your OTLP backend.
 - Use Elsa incidents and activity records for workflow-local diagnosis.
 - Keep Studio diagnostics focused on structured logs and runtime inspection.
 
@@ -238,7 +199,7 @@ Use this when operators work primarily in your external observability stack.
 
 Use this when Elsa Studio users also need an in-product trace view.
 
-- Export `Elsa.Workflows` telemetry to your OTLP backend.
+- Export `Elsa.Workflows` spans to your OTLP backend.
 - Send OTLP telemetry to Elsa's diagnostics collector as well.
 - Grant operators `read:diagnostics:opentelemetry`.
 - Tune in-memory capacities so Studio diagnostics stay bounded.
@@ -247,17 +208,19 @@ Use this when Elsa Studio users also need an in-product trace view.
 
 If traces do not appear where you expect, check these points in order:
 
-1. Confirm your OpenTelemetry pipeline subscribes to
-   `WorkflowInstrumentation.ActivitySourceName`.
-2. Confirm your metrics pipeline subscribes to
-   `WorkflowInstrumentation.MeterName`.
-3. Verify the OTLP exporter endpoint from the host process, not only from your
+1. Confirm your OpenTelemetry tracer provider subscribes to
+   `.AddSource("Elsa.Workflows")`.
+2. If you expect the additional extension layer, confirm both Elsa tracing
+   middleware components are present in the workflow and activity pipelines.
+3. If you expect core metrics, confirm the meter provider subscribes to
+   `.AddMeter("Elsa.Workflows")` or `WorkflowInstrumentation.MeterName`.
+4. Verify the OTLP exporter endpoint from the host process, not only from your
    workstation.
-4. If Studio diagnostics are empty, verify the collector routes under
+5. If Studio diagnostics are empty, verify the collector routes under
    `/elsa/otlp/v1` and the `x-otlp-api-key` header when enabled.
-5. If SignalR trace streaming fails, verify the user has
+6. If SignalR trace streaming fails, verify the user has
    `read:diagnostics:opentelemetry`.
-6. If you enabled gRPC ingestion, confirm your host actually bound the gRPC
+7. If you enabled gRPC ingestion, confirm your host actually bound the gRPC
    collector service instead of only setting collector metadata.
 
 ## Related guides

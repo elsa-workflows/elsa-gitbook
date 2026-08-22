@@ -4,7 +4,8 @@ Elsa is available as a collection of NuGet packages. Some packages are
 required for executing workflows, while others provide integrations with
 systems like service buses, cloud services, and additional features such as
 [email delivery](../activities/email.md), [CSV processing](../activities/csv.md),
-and [GitHub automation](../activities/github.md).
+[GitHub automation](../activities/github.md), or
+[OpenTelemetry workflow/activity tracing](../guides/extensibility/opentelemetry-tracing.md).
 
 ## **Main Package**
 
