@@ -44,7 +44,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Liquid** (`expressions/liquid.md`)
 - **Python** (`expressions/python.md`)
 
-### EXTENSIBILITY (9 pages)
+### EXTENSIBILITY (10 pages)
 
 - **This topic covers extending Elsa with your own custom activities.** (`extensibility/custom-activities.md`)
 - **Connections for activities** (`guides/extensibility/connections.md`)
@@ -52,6 +52,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Registering Custom Types** (`guides/extensibility/custom-types.md`)
 - **Add custom Polly-based resilience strategies and retry diagnostics to Elsa 3.8.0 workflows.** (`guides/extensibility/custom-resilience-strategies.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
+- **Workflow Context Providers** (`guides/extensibility/workflow-contexts.md`)
 - **OpenTelemetry Workflow and Activity Tracing** (`guides/extensibility/opentelemetry-tracing.md`)
 - **DropIns** (`guides/extensibility/dropins.md`)
 - **>-** (`extensibility/reusable-triggers-3.5-preview.md`)
@@ -83,7 +84,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (33 pages)
+### GUIDES (34 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -92,6 +93,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
 - **Hangfire Integration** (`guides/running-workflows/hangfire-integration.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
+- **Workflow Context Providers** (`guides/extensibility/workflow-contexts.md`)
 - **Connections for activities** (`guides/extensibility/connections.md`)
 - **Standalone and Modular Hosting** (`guides/architecture/standalone-and-modular-hosting.md`)
 - **Workflow Dispatch Outbox** (`guides/architecture/workflow-dispatch-outbox.md`)
@@ -171,6 +173,7 @@ Based on the current structure, the following core concepts are documented:
 ### Workflows
 - ✅ Basic workflow concepts (Concepts section)
 - ✅ Workflow context, state, variables, inputs, outputs, bookmarks, and incidents
+- ✅ Provider-backed workflow context and Studio configuration
 - ✅ Outcomes and correlation IDs
 - ✅ Running workflows (multiple methods)
 - ✅ Loading workflows from JSON
@@ -196,6 +199,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ JavaScript IntelliSense type-definition providers
 - ✅ Custom activity icons through Studio display-settings providers
 - ✅ Studio activity port providers for dynamic outcomes and embedded activities
+- ✅ Optional Workflow Context module with provider selection and activity settings
 - ✅ Weaver AI workspace integration, grounded context, tool governance, and
   current proposal-review boundary
 - ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility
@@ -223,6 +227,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Named connection configuration for activities, runtime injection, API
   descriptors, persistence choices, and tenant/security boundaries
 - ✅ Workflow providers for code-first, external, and file-backed definitions
+- ✅ Workflow Context providers, lifecycle, JavaScript access, and Studio integration
 - ✅ Custom CLR type registration and Studio integration
 - ✅ Activity type providers and descriptor refresh
 - ✅ Server-side DropIns packaging, discovery, lifecycle, and deployment boundaries

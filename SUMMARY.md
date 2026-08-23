@@ -152,6 +152,7 @@
 * [Activity Port Providers](guides/extensibility/activity-port-providers.md)
 * [Registering Custom Types](guides/extensibility/custom-types.md)
 * [Workflow Providers](guides/extensibility/workflow-providers.md)
+* [Workflow Context Providers](guides/extensibility/workflow-contexts.md)
 * [Activity Type Providers](guides/extensibility/activity-type-providers.md)
 * [OpenTelemetry Workflow and Activity Tracing](guides/extensibility/opentelemetry-tracing.md)
 * [Custom Resilience Strategies](guides/extensibility/custom-resilience-strategies.md)
