@@ -239,3 +239,6 @@ Use this rule of thumb:
 - Use **properties** for application-owned workflow metadata.
 - Use **bookmarks** to understand why a workflow is waiting.
 - Use **incidents** and the **journal** to diagnose faults and execution history.
+
+For application-owned data loaded and saved through a provider, see
+[Workflow Context Providers](../../guides/extensibility/workflow-contexts.md).

@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-22)
+## Slice Inventory (2026-08-23)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -91,50 +91,65 @@ acceptance criterion below is already complete.
 - `DOC-076` CSV data activity
 - `DOC-077` GitHub DevOps activities and triggers
 - `DOC-078` OpenTelemetry workflow and activity tracing
+- `DOC-079` Workflow Context providers and Studio configuration
 
 ### Available next slices
 
-- `DOC-079` Workflow Contexts
 - `DOC-080` Slack communication activities
 
 ### Recommended next slice
 
-- `DOC-079` Workflow Contexts
+- `DOC-080` Slack communication activities
 
-### Current run plan (2026-08-22)
+### Current run plan (2026-08-23)
 
-- Select and complete `DOC-078` OpenTelemetry workflow and activity tracing
-  from a fresh `origin/main` worktree.
-- Cover package/setup, pipeline registration, workflow and activity span
-  behavior, remote-parent options, error handlers, Studio boundaries, and
-  exporter/collector boundaries using the exact `release/3.8.0` source.
-- Keep `DOC-079` and `DOC-080` available while checking the release source for
-  newly discovered documentation gaps.
+- Select and complete `DOC-079` Workflow Context providers and Studio context
+  configuration from a fresh `origin/main` worktree.
+- Cover module setup, provider registration, workflow/activity pipeline
+  behavior, context-setting activity usage, JavaScript access, provider
+  descriptor discovery, Studio editing, and the exact 3.8.0 lifecycle caveat.
+- Keep `DOC-080` Slack activities available while checking the release source
+  for newly discovered documentation gaps.
 
-### Current run selection (2026-08-22)
+### Current run selection (2026-08-23)
 
-- The published inventory confirms DOC-001 through DOC-077 are covered or
-  substantially covered. `DOC-078` is selected because the Extensions release
-  ships an opt-in `Elsa.OpenTelemetry` package with workflow/activity pipeline
-  middleware and error-span handler contracts that are not explained by the
-  existing collector/distributed-tracing guide.
-- The guide will use a task-oriented format for technical users and operators:
-  install/register the package, add both pipeline middleware components,
-  subscribe an exporter to the `Elsa.Workflows` source, understand emitted
-  spans and errors, and decide whether a separate Elsa Studio collector is
-  needed.
-- Release review found no additional distinct source-backed topic beyond the
-  available `DOC-079` Workflow Context providers and `DOC-080` Slack
-  activities. Workflow Context provider lifecycle still needs a separate
-  source-alignment pass before selection.
+- The published inventory confirms DOC-001 through DOC-078 are covered or
+  substantially covered. `DOC-079` is selected because Core, Extensions, and
+  Studio each expose a distinct Workflow Context surface that is not explained
+  by the existing conceptual Workflow Context page.
+- The guide will use a task-oriented format for technical users and Studio
+  users: enable the module, register a provider, opt a workflow into a
+  provider, configure per-activity settings, inspect available provider types,
+  and understand transient versus provider-backed values.
+- Exact release review found no additional distinct source-backed topic beyond
+  the available `DOC-080` Slack activities. The 3.8.0 activity middleware uses
+  the `Load` setting when deciding whether to save, so the guide will call this
+  out as release behavior and avoid implying that `Save` independently works.
 
-### Current release validation (2026-08-22)
+### Current release validation (2026-08-23)
 
 - Core `release/3.8.0`: `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`
-- Studio `release/3.8.0`: `935edd5cef34ea189376a72408dfe708f62bbfe5`
+- Studio `release/3.8.0`: `b008a52cc02840928824018056ca8299518f04b9`
 - Extensions `release/3.8.0`: `335a26495318f6ee1528bf2723b7333c753ce9a2`
-- Core and Studio advanced since the previous completed run; Extensions did
-  not change. No new distinct candidate was found during this inventory.
+- Studio advanced from the prior completed run; Core and Extensions did not
+  change. The latest released branch remains `release/3.8.0`.
+
+### Current run completion (2026-08-23)
+
+- Added `guides/extensibility/workflow-contexts.md`, linked it from
+  `SUMMARY.md` and the conceptual Workflow Context page, and updated the
+  coverage metadata.
+- Documented the release-backed `Elsa.WorkflowContexts` provider contract,
+  typed provider implementation, DI registration, workflow opt-in, runtime
+  pipeline middleware, `SetWorkflowContextParameter`, JavaScript access,
+  provider descriptors, optional Studio module, and tenant/security boundaries.
+- Called out two release-specific boundaries: module registration does not
+  itself prove that both execution pipelines contain the middleware, and the
+  activity middleware checks `Load` when deciding whether to save. DOC-080
+  Slack activities is now the recommended next slice.
+- Validated Core `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`, Studio
+  `b008a52cc02840928824018056ca8299518f04b9`, and Extensions
+  `335a26495318f6ee1528bf2723b7333c753ce9a2` on `release/3.8.0`.
 
 ### Current run completion (2026-08-22)
 
