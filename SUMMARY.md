@@ -135,6 +135,7 @@
 * [Email](activities/email.md)
 * [CSV](activities/csv.md)
 * [GitHub](activities/github.md)
+* [Slack](activities/slack.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 
