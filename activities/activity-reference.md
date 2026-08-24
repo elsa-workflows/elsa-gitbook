@@ -77,6 +77,7 @@ after the corresponding module is installed and configured.
 - [Email](email.md) explains SMTP setup, the Send Email activity, attachments, and error handling.
 - [CSV](csv.md) explains the Read CSV File activity, delimiters, headers, typed mapping, and memory behavior.
 - [GitHub](github.md) explains server-side GitHub activities, token handling, GraphQL, and the unimplemented 3.8.0 watcher boundary.
+- [Slack](slack.md) explains server-side Slack actions, token/client behavior, and the unimplemented 3.8.0 event watchers.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 

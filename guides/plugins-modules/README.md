@@ -125,6 +125,10 @@ If the activity list is generated from runtime or external data, use an
 [`IActivityProvider`](../extensibility/activity-type-providers.md) instead of
 scanning a fixed assembly.
 
+For a release-backed integration example where package registration and
+activity scanning are separate concerns, see the [Slack activities
+guide](../../activities/slack.md).
+
 ## Creating a Custom Feature
 
 Let's walk through creating a custom feature step by step.

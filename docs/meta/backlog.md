@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-23)
+## Slice Inventory (2026-08-24)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -92,47 +92,67 @@ acceptance criterion below is already complete.
 - `DOC-077` GitHub DevOps activities and triggers
 - `DOC-078` OpenTelemetry workflow and activity tracing
 - `DOC-079` Workflow Context providers and Studio configuration
+- `DOC-080` Slack communication activities
 
 ### Available next slices
 
-- `DOC-080` Slack communication activities
+- `DOC-081` IO and compression activities
+- `DOC-082` Telnyx voice and webhook activities
+- `DOC-083` Orchard Core content activities
+- `DOC-084` Azure Blob upload activity
 
 ### Recommended next slice
 
-- `DOC-080` Slack communication activities
+- `DOC-081` IO and compression activities
 
-### Current run plan (2026-08-23)
+### Current run plan (2026-08-24)
 
-- Select and complete `DOC-079` Workflow Context providers and Studio context
-  configuration from a fresh `origin/main` worktree.
-- Cover module setup, provider registration, workflow/activity pipeline
-  behavior, context-setting activity usage, JavaScript access, provider
-  descriptor discovery, Studio editing, and the exact 3.8.0 lifecycle caveat.
-- Keep `DOC-080` Slack activities available while checking the release source
+- Select and complete `DOC-080` Slack communication activities from a fresh
+  `origin/main` worktree.
+- Cover module setup, token/client behavior, message/channel/file/reaction/
+  reminder/user/search activities, event-trigger boundaries, Studio behavior,
+  and operational/security guidance.
+- Keep `DOC-081` through `DOC-084` available while checking the release source
   for newly discovered documentation gaps.
 
-### Current run selection (2026-08-23)
+### Current run selection (2026-08-24)
 
-- The published inventory confirms DOC-001 through DOC-078 are covered or
-  substantially covered. `DOC-079` is selected because Core, Extensions, and
-  Studio each expose a distinct Workflow Context surface that is not explained
-  by the existing conceptual Workflow Context page.
-- The guide will use a task-oriented format for technical users and Studio
-  users: enable the module, register a provider, opt a workflow into a
-  provider, configure per-activity settings, inspect available provider types,
-  and understand transient versus provider-backed values.
-- Exact release review found no additional distinct source-backed topic beyond
-  the available `DOC-080` Slack activities. The 3.8.0 activity middleware uses
-  the `Load` setting when deciding whether to save, so the guide will call this
-  out as release behavior and avoid implying that `Save` independently works.
+- The published inventory confirms DOC-001 through DOC-079 are covered or
+  substantially covered. `DOC-080` is selected because the Extensions release
+  provides a distinct Slack module with communication activities and event
+  triggers, while the GitBook has no dedicated Slack guide.
+- The guide will use a task-oriented format for technical users and workflow
+  designers: install and enable the module, provide a token safely, send and
+  manage messages, work with channels/files/users/reactions/reminders, and
+  understand the event-trigger boundary.
+- Exact release review found four additional distinct source-backed gaps:
+  `DOC-081` IO/compression, `DOC-082` Telnyx, `DOC-083` Orchard Core, and
+  `DOC-084` Azure Blob upload. No other bounded topic was added.
 
-### Current release validation (2026-08-23)
+### Current release validation (2026-08-24)
 
 - Core `release/3.8.0`: `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`
 - Studio `release/3.8.0`: `b008a52cc02840928824018056ca8299518f04b9`
-- Extensions `release/3.8.0`: `335a26495318f6ee1528bf2723b7333c753ce9a2`
-- Studio advanced from the prior completed run; Core and Extensions did not
-  change. The latest released branch remains `release/3.8.0`.
+- Extensions `release/3.8.0`: `a44e2b09af1202ff4936f493756e114c357eff81`
+- Extensions advanced from the prior completed run's recorded ref; Core and
+  Studio remain at the refs used by the published DOC-079 slice. The latest
+  released branch remains `release/3.8.0`.
+
+### Current run completion (2026-08-24)
+
+- Added `activities/slack.md`, linked it from `SUMMARY.md`, the activity
+  reference, and the plugins/modules guide, and updated the coverage metadata.
+- Documented the release-backed Slack package, its manual feature/activity
+  registration path, token-keyed client cache, 30 callable operations, six
+  unimplemented event descriptors, Studio boundary, skipped test coverage,
+  and security/operations guidance.
+- Added newly discovered follow-on slices `DOC-081` IO and compression,
+  `DOC-082` Telnyx, `DOC-083` Orchard Core, and `DOC-084` Azure Blob upload.
+- Validated Core `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`, Studio
+  `b008a52cc02840928824018056ca8299518f04b9`, and Extensions
+  `a44e2b09af1202ff4936f493756e114c357eff81` on `release/3.8.0`. Extensions
+  advanced from the ref recorded by the prior run; the requested release
+  branch name did not change.
 
 ### Current run completion (2026-08-23)
 

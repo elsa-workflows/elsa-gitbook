@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (9 pages)
+### ACTIVITIES (10 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -17,6 +17,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **MassTransit** (`activities/masstransit/README.md`)
 - **Tutorial** (`activities/masstransit/tutorial.md`)
 - **Send email from a workflow** (`activities/email.md`)
+- **Slack activities** (`activities/slack.md`)
 - **GitHub activities** (`activities/github.md`)
 
 ### APPLICATION-TYPES (3 pages)
@@ -186,6 +187,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Email activity, SMTP configuration, attachments, and send-failure handling
 - ✅ CSV activity, input representations, delimiter/header handling, typed mapping, and memory behavior
 - ✅ GitHub server-side activities, token handling, GraphQL, and the 3.8.0 watcher boundary
+- ✅ Slack server-side actions, token/client behavior, activity registration, and the 3.8.0 watcher boundary
 - ✅ Diagnostics activities
 
 ### Elsa Studio
