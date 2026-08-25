@@ -18,6 +18,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Tutorial** (`activities/masstransit/tutorial.md`)
 - **Send email from a workflow** (`activities/email.md`)
 - **Slack activities** (`activities/slack.md`)
+- **I/O and compression activities** (`activities/io-compression.md`)
 - **GitHub activities** (`activities/github.md`)
 
 ### APPLICATION-TYPES (3 pages)

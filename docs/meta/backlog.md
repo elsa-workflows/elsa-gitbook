@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-24)
+## Slice Inventory (2026-08-25)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -93,41 +93,65 @@ acceptance criterion below is already complete.
 - `DOC-078` OpenTelemetry workflow and activity tracing
 - `DOC-079` Workflow Context providers and Studio configuration
 - `DOC-080` Slack communication activities
+- `DOC-081` I/O and compression activities
 
 ### Available next slices
 
-- `DOC-081` IO and compression activities
+- `DOC-082` Telnyx voice and webhook activities
 - `DOC-082` Telnyx voice and webhook activities
 - `DOC-083` Orchard Core content activities
 - `DOC-084` Azure Blob upload activity
 
 ### Recommended next slice
 
-- `DOC-081` IO and compression activities
+- `DOC-082` Telnyx voice and webhook activities
 
-### Current run plan (2026-08-24)
+### Current run plan (2026-08-25)
 
-- Select and complete `DOC-080` Slack communication activities from a fresh
+- Select and complete `DOC-081` I/O and compression activities from a fresh
   `origin/main` worktree.
-- Cover module setup, token/client behavior, message/channel/file/reaction/
-  reminder/user/search activities, event-trigger boundaries, Studio behavior,
-  and operational/security guidance.
-- Keep `DOC-081` through `DOC-084` available while checking the release source
+- Cover the supporting content-resolution module, ZIP archive inputs and
+  outputs, package registration, Studio/server boundaries, and
+  filesystem/memory/security guidance.
+- Keep `DOC-082` through `DOC-084` available while checking the release source
   for newly discovered documentation gaps.
 
-### Current run selection (2026-08-24)
+### Current run selection (2026-08-25)
 
-- The published inventory confirms DOC-001 through DOC-079 are covered or
-  substantially covered. `DOC-080` is selected because the Extensions release
-  provides a distinct Slack module with communication activities and event
-  triggers, while the GitBook has no dedicated Slack guide.
+- The published inventory confirms DOC-001 through DOC-080 are covered or
+  substantially covered. `DOC-081` is selected because the Extensions release
+  provides a distinct I/O content-resolution module and the `CreateZipArchive`
+  activity, while the GitBook has no dedicated guide for their input forms,
+  registration, or operational boundaries.
 - The guide will use a task-oriented format for technical users and workflow
-  designers: install and enable the module, provide a token safely, send and
-  manage messages, work with channels/files/users/reactions/reminders, and
-  understand the event-trigger boundary.
-- Exact release review found four additional distinct source-backed gaps:
-  `DOC-081` IO/compression, `DOC-082` Telnyx, `DOC-083` Orchard Core, and
-  `DOC-084` Azure Blob upload. No other bounded topic was added.
+  designers: install and enable I/O/compression, choose supported content
+  representations, create an archive, pass the result onward, and account for
+  server filesystem access, memory use, and untrusted inputs.
+- Exact release review found no additional distinct source-backed topic beyond
+  the already queued `DOC-082` Telnyx, `DOC-083` Orchard Core, and `DOC-084`
+  Azure Blob upload slices.
+
+### Current release validation (2026-08-25)
+
+- Core `release/3.8.0`: `f6c35cf1eb5558348a61352fc4eba5925731118d`
+- Studio `release/3.8.0`: `b008a52cc02840928824018056ca8299518f04b9`
+- Extensions `release/3.8.0`: `a44e2b09af1202ff4936f493756e114c357eff81`
+- The requested released branch remains `release/3.8.0`; Extensions advanced
+  from the ref recorded by the previous run, while Core and Studio match the
+  most recently recorded release refs.
+
+### Current run completion (2026-08-25)
+
+- Added `activities/io-compression.md`, linked it from `SUMMARY.md`, the
+  activity reference, and the plugins/modules guide, and updated current
+  coverage.
+- Documented `Elsa.IO` content resolution, `Elsa.IO.Compression` registration,
+  `CreateZipArchive` inputs and output, `ZipEntry` naming, partial-entry
+  failure behavior, in-memory resource usage, optional `Elsa.IO.Http` URL
+  support, Studio/server boundaries, and filesystem/SSRF safeguards.
+- No additional distinct source-backed topic was discovered. `DOC-082`
+  Telnyx, `DOC-083` Orchard Core, and `DOC-084` Azure Blob upload remain the
+  available follow-on slices, with DOC-082 recommended next.
 
 ### Current release validation (2026-08-24)
 
