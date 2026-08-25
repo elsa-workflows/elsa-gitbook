@@ -127,7 +127,9 @@ scanning a fixed assembly.
 
 For a release-backed integration example where package registration and
 activity scanning are separate concerns, see the [Slack activities
-guide](../../activities/slack.md).
+guide](../../activities/slack.md). For the release-backed I/O and compression
+modules, see the [I/O and compression activities
+guide](../../activities/io-compression.md).
 
 ## Creating a Custom Feature
 
