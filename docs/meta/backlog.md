@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-25)
+## Slice Inventory (2026-08-26)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -98,7 +98,6 @@ acceptance criterion below is already complete.
 ### Available next slices
 
 - `DOC-082` Telnyx voice and webhook activities
-- `DOC-082` Telnyx voice and webhook activities
 - `DOC-083` Orchard Core content activities
 - `DOC-084` Azure Blob upload activity
 
@@ -106,39 +105,52 @@ acceptance criterion below is already complete.
 
 - `DOC-082` Telnyx voice and webhook activities
 
-### Current run plan (2026-08-25)
+### Current run plan (2026-08-26)
 
-- Select and complete `DOC-081` I/O and compression activities from a fresh
-  `origin/main` worktree.
-- Cover the supporting content-resolution module, ZIP archive inputs and
-  outputs, package registration, Studio/server boundaries, and
-  filesystem/memory/security guidance.
-- Keep `DOC-082` through `DOC-084` available while checking the release source
-  for newly discovered documentation gaps.
+- Select and complete `DOC-082` Telnyx voice and webhook activities from a
+  fresh `origin/main` worktree.
+- Cover server-side package registration, implemented voice operations,
+  webhook handling, workflow-designer usage, Studio boundaries, and release
+  limitations.
+- Keep `DOC-083` and `DOC-084` available while checking the release source for
+  newly discovered documentation gaps.
 
-### Current run selection (2026-08-25)
+### Current run selection (2026-08-26)
 
-- The published inventory confirms DOC-001 through DOC-080 are covered or
-  substantially covered. `DOC-081` is selected because the Extensions release
-  provides a distinct I/O content-resolution module and the `CreateZipArchive`
-  activity, while the GitBook has no dedicated guide for their input forms,
-  registration, or operational boundaries.
+- The published inventory confirms DOC-001 through DOC-081 are covered or
+  substantially covered. `DOC-082` is selected because the Extensions release
+  provides a distinct Telnyx module with implemented voice activities and a
+  separate webhook activity, while the GitBook has no dedicated guide for
+  their credentials, inputs, registration, or operational boundaries.
 - The guide will use a task-oriented format for technical users and workflow
-  designers: install and enable I/O/compression, choose supported content
-  representations, create an archive, pass the result onward, and account for
-  server filesystem access, memory use, and untrusted inputs.
-- Exact release review found no additional distinct source-backed topic beyond
-  the already queued `DOC-082` Telnyx, `DOC-083` Orchard Core, and `DOC-084`
-  Azure Blob upload slices.
+  designers: configure the server, choose a voice operation, handle webhook
+  payloads, understand Studio visibility, and account for credentials,
+  retries, and the release's unimplemented event triggers.
+- Exact release review will check the already queued `DOC-083` Orchard Core
+  and `DOC-084` Azure Blob upload topics for additional distinct gaps.
 
-### Current release validation (2026-08-25)
+### Current release validation (2026-08-26)
 
-- Core `release/3.8.0`: `f6c35cf1eb5558348a61352fc4eba5925731118d`
+- Core `release/3.8.0`: `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`
 - Studio `release/3.8.0`: `b008a52cc02840928824018056ca8299518f04b9`
 - Extensions `release/3.8.0`: `a44e2b09af1202ff4936f493756e114c357eff81`
-- The requested released branch remains `release/3.8.0`; Extensions advanced
-  from the ref recorded by the previous run, while Core and Studio match the
-  most recently recorded release refs.
+- The requested released branch remains `release/3.8.0`; these refs match the
+  latest local release worktrees used for this slice.
+
+### Current run completion (2026-08-26)
+
+- Added `activities/telnyx.md`, linked it from `SUMMARY.md`, the activity
+  reference, the packages guide, and the plugins/modules guide, and updated
+  current coverage.
+- Documented server registration and options, call-control and flowchart
+  activities, typed webhook triggers, client-state correlation, Studio/server
+  boundaries, endpoint security, persistence, retries, and troubleshooting.
+- Release-source assertions, repository link checks, fenced-code checks,
+  `git diff --check`, and cited-source HTTP checks passed. No Telnyx-specific
+  consumer was found in the Core or Studio `src` trees.
+- DOC-083 Orchard Core content activities and DOC-084 Azure Blob upload remain
+  the available follow-on slices; DOC-083 is recommended next after checking
+  the release source for any newly discovered topic.
 
 ### Current run completion (2026-08-25)
 

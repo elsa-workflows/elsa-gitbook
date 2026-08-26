@@ -5,7 +5,8 @@ required for executing workflows, while others provide integrations with
 systems like service buses, cloud services, and additional features such as
 [email delivery](../activities/email.md), [CSV processing](../activities/csv.md),
 [GitHub automation](../activities/github.md), or
-[OpenTelemetry workflow/activity tracing](../guides/extensibility/opentelemetry-tracing.md).
+[OpenTelemetry workflow/activity tracing](../guides/extensibility/opentelemetry-tracing.md),
+or [Telnyx voice and webhook automation](../activities/telnyx.md).
 
 ## **Main Package**
 

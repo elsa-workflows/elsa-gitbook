@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (10 pages)
+### ACTIVITIES (12 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -20,6 +20,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Slack activities** (`activities/slack.md`)
 - **I/O and compression activities** (`activities/io-compression.md`)
 - **GitHub activities** (`activities/github.md`)
+- **Telnyx voice and webhook activities** (`activities/telnyx.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
