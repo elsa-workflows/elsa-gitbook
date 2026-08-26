@@ -125,11 +125,11 @@ If the activity list is generated from runtime or external data, use an
 [`IActivityProvider`](../extensibility/activity-type-providers.md) instead of
 scanning a fixed assembly.
 
-For a release-backed integration example where package registration and
-activity scanning are separate concerns, see the [Slack activities
-guide](../../activities/slack.md). For the release-backed I/O and compression
-modules, see the [I/O and compression activities
-guide](../../activities/io-compression.md).
+For release-backed integration examples where package registration and
+activity discovery matter, see the [Slack activities
+guide](../../activities/slack.md), the [I/O and compression activities
+guide](../../activities/io-compression.md), or the [Telnyx voice and webhook
+guide](../../activities/telnyx.md).
 
 ## Creating a Custom Feature
 

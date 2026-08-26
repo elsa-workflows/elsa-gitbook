@@ -137,6 +137,7 @@
 * [GitHub](activities/github.md)
 * [Slack](activities/slack.md)
 * [I/O and Compression](activities/io-compression.md)
+* [Telnyx Voice and Webhooks](activities/telnyx.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 
