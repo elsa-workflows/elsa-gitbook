@@ -138,6 +138,7 @@
 * [Slack](activities/slack.md)
 * [I/O and Compression](activities/io-compression.md)
 * [Telnyx Voice and Webhooks](activities/telnyx.md)
+* [Orchard Core Content](activities/orchard-core.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 

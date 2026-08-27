@@ -130,6 +130,8 @@ activity discovery matter, see the [Slack activities
 guide](../../activities/slack.md), the [I/O and compression activities
 guide](../../activities/io-compression.md), or the [Telnyx voice and webhook
 guide](../../activities/telnyx.md).
+For CMS integrations, see the [Orchard Core content activities
+guide](../../activities/orchard-core.md).
 
 ## Creating a Custom Feature
 

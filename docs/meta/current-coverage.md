@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (12 pages)
+### ACTIVITIES (13 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -21,6 +21,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **I/O and compression activities** (`activities/io-compression.md`)
 - **GitHub activities** (`activities/github.md`)
 - **Telnyx voice and webhook activities** (`activities/telnyx.md`)
+- **Orchard Core content activities** (`activities/orchard-core.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -190,6 +191,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ CSV activity, input representations, delimiter/header handling, typed mapping, and memory behavior
 - ✅ GitHub server-side activities, token handling, GraphQL, and the 3.8.0 watcher boundary
 - ✅ Slack server-side actions, token/client behavior, activity registration, and the 3.8.0 watcher boundary
+- ✅ Orchard Core content operations, authenticated REST/GraphQL clients, media uploads, and dynamic content-item event triggers
 - ✅ Diagnostics activities
 
 ### Elsa Studio
