@@ -80,6 +80,7 @@ after the corresponding module is installed and configured.
 - [Slack](slack.md) explains server-side Slack actions, token/client behavior, and the unimplemented 3.8.0 event watchers.
 - [I/O and Compression](io-compression.md) explains content resolution, ZIP archive inputs and outputs, URL support, and server-side resource boundaries.
 - [Telnyx Voice and Webhooks](telnyx.md) explains server-side call control, inbound call triggers, typed webhook events, and webhook security boundaries.
+- [Orchard Core Content](orchard-core.md) explains content mutations, media and GraphQL operations, dynamic content-item event triggers, and the server-side authentication boundary.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 
