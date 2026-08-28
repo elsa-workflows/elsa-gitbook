@@ -132,6 +132,8 @@ guide](../../activities/io-compression.md), or the [Telnyx voice and webhook
 guide](../../activities/telnyx.md).
 For CMS integrations, see the [Orchard Core content activities
 guide](../../activities/orchard-core.md).
+For Azure object storage, see the [Azure Blob upload activity
+guide](../../activities/azure-blob.md).
 
 ## Creating a Custom Feature
 

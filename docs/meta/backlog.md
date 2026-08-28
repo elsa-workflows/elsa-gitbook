@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-27)
+## Slice Inventory (2026-08-28)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -95,40 +95,42 @@ acceptance criterion below is already complete.
 - `DOC-080` Slack communication activities
 - `DOC-081` I/O and compression activities
 - `DOC-082` Telnyx voice and webhook activities
+- `DOC-083` Orchard Core content activities
 
 ### Available next slices
 
-- `DOC-083` Orchard Core content activities
 - `DOC-084` Azure Blob upload activity
+- `DOC-085` File storage activities
 
 ### Recommended next slice
 
-- `DOC-083` Orchard Core content activities
+- `DOC-084` Azure Blob upload activity
 
-### Current run plan (2026-08-27)
+### Current run plan (2026-08-28)
 
-- Select and complete `DOC-083` Orchard Core content activities from a
-  fresh `origin/main` worktree.
-- Cover server-side package registration, Orchard REST/GraphQL operations,
-  content-item event triggers, workflow-designer usage, Studio boundaries, and
+- Select and complete `DOC-084` Azure Blob upload activity from a fresh
+  `origin/main` worktree.
+- Cover server-side package registration, Azure Blob client configuration,
+  upload inputs and outputs, workflow-designer usage, Studio boundaries, and
   release limitations.
-- Keep `DOC-084` available while checking the release source for newly
-  discovered documentation gaps.
+- Check the release source for newly discovered documentation gaps and add
+  them to the follow-on inventory if they are distinct and source-backed.
 
-### Current run selection (2026-08-27)
+### Current run selection (2026-08-28)
 
-- The published inventory confirms DOC-001 through DOC-082 are covered or
-  substantially covered. `DOC-083` is selected because the Extensions release
-  provides a distinct Orchard Core module with content-management activities,
-  GraphQL access, and dynamically generated content-item event triggers, while
-  the GitBook has no dedicated guide for its credentials, inputs, registration,
-  or operational boundaries.
+- The published inventory confirms DOC-001 through DOC-083 are covered or
+  substantially covered. `DOC-084` is selected because the Extensions release
+  provides a distinct Azure Blob upload activity while the GitBook has no
+  dedicated guide for its package registration, connection configuration,
+  inputs, outputs, or operational boundaries.
 - The guide will use a task-oriented format for technical users and workflow
-  designers: configure the server, choose a content operation, handle
-  content-item events, understand Studio visibility, and account for
-  authentication, persistence, and release boundaries.
-- Exact release review found no additional distinct source-backed topic beyond
-  the queued `DOC-084` Azure Blob upload activity.
+  designers: configure the server, prepare blob content, upload it from a
+  workflow, understand Studio visibility, and account for credentials,
+  persistence, and release boundaries.
+- Exact release review found `DOC-085` File storage activities as a distinct
+  follow-on topic: the release also ships `Elsa.Storage.Files` with `Open file`
+  and `Save file` activities, but the GitBook has no focused guide for its
+  provider registration and server-side file behavior.
 
 ### Current release validation (2026-08-27)
 
@@ -137,6 +139,29 @@ acceptance criterion below is already complete.
 - Extensions `release/3.8.0`: `a44e2b09af1202ff4936f493756e114c357eff81`
 - The requested released branch remains `release/3.8.0`; these refs match the
   latest release worktrees used for this slice.
+
+### Current release validation (2026-08-28)
+
+- Core `release/3.8.0`: `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`
+- Studio `release/3.8.0`: `b008a52cc02840928824018056ca8299518f04b9`
+- Extensions `release/3.8.0`: `a44e2b09af1202ff4936f493756e114c357eff81`
+- The requested released branch remains `release/3.8.0`; the exact refs were
+  fetched and used for this slice. The source branch name did not change.
+
+### Current run completion (2026-08-28)
+
+- Added `activities/azure-blob.md`, linked it from `SUMMARY.md` and the
+  plugins/modules guide, updated current coverage, and completed DOC-084.
+- Documented the missing `UseAzureStorage` helper, explicit feature/activity
+  registration, container-URI credential behavior, unconditional `.json`
+  naming, JSON-only block uploads, Studio/server boundaries, and operational
+  safeguards.
+- Release-source assertions, repository local-link and `SUMMARY.md` checks,
+  fenced-code checks, staged `git diff --check`, and cited-source HTTP checks
+  passed. No local Markdownlint, Vale, Lychee, or GitBook command is available.
+- Recorded DOC-085 File storage activities as the next recommended slice after
+  finding the separate `Elsa.Storage.Files` `Open file` and `Save file`
+  activities during release inventory.
 
 ### Current run completion (2026-08-27)
 
