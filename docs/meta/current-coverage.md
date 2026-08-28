@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (13 pages)
+### ACTIVITIES (14 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -22,6 +22,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **GitHub activities** (`activities/github.md`)
 - **Telnyx voice and webhook activities** (`activities/telnyx.md`)
 - **Orchard Core content activities** (`activities/orchard-core.md`)
+- **Azure Blob upload activity** (`activities/azure-blob.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -192,6 +193,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ GitHub server-side activities, token handling, GraphQL, and the 3.8.0 watcher boundary
 - ✅ Slack server-side actions, token/client behavior, activity registration, and the 3.8.0 watcher boundary
 - ✅ Orchard Core content operations, authenticated REST/GraphQL clients, media uploads, and dynamic content-item event triggers
+- ✅ Azure Blob JSON upload activity, explicit 3.8.0 registration, container-URI behavior, block upload semantics, and Studio/server boundaries
 - ✅ Diagnostics activities
 
 ### Elsa Studio
