@@ -194,6 +194,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Slack server-side actions, token/client behavior, activity registration, and the 3.8.0 watcher boundary
 - ✅ Orchard Core content operations, authenticated REST/GraphQL clients, media uploads, and dynamic content-item event triggers
 - ✅ Azure Blob JSON upload activity, explicit 3.8.0 registration, container-URI behavior, block upload semantics, and Studio/server boundaries
+- ✅ File storage activities, configurable blob-provider registration, input
+  conversion, collection-to-ZIP behavior, and Studio/server boundaries
 - ✅ Diagnostics activities
 
 ### Elsa Studio

@@ -134,6 +134,8 @@ For CMS integrations, see the [Orchard Core content activities
 guide](../../activities/orchard-core.md).
 For Azure object storage, see the [Azure Blob upload activity
 guide](../../activities/azure-blob.md).
+For provider-backed file reads and writes, see the [File Storage activities
+guide](../../activities/file-storage.md).
 
 ## Creating a Custom Feature
 
