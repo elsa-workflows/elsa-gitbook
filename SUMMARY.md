@@ -140,6 +140,7 @@
 * [Telnyx Voice and Webhooks](activities/telnyx.md)
 * [Orchard Core Content](activities/orchard-core.md)
 * [Azure Blob Upload](activities/azure-blob.md)
+* [File Storage](activities/file-storage.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 
