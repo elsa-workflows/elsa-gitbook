@@ -150,7 +150,7 @@ The documentation currently contains a broad set of markdown pages organized int
 ### OPTIMIZE (3 pages)
 
 - **Log Persistence** (`optimize/log-persistence.md`)
-- **>-** (`optimize/retention.md`)
+- **Retention policies and cleanup** (`optimize/retention.md`)
 - **>-** (`optimize/workers.md`)
 
 ### ROOT (2 pages)
@@ -264,7 +264,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Alterations and alteration plans
 - ✅ Release-backed operational guide for immediate alterations, filtered
   plans, Studio staging, retry behavior, and durability
-- ✅ Log persistence and retention
+- ✅ Log persistence and release-backed retention policies, cleanup batches,
+  related-record deletion, and clustered-host safeguards
 - ✅ Logging framework
 - ✅ Weaver AI Host and Studio workflow assistance guide, including provider,
   persistence, permissions, and audit boundaries

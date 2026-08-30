@@ -963,32 +963,39 @@ kubectl exec -it rabbitmq-pod -- rabbitmqctl list_queues
 Old completed or faulted workflow instances should be cleaned up periodically:
 
 ```csharp
-// Configure retention policy in Elsa
+// Configure retention policy in Elsa. See the retention guide for the
+// package reference, filter choices, and deletion safeguards.
 builder.Services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement(management =>
+    elsa.UseRetention(retention =>
     {
-        management.UseWorkflowInstanceRetention(retention =>
+        retention.SweepInterval = TimeSpan.FromHours(1);
+        retention.AddDeletePolicy("Finished workflows after 30 days", sp =>
         {
-            retention.RetentionPeriod = TimeSpan.FromDays(30);
-            retention.SweepInterval = TimeSpan.FromHours(1);
+            var clock = sp.GetRequiredService<ISystemClock>();
+            return new RetentionWorkflowInstanceFilter
+            {
+                WorkflowStatus = WorkflowStatus.Finished,
+                TimestampFilters = new[]
+                {
+                    new TimestampFilter
+                    {
+                        Column = nameof(WorkflowInstance.FinishedAt),
+                        Operator = TimestampFilterOperator.LessThanOrEqual,
+                        Timestamp = clock.UtcNow.AddDays(-30)
+                    }
+                }
+            };
         });
     });
 });
 ```
 
-**Manual Cleanup (SQL):**
-```sql
--- Delete completed workflows older than 30 days
-DELETE FROM elsa.workflow_instances
-WHERE status = 'Completed'
-  AND finished_at < NOW() - INTERVAL '30 days';
-
--- Delete faulted workflows older than 90 days
-DELETE FROM elsa.workflow_instances
-WHERE status = 'Faulted'
-  AND finished_at < NOW() - INTERVAL '90 days';
-```
+**Manual cleanup:** Avoid deleting workflow rows directly with SQL. Elsa's
+retention job also cleans related bookmarks and runtime records, while table
+names and transaction behavior vary by persistence provider. Use a narrow
+retention policy or the provider's documented maintenance procedure instead;
+see [Retention](../../optimize/retention.md).
 
 **Quartz Cleanup:**
 

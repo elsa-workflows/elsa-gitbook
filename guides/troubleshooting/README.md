@@ -484,37 +484,44 @@ For the complete release-backed setup and error-handler behavior, see
 
 ### Workflow Instance Retention
 
-Old workflow instances consume database space and slow queries. Configure automatic cleanup:
+Old workflow instances consume database space and slow queries. Configure the
+separate retention extension for automatic cleanup:
 
 ```csharp
-elsa.UseWorkflowManagement(management =>
+elsa.UseRetention(retention =>
 {
-    management.UseWorkflowInstanceRetention(retention =>
+    retention.SweepInterval = TimeSpan.FromHours(1);
+    retention.AddDeletePolicy("Finished workflows after 30 days", sp =>
     {
-        retention.RetentionPeriod = TimeSpan.FromDays(30);
-        retention.SweepInterval = TimeSpan.FromHours(1);
+        var clock = sp.GetRequiredService<ISystemClock>();
+        return new RetentionWorkflowInstanceFilter
+        {
+            WorkflowStatus = WorkflowStatus.Finished,
+            TimestampFilters = new[]
+            {
+                new TimestampFilter
+                {
+                    Column = nameof(WorkflowInstance.FinishedAt),
+                    Operator = TimestampFilterOperator.LessThanOrEqual,
+                    Timestamp = clock.UtcNow.AddDays(-30)
+                }
+            }
+        };
     });
 });
 ```
 
-### Manual Cleanup Queries
+See [Retention](../../optimize/retention.md) before enabling deletion in a
+production environment.
 
-```sql
--- Delete completed workflows older than 30 days
-DELETE FROM elsa.workflow_instances
-WHERE status = 'Completed'
-  AND finished_at < NOW() - INTERVAL '30 days';
+### Manual cleanup
 
--- Delete orphaned bookmarks
-DELETE FROM elsa.bookmarks
-WHERE workflow_instance_id NOT IN (
-    SELECT id FROM elsa.workflow_instances
-);
-
--- Clean execution logs (if using execution logging)
-DELETE FROM elsa.workflow_execution_log
-WHERE timestamp < NOW() - INTERVAL '7 days';
-```
+Avoid deleting workflow rows directly with SQL. Elsa's retention job also
+cleans related bookmarks and runtime records, while table names, status
+storage, and transaction behavior vary by persistence provider. Use a narrow
+retention policy or the provider's documented maintenance procedure instead.
+See [Retention](../../optimize/retention.md) for the supported filter and
+cleanup behavior.
 
 ### Quartz Cleanup
 
