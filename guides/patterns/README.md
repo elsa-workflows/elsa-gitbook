@@ -611,12 +611,25 @@ Configure cleanup for completed workflows:
 ```csharp
 builder.Services.AddElsa(elsa =>
 {
-    elsa.UseWorkflowManagement(management =>
+    elsa.UseRetention(retention =>
     {
-        management.UseWorkflowInstanceRetention(retention =>
+        retention.SweepInterval = TimeSpan.FromHours(1);
+        retention.AddDeletePolicy("Finished workflows after 30 days", sp =>
         {
-            retention.RetentionPeriod = TimeSpan.FromDays(30);
-            retention.SweepInterval = TimeSpan.FromHours(1);
+            var clock = sp.GetRequiredService<ISystemClock>();
+            return new RetentionWorkflowInstanceFilter
+            {
+                WorkflowStatus = WorkflowStatus.Finished,
+                TimestampFilters = new[]
+                {
+                    new TimestampFilter
+                    {
+                        Column = nameof(WorkflowInstance.FinishedAt),
+                        Operator = TimestampFilterOperator.LessThanOrEqual,
+                        Timestamp = clock.UtcNow.AddDays(-30)
+                    }
+                }
+            };
         });
     });
 });

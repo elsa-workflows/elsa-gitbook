@@ -93,18 +93,18 @@ This document provides exact source file references in the elsa-core and elsa-ex
 - Understanding bookmark storage patterns
 - Resume behavior documentation
 
-## Workflow Options and Retention
+## Workflow Options
 
 ### WorkflowOptions
 
 **Path:** `src/modules/Elsa.Workflows.Core/Models/WorkflowOptions.cs`
 
-**Purpose:** Contains workflow-level options including commit strategy selection and retention-related settings.
+**Purpose:** Contains workflow-level options including commit strategy selection.
 
 **Key Elements:**
 - `CommitStrategyName` property
 - Workflow-level configuration options
-- Persistence behavior hints
+- Workflow-level execution configuration
 
 **Usage in Guide:**
 - Commit strategy selection
@@ -202,8 +202,9 @@ This document provides exact source file references in the elsa-core and elsa-ex
 
 **Key Files:**
 - `RetentionFeature.cs` — Feature registration
-- `RetentionService.cs` — Background cleanup service
-- `Filters/` — Retention filter implementations
+- `Jobs/CleanupJob.cs` — Batched policy execution and cleanup
+- `Models/RetentionWorkflowInstanceFilter.cs` — Supported retention filters
+- `Contracts/` — Policy, collector, and cleanup strategy contracts
 
 **Purpose:** Automatic cleanup of old workflow instances and related data.
 

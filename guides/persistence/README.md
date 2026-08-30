@@ -362,62 +362,17 @@ See [Indexing Notes](examples/indexing-notes.md) for provider-specific guidance.
 
 ## Retention & Cleanup
 
-Over time, completed workflow instances and bookmarks accumulate. Configure retention policies to manage storage:
+Over time, completed workflow instances and their runtime records accumulate.
+Elsa 3.8.0 provides retention through the separate `Elsa.Retention` extension.
+It selects instances with `RetentionWorkflowInstanceFilter` and, for the
+built-in deletion policy, removes the related bookmarks, activity execution
+records, workflow execution logs, and workflow instances.
 
-### Workflow Instance Retention
-
-Use the built-in retention feature to automatically clean up old workflow instances:
-
-```csharp
-elsa.UseRetention(retention =>
-{
-    retention.SweepInterval = TimeSpan.FromHours(1);  // Check every hour
-    
-    // Delete completed workflows older than 30 days
-    retention.AddDeletePolicy("Delete old completed workflows", sp =>
-    {
-        var clock = sp.GetRequiredService<ISystemClock>();
-        var threshold = clock.UtcNow.AddDays(-30);
-        
-        return new RetentionWorkflowInstanceFilter
-        {
-            WorkflowStatus = WorkflowStatus.Finished,
-            TimestampFilters = new[]
-            {
-                new TimestampFilter
-                {
-                    Column = nameof(WorkflowInstance.FinishedAt),
-                    Operator = TimestampFilterOperator.LessThanOrEqual,
-                    Timestamp = threshold
-                }
-            }
-        };
-    });
-    
-    // Delete faulted workflows older than 90 days
-    retention.AddDeletePolicy("Delete old faulted workflows", sp =>
-    {
-        var clock = sp.GetRequiredService<ISystemClock>();
-        var threshold = clock.UtcNow.AddDays(-90);
-        
-        return new RetentionWorkflowInstanceFilter
-        {
-            WorkflowStatus = WorkflowStatus.Faulted,
-            TimestampFilters = new[]
-            {
-                new TimestampFilter
-                {
-                    Column = nameof(WorkflowInstance.FinishedAt),
-                    Operator = TimestampFilterOperator.LessThanOrEqual,
-                    Timestamp = threshold
-                }
-            }
-        };
-    });
-});
-```
-
-**Code Reference:** `src/modules/Elsa.Workflows.Core/Models/WorkflowOptions.cs` — Retention context and options.
+See [Retention](../../optimize/retention.md) for the package registration,
+age-filter example, page-size and sweep settings, clustered-host locking,
+custom cleanup strategies, and the destructive-operation checklist. Configure
+retention alongside the management and runtime persistence stores it will
+clean; it does not replace backups or archive data.
 
 ### Bookmark Cleanup
 

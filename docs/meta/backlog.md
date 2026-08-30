@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-29)
+## Slice Inventory (2026-08-30)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -98,42 +98,67 @@ acceptance criterion below is already complete.
 - `DOC-083` Orchard Core content activities
 - `DOC-084` Azure Blob upload activity
 - `DOC-085` File storage activities
+- `DOC-086` Retention policies and cleanup
 
 ### Available next slices
 
-- No additional distinct source-backed slice identified in this run.
+- `DOC-087` SQL database activities
 
 ### Recommended next slice
 
-- Run a fresh release inventory before selecting the next slice.
+- `DOC-087` SQL database activities: document the server-side SQL extension,
+  provider/client registration, query/command activity contracts, parameter
+  handling, result limitations, and database security boundary.
 
-### Current run plan (2026-08-29)
+### Current run plan (2026-08-30)
 
-- Completed `DOC-085` File storage activities from a fresh `origin/main`
-  worktree.
-- Covered server-side provider registration, the `Open file` and `Save file`
-  contracts, supported input shapes, default directory behavior, custom
-  storage configuration, workflow-designer usage, Studio boundaries, and
-  release limitations.
-- Checked the release source for newly discovered documentation gaps; no
-  additional distinct source-backed topic was identified.
+- Completed `DOC-086` Retention policies and cleanup from a fresh
+  `origin/main` worktree.
+- Refreshed the existing `optimize/retention.md` instead of adding a duplicate
+  page. Covered server registration, default and custom deletion policies,
+  supported filters, sweep and page-size options, the single-node execution
+  boundary, related-entity cleanup, and operational safeguards.
+- Re-inventory the 3.8.0 extension modules after this slice for any new
+  source-backed gap.
 
-### Current run selection (2026-08-29)
+### Current run selection (2026-08-30)
 
-- The published inventory confirms DOC-001 through DOC-084 are covered or
-  substantially covered. `DOC-085` is selected because the Extensions release
-  provides a distinct `Elsa.Storage.Files` module with `Open file` and `Save
-  file` activities while the GitBook has no focused guide for provider
-  registration, input conversion, default storage, or operational boundaries.
-- The guide will use a task-oriented format for technical users and workflow
-  designers: configure the server, choose a storage backend, read or write a
-  file from a workflow, understand Studio visibility, and account for
-  path-safety, persistence, and release boundaries.
-- Exact release review found no additional distinct source-backed topic beyond
-  `DOC-085`; future inventory runs should reassess the remaining extension
-  modules after this slice.
+- The published inventory confirms DOC-001 through DOC-085 are covered or
+  substantially covered. `DOC-086` is selected because the existing Retention
+  page does not match the 3.8.0 implementation: it omits the package and
+  default interval, uses no page-size or single-node guidance, and presents
+  extension examples without explaining the policy strategy boundary.
+- The page uses a task-oriented format for technical users and operators:
+  install and enable the module, define a bounded deletion policy, understand
+  what related records are removed, extend cleanup safely, and verify the
+  operational boundary before enabling destructive automation.
+- Exact release review also found `DOC-087` SQL database activities as a
+  distinct uncovered source-backed topic; it is the recommended next slice.
 
-### Current release validation (2026-08-29)
+### Current run completion (2026-08-30)
+
+- Refreshed `optimize/retention.md` with the 3.8.0 `Elsa.Retention` package
+  and `UseRetention` registration, the default four-hour sweep and page-size
+  options, bounded status/age filters, default related-record cleanup,
+  distributed locking for the `[SingleNodeTask]` recurring task, custom
+  collector/strategy contracts, and a destructive-operation checklist.
+- Corrected stale retention examples in the persistence, clustering,
+  troubleshooting, and workflow-pattern guides that referenced the removed
+  `UseWorkflowInstanceRetention`/`RetentionPeriod` API.
+- Release source review found `DOC-087` SQL database activities after
+  inspecting adjacent extension modules. The next run should re-inventory the
+  release source and may select that topic.
+
+### Newly discovered follow-on topics (2026-08-30)
+
+- `DOC-087` SQL database activities: the 3.8.0 Extensions release exposes
+  `UseSql`, named client registration, `SqlQuery`, `SqlCommand`, and
+  `SqlSingleValue` across MySQL, PostgreSQL, SQLite, and SQL Server. A future
+  guide must explain that only recognized `{{...}}` values are parameterized,
+  raw SQL and identifiers remain caller-controlled, `SqlQuery.Results` is a
+  non-serializable `DataSet`, and the base client loads one result set.
+
+### Current release validation (2026-08-30)
 
 - Core `release/3.8.0`: `dff7d9f987394c3c2ba8003e6f9c803e97194fbc`
 - Studio `release/3.8.0`: `b008a52cc02840928824018056ca8299518f04b9`
