@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-30)
+## Slice Inventory (2026-08-31)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -102,13 +102,56 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-087` SQL database activities
+_No additional slice has been confirmed yet; re-inventory the release modules
+before selecting the next run._
 
 ### Recommended next slice
 
-- `DOC-087` SQL database activities: document the server-side SQL extension,
-  provider/client registration, query/command activity contracts, parameter
-  handling, result limitations, and database security boundary.
+- Re-inventory the 3.8.0 extension modules for a new source-backed gap.
+
+### Current run plan (2026-08-31)
+
+- Selected `DOC-087` SQL database activities from the fresh release inventory.
+- Re-inventory the 3.8.0 extension modules during source review and add any
+  distinct uncovered topic as a later slice if it is not part of this guide.
+- Use a task-oriented guide for technical users: install and register a named
+  SQL client, choose the query, command, or scalar activity, bind parameters safely,
+  handle the result-shape and serialization boundaries, and apply database
+  access safeguards.
+
+### Current run selection (2026-08-31)
+
+- The fresh inventory selected `DOC-087` because the published GitBook had no
+  SQL activity guide or navigation entry, while the 3.8.0 extension exposes a
+  complete server-side SQL module.
+- The guide uses a task-oriented format: install and register a named client,
+  choose the query, command, or scalar activity, bind values with SQL
+  placeholders, understand result/serialization limits, and secure access to
+  the target database.
+
+### Current run completion (2026-08-31)
+
+- Added `activities/sql.md`, linked it from `SUMMARY.md`, the activity
+  reference, and the modules/extensibility guide, and completed `DOC-087`.
+- Documented the server-side `UseSql` setup, four provider packages, named
+  client registration, the three activity contracts, SQL placeholder
+  parameterization, custom provider boundaries, Studio/server behavior, and
+  result, persistence, and security limitations.
+- Release-source assertions, repository link and navigation checks, balanced
+  fenced-code checks, staged `git diff --check`, and source-link HTTP checks
+  passed. No local Markdownlint, Vale, Lychee, or GitBook command is available.
+- No additional distinct source-backed topic was found after re-inventorying
+  the 3.8.0 extension modules; the next run should start with a fresh
+  inventory.
+
+### Current release validation (2026-08-31)
+
+- Core `release/3.8.0`: `01db86ec213e952e186cdada945a70c917f302f1`
+- Studio `release/3.8.0`: `2b131f930335bc061f0549ce67dd6b1a73928c58`
+- Extensions `release/3.8.0`: `a44e2b09af1202ff4936f493756e114c357eff81`
+- The requested release branch remains `release/3.8.0`; Core and Studio
+  advanced from the previous recorded refs, while the branch name did not
+  change.
 
 ### Current run plan (2026-08-30)
 
