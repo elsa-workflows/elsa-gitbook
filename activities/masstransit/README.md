@@ -274,9 +274,10 @@ related but different MassTransit integration paths:
   `UseMassTransitDispatcher()` on workflow management and runtime features,
   moves workflow dispatch and stimulus work over MassTransit; it is
   infrastructure for Elsa itself, not a replacement for message-type activities
-* the Azure Service Bus activity module (`UseAzureServiceBus()`) provides
-  transport-specific activities such as `SendMessage` and `MessageReceived`;
-  those are separate from the generic message-type activities described here
+* the standalone [Azure Service Bus activity module](../azure-service-bus.md)
+  (`UseAzureServiceBus()`) provides transport-specific activities such as
+  `SendMessage` and `MessageReceived`; those are separate from the generic
+  message-type activities described here
 
 Use the generic MassTransit activities when your workflows exchange strongly
 typed application messages. Use the workflow dispatcher when Elsa runtime and

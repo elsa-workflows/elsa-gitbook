@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (16 pages)
+### ACTIVITIES (17 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -25,6 +25,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Azure Blob upload activity** (`activities/azure-blob.md`)
 - **File storage activities** (`activities/file-storage.md`)
 - **SQL activities** (`activities/sql.md`)
+- **Azure Service Bus activities** (`activities/azure-service-bus.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -200,6 +201,8 @@ Based on the current structure, the following core concepts are documented:
   conversion, collection-to-ZIP behavior, and Studio/server boundaries
 - ✅ SQL activities, named provider registration, parameterized workflow values,
   query/command/scalar contracts, and result/serialization boundaries
+- ✅ Azure Service Bus activities, queue/topic setup, resource initialization,
+  hosted workers, message serialization, and Studio/server boundaries
 - ✅ Diagnostics activities
 
 ### Elsa Studio

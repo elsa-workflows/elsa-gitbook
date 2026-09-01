@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-08-31)
+## Slice Inventory (2026-09-01)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -99,37 +99,56 @@ acceptance criterion below is already complete.
 - `DOC-084` Azure Blob upload activity
 - `DOC-085` File storage activities
 - `DOC-086` Retention policies and cleanup
+- `DOC-087` SQL database activities
 
 ### Available next slices
 
-_No additional slice has been confirmed yet; re-inventory the release modules
-before selecting the next run._
+- `DOC-088` Azure Service Bus activities
+- `DOC-089` Kafka activities and transport configuration
 
 ### Recommended next slice
 
-- Re-inventory the 3.8.0 extension modules for a new source-backed gap.
+- `DOC-088` Azure Service Bus activities: document the standalone
+  `Elsa.ServiceBus.AzureServiceBus` module, queue/topic and subscription
+  configuration, `SendMessage` and `MessageReceived`, and the boundary between
+  resource creation, worker startup, and Studio design-time metadata.
 
-### Current run plan (2026-08-31)
+### Current run plan (2026-09-01)
 
-- Selected `DOC-087` SQL database activities from the fresh release inventory.
-- Re-inventory the 3.8.0 extension modules during source review and add any
-  distinct uncovered topic as a later slice if it is not part of this guide.
-- Use a task-oriented guide for technical users: install and register a named
-  SQL client, choose the query, command, or scalar activity, bind parameters safely,
-  handle the result-shape and serialization boundaries, and apply database
-  access safeguards.
+- Selected `DOC-088` Azure Service Bus activities after re-inventorying the
+  release modules. The standalone Azure Service Bus activity module is not
+  documented; the existing MassTransit page only notes it as a separate path.
+- Use a task-oriented guide for workflow designers and host developers: install
+  the module, configure the connection and optional queue/topic/subscription
+  definitions, understand automatic resource creation and worker startup, then
+  use the send and receive activities with their actual payload boundaries.
+- Keep `DOC-089` Kafka activities separate because its consumer/producer factory,
+  schema registry, UI-handler, and correlation model are substantially
+  different from Azure Service Bus.
 
-### Current run selection (2026-08-31)
+### Current run selection (2026-09-01)
 
-- The fresh inventory selected `DOC-087` because the published GitBook had no
-  SQL activity guide or navigation entry, while the 3.8.0 extension exposes a
-  complete server-side SQL module.
-- The guide uses a task-oriented format: install and register a named client,
-  choose the query, command, or scalar activity, bind values with SQL
-  placeholders, understand result/serialization limits, and secure access to
-  the target database.
+- The fresh inventory selected `DOC-088` because the published GitBook had no
+  dedicated guide for the standalone Azure Service Bus activity module; the
+  existing MassTransit page only noted it as a separate path.
+- The guide uses a task-oriented format: install the server package, configure
+  the connection and optional resources, choose queue or topic messaging, use
+  the send/receive activities, and understand hosted-worker and payload
+  boundaries.
 
-### Current run completion (2026-08-31)
+### Current run completion (2026-09-01)
+
+- Added `activities/azure-service-bus.md`, linked it from `SUMMARY.md`, the
+  activity reference, and the MassTransit guide, and completed `DOC-088`.
+- Documented the standalone `Elsa.ServiceBus.AzureServiceBus` package,
+  connection resolution, queue/topic/subscription definitions, optional
+  resource creation, `SendMessage` and `MessageReceived`, message formatters,
+  bookmark-triggered workers, Studio/server boundaries, and operational limits.
+- `DOC-089` Kafka activities and transport configuration remains a separate
+  candidate because its consumer/producer factories, schema registries, UI
+  handlers, and correlation model differ substantially from Azure Service Bus.
+
+### Previous run completion (2026-08-31)
 
 - Added `activities/sql.md`, linked it from `SUMMARY.md`, the activity
   reference, and the modules/extensibility guide, and completed `DOC-087`.
@@ -144,10 +163,10 @@ before selecting the next run._
   the 3.8.0 extension modules; the next run should start with a fresh
   inventory.
 
-### Current release validation (2026-08-31)
+### Current release validation (2026-09-01)
 
 - Core `release/3.8.0`: `01db86ec213e952e186cdada945a70c917f302f1`
-- Studio `release/3.8.0`: `2b131f930335bc061f0549ce67dd6b1a73928c58`
+- Studio `release/3.8.0`: `a9f7b70ae36b9b81c16f327a8187df6cc77b1503`
 - Extensions `release/3.8.0`: `a44e2b09af1202ff4936f493756e114c357eff81`
 - The requested release branch remains `release/3.8.0`; Core and Studio
   advanced from the previous recorded refs, while the branch name did not
