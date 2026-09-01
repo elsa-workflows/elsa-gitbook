@@ -85,6 +85,8 @@ after the corresponding module is installed and configured.
 - [File Storage](file-storage.md) explains the configurable blob provider,
   Open file and Save file contracts, collection-to-ZIP behavior, and
   server-side path boundaries.
+- [SQL activities](sql.md) explains server registration, provider selection,
+  query/command/scalar contracts, parameter binding, and result limitations.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 

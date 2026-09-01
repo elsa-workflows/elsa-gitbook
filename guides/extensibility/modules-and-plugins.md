@@ -609,6 +609,8 @@ builder.Services.AddElsa(elsa => elsa
   delimiters, typed mapping, and memory behavior.
 - [GitHub activities](../../activities/github.md) for server-side GitHub
   actions, token handling, GraphQL, and the 3.8.0 watcher limitation.
+- [SQL activities](../../activities/sql.md) for database client registration,
+  query/command/scalar activities, parameter binding, and result limits.
 - **[Custom Activities](../../extensibility/custom-activities.md)** - Detailed guide on creating activities
 - **[Plugins & Modules](../plugins-modules/README.md)** - Extended guide with more examples
 - **[Architecture Overview](../architecture/README.md)** - Understanding Elsa's architecture

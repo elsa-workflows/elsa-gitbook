@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (14 pages)
+### ACTIVITIES (16 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -23,6 +23,8 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Telnyx voice and webhook activities** (`activities/telnyx.md`)
 - **Orchard Core content activities** (`activities/orchard-core.md`)
 - **Azure Blob upload activity** (`activities/azure-blob.md`)
+- **File storage activities** (`activities/file-storage.md`)
+- **SQL activities** (`activities/sql.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -196,6 +198,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Azure Blob JSON upload activity, explicit 3.8.0 registration, container-URI behavior, block upload semantics, and Studio/server boundaries
 - ✅ File storage activities, configurable blob-provider registration, input
   conversion, collection-to-ZIP behavior, and Studio/server boundaries
+- ✅ SQL activities, named provider registration, parameterized workflow values,
+  query/command/scalar contracts, and result/serialization boundaries
 - ✅ Diagnostics activities
 
 ### Elsa Studio
