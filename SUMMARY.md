@@ -142,6 +142,7 @@
 * [Azure Blob Upload](activities/azure-blob.md)
 * [File Storage](activities/file-storage.md)
 * [SQL activities](activities/sql.md)
+* [Azure Service Bus](activities/azure-service-bus.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 

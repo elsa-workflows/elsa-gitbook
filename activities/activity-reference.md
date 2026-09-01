@@ -87,6 +87,8 @@ after the corresponding module is installed and configured.
   server-side path boundaries.
 - [SQL activities](sql.md) explains server registration, provider selection,
   query/command/scalar contracts, parameter binding, and result limitations.
+- [Azure Service Bus](azure-service-bus.md) explains queue/topic setup,
+  resource initialization, send/receive activities, and hosted workers.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 
