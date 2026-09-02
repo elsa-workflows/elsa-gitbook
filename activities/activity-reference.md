@@ -89,6 +89,8 @@ after the corresponding module is installed and configured.
   query/command/scalar contracts, parameter binding, and result limitations.
 - [Azure Service Bus](azure-service-bus.md) explains queue/topic setup,
   resource initialization, send/receive activities, and hosted workers.
+- [Kafka](kafka.md) explains consumer and producer definitions, string/JSON/
+  Avro factories, message matching, correlation, and hosted workers.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 

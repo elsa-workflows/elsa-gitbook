@@ -136,6 +136,8 @@ For Azure object storage, see the [Azure Blob upload activity
 guide](../../activities/azure-blob.md).
 For provider-backed file reads and writes, see the [File Storage activities
 guide](../../activities/file-storage.md).
+For standalone Kafka messaging, see the [Kafka activities
+guide](../../activities/kafka.md).
 
 ## Creating a Custom Feature
 
