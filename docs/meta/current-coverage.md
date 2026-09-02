@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (17 pages)
+### ACTIVITIES (19 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -17,6 +17,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **MassTransit** (`activities/masstransit/README.md`)
 - **Tutorial** (`activities/masstransit/tutorial.md`)
 - **Send email from a workflow** (`activities/email.md`)
+- **Read CSV data in a workflow** (`activities/csv.md`)
 - **Slack activities** (`activities/slack.md`)
 - **I/O and compression activities** (`activities/io-compression.md`)
 - **GitHub activities** (`activities/github.md`)
@@ -26,6 +27,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **File storage activities** (`activities/file-storage.md`)
 - **SQL activities** (`activities/sql.md`)
 - **Azure Service Bus activities** (`activities/azure-service-bus.md`)
+- **Kafka activities** (`activities/kafka.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -203,6 +205,8 @@ Based on the current structure, the following core concepts are documented:
   query/command/scalar contracts, and result/serialization boundaries
 - ✅ Azure Service Bus activities, queue/topic setup, resource initialization,
   hosted workers, message serialization, and Studio/server boundaries
+- ✅ Kafka activities, consumer/producer definitions, string/JSON/Avro
+  factories, message matching, correlation, and hosted worker lifecycle
 - ✅ Diagnostics activities
 
 ### Elsa Studio

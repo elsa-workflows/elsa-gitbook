@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-01)
+## Slice Inventory (2026-09-02)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -100,53 +100,58 @@ acceptance criterion below is already complete.
 - `DOC-085` File storage activities
 - `DOC-086` Retention policies and cleanup
 - `DOC-087` SQL database activities
+- `DOC-088` Azure Service Bus activities
 
 ### Available next slices
 
-- `DOC-088` Azure Service Bus activities
 - `DOC-089` Kafka activities and transport configuration
 
 ### Recommended next slice
 
-- `DOC-088` Azure Service Bus activities: document the standalone
-  `Elsa.ServiceBus.AzureServiceBus` module, queue/topic and subscription
-  configuration, `SendMessage` and `MessageReceived`, and the boundary between
-  resource creation, worker startup, and Studio design-time metadata.
+- `DOC-089` Kafka activities and transport configuration: document the
+  standalone `Elsa.ServiceBus.Kafka` module, consumer/producer definitions,
+  JSON and Avro factories, message triggers, correlation, and the hosted worker
+  lifecycle.
 
-### Current run plan (2026-09-01)
+### Current run plan (2026-09-02)
 
-- Selected `DOC-088` Azure Service Bus activities after re-inventorying the
-  release modules. The standalone Azure Service Bus activity module is not
-  documented; the existing MassTransit page only notes it as a separate path.
+- Select and complete `DOC-089` Kafka activities and transport configuration
+  after re-inventorying the published GitBook and the 3.8.0 release modules.
 - Use a task-oriented guide for workflow designers and host developers: install
-  the module, configure the connection and optional queue/topic/subscription
-  definitions, understand automatic resource creation and worker startup, then
-  use the send and receive activities with their actual payload boundaries.
-- Keep `DOC-089` Kafka activities separate because its consumer/producer factory,
-  schema registry, UI-handler, and correlation model are substantially
-  different from Azure Service Bus.
+  the server module, configure Kafka consumers and producers, choose a message
+  factory, use the receive/produce activities, and understand worker,
+  bookmark, correlation, schema, and Studio boundaries.
+- No additional distinct source-backed topic was found in the 3.8.0 extension
+  module inventory; retain the next run's fresh-inventory requirement.
 
-### Current run selection (2026-09-01)
+### Current run selection (2026-09-02)
 
-- The fresh inventory selected `DOC-088` because the published GitBook had no
-  dedicated guide for the standalone Azure Service Bus activity module; the
-  existing MassTransit page only noted it as a separate path.
-- The guide uses a task-oriented format: install the server package, configure
-  the connection and optional resources, choose queue or topic messaging, use
-  the send/receive activities, and understand hosted-worker and payload
-  boundaries.
+- The fresh inventory selected `DOC-089` because the published GitBook now
+  covers standalone Azure Service Bus activities but has no dedicated Kafka
+  guide. Kafka's definition/factory, schema-registry, UI-handler, correlation,
+  and worker contracts are distinct from both MassTransit and Azure Service
+  Bus.
+- The planned guide will use a task-oriented format: install and register the
+  server package, configure definitions, choose JSON/string/Avro handling, use
+  the two activities, and diagnose hosted-worker or message-matching issues.
 
-### Current run completion (2026-09-01)
+### Newly discovered follow-on topics (2026-09-02)
 
-- Added `activities/azure-service-bus.md`, linked it from `SUMMARY.md`, the
-  activity reference, and the MassTransit guide, and completed `DOC-088`.
-- Documented the standalone `Elsa.ServiceBus.AzureServiceBus` package,
-  connection resolution, queue/topic/subscription definitions, optional
-  resource creation, `SendMessage` and `MessageReceived`, message formatters,
-  bookmark-triggered workers, Studio/server boundaries, and operational limits.
-- `DOC-089` Kafka activities and transport configuration remains a separate
-  candidate because its consumer/producer factories, schema registries, UI
-  handlers, and correlation model differ substantially from Azure Service Bus.
+- No additional distinct source-backed topic was found after reviewing the
+  3.8.0 Extensions module inventory. Existing pages cover the other shipped
+  modules, including Azure Service Bus, SQL, storage, and diagnostics.
+
+### Current run completion (2026-09-02)
+
+- Added `activities/kafka.md`, linked it from `SUMMARY.md`, the activity
+  reference, the modules/extensibility guides, and updated current coverage.
+  Completed `DOC-089`.
+- Documented the standalone `Elsa.ServiceBus.Kafka` package, Kafka options and
+  definitions, string/JSON/Avro factories, Schema Registry behavior,
+  `MessageReceived` and `ProduceMessage`, matching/correlation/tenant
+  boundaries, hosted workers, Studio behavior, and operational safeguards.
+- The 3.8.0 source review found no additional distinct follow-on topic after
+  the Kafka module inventory; the next run should start with a fresh inventory.
 
 ### Previous run completion (2026-08-31)
 
@@ -163,7 +168,7 @@ acceptance criterion below is already complete.
   the 3.8.0 extension modules; the next run should start with a fresh
   inventory.
 
-### Current release validation (2026-09-01)
+### Current release validation (2026-09-02)
 
 - Core `release/3.8.0`: `01db86ec213e952e186cdada945a70c917f302f1`
 - Studio `release/3.8.0`: `a9f7b70ae36b9b81c16f327a8187df6cc77b1503`
