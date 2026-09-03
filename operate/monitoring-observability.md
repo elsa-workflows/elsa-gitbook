@@ -120,6 +120,9 @@ Use Structured Logs when you want:
   source.
 - A safer operator-facing view than raw console output.
 
+For server registration, Studio module composition, redaction, persistence,
+and queue-pressure guidance, see [Structured Logs](structured-logs.md).
+
 ### Console Logs
 
 `Elsa.Diagnostics.ConsoleLogs` captures raw `stdout` and `stderr` lines from

@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-02)
+## Slice Inventory (2026-09-03)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -101,28 +101,46 @@ acceptance criterion below is already complete.
 - `DOC-086` Retention policies and cleanup
 - `DOC-087` SQL database activities
 - `DOC-088` Azure Service Bus activities
+- `DOC-089` Kafka activities and transport configuration
+- `DOC-090` Structured Logs diagnostics and Studio operations
 
 ### Available next slices
 
-- `DOC-089` Kafka activities and transport configuration
+- `DOC-091` ElsaScript blob-storage workflow format and limitations.
+- `DOC-092` Quartz scheduling and persistence configuration.
+- `DOC-093` Dapper persistence provider and dialect setup.
+- `DOC-094` Console Logs diagnostics and Studio operations.
 
 ### Recommended next slice
 
-- `DOC-089` Kafka activities and transport configuration: document the
-  standalone `Elsa.ServiceBus.Kafka` module, consumer/producer definitions,
-  JSON and Avro factories, message triggers, correlation, and the hosted worker
-  lifecycle.
+- `DOC-091` ElsaScript blob-storage workflow format and limitations: the
+  release contains a dedicated blob workflow format and storage provider whose
+  constraints are not yet explained in a task-oriented guide.
 
-### Current run plan (2026-09-02)
+### Current run plan (2026-09-03)
 
-- Select and complete `DOC-089` Kafka activities and transport configuration
-  after re-inventorying the published GitBook and the 3.8.0 release modules.
-- Use a task-oriented guide for workflow designers and host developers: install
-  the server module, configure Kafka consumers and producers, choose a message
-  factory, use the receive/produce activities, and understand worker,
-  bookmark, correlation, schema, and Studio boundaries.
-- No additional distinct source-backed topic was found in the 3.8.0 extension
-  module inventory; retain the next run's fresh-inventory requirement.
+- Add a source-grounded Structured Logs guide for capture, Studio integration,
+  REST/SignalR access, redaction, buffering, SQLite persistence, retention,
+  and operational limits.
+- Reconcile the older Logging Framework and Log activity pages so readers can
+  choose between workflow-emitted sink logs and host-level diagnostics.
+- Validate against `release/3.8.0` in Core, Studio, and Extensions; perform
+  self-review and local documentation checks before delivery.
+
+### Current run completion (2026-09-03)
+
+- Completed `DOC-090` with a new Structured Logs guide, navigation entry,
+  monitoring cross-link, and reconciled `Elsa.Logging`/`Log` activity pages.
+- Validated the guide against Core, Studio, and Extensions `release/3.8.0`
+  source refs; next recommended slice is `DOC-091`.
+
+### Current run selection (2026-09-03)
+
+- Selected `DOC-090` after confirming that `origin/main` has only incidental
+  Structured Logs coverage in monitoring and permissions pages, while the
+  release contains dedicated Core and Studio diagnostics modules.
+- The next recommended slice is `DOC-091` ElsaScript after this run's source
+  and documentation inventory is refreshed.
 
 ### Current run selection (2026-09-02)
 

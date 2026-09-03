@@ -140,9 +140,10 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Introduction** (`multitenancy/introduction.md`)
 - **Setup** (`multitenancy/setup.md`)
 
-### OPERATE (9 pages)
+### OPERATE (10 pages)
 
 - **Monitoring & Observability** (`operate/monitoring-observability.md`)
+- **Structured Logs** (`operate/structured-logs.md`)
 - **Readiness and Health Checks** (`operate/readiness-and-health-checks.md`)
 - **Distributed Tracing** (`operate/distributed-tracing.md`)
 - **Investigate a Workflow Instance** (`operate/workflow-state-and-journal.md`)
@@ -278,6 +279,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Log persistence and release-backed retention policies, cleanup batches,
   related-record deletion, and clustered-host safeguards
 - ✅ Logging framework
+- ✅ Structured Logs diagnostics, Studio integration, redaction, bounded
+  buffering, SQLite persistence, retention, and dropped-write diagnostics
 - ✅ Weaver AI Host and Studio workflow assistance guide, including provider,
   persistence, permissions, and audit boundaries
 - ✅ Workflow-definition labels, Studio management, API assignment, filtering,
