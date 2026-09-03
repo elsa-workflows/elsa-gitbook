@@ -1,6 +1,9 @@
-# Logging Framework
+# Logging Framework (`Elsa.Logging`)
 
-The **Elsa.Logging** module provides a flexible and extensible way to capture, structure, and route log entries to various sinks. You can configure logging programmatically or via configuration files, and extend the framework with custom sinks for complete control.
+The **Elsa.Logging** module from `elsa-extensions` provides a flexible and
+extensible way to emit workflow log entries and route them to configured
+sinks. It is different from the host-level `ILogger` capture and Studio
+diagnostics provided by [Structured Logs](../operate/structured-logs.md).
 
 ## Programmatic Configuration
 
@@ -139,7 +142,10 @@ You can achieve the same behavior with the `LoggingFramework` section when confi
 
 ## Workflow Diagnostic Output
 
-Elsa 3.7.0 does not include a built-in workflow activity named **Log** in the core activity set. Use the built-in **WriteLine** activity for simple workflow diagnostic output, and use Elsa's execution logging and log persistence features for activity execution history.
+Elsa 3.8.0's core activity set does not include **Log**. The optional
+`Elsa.Logging` extension adds the workflow **Log** activity; use
+**WriteLine** when the workflow needs simple standard-output text, and use
+the journal and log persistence features for activity execution history.
 
 Example workflow diagnostic output:
 
@@ -195,4 +201,6 @@ Once registered, the factory can be used from configuration:
 
 * See `ConsoleLogSinkFactory` and `SerilogLogSinkFactory` for implementation examples.
 * Configure sinks in code or via configuration for maximum flexibility.
-* Use the `Log` activity in workflows to emit structured log entries.
+* Use the `Log` activity in workflows to emit entries into configured sinks.
+* Use [Structured Logs](../operate/structured-logs.md) for host `ILogger`
+  events, Studio filtering, live streaming, and optional durable storage.

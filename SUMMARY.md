@@ -175,6 +175,7 @@
 ## Operate
 
 * [Monitoring & Observability](operate/monitoring-observability.md)
+* [Structured Logs](operate/structured-logs.md)
 * [Readiness and Health Checks](operate/readiness-and-health-checks.md)
 * [Distributed Tracing](operate/distributed-tracing.md)
 * [Investigate a Workflow Instance](operate/workflow-state-and-journal.md)
