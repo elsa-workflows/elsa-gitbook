@@ -24,6 +24,7 @@ Studio sees them through the ordinary workflow-definition API.
 | External workflow source | `IWorkflowsProvider` |
 | Studio definitions | Persistence and workflow-definition API |
 | Load one JSON document and run it immediately | [Loading Workflows from JSON](../loading-workflows-from-json.md) |
+| Load `.elsa` files from blob storage | [Loading Workflows from ElsaScript](../loading-workflows-from-elsascript.md) |
 | Supply dynamic activity types to the Studio picker | [`IActivityProvider`](activity-type-providers.md) |
 | Register CLR types used by workflow data | [Registering Custom Types](custom-types.md) |
 
@@ -172,9 +173,11 @@ it lists files recursively, filters by the extensions supported by its format
 handlers, and returns only files accepted by a handler. Its built-in feature
 registers the provider with `AddWorkflowsProvider<BlobStorageWorkflowsProvider>()`.
 
-The [JSON loading guide](../loading-workflows-from-json.md) shows the package
-setup for Blob Storage. Use this provider guide when you need to implement a
-different source or need to understand reload and persistence behavior.
+The [JSON loading guide](../loading-workflows-from-json.md) and the
+[ElsaScript Blob Storage guide](../loading-workflows-from-elsascript.md) show
+the shipped format integrations. Use this provider guide when you need to
+implement a different source or need to understand reload and persistence
+behavior.
 
 ## Identity, versions, and tenants
 

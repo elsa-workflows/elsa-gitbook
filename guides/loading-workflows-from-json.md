@@ -208,6 +208,11 @@ dotnet add package Elsa.WorkflowProviders.BlobStorage
 
 > **Note:** Earlier documentation may have incorrectly referenced `Elsa.WorkflowProviders.FluentStorage`. The correct package name is `Elsa.WorkflowProviders.BlobStorage`.
 
+The base provider handles `.json` files. To load the separate ElsaScript DSL
+from `.elsa` files, install the
+[ElsaScript Blob Storage package](loading-workflows-from-elsascript.md#install-and-register-the-server-modules)
+and follow [Loading Workflows from ElsaScript](loading-workflows-from-elsascript.md).
+
 For provider behavior, reload operations, and custom external sources, see
 [Workflow Providers](extensibility/workflow-providers.md).
 

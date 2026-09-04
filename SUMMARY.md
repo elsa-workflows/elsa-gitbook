@@ -90,6 +90,7 @@
   * [OpenAPI for HTTP workflow triggers](guides/http-workflows/openapi.md)
 * [External Application Interaction](guides/external-application-interaction.md)
 * [Loading Workflows from JSON](guides/loading-workflows-from-json.md)
+* [Loading Workflows from ElsaScript](guides/loading-workflows-from-elsascript.md)
 * [Plugins & Modules](guides/plugins-modules/README.md)
   * [Package Manifests for Extensions](guides/plugins-modules/package-manifests.md)
 * [Extensibility](guides/extensibility/modules-and-plugins.md)
