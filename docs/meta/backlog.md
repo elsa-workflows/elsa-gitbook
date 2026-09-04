@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-03)
+## Slice Inventory (2026-09-04)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -103,29 +103,53 @@ acceptance criterion below is already complete.
 - `DOC-088` Azure Service Bus activities
 - `DOC-089` Kafka activities and transport configuration
 - `DOC-090` Structured Logs diagnostics and Studio operations
+- `DOC-091` ElsaScript blob-storage workflow format and limitations
 
 ### Available next slices
 
-- `DOC-091` ElsaScript blob-storage workflow format and limitations.
 - `DOC-092` Quartz scheduling and persistence configuration.
 - `DOC-093` Dapper persistence provider and dialect setup.
 - `DOC-094` Console Logs diagnostics and Studio operations.
 
 ### Recommended next slice
 
-- `DOC-091` ElsaScript blob-storage workflow format and limitations: the
-  release contains a dedicated blob workflow format and storage provider whose
-  constraints are not yet explained in a task-oriented guide.
+- `DOC-092` Quartz scheduling and persistence configuration: the next
+  release-backed gap is the distinction between Elsa's local scheduler and
+  Quartz's durable, multi-node scheduling path.
 
-### Current run plan (2026-09-03)
+### Current run plan (2026-09-04)
 
-- Add a source-grounded Structured Logs guide for capture, Studio integration,
-  REST/SignalR access, redaction, buffering, SQLite persistence, retention,
-  and operational limits.
-- Reconcile the older Logging Framework and Log activity pages so readers can
-  choose between workflow-emitted sink logs and host-level diagnostics.
+- Add a source-grounded ElsaScript blob-storage guide covering the `.elsa`
+  workflow format, parser/materializer boundary, blob-provider registration,
+  supported storage configuration, Studio visibility, and invalid-file
+  limitations.
+- Reconcile the existing JSON/blob-storage guidance so readers understand that
+  the provider is a server-side importer and that ElsaScript is distinct from
+  workflow JSON and expression languages.
 - Validate against `release/3.8.0` in Core, Studio, and Extensions; perform
   self-review and local documentation checks before delivery.
+
+### Current run selection (2026-09-04)
+
+- Selected `DOC-091` after the fresh inventory confirmed that the published
+  docs cover JSON blob storage but do not explain the release's dedicated
+  ElsaScript blob format handler, `.elsa` extension, compiler/materializer
+  boundary, or the behavior when a blob cannot be parsed.
+- No additional distinct topic was discovered during the initial Core, Studio,
+  and Extensions release-source inventory. `DOC-092` Quartz scheduling,
+  `DOC-093` Dapper persistence, and `DOC-094` Console Logs remain available for
+  later runs.
+
+### Current run completion (2026-09-04)
+
+- Completed `DOC-091` with a new ElsaScript blob-storage guide, navigation and
+  cross-links from the JSON and workflow-provider guides, and reconciled
+  coverage metadata.
+- Validated the guide against the fetched Core, Studio, and Extensions
+  `release/3.8.0` refs. Core contains the relevant ElsaScript and Blob Storage
+  implementation; Studio and Extensions contain no additional ElsaScript blob
+  loader that changes this guide's scope.
+- The next recommended slice is `DOC-092` Quartz scheduling and persistence.
 
 ### Current run completion (2026-09-03)
 

@@ -94,13 +94,14 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (34 pages)
+### GUIDES (35 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
 - **Designer** (`guides/http-workflows/designer.md`)
 - **Programmatic** (`guides/http-workflows/programmatic.md`)
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
+- **Loading Workflows from ElsaScript** (`guides/loading-workflows-from-elsascript.md`)
 - **Hangfire Integration** (`guides/running-workflows/hangfire-integration.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
 - **Workflow Context Providers** (`guides/extensibility/workflow-contexts.md`)
