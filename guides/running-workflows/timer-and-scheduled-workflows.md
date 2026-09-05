@@ -275,7 +275,9 @@ Keep these 3.8.0 behaviors in mind:
 * `Timer`, `Cron`, and `StartAt` only become workflow-starting triggers when `CanStartWorkflow` is enabled.
 * `Delay` always resumes an existing workflow instance; it is not a start trigger.
 * `Timer` schedules its first trigger occurrence relative to trigger indexing time.
-* `Cron` uses the Cronos parser with seconds included.
+* With the default local scheduler, `Cron` uses Elsa's Cronos parser with
+  seconds included. After `UseQuartzScheduler()`, Elsa uses
+  `QuartzCronParser`; validate the expression against Quartz's cron dialect.
 * `StartAt` catches up trigger executions that are already in the past when Elsa schedules them.
 * `UseScheduling()` configures the default local in-memory scheduler.
 * Scheduled bookmarks for `Delay`, `Timer`, `Cron`, and `StartAt` are all handed to Elsa's workflow scheduler, so the deployment model determines whether scheduled execution is local-only or suitable for clustered workloads.
