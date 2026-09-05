@@ -45,6 +45,8 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
     dotnet add package Elsa.Identity --version 3.8.0
     dotnet add package Elsa.Scheduling --version 3.8.0
     dotnet add package Elsa.Workflows.Api --version 3.8.0
+    dotnet add package Elsa.Dashboard.Api --version 3.8.0
+    dotnet add package Elsa.Workflows.Runtime.Dashboard --version 3.8.0
     dotnet add package Elsa.Expressions.CSharp --version 3.8.0
     dotnet add package Elsa.Expressions.JavaScript --version 3.8.0
     dotnet add package Elsa.Expressions.Liquid --version 3.8.0
@@ -93,6 +95,10 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
 
         // Expose Elsa API endpoints.
         elsa.UseWorkflowsApi();
+
+        // Expose the operational dashboard API and workflow runtime data.
+        elsa.UseDashboardApi();
+        elsa.UseWorkflowRuntimeDashboard();
 
         // Setup a SignalR hub for real-time updates from the server.
         elsa.UseRealTimeWorkflows();

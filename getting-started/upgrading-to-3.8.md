@@ -222,12 +222,17 @@ only adds structured-log capture when its host setting is enabled:
 ```csharp
 builder.Services.AddElsa(elsa => elsa
     .UseDashboardApi()
+    .UseWorkflowRuntimeDashboard()
     .UseStructuredLogs()
     .UseStructuredLogsDashboard());
 
 var app = builder.Build();
 app.UseStructuredLogs();
 ```
+
+`Elsa.Dashboard.Api` and `Elsa.Workflows.Runtime.Dashboard` provide the
+dashboard API and workflow runtime data used by Studio; install both at
+version `3.8.0` when enabling this registration.
 
 Use the corresponding module guide for its package, route, permissions, and
 storage requirements. Do not assume that installing a package alone exposes

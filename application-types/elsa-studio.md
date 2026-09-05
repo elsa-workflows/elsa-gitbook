@@ -155,6 +155,14 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     // Run the application.
     await app.RunAsync();
     ```
+
+`AddDashboardModule()` registers the Studio dashboard UI. The connected Elsa
+Server must also install `Elsa.Dashboard.Api` and
+`Elsa.Workflows.Runtime.Dashboard` at version `3.8.0`, then enable
+`UseDashboardApi()` and `UseWorkflowRuntimeDashboard()` in its `AddElsa`
+configuration. Without those server modules, Studio can load but its
+operational dashboard has no workflow runtime data.
+
 4.  **Remove Unnecessary Files**
 
     For a cleaner project structure, delete the following directories and files:

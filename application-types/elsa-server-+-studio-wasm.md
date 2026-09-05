@@ -66,6 +66,8 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     dotnet add package Elsa.Identity --version 3.8.0
     dotnet add package Elsa.Scheduling --version 3.8.0
     dotnet add package Elsa.Workflows.Api --version 3.8.0
+    dotnet add package Elsa.Dashboard.Api --version 3.8.0
+    dotnet add package Elsa.Workflows.Runtime.Dashboard --version 3.8.0
     dotnet add package Elsa.Expressions.CSharp --version 3.8.0
     dotnet add package Elsa.Expressions.JavaScript --version 3.8.0
     dotnet add package Elsa.Expressions.Liquid --version 3.8.0
@@ -116,6 +118,8 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
             .UseLiquid()
             .UseHttp(http => http.ConfigureHttpOptions = options => configuration.GetSection("Http").Bind(options))
             .UseWorkflowsApi()
+            .UseDashboardApi()
+            .UseWorkflowRuntimeDashboard()
             .AddActivitiesFrom<Program>()
             .AddWorkflowsFrom<Program>()
         );
