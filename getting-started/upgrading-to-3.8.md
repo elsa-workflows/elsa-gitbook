@@ -50,6 +50,48 @@ and .NET 9 package sets remain on `7.1.1`. If an application targets .NET 10,
 review custom endpoint wrappers and resume integrations: `ResumeRequest` is
 obsolete and the runtime resume endpoint uses `FastEndpoints.EmptyRequest`.
 
+## Start from the Elsa templates
+
+For a new .NET 10 application, install the stable `Elsa.Templates` package
+from NuGet.org:
+
+```bash
+dotnet new install Elsa.Templates@3.8.0
+```
+
+The [Elsa.Templates 3.8.0 GitHub release](https://github.com/elsa-workflows/elsa-templates/releases/tag/3.8.0)
+lists the package release and its source changes. Generate the template that
+matches your deployment shape:
+
+```bash
+# Server: static configuration-backed features.
+dotnet new elsa-server -n MyElsaServer --feature-model static
+
+# Server: CShells feature and persistence composition.
+dotnet new elsa-server -n MyElsaServer --feature-model shell
+
+# Studio: choose server, wasm, or hybrid hosting.
+dotnet new elsa-studio -n MyElsaStudio --hosting server
+dotnet new elsa-studio -n MyElsaStudio --hosting wasm
+dotnet new elsa-studio -n MyElsaStudio --hosting hybrid
+
+# Combined server and Studio application.
+dotnet new elsa-combined -n MyElsaApp --feature-model static --studio-hosting server
+```
+
+The server and combined templates also accept `--persistence sqlite`,
+`sqlserver`, `postgresql`, or `oracle`. Studio and combined templates accept
+`--auth-provider elsa-identity`, `open-id-connect`, or the legacy
+`elsa-login`; add `--with-labels` when the Labels module is needed. The
+generated project files target `net10.0`.
+
+For local Development only, the generated server and combined configurations
+provide an `admin` user with the password `password`. The `static` feature
+model reads its user and role from `Identity:Users` and `Identity:Roles`; the
+`shell` model uses the CShells `DefaultAdminUser` feature. Replace the
+development credentials and signing key before deployment, and keep all
+deployment values outside source control.
+
 ## Configure identity before startup
 
 The 3.8.0 reference server no longer supplies production-usable admin
