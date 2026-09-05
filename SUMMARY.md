@@ -103,6 +103,7 @@
   * [Altering a Running Workflow Instance](guides/running-workflows/altering-workflow-instances.md)
   * [Using a Trigger](guides/running-workflows/using-a-trigger.md)
   * [Timer and Scheduled Workflows](guides/running-workflows/timer-and-scheduled-workflows.md)
+  * [Quartz Scheduling](guides/running-workflows/quartz-scheduling.md)
   * [Workflow Definition Version Lifecycle](guides/running-workflows/workflow-definition-lifecycle.md)
   * [Hangfire Integration](guides/running-workflows/hangfire-integration.md)
   * [Long-Running Workflows](guides/running-workflows/long-running-workflows.md)

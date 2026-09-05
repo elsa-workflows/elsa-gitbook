@@ -124,6 +124,10 @@ See [MongoDB Setup Example](examples/mongodb-setup.md) for configuration details
 
 See [Dapper Setup Example](examples/dapper-setup.md) for configuration details.
 
+If the persistence requirement is specifically scheduled Quartz jobs, see
+[Quartz Scheduling](../running-workflows/quartz-scheduling.md). Quartz's job
+store is separate from Elsa's workflow-definition and workflow-instance stores.
+
 ### Elasticsearch
 
 **Best for:** Deployments that already operate Elasticsearch and want

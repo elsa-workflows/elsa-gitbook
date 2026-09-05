@@ -104,20 +104,54 @@ acceptance criterion below is already complete.
 - `DOC-089` Kafka activities and transport configuration
 - `DOC-090` Structured Logs diagnostics and Studio operations
 - `DOC-091` ElsaScript blob-storage workflow format and limitations
+- `DOC-092` Quartz scheduling and persistence configuration
 
 ### Available next slices
 
-- `DOC-092` Quartz scheduling and persistence configuration.
 - `DOC-093` Dapper persistence provider and dialect setup.
 - `DOC-094` Console Logs diagnostics and Studio operations.
 
 ### Recommended next slice
 
-- `DOC-092` Quartz scheduling and persistence configuration: the next
-  release-backed gap is the distinction between Elsa's local scheduler and
-  Quartz's durable, multi-node scheduling path.
+- `DOC-093` Dapper persistence provider and dialect setup: the next
+  release-backed persistence gap is a focused provider and migration guide for
+  teams choosing Dapper instead of EF Core or MongoDB.
 
-### Current run plan (2026-09-04)
+### Current run plan (2026-09-05)
+
+- Add a source-grounded Quartz scheduling and persistence guide covering the
+  scheduler replacement, durable Quartz store configuration, clustering
+  requirements, trigger/bookmark behavior, and operational verification.
+- Reconcile the existing timer, long-running workflow, clustering, and
+  persistence guidance so readers can distinguish Elsa's local scheduler from
+  Quartz's durable multi-node scheduling path.
+- Validate against `release/3.8.0` in Core, Studio, and Extensions; perform
+  self-review and local documentation checks before delivery.
+
+### Current run selection (2026-09-05)
+
+- Selected `DOC-092` after the fresh inventory confirmed that the published
+  docs mention Quartz in scheduling and clustering pages but do not provide a
+  focused release-backed configuration and operations guide.
+- `DOC-093` Dapper persistence and `DOC-094` Console Logs remain available for
+  later runs. No additional distinct topic was discovered during the initial
+  Core, Studio, and Extensions release-source inventory.
+
+### Current run completion (2026-09-05)
+
+- Completed `DOC-092` with a new Quartz scheduling guide covering package
+  selection, durable store configuration, clustering, scheduled start/resume
+  jobs, cron behavior, retries, migrations, shutdown, Studio boundaries, and
+  deployment verification.
+- Reconciled the timer, persistence, and clustering pages to distinguish
+  Elsa's local in-process scheduler from Quartz's persistent
+  `IWorkflowScheduler` implementation and removed the clustering page's
+  duplicate hosted-service and raw-properties setup.
+- Validated against unchanged `release/3.8.0` refs: Core `01db86e`, Studio
+  `b7b3629`, and Extensions `a44e2b0`. No additional distinct topic was found;
+  `DOC-093` is the next recommendation.
+
+### Previous run plan (2026-09-04)
 
 - Add a source-grounded ElsaScript blob-storage guide covering the `.elsa`
   workflow format, parser/materializer boundary, blob-provider registration,
