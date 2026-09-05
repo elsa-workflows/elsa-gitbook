@@ -65,7 +65,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Workflow Context Providers** (`guides/extensibility/workflow-contexts.md`)
 - **OpenTelemetry Workflow and Activity Tracing** (`guides/extensibility/opentelemetry-tracing.md`)
 - **DropIns** (`guides/extensibility/dropins.md`)
-- **>-** (`extensibility/reusable-triggers-3.5-preview.md`)
+- **Reusable Triggers** (`extensibility/reusable-triggers-3.5-preview.md`)
 
 ### FEATURES (7 pages)
 
@@ -169,11 +169,11 @@ The documentation currently contains a broad set of markdown pages organized int
 ### STUDIO (10 pages)
 
 - **This section displays the available customization options for Elsa Studio.** (`studio/design/README.md`)
-- **Activity Pickers (3.7-preview)** (`studio/design/activity-pickers-3.7-preview.md`)
-- **Workflow Editor (3.5-preview)** (`studio/design/workflow-editor-3.5-preview.md`)
+- **Activity Pickers** (`studio/design/activity-pickers-3.7-preview.md`)
+- **Workflow Editor Design Notes** (`studio/design/workflow-editor-3.5-preview.md`)
 - **Localization** (`studio/localization.md`)
 - **This section shows the various Elsa Studio customisation options available** (`studio/workflow-editor/README.md`)
-- **Content Visualisers (3.6-preview)** (`studio/workflow-editor/content-visualisers-3.6-preview.md`)
+- **Content Visualisers** (`studio/workflow-editor/content-visualisers-3.6-preview.md`)
 - **Field Extensions** (`studio/workflow-editor/field-extensions.md`)
 - **UI Hints** (`studio/workflow-editor/ui-hints.md`)
 - **Activity Port Providers** (`guides/extensibility/activity-port-providers.md`)

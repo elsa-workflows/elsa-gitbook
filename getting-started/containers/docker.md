@@ -8,6 +8,14 @@ The Elsa project currently offers three different Docker images:
 
 These images make it easy to give Elsa a quick spin without first creating an ASP.NET application and setting up Elsa. Before trying to run an image, [make sure you have Docker installed](https://elsa-workflows.github.io/elsa-documentation/prerequisites.html#docker) on your machine.
 
+{% hint style="warning" %}
+The image references on this page use the independently published,
+unversioned `:latest` tags shown in the commands. They are not evidence that
+the current image contains Elsa 3.8.0. Verify the image digest and release
+metadata separately; use [Upgrade to Elsa 3.8.0](../upgrading-to-3.8.md) for
+the stable source and NuGet package requirements.
+{% endhint %}
+
 ### Elsa Server + Studio <a href="#elsa-server-and-studio" id="elsa-server-and-studio"></a>
 
 This image hosts an ASP.NET Core application that runs both as an Elsa Server as well as an Elsa Studio application. To run the container, simply run the following commands from your terminal:
@@ -17,12 +25,12 @@ docker pull elsaworkflows/elsa-server-and-studio-v3:latest
 docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e HTTP__BASEURL=http://localhost:13000 -p 13000:8080 elsaworkflows/elsa-server-and-studio-v3:latest
 ```
 
-When the container has started, open a web browser and navigate to [http://localhost:13000](http://localhost:13000/). On the login screen, enter the following credentials:
+When the container has started, open a web browser and navigate to [http://localhost:13000](http://localhost:13000/).
 
-```shell-session
-username: admin
-password: password
-```
+The identity contract follows the image release. Because this image tag is
+unversioned, do not infer its login defaults from the Elsa 3.8.0 package
+documentation. Follow the image's published configuration before signing in;
+for a 3.8.0 source or package host, see [Elsa Identity](../../guides/authentication/elsa-identity.md).
 
 ### Elsa Server <a href="#elsa-server" id="elsa-server"></a>
 
@@ -52,9 +60,8 @@ docker run -t -i -e ASPNETCORE_ENVIRONMENT='Development' -e HTTP_PORTS=8080 -e E
 Note that Elsa Studio needs to connect to an existing Elsa Server instance, which URL is configured via the `ELSASERVER__URL` environment variable passed to the container (on port `13000` in this example). To quickly start an Elsa Server instance, you can run the Elsa Server Docker image as outlined in the previous chapter.
 {% endhint %}
 
-When the container has started, open a web browser and navigate to [http://localhost:14000](http://localhost:14000/). On the login screen, enter the following credentials:
+When the container has started, open a web browser and navigate to [http://localhost:14000](http://localhost:14000/).
 
-```shell-session
-username: admin
-password: password
-```
+The Studio image uses the identity provider exposed by the connected server.
+Configure a user on that server before signing in, following the connected
+server image's published identity contract.

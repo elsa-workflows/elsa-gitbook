@@ -5,7 +5,7 @@ description: >-
   It provides examples and guidance.
 ---
 
-# Reusable Triggers (3.5-preview)
+# Reusable Triggers
 
 Elsa Workflows provides a streamlined way to create custom activities that leverage existing trigger infrastructure. This enables developers to build their own trigger-based activities—such as timers, delays, events, and HTTP endpoints—without dealing with low-level scheduling, event wiring, or infrastructure concerns.
 
@@ -140,4 +140,3 @@ These reusable base classes and helper methods provide a consistent, composable 
 * **Consistency**: Aligns with Elsa's activity and workflow execution model.
 
 Use these tools to build rich, event-driven workflows with minimal overhead, while keeping full control over the activity logic.
-

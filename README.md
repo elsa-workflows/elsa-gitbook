@@ -6,6 +6,12 @@ description: Introducing Elsa Workflows 3
 
 Elsa Workflows is a set of open-source .NET libraries designed to enhance .NET applications with workflow capabilities. Think of it as lego blocks for creating workflow engines in .NET.
 
+{% hint style="info" %}
+These docs target the Elsa 3.8.0 stable package family. See [Upgrade to Elsa
+3.8.0](getting-started/upgrading-to-3.8.md) for the release sources, security
+defaults, and module registration checklist.
+{% endhint %}
+
 Workflows in Elsa can be defined in different ways:
 
 * Programmatically by writing .NET code.
@@ -84,7 +90,12 @@ And/or, define workflows declaratively using JSON:
 Elsa is continually evolving, and while it offers powerful capabilities, there are some known limitations and ongoing work:
 
 * Documentation is still a work in progress.
-* Starting workflows from the designer is currently supported only for workflows that do not require input and do not start with a trigger; this is planned for a future release.
-* The designer currently only supports Flowchart activities. Support for Sequence and StateMachine activities is planned for a future release.
-* UI input validation is not yet implemented.
-
+* The editor's **Run Workflow** action sends an empty execution request. Use a
+  trigger or the API when the workflow requires inputs or must start through a
+  trigger; the editor does not collect those values in that action.
+* Flowchart, Sequence, and StateMachine designers are available in the Elsa
+  Studio 3.8.0 release. Sequence and StateMachine use their own editing
+  surfaces and may expose different editing constraints than Flowchart.
+* Studio validates required editor fields and reports server-side validation
+  errors while saving or publishing. It does not provide a general-purpose
+  input form for the Run Workflow action.

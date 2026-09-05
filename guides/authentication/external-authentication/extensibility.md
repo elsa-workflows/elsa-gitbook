@@ -12,9 +12,8 @@ adapters and customize how unlinked identities, permissions, and connection
 settings are handled.
 
 This page is for developers who own a trusted Elsa deployment and, optionally,
-an Elsa Studio package. It documents the extension contracts in the Elsa 3.8
-preview release; the feature is still preview-only, so pin and test the exact
-package versions you deploy.
+an Elsa Studio package. It documents the extension contracts in the stable Elsa
+3.8.0 release. Pin and test the exact package versions you deploy.
 
 ## Choose the right extension point
 

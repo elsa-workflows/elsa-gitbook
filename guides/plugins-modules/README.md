@@ -437,8 +437,8 @@ MyWorkflows.Extensions/
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elsa" Version="3.7.0" />
-    <PackageReference Include="Elsa.Workflows.Core" Version="3.7.0" />
+    <PackageReference Include="Elsa" Version="3.8.0" />
+    <PackageReference Include="Elsa.Workflows.Core" Version="3.8.0" />
   </ItemGroup>
 </Project>
 ```

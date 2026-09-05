@@ -128,7 +128,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Map Elsa workflows API endpoints
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 
 // Your existing endpoints
 app.MapControllers();
@@ -181,7 +181,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.MapControllers();
 
 app.Run();

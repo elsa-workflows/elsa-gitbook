@@ -9,6 +9,16 @@ description: >-
 
 This comprehensive guide covers deploying Elsa Workflows to Kubernetes in production environments. Whether you're using managed Kubernetes services (EKS, AKS, GKE) or self-hosted clusters, this guide provides everything you need for a reliable, scalable deployment.
 
+{% hint style="warning" %}
+**Check image publication before using these examples**
+
+The raw manifests below retain historical `v3.7.0` metadata and the image
+examples use separately published `:latest` references. This page does not
+verify a 3.8.0 container or Helm chart publication. Before a stable 3.8.0
+deployment, select a published image digest and apply the identity and module
+requirements in [Upgrade to Elsa 3.8.0](../getting-started/upgrading-to-3.8.md).
+{% endhint %}
+
 ## Overview
 
 Elsa Workflows can be deployed to Kubernetes using either:
@@ -1823,7 +1833,7 @@ var app = builder.Build();
 app.UseMetricServer();  // Exposes /metrics endpoint
 app.UseHttpMetrics();   // Collect HTTP metrics
 
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.Run();
 ```
 
@@ -3169,9 +3179,13 @@ After deploying Elsa Workflows to Kubernetes:
 
 ## Version Information
 
-This guide is written for:
+This guide contains historical Kubernetes manifest examples. The `v3.7.0`
+labels in those manifests are retained to preserve their source context; they
+are not a claim that a matching 3.8.0 image is published. Verify image and
+chart publication separately before deployment.
 
-* **Elsa Workflows**: v3.7.0
+The surrounding infrastructure examples target:
+
 * **Kubernetes**: v1.28+
 * **Helm**: v3.12+
 * **PostgreSQL**: 16+

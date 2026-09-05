@@ -1,12 +1,15 @@
 ---
 description: >-
-  Move Elsa Studio from direct OpenID Connect to the Elsa 3.8 preview External
+  Move Elsa Studio from direct OpenID Connect to the Elsa 3.8.0 External
   Authentication broker, with a staged rollout and rollback plan.
 ---
 
 # Migrate from Direct OpenID Connect
 
-> **Preview feature:** Brokered External Authentication is new in Elsa 3.8 preview and is currently available from Feedz while under active development. Plan this as a reversible, staged migration; do not remove the existing direct OpenID Connect registration until the brokered flow is proven in your environment.
+> **Elsa 3.8.0 stable:** Brokered External Authentication is included in the
+> stable Core and Studio packages. Plan this as a reversible, staged migration;
+> do not remove the existing direct OpenID Connect registration until the
+> brokered flow is proven in your environment.
 
 Direct OpenID Connect remains a supported Studio authentication mode. External Authentication is an alternative architecture: Elsa Server becomes the relying party for the upstream provider, then issues Elsa credentials that Studio consumes.
 

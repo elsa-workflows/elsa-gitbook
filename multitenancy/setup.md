@@ -61,7 +61,7 @@ The following _appsettings.json_ section demonstrates an example of defining use
 {
   "Identity": {
     "Tokens": {
-      "SigningKey": "sufficiently-large-secret-signing-key",
+      "SigningKey": "set-outside-source-control",
       "AccessTokenLifetime": "1:00:00:00",
       "RefreshTokenLifetime": "7:00:00:00"
     },
@@ -87,8 +87,8 @@ The following _appsettings.json_ section demonstrates an example of defining use
       {
         "Id": "a2323f46-42db-4e15-af8b-94238717d817",
         "Name": "admin",
-        "HashedPassword": "TfKzh9RLix6FPcCNeHLkGrysFu3bYxqzGqduNdi8v1U=",
-        "HashedPasswordSalt": "JEy9kBlhHCNsencitRHlGxmErmSgY+FVyMJulCH27Ds=",
+        "HashedPassword": "<generated-password-hash>",
+        "HashedPasswordSalt": "<generated-password-salt>",
         "Roles": [
           "admin-1"
         ],
@@ -100,8 +100,8 @@ The following _appsettings.json_ section demonstrates an example of defining use
         "Roles": [
           "admin-2"
         ],
-        "HashedPassword": "8B0fFK/f/kk9GkVtzXfRJ2Y6cNyYVvLTfKouWcAcuPg=",
-        "HashedPasswordSalt": "xlNWvEng8fRvo0McyJopbRJ2MJ9NIYV/4IY5dOZeiiw=",
+        "HashedPassword": "<generated-password-hash>",
+        "HashedPasswordSalt": "<generated-password-salt>",
         "TenantId": "tenant-2"
       }
     ],
@@ -110,13 +110,13 @@ The following _appsettings.json_ section demonstrates an example of defining use
         "Id": "d57030226341448daff5a2935aba2d3f",
         "Name": "Postman",
         "Roles": [
-          "admin"
+          "admin-1"
         ],
         "ClientId": "HXr0Vzdm9KCZbwsJ",
-        "HashedApiKey": "Z5ClHs3mbzx8Pnw3+PxbMq8A/Y+VKMCCDTGYtax8JFM=",
-        "HashedApiKeySalt": "kBisa1X8FwBfN2zmyGMFRgIVVBleghhQAJ4WGyTkaD0=",
-        "HashedClientSecret": "jEv58d0SVbGQ3nBZM0lkzHghG4Y+lMKW80wipz+9vHk=",
-        "HashedClientSecretSalt": "xRKy14Ok1/tU3kLf/8V1fcbLIegy9vcM90Peu2tzohU=",
+        "HashedApiKey": "<generated-api-key-hash>",
+        "HashedApiKeySalt": "<generated-api-key-salt>",
+        "HashedClientSecret": "<generated-client-secret-hash>",
+        "HashedClientSecretSalt": "<generated-client-secret-salt>",
         "TenantId": "tenant-1"
       }
     ]
@@ -125,7 +125,12 @@ The following _appsettings.json_ section demonstrates an example of defining use
 ```
 {% endcode %}
 
+The hash and salt placeholders above are intentionally not usable
+credentials. Generate them with the identity tooling used by your deployment,
+and keep the signing key and credential material outside source control. Elsa
+3.8.0 rejects the known public signing-key samples outside `Development` and
+`Demo`.
+
 {% hint style="warning" %}
 Primary keys (Id) must be unique across tenants since there's no constraint with tenant IDs. This might change in a future version.
 {% endhint %}
-

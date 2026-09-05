@@ -8,6 +8,13 @@ description: >-
 
 Elsa Studio is a Blazor application that let's you manage workflows through a UI. The application is essentially a SPA that connects to an Elsa Server as its back-end.
 
+{% hint style="warning" %}
+This walkthrough requires the .NET 10 SDK and targets Elsa Studio 3.8.0. Install the Elsa package family at
+`3.8.0`, and configure the connected server's identity signing key and
+administrator through deployment-owned configuration. Elsa 3.8.0 does not
+provide production-usable default credentials.
+{% endhint %}
+
 ## Setup <a href="#setup" id="setup"></a>
 
 To setup Elsa Studio, we'll go through the following steps:
@@ -24,7 +31,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     Execute the following command in the terminal:
 
     ```bash
-    dotnet new blazorwasm -n "ElsaStudioBlazorWasm"
+    dotnet new blazorwasm -n "ElsaStudioBlazorWasm" --framework net10.0
     ```
 
     \
@@ -35,13 +42,16 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
 
     ```
     cd ElsaStudioBlazorWasm
-    dotnet add package Elsa.Studio
-    dotnet add package Elsa.Studio.Core.BlazorWasm
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI
-    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm
-    dotnet add package Elsa.Studio.Localization.BlazorWasm
-    dotnet add package Elsa.Api.Client
+    dotnet add package Elsa.Studio --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.UI --version 3.8.0
+    dotnet add package Elsa.Studio.Core.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Localization.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Api.Client --version 3.8.0
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly --version 10.0.8
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Authentication --version 10.0.8
     ```
 3.  **Modify Program.cs**
 
@@ -50,6 +60,8 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     **Program.cs**
 
     ```csharp
+    using Elsa.Studio.Authentication.Abstractions.Models;
+    using Elsa.Studio.Authentication.UI.Extensions;
     using Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm.Extensions;
     using Elsa.Studio.Authentication.ElsaIdentity.HttpMessageHandlers;
     using Elsa.Studio.Authentication.ElsaIdentity.UI.Extensions;
@@ -83,6 +95,10 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     var authProvider = configuration["Authentication:Provider"];
     if (string.IsNullOrWhiteSpace(authProvider))
         authProvider = "ElsaIdentity";
+
+    if (!Enum.TryParse<StudioAuthenticationProvider>(authProvider, true, out var selectedAuthProvider))
+        throw new InvalidOperationException($"Unsupported authentication provider: {authProvider}");
+    builder.Services.AddStudioAuthenticationMode(options => options.Provider = selectedAuthProvider);
 
     Type authenticationHandler;
 
@@ -121,6 +137,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
 
     builder.Services.AddCore();
     builder.Services.AddShell();
+    builder.Services.AddAuthenticationUI(); // Registers the shared /login page and its services.
     builder.Services.AddRemoteBackend(backendApiConfig);
     builder.Services.AddDashboardModule();
     builder.Services.AddWorkflowsModule();
@@ -160,7 +177,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
             "Url": "https://localhost:5001/elsa/api"
         },
         "Authentication": {
-            "Provider": "OpenIdConnect",
+            "Provider": "ElsaIdentity",
             "OpenIdConnect": {
                 "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
                 "ClientId": "{client-id}",
@@ -182,6 +199,8 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
         }
     }
     ```
+
+    The sample selects `ElsaIdentity` to use the configured server administrator. To use an external identity provider, set `Provider` to `OpenIdConnect` and replace the OpenID Connect placeholders.
 
     `AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
@@ -252,12 +271,10 @@ dotnet run --urls https://localhost:6001
 
 Your application is now accessible at [https://localhost:6001](https://localhost:6001/).
 
-By default, you can log in using:
-
-```
-username: admin
-password: password
-```
+The server controls the available users and roles. Configure an administrator
+through the server's identity provider before signing in; do not rely on a
+hard-coded `admin`/`password` pair. The [Elsa Identity guide](../guides/authentication/elsa-identity.md)
+shows the stable 3.8.0 configuration shape.
 
 ## Source Code <a href="#source-code" id="source-code"></a>
 

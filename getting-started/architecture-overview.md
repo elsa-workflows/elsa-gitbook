@@ -1064,16 +1064,24 @@ public class CustomTenantResolver : ITenantResolver
 
 **Configuration:**
 ```csharp
+var identitySection = builder.Configuration.GetSection("Identity");
+
 elsa.UseIdentity(identity =>
 {
-    identity.TokenOptions = options => 
-        options.SigningKey = builder.Configuration["Jwt:SigningKey"]; // Use secure key storage in production
-    identity.UseAdminUserProvider();
+    identity.TokenOptions += options =>
+        identitySection.GetSection("Tokens").Bind(options);
+    identity.UseConfigurationBasedUserProvider(options => identitySection.Bind(options));
+    identity.UseConfigurationBasedApplicationProvider(options => identitySection.Bind(options));
+    identity.UseConfigurationBasedRoleProvider(options => identitySection.Bind(options));
 });
 
-elsa.UseDefaultAuthentication(auth => 
-    auth.UseAdminApiKey());
+elsa.UseDefaultAuthentication();
 ```
+
+In Elsa 3.8.0, `Identity:Tokens:SigningKey` must be a deployment-owned,
+printable-ASCII value of at least 32 characters. The server does not provide
+production-usable default users or API keys. See [Upgrade to Elsa 3.8.0](upgrading-to-3.8.md)
+for the localhost bootstrap and host-code execution changes.
 
 ### Workflow Security
 

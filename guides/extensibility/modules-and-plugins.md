@@ -337,7 +337,7 @@ Then in your `Program.cs`, after building the app:
 var app = builder.Build();
 
 // Map Elsa API endpoints
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 
 // Map custom reporting endpoints
 app.MapReportingEndpoints();
@@ -388,7 +388,7 @@ builder.Services.AddElsa(elsa => elsa
 
 var app = builder.Build();
 
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.MapReportingEndpoints();
 
 app.Run();
@@ -543,9 +543,9 @@ To share your module as a NuGet package:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elsa" Version="3.7.0" />
-    <PackageReference Include="Elsa.Workflows.Core" Version="3.7.0" />
-    <PackageReference Include="Elsa.Workflows.Runtime" Version="3.7.0" />
+    <PackageReference Include="Elsa" Version="3.8.0" />
+    <PackageReference Include="Elsa.Workflows.Core" Version="3.8.0" />
+    <PackageReference Include="Elsa.Workflows.Runtime" Version="3.8.0" />
   </ItemGroup>
 </Project>
 ```

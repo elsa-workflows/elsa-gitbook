@@ -2,6 +2,13 @@
 
 This document lists all elsa-core source files referenced in the Clustering Guide for easy maintainer review and verification.
 
+{% hint style="info" %}
+The permalinks in this maintainer index intentionally pin the `3.7.0` source
+baseline used by the clustering guide. They are historical evidence, not
+current Elsa 3.8.0 API claims; verify a changed implementation against the
+stable 3.8.0 tag before updating the guide.
+{% endhint %}
+
 ## Core Runtime Components
 
 ### WorkflowResumer

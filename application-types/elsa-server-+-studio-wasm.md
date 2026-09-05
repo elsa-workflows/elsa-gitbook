@@ -10,6 +10,12 @@ Instead of running Elsa Server and Elsa Studio as separate ASP.NET Core applicat
 
 For Elsa Studio, we will setup the Blazor parts using Blazor WebAssembly, which static files will be served from the ASP.NET Core host application.
 
+{% hint style="warning" %}
+This walkthrough requires the .NET 10 SDK and targets Elsa 3.8.0. The server must receive a real identity signing
+key and deployment-owned users/applications before startup. Stable 3.8.0 does
+not provide production-usable default admin credentials.
+{% endhint %}
+
 ## Create Solution <a href="#create-solution" id="create-solution"></a>
 
 In this chapter, we will scaffold a new solution and two projects:
@@ -26,13 +32,13 @@ Run the following commands to create a solution with two projects:
 dotnet new sln -n ElsaServerAndStudio
 
 # Create the host project
-dotnet new web -n "ElsaServer"
+dotnet new web -n "ElsaServer" --framework net10.0
 
 # Add the host project to the solution
 dotnet sln add ElsaServer/ElsaServer.csproj
 
 # Create the client project
-dotnet new blazorwasm -n "ElsaStudio"
+dotnet new blazorwasm -n "ElsaStudio" --framework net10.0
 
 # Add the client project to the solution
 dotnet sln add ElsaStudio/ElsaStudio.csproj
@@ -53,17 +59,17 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     Add the following packages:
 
     ```bash
-    dotnet add package Elsa
-    dotnet add package Elsa.Persistence.EFCore
-    dotnet add package Elsa.Persistence.EFCore.Sqlite
-    dotnet add package Elsa.Http
-    dotnet add package Elsa.Identity
-    dotnet add package Elsa.Scheduling
-    dotnet add package Elsa.Workflows.Api
-    dotnet add package Elsa.Expressions.CSharp
-    dotnet add package Elsa.Expressions.JavaScript
-    dotnet add package Elsa.Expressions.Liquid
-    dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server
+    dotnet add package Elsa --version 3.8.0
+    dotnet add package Elsa.Persistence.EFCore --version 3.8.0
+    dotnet add package Elsa.Persistence.EFCore.Sqlite --version 3.8.0
+    dotnet add package Elsa.Http --version 3.8.0
+    dotnet add package Elsa.Identity --version 3.8.0
+    dotnet add package Elsa.Scheduling --version 3.8.0
+    dotnet add package Elsa.Workflows.Api --version 3.8.0
+    dotnet add package Elsa.Expressions.CSharp --version 3.8.0
+    dotnet add package Elsa.Expressions.JavaScript --version 3.8.0
+    dotnet add package Elsa.Expressions.Liquid --version 3.8.0
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server --version 10.0.8
     ```
 2.  **Update Program.cs**
 
@@ -73,6 +79,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
 
     ```csharp
     using Elsa.Persistence.EFCore.Extensions;
+    using Elsa.Persistence.EFCore.Modules.Identity;
     using Elsa.Persistence.EFCore.Modules.Management;
     using Elsa.Persistence.EFCore.Modules.Runtime;
     using Elsa.Extensions;
@@ -83,13 +90,23 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
 
     var services = builder.Services;
     var configuration = builder.Configuration;
+    var identityTokenSection = configuration.GetSection("Identity:Tokens");
+    var adminUserName = configuration["Identity:Bootstrap:UserName"]
+        ?? throw new InvalidOperationException("Identity:Bootstrap:UserName is required.");
+    var adminPassword = configuration["Identity:Bootstrap:Password"]
+        ?? throw new InvalidOperationException("Identity:Bootstrap:Password is required.");
 
     services
         .AddElsa(elsa => elsa
             .UseIdentity(identity =>
             {
-                identity.TokenOptions = options => options.SigningKey = "large-signing-key-for-signing-JWT-tokens";
-                identity.UseAdminUserProvider();
+                identity.TokenOptions += options => identityTokenSection.Bind(options);
+                identity.UseEntityFrameworkCore(ef => ef.UseSqlite());
+                identity.UseDefaultAdmin(admin => admin
+                    .WithAdminUserName(adminUserName)
+                    .WithAdminPassword(adminPassword)
+                    .WithAdminRoleName("admin")
+                    .WithAdminRolePermissions(new List<string> { "*" }));
             })
             .UseDefaultAuthentication()
             .UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseSqlite()))
@@ -97,7 +114,6 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
             .UseScheduling()
             .UseJavaScript()
             .UseLiquid()
-            .UseCSharp()
             .UseHttp(http => http.ConfigureHttpOptions = options => configuration.GetSection("Http").Bind(options))
             .UseWorkflowsApi()
             .AddActivitiesFrom<Program>()
@@ -116,17 +132,31 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     }
 
     app.UseHttpsRedirection();
-    app.MapStaticAssets();
+    // Serve WebAssembly boot resources (including ICU data) and application assets.
+    app.UseBlazorFrameworkFiles();
+    app.UseStaticFiles();
     app.UseRouting();
     app.UseCors();
-    app.UseStaticFiles();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseWorkflowsApi();
+    app.MapWorkflowsApi();
     app.UseWorkflows();
     app.MapFallbackToPage("/_Host");
     app.Run();
     ```
+
+The example stores identity data in the same SQLite database as the workflow
+data and creates an administrator on first startup. Set
+`Identity:Bootstrap:UserName` and `Identity:Bootstrap:Password` (or their
+double-underscore environment-variable forms) through deployment-owned
+configuration. Set `Identity:Tokens:SigningKey` (or
+`Identity__Tokens__SigningKey`) to a random printable-ASCII value of at least
+32 characters. The C# and Python engines are host-code execution and are
+disabled by default; enable them only for trusted authors and grant the
+matching `exec:csharp-expressions` or `exec:python-expressions` permission.
+See
+[Upgrade to Elsa 3.8.0](../getting-started/upgrading-to-3.8.md) for the full
+security and module checklist.
 3.  **Update appsettings.json**
 
     Add the following configuration section to `appsettings.json` or `appsettings.Development.json` with the following content:
@@ -138,6 +168,16 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
             "BasePath": "/api/workflows"
         }
     }
+    ```
+
+    Supply the identity values through user secrets or environment variables;
+    keep them out of committed `appsettings.json` files:
+
+    ```bash
+    dotnet user-secrets init
+    dotnet user-secrets set "Identity:Tokens:SigningKey" "$(openssl rand -hex 32)"
+    dotnet user-secrets set "Identity:Bootstrap:UserName" "admin"
+    dotnet user-secrets set "Identity:Bootstrap:Password" "replace-with-a-local-bootstrap-password"
     ```
 4.  **Create \_Host.cshtml**
 
@@ -160,7 +200,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-        <title>Elsa Studio 3.0</title>
+        <title>Elsa Studio 3.8.0</title>
         <base href="/"/>
         <link rel="apple-touch-icon" sizes="180x180" href="@basePath/_content/Elsa.Studio.Shell/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="@basePath/_content/Elsa.Studio.Shell/favicon-32x32.png">
@@ -219,14 +259,25 @@ Next, we will modify the client project.
 
     ```bash
     cd ../ElsaStudio
-    dotnet add package Elsa.Studio
-    dotnet add package Elsa.Studio.Core.BlazorWasm
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI
-    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm
-    dotnet add package Elsa.Studio.Localization.BlazorWasm
-    dotnet add package Elsa.Api.Client
+    dotnet add package Elsa.Studio --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.UI --version 3.8.0
+    dotnet add package Elsa.Studio.Core.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Localization.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Api.Client --version 3.8.0
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly --version 10.0.8
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Authentication --version 10.0.8
     ```
+Before changing `Program.cs`, add this property inside a `PropertyGroup` in the
+client `.csproj`. Studio selects its culture during startup, so the WebAssembly
+application must load the required globalization data:
+
+```xml
+<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+```
+
 2.  **Modify Program.cs**
 
     Open `Program.cs` and replace its existing content with the code provided below:
@@ -235,6 +286,8 @@ Next, we will modify the client project.
 
     ```csharp
     using System.Text.Json;
+    using Elsa.Studio.Authentication.Abstractions.Models;
+    using Elsa.Studio.Authentication.UI.Extensions;
     using Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm.Extensions;
     using Elsa.Studio.Authentication.ElsaIdentity.HttpMessageHandlers;
     using Elsa.Studio.Authentication.ElsaIdentity.UI.Extensions;
@@ -272,6 +325,10 @@ Next, we will modify the client project.
     if (string.IsNullOrWhiteSpace(authProvider))
         authProvider = "ElsaIdentity";
 
+    if (!Enum.TryParse<StudioAuthenticationProvider>(authProvider, true, out var selectedAuthProvider))
+        throw new InvalidOperationException($"Unsupported authentication provider: {authProvider}");
+    builder.Services.AddStudioAuthenticationMode(options => options.Provider = selectedAuthProvider);
+
     Type authenticationHandler;
 
     if (authProvider.Equals("ElsaIdentity", StringComparison.OrdinalIgnoreCase))
@@ -303,6 +360,7 @@ Next, we will modify the client project.
 
     builder.Services.AddCore();
     builder.Services.AddShell();
+    builder.Services.AddAuthenticationUI(); // Registers the shared /login page and its services.
     builder.Services.AddRemoteBackend(new()
     {
         ConfigureHttpClientBuilder = options => options.AuthenticationHandler = authenticationHandler
@@ -337,7 +395,7 @@ Next, we will modify the client project.
     ```json
     {
         "Authentication": {
-            "Provider": "OpenIdConnect",
+            "Provider": "ElsaIdentity",
             "OpenIdConnect": {
                 "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
                 "ClientId": "{client-id}",
@@ -359,6 +417,8 @@ Next, we will modify the client project.
         }
     }
     ```
+
+    The sample selects `ElsaIdentity` so it can use the server bootstrap administrator. The `OpenIdConnect` section is inactive until you change `Provider` to `OpenIdConnect` and replace its placeholders with your identity-provider settings.
 
     `AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
@@ -393,12 +453,8 @@ dotnet run --urls https://localhost:5001
 
 Your application is now accessible at [https://localhost:5001](https://localhost:5001/).
 
-By default, you can log in using:
-
-```
-username: admin
-password: password
-```
+Sign in with a user configured by the server's identity provider. Stable
+3.8.0 no longer supplies a hard-coded `admin`/`password` login.
 
 ## Source Code <a href="#source-code" id="source-code"></a>
 

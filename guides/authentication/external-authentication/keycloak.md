@@ -6,8 +6,10 @@ description: >-
 
 # Keycloak Walkthrough
 
-{% hint style="warning" %}
-This walkthrough uses the Elsa 3.8 preview packages from Feedz. External Authentication is under active development. Use sample credentials only in an isolated development environment.
+{% hint style="info" %}
+This walkthrough uses the stable Elsa 3.8.0 External Authentication packages.
+Use sample credentials only in an isolated development environment and keep
+provider secrets outside source control.
 {% endhint %}
 
 This walkthrough makes the provider-neutral configuration concrete with Keycloak. The same Elsa configuration model applies to Microsoft Entra ID, Auth0, Okta, OpenIddict, and other conforming OpenID Connect providers.

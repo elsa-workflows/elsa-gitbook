@@ -198,14 +198,14 @@ MyWorkflows.Extensions/
 ```xml
 <ItemGroup>
   <!-- Core Elsa packages -->
-  <PackageReference Include="Elsa" Version="3.7.0" />
-  <PackageReference Include="Elsa.Workflows.Core" Version="3.7.0" />
+  <PackageReference Include="Elsa" Version="3.8.0" />
+  <PackageReference Include="Elsa.Workflows.Core" Version="3.8.0" />
   
   <!-- Optional: For HTTP activities -->
-  <PackageReference Include="Elsa.Http" Version="3.7.0" />
+  <PackageReference Include="Elsa.Http" Version="3.8.0" />
   
   <!-- Optional: For entity framework -->
-  <PackageReference Include="Elsa.Persistence.EFCore" Version="3.7.0" />
+  <PackageReference Include="Elsa.Persistence.EFCore" Version="3.8.0" />
 </ItemGroup>
 ```
 
@@ -259,18 +259,18 @@ public void MyFeature_RegistersActivities()
 
 ### Elsa 3.x
 
-The patterns described in this guide are compatible with Elsa Workflows version 3.7.0.
+The patterns described in this guide are compatible with Elsa Workflows version 3.8.0.
 
 **Key Version Notes:**
-- Elsa 3.7.0: Modern feature and module system
+- Elsa 3.8.0: Stable feature and module system
 - Breaking changes from 2.x: See [V2 to V3 Migration Guide](../migration-v2-to-v3.md)
 
 ### Recommended Versioning Strategy
 
 ```xml
 <!-- Use version ranges for forward compatibility -->
-<PackageReference Include="Elsa" Version="3.7.0" />
-<PackageReference Include="Elsa.Workflows.Core" Version="3.7.0" />
+<PackageReference Include="Elsa" Version="3.8.0" />
+<PackageReference Include="Elsa.Workflows.Core" Version="3.8.0" />
 ```
 
 ## Community Extensions
@@ -365,4 +365,4 @@ Consider contributing your extensions:
 
 **Document ID**: DOC-019  
 **Last Updated**: 2025-11-25  
-**Elsa Version**: 3.7.0
+**Elsa Version**: 3.8.0

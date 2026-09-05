@@ -6,6 +6,13 @@ description: >-
 
 # Elsa Server + Studio - Single Image
 
+{% hint style="warning" %}
+This example uses the independently published, unversioned
+`elsaworkflows/elsa-server-and-studio-v3:latest` image. Verify its digest and
+release metadata before treating it as an Elsa 3.8.0 deployment; use [Upgrade
+to Elsa 3.8.0](../../upgrading-to-3.8.md) for stable source and package hosts.
+{% endhint %}
+
 ### Docker Compose Configuration﻿ <a href="#docker-compose-configuration" id="docker-compose-configuration"></a>
 
 Below is an example Docker Compose configuration that sets up the Elsa Server + Studio application:
@@ -40,9 +47,8 @@ services:
 
 Once the container is running, you can access Elsa Studio in your browser at: [http://localhost:14000](http://localhost:14000/).
 
-Use the default admin credentials to log in.
-
-```
-username: admin
-password: password
-```
+Configure the server's `Identity` section and
+`Identity:Tokens:SigningKey` through the image's published configuration
+before signing in. Because the image tag is unversioned, do not infer its
+login defaults from the Elsa 3.8.0 package documentation. For a 3.8.0 source
+or package host, see [Elsa Identity](../../../guides/authentication/elsa-identity.md).

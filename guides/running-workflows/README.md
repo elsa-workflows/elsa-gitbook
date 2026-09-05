@@ -207,7 +207,7 @@ This section covers common issues when executing workflows via the REST API.
    });
    
    // In the app builder
-   app.UseWorkflowsApi();
+   app.MapWorkflowsApi();
    app.UseWorkflows(); // Registers HTTP endpoints for workflow triggers
    ```
 

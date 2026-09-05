@@ -1,14 +1,13 @@
 ---
 description: >-
   Manage Elsa External Authentication connections, identity links, and sessions
-  from Elsa Studio 3.8 preview.
+  from Elsa Studio 3.8.0.
 ---
 
 # External Authentication administration
 
-> **Preview feature — Elsa 3.8.** This functionality is available from the
-> Feedz.io preview feed while it remains under development. Verify matching
-> Elsa Core and Studio preview versions before relying on a management action.
+> **Elsa 3.8.0 stable.** This functionality is included in the stable Elsa Core
+> and Studio 3.8.0 packages. Keep both package families aligned.
 
 After a Studio host registers `Elsa.Studio.ExternalAuthentication`, its
 **Administration → Identity & access** menu can expose an Elsa Server-backed
@@ -123,8 +122,8 @@ configured state, and resolvability—not the value.
 
 Adapters supply field descriptors, validation, capabilities, and (optionally) a
 custom editor contract. Studio uses these server-provided descriptors for
-provider-specific fields, so the available fields vary by adapter and preview
-version.
+provider-specific fields, so the available fields vary by adapter and the
+installed 3.8.0 package set.
 
 For unlinked identities, the policy form is descriptor-driven:
 
@@ -135,8 +134,8 @@ For unlinked identities, the policy form is descriptor-driven:
   picker becomes read-only and warns the operator instead of accepting raw role
   IDs.
 
-Although the contract contains permission and claim mapping DTOs, this preview
-does not expose customer-facing mapping or permission-preview editors. Do not
+Although the contract contains permission and claim mapping DTOs, this Studio
+release does not expose customer-facing mapping or permission-preview editors. Do not
 document those as an available Studio workflow.
 
 ### Test connection and Preview sign-in
@@ -211,10 +210,10 @@ who understand the identity source; it is not a general user-profile editor.
 connection key, and active/revoked status, plus cursor paging.
 
 {% hint style="warning" %}
-In the current 3.8 preview, Studio labels and sends the connection filter as
-**Connection ID**, while the Elsa Server endpoint expects `connectionKey`.
+In the Elsa 3.8.0 release source, Studio labels and sends the connection filter
+as **Connection ID**, while the Elsa Server endpoint expects `connectionKey`.
 Leave that Studio filter empty or query the REST API with `connectionKey` until
-the preview clients are aligned.
+the clients are aligned.
 {% endhint %}
 
 The page intentionally shows only safe metadata: session ID, user ID, tenant

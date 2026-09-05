@@ -6,7 +6,9 @@ description: >-
 
 # Configure External Authentication
 
-> **Elsa 3.8 preview:** This guide documents the preview External Authentication modules distributed from Feedz. The feature is under development; validate every preview upgrade before promoting it.
+This guide documents the stable Elsa 3.8.0 External Authentication modules.
+Keep the Core and Studio package families aligned at `3.8.0` when applying the
+configuration.
 
 External Authentication has two configuration boundaries:
 

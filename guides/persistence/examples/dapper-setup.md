@@ -7,6 +7,17 @@ description: >-
 
 This document provides a minimal, copy-pasteable example for configuring Elsa Workflows with Dapper persistence.
 
+{% hint style="warning" %}
+**Historical provider example**
+
+This page retains version-specific Dapper migration references from the 3.7.0
+documentation. The Elsa Core 3.8.0 stable tag does not contain the
+`Elsa.Persistence.Dapper.Migrations` source used by these examples, so this is
+not a verified 3.8.0 setup. Treat the snippets as historical reference and
+use the [EF Core setup guide](efcore-setup.md) for a provider covered by the
+3.8.0 source tree until a separately published Dapper package is verified.
+{% endhint %}
+
 ## Prerequisites
 
 - .NET 8.0 or later

@@ -211,8 +211,8 @@ Based on typical Elsa Studio functionality and common workflow designer patterns
 1. ❌ No comprehensive Studio tour/walkthrough
 2. ❌ No designer keyboard shortcuts documentation
 3. ❌ Limited connection configuration guide
-4. ⚠️ Activity picker documentation exists (3.7-preview) but incomplete
-5. ⚠️ Content visualizers documented (3.6-preview) but could be expanded
+4. ⚠️ Activity picker documentation exists but is incomplete
+5. ⚠️ Content visualizers are documented but could be expanded
 6. ⚠️ UI hints documented but lacks examples
 7. ❌ No troubleshooting guide for Studio connection issues
 8. ❌ No best practices for workflow organization in Studio
@@ -245,4 +245,3 @@ Based on typical Elsa Studio functionality and common workflow designer patterns
    - Custom UI hints and visualizers
    - Extending Studio with plugins
    - Integration with external systems
-

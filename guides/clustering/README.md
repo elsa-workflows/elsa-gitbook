@@ -1382,7 +1382,7 @@ builder.Services.AddElsa(elsa =>
     });
 });
 
-// In Elsa Studio, use the 3.7.0 Blazor host pattern from
+// In Elsa Studio, use the 3.8.0 Blazor host pattern from
 // guides/studio/integration/README.md and set:
 // Backend:Url = "https://api.example.com/elsa/api"
 // Authentication:Provider = "OpenIdConnect"
