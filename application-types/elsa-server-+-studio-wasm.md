@@ -362,15 +362,18 @@ application must load the required globalization data:
         ConfigureLocalizationOptions = options => configuration.GetSection("Localization").Bind(options)
     };
 
+    var backendApiConfig = new BackendApiConfig
+    {
+        ConfigureBackendOptions = options => configuration.GetSection("Backend").Bind(options),
+        ConfigureHttpClientBuilder = options => options.AuthenticationHandler = authenticationHandler
+    };
+
     builder.Services.AddCore();
     builder.Services.AddShell();
     builder.Services.AddAuthenticationUI(); // Registers the shared /login page and its services.
-    builder.Services.AddRemoteBackend(new()
-    {
-        ConfigureHttpClientBuilder = options => options.AuthenticationHandler = authenticationHandler
-    });
+    builder.Services.AddRemoteBackend(backendApiConfig);
 
-    builder.Services.AddDashboardModule();
+    builder.Services.AddDashboardModule(backendApiConfig);
     builder.Services.AddWorkflowsModule();
     builder.Services.AddLocalizationModule(localizationConfig);
 

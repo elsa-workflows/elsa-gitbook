@@ -139,7 +139,7 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
     builder.Services.AddShell();
     builder.Services.AddAuthenticationUI(); // Registers the shared /login page and its services.
     builder.Services.AddRemoteBackend(backendApiConfig);
-    builder.Services.AddDashboardModule();
+    builder.Services.AddDashboardModule(backendApiConfig);
     builder.Services.AddWorkflowsModule();
     builder.Services.AddLocalizationModule(localizationConfig);
 
