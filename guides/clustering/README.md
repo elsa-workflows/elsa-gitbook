@@ -192,18 +192,23 @@ public async Task<ResumeWorkflowResult> ResumeWorkflowAsync(
 
 #### 3. Centralized Scheduler (Quartz.NET Clustering)
 
-Quartz.NET clustering ensures scheduled jobs (timers, delays, cron triggers) execute only once across the cluster.
-
-**Code References:**
-- `src/modules/Elsa.Scheduling/Services/DefaultBookmarkScheduler.cs` - Enqueues bookmark resume tasks
-- `src/modules/Elsa.Scheduling/Tasks/ResumeWorkflowTask.cs` - Quartz job that resumes workflows
+For the release-backed Elsa configuration, see [Quartz Scheduling](../running-workflows/quartz-scheduling.md).
+Elsa's `DefaultBookmarkScheduler` and `DefaultTriggerScheduler` classify
+scheduled bookmarks and triggers, then delegate through `IWorkflowScheduler`.
+When Quartz is selected, `QuartzWorkflowScheduler` stores the corresponding
+start/resume jobs and triggers in Quartz. Clustering coordinates scheduler
+instances, but it is not a guarantee that external side effects are
+idempotent.
 
 **How It Works:**
-1. `DefaultBookmarkScheduler` creates a Quartz job for each scheduled bookmark
-2. Quartz stores job metadata in a shared database
-3. At execution time, nodes compete for a database lock
-4. The node that acquires the lock executes the job; others skip it
-5. Failed nodes' jobs are recovered by surviving nodes (failover)
+1. Elsa classifies a timer, cron, or time-based bookmark.
+2. The configured `IWorkflowScheduler` creates a start or resume schedule.
+3. With Quartz selected, `QuartzWorkflowScheduler` stores a durable Quartz job
+   and trigger in the configured provider store.
+4. Clustered Quartz nodes coordinate access to the shared job store; the node
+   that acquires the firing executes the Elsa start or resume job.
+5. Retry and recovery behavior depends on the Quartz store and job
+   configuration. Verify it with the deployment's actual failure test.
 
 #### 4. Distributed Cache Invalidation
 
@@ -537,38 +542,12 @@ To use a different provider, simply register it as shown above. Elsa's `Workflow
 
 ### Configuring Quartz Clustering
 
-**Example quartz.properties:**
-```properties
-# Cluster instance configuration
-quartz.scheduler.instanceName = ElsaQuartzCluster
-quartz.scheduler.instanceId = AUTO
+Use Elsa's provider helpers so the scheduler, persistence store, migrations,
+table prefix, and clustering setting stay aligned:
 
-# Thread pool
-quartz.threadPool.type = Quartz.Simpl.SimpleThreadPool, Quartz
-quartz.threadPool.threadCount = 10
-
-# Persistent job store with clustering
-quartz.jobStore.type = Quartz.Impl.AdoJobStore.JobStoreTX, Quartz
-quartz.jobStore.dataSource = default
-quartz.jobStore.tablePrefix = qrtz_
-quartz.jobStore.driverDelegateType = Quartz.Impl.AdoJobStore.PostgreSQLDelegate, Quartz
-
-# Enable clustering
-quartz.jobStore.clustered = true
-quartz.jobStore.clusterCheckinInterval = 20000
-quartz.jobStore.clusterCheckinMisfireThreshold = 60000
-
-# PostgreSQL data source
-quartz.dataSource.default.provider = Npgsql
-quartz.dataSource.default.connectionString = Server=localhost;Database=elsa;User Id=elsa;Password=YOUR_PASSWORD
-
-# Serialization
-quartz.serializer.type = json
-```
-
-**Configuration in Program.cs:**
 ```csharp
 using Elsa.Extensions;
+using Elsa.Persistence.EFCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -580,33 +559,20 @@ builder.Services.AddElsa(elsa =>
     // Enable Quartz scheduling
     elsa.UseScheduling(scheduling => scheduling.UseQuartzScheduler());
     
-    // Configure Quartz with PostgreSQL and clustering
-    elsa.UseQuartz(quartz =>
-    {
-        // This automatically enables clustering
-        quartz.UsePostgreSql(builder.Configuration.GetConnectionString("PostgreSql"));
-    });
-});
-
-// Configure Quartz service
-builder.Services.AddQuartzHostedService(options =>
-{
-    options.WaitForJobsToComplete = true;
+    elsa.UseQuartz(quartz => quartz.UsePostgreSql(
+        builder.Configuration.GetConnectionString("PostgreSql")!,
+        useClustering: true));
 });
 
 var app = builder.Build();
 app.Run();
 ```
 
-**Environment Variables:**
-```bash
-QUARTZ__CLUSTERED=true
-QUARTZ__INSTANCENAME=ElsaQuartzCluster
-QUARTZ__SCHEDULER_INSTANCEID=AUTO
-CONNECTIONSTRINGS__POSTGRESQL="Server=postgres-host;Database=elsa;User Id=elsa;Password=YOUR_PASSWORD"
-```
-
-**See:** `examples/quartz-cluster-config.md` for detailed configuration options.
+The SQL Server, PostgreSQL, and MySQL helpers enable clustering by default;
+SQLite defaults to clustering disabled. See [Quartz Scheduling](../running-workflows/quartz-scheduling.md)
+for provider selection, table prefixes, scheduler identity, migrations, and
+verification. Do not add a second `AddQuartzHostedService` when `UseQuartz`
+owns the Elsa Quartz lifecycle.
 
 ### Kubernetes Configuration
 

@@ -236,7 +236,8 @@ If scheduled workflows do not fire, check the [Troubleshooting guide](../trouble
 
 If you need schedules to survive restarts or coordinate across multiple nodes, replace the default local scheduler.
 
-Quartz is the built-in durable option most Elsa deployments use:
+For a durable scheduler, use the release-backed [Quartz Scheduling](quartz-scheduling.md)
+guide. The minimal selection is:
 
 ```csharp
 builder.Services.AddElsa(elsa =>
@@ -246,7 +247,10 @@ builder.Services.AddElsa(elsa =>
 });
 ```
 
-In `release/3.8.0`, Quartz replaces the scheduling feature's `WorkflowScheduler` with `QuartzWorkflowScheduler` and swaps the cron parser to `QuartzCronParser`.
+In `release/3.8.0`, Quartz replaces the scheduling feature's `IWorkflowScheduler`
+with `QuartzWorkflowScheduler` and uses `QuartzCronParser`. Quartz persistence
+and clustering are separate from Elsa workflow persistence; configure both when
+scheduled work and workflow state must survive a restart.
 
 Hangfire is also supported:
 
@@ -281,5 +285,6 @@ Keep these 3.8.0 behaviors in mind:
 * [Using a Trigger](using-a-trigger.md)
 * [Running Workflows](README.md)
 * [Long-Running Workflows](long-running-workflows.md)
+* [Quartz Scheduling](quartz-scheduling.md)
 * [Clustering](../clustering/README.md)
 * [Troubleshooting](../troubleshooting/README.md)
