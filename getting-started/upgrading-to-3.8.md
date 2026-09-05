@@ -92,8 +92,10 @@ builder.Services.AddElsa(elsa => elsa
     .UseDefaultAuthentication());
 ```
 
-The initializer is idempotent. After the first bootstrap, rotate the bootstrap
-credentials according to your deployment policy. If the host intentionally uses
+The initializer is idempotent. This abbreviated registration uses in-memory
+identity stores; add a durable identity provider before deployment, as shown
+in the [server setup guide](../application-types/elsa-server.md). After the
+first bootstrap, rotate the credentials according to your deployment policy. If the host intentionally uses
 configuration-backed users, applications, and roles instead, keep those
 `UseConfigurationBased*Provider` registrations and configure the values
 through deployment-owned configuration.
@@ -140,6 +142,23 @@ The required permissions are `exec:csharp-expressions` and
 `exec:python-expressions`. Treat enabling either option as granting access to
 the host process. If the application does not need one of these engines,
 remove its package and registration during the upgrade.
+
+## Update custom Studio hosts
+
+For Elsa Identity and direct OpenID Connect hosts, register the shared
+`Elsa.Studio.Authentication.UI` module at version `3.8.0` and call
+`AddAuthenticationUI()`. `AddElsaIdentityUI()` registers the identity provider
+and redirect; it does not register the shared `/login` page. Select the host's
+authentication provider with `AddStudioAuthenticationMode(...)` as shown in
+the [Studio setup guide](../application-types/elsa-studio.md). Legacy
+`ElsaLogin` hosts use their own login module.
+
+WebAssembly hosts that select a culture during startup need
+`<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>`
+in their client project. A hosted WebAssembly application also needs
+`UseBlazorFrameworkFiles()` before `UseStaticFiles()` to serve its boot
+resources. Verify that the browser displays the sign-in form; a successful
+build or an HTTP 200 for the host page does not prove that WebAssembly started.
 
 ## Wire optional modules explicitly
 

@@ -9,7 +9,7 @@ description: >-
 An Elsa Server is an ASP.NET Core web application that lets you manage workflows using a REST API and execute them. You can store your workflows in various places like databases, file systems, or even cloud storage.
 
 {% hint style="warning" %}
-This page targets Elsa 3.8.0. The 3.8.0 server requires a configured JWT
+This walkthrough requires the .NET 10 SDK and targets Elsa 3.8.0. The 3.8.0 server requires a configured JWT
 signing key and no longer supplies production-usable admin credentials or API
 keys. Use deployment-owned configuration for identity values; do not copy
 secrets into `Program.cs`.
@@ -24,7 +24,7 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
     Open your command line tool and run these commands:
 
     ```bash
-    dotnet new web -n "ElsaServer"
+    dotnet new web -n "ElsaServer" --framework net10.0
     ```
 2.  **CD into the project's directory**
 

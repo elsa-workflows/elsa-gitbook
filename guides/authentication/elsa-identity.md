@@ -81,8 +81,10 @@ builder.Services.AddElsa(elsa => elsa
     .UseDefaultAuthentication());
 ```
 
-The initializer is idempotent. Rotate the bootstrap credentials after initial
-access. `UseDefaultAuthentication()` does not grant the security-root
+The initializer is idempotent. The abbreviated registration above uses
+in-memory identity stores; for durable users and roles, use the EF identity
+provider shown in the [server setup guide](../../application-types/elsa-server.md).
+Rotate the bootstrap credentials after initial access. `UseDefaultAuthentication()` does not grant the security-root
 permission to localhost by default; use an authenticated administrator for
 deployed hosts. An isolated local host can opt in explicitly with
 `EnableLocalHostPermissionGrantForSecurityRoot()`.

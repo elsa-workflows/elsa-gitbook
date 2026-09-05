@@ -11,7 +11,7 @@ Instead of running Elsa Server and Elsa Studio as separate ASP.NET Core applicat
 For Elsa Studio, we will setup the Blazor parts using Blazor WebAssembly, which static files will be served from the ASP.NET Core host application.
 
 {% hint style="warning" %}
-This page targets Elsa 3.8.0. The server must receive a real identity signing
+This walkthrough requires the .NET 10 SDK and targets Elsa 3.8.0. The server must receive a real identity signing
 key and deployment-owned users/applications before startup. Stable 3.8.0 does
 not provide production-usable default admin credentials.
 {% endhint %}
@@ -32,13 +32,13 @@ Run the following commands to create a solution with two projects:
 dotnet new sln -n ElsaServerAndStudio
 
 # Create the host project
-dotnet new web -n "ElsaServer"
+dotnet new web -n "ElsaServer" --framework net10.0
 
 # Add the host project to the solution
 dotnet sln add ElsaServer/ElsaServer.csproj
 
 # Create the client project
-dotnet new blazorwasm -n "ElsaStudio"
+dotnet new blazorwasm -n "ElsaStudio" --framework net10.0
 
 # Add the client project to the solution
 dotnet sln add ElsaStudio/ElsaStudio.csproj
@@ -69,7 +69,7 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     dotnet add package Elsa.Expressions.CSharp --version 3.8.0
     dotnet add package Elsa.Expressions.JavaScript --version 3.8.0
     dotnet add package Elsa.Expressions.Liquid --version 3.8.0
-    dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server --version 8.0.0
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server --version 10.0.8
     ```
 2.  **Update Program.cs**
 
@@ -132,7 +132,8 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     }
 
     app.UseHttpsRedirection();
-    // UseStaticFiles keeps this host compatible with the .NET 8 target.
+    // Serve WebAssembly boot resources (including ICU data) and application assets.
+    app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
     app.UseRouting();
     app.UseCors();
@@ -259,13 +260,24 @@ Next, we will modify the client project.
     ```bash
     cd ../ElsaStudio
     dotnet add package Elsa.Studio --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.UI --version 3.8.0
     dotnet add package Elsa.Studio.Core.BlazorWasm --version 3.8.0
     dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm --version 3.8.0
     dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI --version 3.8.0
     dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm --version 3.8.0
     dotnet add package Elsa.Studio.Localization.BlazorWasm --version 3.8.0
     dotnet add package Elsa.Api.Client --version 3.8.0
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly --version 10.0.8
+    dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Authentication --version 10.0.8
     ```
+Before changing `Program.cs`, add this property inside a `PropertyGroup` in the
+client `.csproj`. Studio selects its culture during startup, so the WebAssembly
+application must load the required globalization data:
+
+```xml
+<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+```
+
 2.  **Modify Program.cs**
 
     Open `Program.cs` and replace its existing content with the code provided below:
@@ -274,6 +286,8 @@ Next, we will modify the client project.
 
     ```csharp
     using System.Text.Json;
+    using Elsa.Studio.Authentication.Abstractions.Models;
+    using Elsa.Studio.Authentication.UI.Extensions;
     using Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm.Extensions;
     using Elsa.Studio.Authentication.ElsaIdentity.HttpMessageHandlers;
     using Elsa.Studio.Authentication.ElsaIdentity.UI.Extensions;
@@ -311,6 +325,10 @@ Next, we will modify the client project.
     if (string.IsNullOrWhiteSpace(authProvider))
         authProvider = "ElsaIdentity";
 
+    if (!Enum.TryParse<StudioAuthenticationProvider>(authProvider, true, out var selectedAuthProvider))
+        throw new InvalidOperationException($"Unsupported authentication provider: {authProvider}");
+    builder.Services.AddStudioAuthenticationMode(options => options.Provider = selectedAuthProvider);
+
     Type authenticationHandler;
 
     if (authProvider.Equals("ElsaIdentity", StringComparison.OrdinalIgnoreCase))
@@ -342,6 +360,7 @@ Next, we will modify the client project.
 
     builder.Services.AddCore();
     builder.Services.AddShell();
+    builder.Services.AddAuthenticationUI(); // Registers the shared /login page and its services.
     builder.Services.AddRemoteBackend(new()
     {
         ConfigureHttpClientBuilder = options => options.AuthenticationHandler = authenticationHandler
@@ -376,7 +395,7 @@ Next, we will modify the client project.
     ```json
     {
         "Authentication": {
-            "Provider": "OpenIdConnect",
+            "Provider": "ElsaIdentity",
             "OpenIdConnect": {
                 "Authority": "https://login.microsoftonline.com/{tenant-id}/v2.0",
                 "ClientId": "{client-id}",
@@ -398,6 +417,8 @@ Next, we will modify the client project.
         }
     }
     ```
+
+    The sample selects `ElsaIdentity` so it can use the server bootstrap administrator. The `OpenIdConnect` section is inactive until you change `Provider` to `OpenIdConnect` and replace its placeholders with your identity-provider settings.
 
     `AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
