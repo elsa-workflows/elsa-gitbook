@@ -66,6 +66,8 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     dotnet add package Elsa.Identity --version 3.8.0
     dotnet add package Elsa.Scheduling --version 3.8.0
     dotnet add package Elsa.Workflows.Api --version 3.8.0
+    dotnet add package Elsa.Dashboard.Api --version 3.8.0
+    dotnet add package Elsa.Workflows.Runtime.Dashboard --version 3.8.0
     dotnet add package Elsa.Expressions.CSharp --version 3.8.0
     dotnet add package Elsa.Expressions.JavaScript --version 3.8.0
     dotnet add package Elsa.Expressions.Liquid --version 3.8.0
@@ -116,6 +118,8 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
             .UseLiquid()
             .UseHttp(http => http.ConfigureHttpOptions = options => configuration.GetSection("Http").Bind(options))
             .UseWorkflowsApi()
+            .UseDashboardApi()
+            .UseWorkflowRuntimeDashboard()
             .AddActivitiesFrom<Program>()
             .AddWorkflowsFrom<Program>()
         );
@@ -358,15 +362,18 @@ application must load the required globalization data:
         ConfigureLocalizationOptions = options => configuration.GetSection("Localization").Bind(options)
     };
 
+    var backendApiConfig = new BackendApiConfig
+    {
+        ConfigureBackendOptions = options => configuration.GetSection("Backend").Bind(options),
+        ConfigureHttpClientBuilder = options => options.AuthenticationHandler = authenticationHandler
+    };
+
     builder.Services.AddCore();
     builder.Services.AddShell();
     builder.Services.AddAuthenticationUI(); // Registers the shared /login page and its services.
-    builder.Services.AddRemoteBackend(new()
-    {
-        ConfigureHttpClientBuilder = options => options.AuthenticationHandler = authenticationHandler
-    });
+    builder.Services.AddRemoteBackend(backendApiConfig);
 
-    builder.Services.AddDashboardModule();
+    builder.Services.AddDashboardModule(backendApiConfig);
     builder.Services.AddWorkflowsModule();
     builder.Services.AddLocalizationModule(localizationConfig);
 
