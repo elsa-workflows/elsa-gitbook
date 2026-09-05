@@ -1,4 +1,4 @@
-# Workflow Editor (3.5-preview)
+# Workflow Editor Design Notes
 
 As of version 3.5.0, the default workflow editor got a minor UI refresh.
 

@@ -7,7 +7,9 @@ description: >-
 # External Authentication REST API
 
 {% hint style="warning" %}
-These APIs first appear in the Elsa 3.8 preview and remain under active development. Generate clients against the exact preview build you deploy and keep Core and Studio package versions aligned.
+These APIs are available in the stable Elsa 3.8.0 package family. Generate
+clients against the exact `3.8.0` contracts you deploy and keep Core and Studio
+package versions aligned.
 {% endhint %}
 
 All paths below are relative to Elsa's configured API prefix, commonly `/elsa/api`. JSON uses camel case. IDs and flow handles are opaque.

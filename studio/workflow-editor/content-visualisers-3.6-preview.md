@@ -1,4 +1,4 @@
-# Content Visualisers (3.6-preview)
+# Content Visualisers
 
 ## Overview
 

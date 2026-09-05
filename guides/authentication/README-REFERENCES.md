@@ -29,11 +29,12 @@ repository.
 
 ## Maintenance Rules
 
-- Validate examples against `release/3.8.0` while Elsa 3.8 is in development.
+- Validate examples against the stable `3.8.0` tags while the package family
+  evolves.
 - Keep Direct OIDC and External Authentication as separate, selectable
   topologies. Direct OIDC is not deprecated in Elsa 3.8.
-- Keep External Authentication's preview and Feedz.io status prominent until
-  the packages reach general availability.
+- Keep External Authentication's stable `3.8.0` package alignment and migration
+  notes prominent.
 - Document API authorization through Elsa `permissions` claims; do not imply
   that ASP.NET Core roles alone authorize Elsa API endpoints.
 - Keep workflow `HttpEndpoint` authorization under Security & Hardening.

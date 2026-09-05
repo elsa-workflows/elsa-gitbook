@@ -6,10 +6,12 @@ description: >-
 
 # External Authentication
 
-{% hint style="warning" %}
-**Preview in Elsa 3.8**
+{% hint style="info" %}
+**Available in Elsa 3.8.0**
 
-External Authentication is available starting with **Elsa 3.8**, which is currently under active development. The packages are preview-only and are published through the [Elsa Feedz preview feed](../../../getting-started/packages.md#previews). APIs, configuration, persistence migrations, and Studio screens can still change before general availability.
+External Authentication is included in the stable Elsa 3.8.0 Core and Studio
+packages. Install the matching `3.8.0` package family from NuGet.org and keep
+Core, Studio, and Extensions versions aligned.
 {% endhint %}
 
 External Authentication is Elsa's brokered sign-in capability. Elsa Server becomes the relying party for one or more upstream identity providers, resolves the external identity to an Elsa User, and issues the Elsa credentials used by Studio. Provider tokens and client secrets do not pass through Studio.
@@ -59,8 +61,8 @@ The upstream provider client and the Elsa **Authentication Client** are separate
 
 Use this shortest safe path for an isolated development environment:
 
-1. Add the Feedz preview source and install the Core foundation plus the OIDC
-   adapter as shown in [Installation](installation.md#configure-the-preview-feed).
+1. Install the stable Core foundation plus the OIDC adapter as shown in
+   [Installation](installation.md#install-stable-packages).
 2. Enable Elsa Identity, External Authentication, and the OIDC adapter. Use the
    in-memory stores only for this first single-node run.
 3. Configure one OIDC connection, one Studio Authentication Client, the public
@@ -121,7 +123,9 @@ Both Studio hosting models are supported. Neither is universally preferred: [com
 - **Unlinked Identity Policy**: determines whether a first external sign-in is rejected, creates a user, or invokes an installed matcher.
 - **Permission Grant Source**: converts trusted provider information into explicit Elsa authorization grants. Upstream roles never become Elsa permissions automatically.
 
-In the current 3.8 preview UI, these resources appear under **Administration → Identity & access** as **Identity provider connections**, **External identity links**, and **Authentication sessions**.
+In the Elsa 3.8.0 UI, these resources appear under **Administration → Identity
+& access** as **Identity provider connections**, **External identity links**,
+and **Authentication sessions**.
 
 ## Scope of This Guide
 

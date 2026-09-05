@@ -1,15 +1,15 @@
 ---
 description: >-
   Diagnose Elsa Studio External Authentication integration and administration
-  issues in Elsa 3.8 preview.
+  issues in Elsa 3.8.0.
 ---
 
 # External Authentication troubleshooting
 
-> **Preview feature — Elsa 3.8.** External Authentication currently ships from
-> the Feedz.io preview feed and remains under development. Check that Elsa Core
-> and Elsa Studio use compatible 3.8 preview builds before investigating a
-> runtime symptom as a configuration problem.
+> **Elsa 3.8.0 stable.** External Authentication ships in the stable Core and
+> Studio package family. Check that Elsa Core and Elsa Studio use compatible
+> `3.8.0` packages before investigating a runtime symptom as a configuration
+> problem.
 
 Start with the boundary that failed: Studio host startup, login method discovery,
 broker redirect/callback, token exchange/refresh, Elsa API authorization, or
@@ -20,7 +20,7 @@ URLs in logs or support tickets.
 ## Fast triage
 
 1. Record the Studio host model (Blazor Server or WebAssembly), public Studio
-   origin, Elsa API `Backend:Url`, and the preview package versions—without
+   origin, Elsa API `Backend:Url`, and the resolved `3.8.0` package versions—without
    secret values.
 2. Confirm `Authentication:Provider` is exactly `ExternalAuthentication`.
 3. Confirm Studio's `ClientId` identifies a dedicated Elsa Authentication
@@ -132,8 +132,8 @@ tenant and client:
 - a database override is not shadowing the configuration-owned record;
 - the Authentication Client itself is enabled and the request uses its exact
   registered callback and expected tenant context;
-- the adapter module is installed and its flow is available in this preview
-  build.
+- the adapter module is installed and its flow is available in the stable
+  package set.
 
 Use the public error category and correlation ID to locate the matching
 server-side security event. Do not expose provider exceptions or retry captured

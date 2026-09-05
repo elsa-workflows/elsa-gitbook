@@ -1,4 +1,4 @@
-# Activity Pickers (3.7-preview)
+# Activity Pickers
 
 ## Overview
 

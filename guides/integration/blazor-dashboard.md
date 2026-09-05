@@ -150,7 +150,7 @@ builder.Services.AddElsa(elsa =>
         .UseHttp();
 });
 
-// Add Elsa Studio 3.7.0 host services.
+// Add Elsa Studio 3.8.0 host services.
 builder.Services.AddCore();
 builder.Services.AddShell(options => builder.Configuration.GetSection("Shell").Bind(options));
 builder.Services.AddRemoteBackend(new BackendApiConfig
@@ -182,7 +182,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Map Elsa API endpoints under /elsa
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 
 // Map Blazor hub and Studio UI
 app.MapBlazorHub();
@@ -349,7 +349,7 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
@@ -488,7 +488,7 @@ var app = builder.Build();
 app.UseCors("AllowStudio");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 
 app.Run();
 ```
@@ -682,7 +682,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

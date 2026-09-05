@@ -27,10 +27,9 @@ controls.
 | The host supplies another ASP.NET Core authentication scheme | [Custom Authentication](custom-authentication.md) |
 | Authentication must be disabled for an isolated local environment | [Disable Authentication in Development](disable-authentication.md) |
 
-{% hint style="warning" %}
-External Authentication is available as of Elsa 3.8, which is currently under
-development. Preview packages are published through the Elsa Feedz.io feed;
-they are not stable releases.
+{% hint style="info" %}
+External Authentication is available in the stable Elsa 3.8.0 Core and Studio
+packages. Install the matching package family from NuGet.org.
 {% endhint %}
 
 Direct OpenID Connect and External Authentication are different topologies.

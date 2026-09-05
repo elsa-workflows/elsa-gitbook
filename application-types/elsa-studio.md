@@ -8,6 +8,13 @@ description: >-
 
 Elsa Studio is a Blazor application that let's you manage workflows through a UI. The application is essentially a SPA that connects to an Elsa Server as its back-end.
 
+{% hint style="warning" %}
+This page targets Elsa Studio 3.8.0. Install the Elsa package family at
+`3.8.0`, and configure the connected server's identity signing key and
+administrator through deployment-owned configuration. Elsa 3.8.0 does not
+provide production-usable default credentials.
+{% endhint %}
+
 ## Setup <a href="#setup" id="setup"></a>
 
 To setup Elsa Studio, we'll go through the following steps:
@@ -35,13 +42,13 @@ If you are using .NET 8.0+, you can just use `blazorwasm` instead of `blazorwasm
 
     ```
     cd ElsaStudioBlazorWasm
-    dotnet add package Elsa.Studio
-    dotnet add package Elsa.Studio.Core.BlazorWasm
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI
-    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm
-    dotnet add package Elsa.Studio.Localization.BlazorWasm
-    dotnet add package Elsa.Api.Client
+    dotnet add package Elsa.Studio --version 3.8.0
+    dotnet add package Elsa.Studio.Core.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI --version 3.8.0
+    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Studio.Localization.BlazorWasm --version 3.8.0
+    dotnet add package Elsa.Api.Client --version 3.8.0
     ```
 3.  **Modify Program.cs**
 
@@ -252,12 +259,10 @@ dotnet run --urls https://localhost:6001
 
 Your application is now accessible at [https://localhost:6001](https://localhost:6001/).
 
-By default, you can log in using:
-
-```
-username: admin
-password: password
-```
+The server controls the available users and roles. Configure an administrator
+through the server's identity provider before signing in; do not rely on a
+hard-coded `admin`/`password` pair. The [Elsa Identity guide](../guides/authentication/elsa-identity.md)
+shows the stable 3.8.0 configuration shape.
 
 ## Source Code <a href="#source-code" id="source-code"></a>
 

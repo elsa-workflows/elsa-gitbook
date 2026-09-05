@@ -6,7 +6,10 @@ description: >-
 
 # Run External Authentication in Production
 
-> **Preview feature:** Elsa External Authentication is a 3.8 preview capability distributed through Feedz and still under development. Treat it as a controlled rollout: pin a tested preview version, rehearse upgrade and rollback, and retest sign-in, refresh, logout, and recovery paths after every update.
+> **Elsa 3.8.0 stable:** External Authentication is part of the stable Core and
+> Studio package family. Keep a tested `3.8.0` package set, rehearse upgrade and
+> rollback, and retest sign-in, refresh, logout, and recovery paths after every
+> deployment change.
 
 The default broker registration uses in-memory state. That makes setup convenient, but it is a development-only choice: a restart loses active transactions and sessions, and nodes do not share broker state. Production requires durable External Authentication persistence, shared cryptographic material, and an intentional recovery path.
 
@@ -56,9 +59,9 @@ The durable feature replaces the in-memory implementations for:
 - External Authentication sessions and rotating refresh-token state.
 - Preview results, connection-test observations, and connection-registry versions.
 
-> **Important:** Identity persistence does not imply External Authentication persistence. In 3.8 preview, omitting the dedicated feature silently leaves the broker on in-memory stores. A single node may appear to work until it restarts; multiple nodes have inconsistent sessions, transactions, grants, and registry versions.
+> **Important:** Identity persistence does not imply External Authentication persistence. In 3.8.0, omitting the dedicated feature silently leaves the broker on in-memory stores. A single node may appear to work until it restarts; multiple nodes have inconsistent sessions, transactions, grants, and registry versions.
 
-Apply the provider's `Initial` migration before enabling traffic. The preview persistence packages use their own migration history. If you are upgrading within 3.8 preview, review the External Authentication persistence migration notes and test against a copy of your database; do not assume the Identity context migration history covers the broker tables.
+Apply the provider's `Initial` migration before enabling traffic. The External Authentication persistence packages use their own migration history. Review the migration notes and test against a copy of your database; do not assume the Identity context migration history covers the broker tables.
 
 ## Cluster requirements
 
@@ -100,7 +103,7 @@ Studio Server scale-out has a separate requirement described below.
 ### Blazor Server Studio scale-out
 
 Broker persistence applies to Elsa Server, not to the Studio host's own login
-cookie. In this preview, the Blazor Server package stores authentication tickets
+cookie. In this stable release, the Blazor Server package stores authentication tickets
 in a node-local `IMemoryCache` ticket store. A scaled-out Studio Server
 deployment must therefore use session affinity, or replace the configured
 ASP.NET Core `ITicketStore` with a shared implementation. Share the Studio

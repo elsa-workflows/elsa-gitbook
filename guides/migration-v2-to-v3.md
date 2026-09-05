@@ -198,7 +198,7 @@ builder.Services.AddElsa(elsa =>
 var app = builder.Build();
 
 // Use Elsa middleware
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.UseWorkflows();
 
 app.Run();

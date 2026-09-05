@@ -9,6 +9,17 @@ description: >-
 
 This quickstart guide helps you get Elsa Workflows up and running in minutes using Docker Compose. It's designed for evaluation, development, and learning purposes.
 
+{% hint style="warning" %}
+**The application image is published separately from the 3.8.0 packages**
+
+The examples use `elsaworkflows/elsa-server-and-studio-v3:latest`. This is an
+unversioned image reference; this repository does not establish that the
+current `latest` image contains Elsa 3.8.0. Treat this page as an evaluation
+quickstart, verify the image digest and its own release metadata, and use the
+[Elsa 3.8.0 upgrade guide](../../upgrading-to-3.8.md) for source and NuGet
+package hosts.
+{% endhint %}
+
 ## Prerequisites
 
 Before you begin, ensure you have:
@@ -67,18 +78,20 @@ docker compose up -d
 
 Wait a few seconds for the services to start, then access Elsa Studio at [http://localhost:14000](http://localhost:14000/).
 
-{% hint style="success" %}
-**Default Credentials**
+{% hint style="info" %}
+**Identity behavior follows the image**
 
-* Username: `admin`
-* Password: `password`
-
-Change these in production environments!
+Because the image tag is unversioned, do not infer its login defaults from the
+Elsa 3.8.0 package documentation. Follow the image's published configuration
+for this evaluation image. For an Elsa 3.8.0 source or package host, configure
+the signing key and bootstrap administrator described in [Elsa Identity](../../../guides/authentication/elsa-identity.md).
 {% endhint %}
 
-### Option 2: PostgreSQL (Production-Ready)
+### Option 2: PostgreSQL-backed evaluation
 
-For production-like evaluation with a robust database, use PostgreSQL:
+For evaluation with an external database, use PostgreSQL. The compose file is
+still an evaluation example; apply your own backup, TLS, secret, and upgrade
+policy before operating any deployment as a production service:
 
 ```yaml
 services:
@@ -348,12 +361,11 @@ docker-compose up -d
 
 ### Authentication Problems
 
-**Symptom**: Can't log in with default credentials
+**Symptom**: Can't log in after configuring the container
 
 **Solutions**:
-1. Ensure you're using:
-   - Username: `admin`
-   - Password: `password`
+1. Confirm that the server's `Identity` section contains the intended user and
+   role and that `Identity:Tokens:SigningKey` is configured.
 
 2. Clear browser cache and cookies
 
@@ -369,7 +381,7 @@ docker-compose up -d
 
 ### Security
 
-1. **Change Default Credentials**: Never use default admin credentials in production
+1. **Configure deployment-owned identity**: For a 3.8.0 package host, follow the identity bootstrap instructions in the [upgrade guide](../../upgrading-to-3.8.md); for this unversioned image, follow its published identity contract
 2. **Use Strong Passwords**: For both Elsa and database users
 3. **Enable HTTPS**: Configure TLS/SSL certificates
 4. **Restrict Database Access**: Don't expose database ports publicly
@@ -478,10 +490,7 @@ If you encounter issues not covered in this guide:
 
 ## Version Information
 
-This guide is written for:
-* Elsa Workflows v3.7.0
-* Docker Compose V2
-* PostgreSQL 16
-* SQLite 3
-
-Always check the [official releases](https://github.com/elsa-workflows/elsa-core/releases) for the latest version information.
+This guide intentionally does not pin a Docker image release. Its examples use
+the `:latest` image tags shown above; verify the image publication and digest in
+your registry before production deployment. The application upgrade rules for
+the stable 3.8.0 package release are in [Upgrade to Elsa 3.8.0](../../upgrading-to-3.8.md).

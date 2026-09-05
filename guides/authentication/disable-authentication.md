@@ -39,7 +39,7 @@ builder.Services.AddElsa(elsa =>
 });
 
 var app = builder.Build();
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.Run();
 ```
 

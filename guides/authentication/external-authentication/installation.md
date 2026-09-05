@@ -1,12 +1,14 @@
 ---
 description: >-
-  Install the Elsa 3.8 preview External Authentication broker, its OpenID Connect
+  Install the Elsa 3.8.0 External Authentication broker, its OpenID Connect
   adapter, optional secret bridge, and durable persistence providers.
 ---
 
 # Install External Authentication
 
-> **Preview feature:** External Authentication is available starting with **Elsa 3.8 preview** packages. At the time of writing it is published from the [Elsa Feedz preview feed](https://f.feedz.io/elsa-workflows/elsa-3/nuget/index.json), not as a stable NuGet.org release, and remains under active development. Test upgrades in a non-production environment and expect configuration or API changes before general availability.
+External Authentication is available in the stable Elsa 3.8.0 Core and Studio
+packages on NuGet.org. Keep the Core, Studio, and Extensions package families
+on the same `3.8.0` version.
 
 External Authentication makes Elsa Server a broker between Elsa Studio and one or more upstream identity providers. Elsa owns the sign-in transaction, issues the Elsa access and refresh tokens that Studio consumes, and can centrally manage connections, identity links, sessions, and permission mapping. The first supplied provider adapter is OpenID Connect.
 
@@ -14,39 +16,25 @@ This is different from Studio's existing direct OpenID Connect mode, in which St
 
 ## Prerequisites
 
-- An Elsa **3.8 preview** application with Elsa Identity enabled. The broker issues Elsa credentials, so it needs Elsa Identity token signing and a user/role provider.
+- An Elsa **3.8.0** application with Elsa Identity enabled. The broker issues Elsa credentials, so it needs Elsa Identity token signing and a user/role provider.
 - An upstream OpenID Connect provider with a confidential client registration for Elsa Server.
 - A public HTTPS address for Elsa Server. It is used to derive the fixed provider callbacks.
 - For production or multiple nodes, a relational database supported by the selected persistence provider and a shared ASP.NET Core Data Protection key store. See [Production](production.md).
 
 Use a real secret manager, environment variables, or another configuration provider for keys and client secrets. The examples deliberately use placeholders only.
 
-## Configure the preview feed
+## Install stable packages
 
-Add the Feedz source to `NuGet.config` alongside NuGet.org:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <clear />
-    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-    <add key="Elsa 3 preview" value="https://f.feedz.io/elsa-workflows/elsa-3/nuget/index.json" />
-  </packageSources>
-</configuration>
-```
-
-Install preview packages and keep all Elsa Core packages on one compatible
-`3.8.0-preview.*` build. Pin the resolved build centrally for repeatable
-deployments; do not mix preview packages with a released 3.x package set.
+Stable Elsa 3.8.0 packages are available from NuGet.org; no preview feed is
+required. Pin the version explicitly for repeatable restores:
 
 ## Choose packages
 
 Install the foundation and at least one protocol adapter:
 
 ```bash
-dotnet add package Elsa.ExternalAuthentication --prerelease
-dotnet add package Elsa.ExternalAuthentication.OpenIdConnect --prerelease
+dotnet add package Elsa.ExternalAuthentication --version 3.8.0
+dotnet add package Elsa.ExternalAuthentication.OpenIdConnect --version 3.8.0
 ```
 
 The available packages are:
@@ -66,7 +54,7 @@ The available packages are:
 For example, a SQL Server deployment adds:
 
 ```bash
-dotnet add package Elsa.ExternalAuthentication.Persistence.EFCore.SqlServer --prerelease
+dotnet add package Elsa.ExternalAuthentication.Persistence.EFCore.SqlServer --version 3.8.0
 ```
 
 The provider-specific package is required for its migrations and, in a CShells host, to make the corresponding shell feature discoverable. Identity persistence and External Authentication persistence are separate features: adding `Elsa.Persistence.EFCore.*` or enabling an Identity persistence feature does **not** make broker state durable.

@@ -11,6 +11,14 @@ access and refresh tokens, and API applications. Roles contain Elsa permission
 strings; issued JWTs and authenticated API keys expose those permissions as
 `permissions` claims.
 
+{% hint style="info" %}
+The examples target Elsa 3.8.0. Install the identity package from NuGet.org:
+
+```bash
+dotnet add package Elsa.Identity --version 3.8.0
+```
+{% endhint %}
+
 ## Register the identity modules
 
 Install the `Elsa.Identity` package and configure identity before the workflow
@@ -45,7 +53,7 @@ builder.Services.AddElsa(elsa =>
 var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseWorkflowsApi();
+app.MapWorkflowsApi();
 app.Run();
 ```
 
@@ -53,6 +61,31 @@ app.Run();
 `UseDefaultAuthentication` enables Elsa JWT bearer and API-key authentication.
 The authentication and authorization middleware must run before the Elsa API
 endpoints.
+
+For a new host that needs an initial administrator, prefer the 3.8.0
+`DefaultAdminUser` bootstrap instead of a hard-coded `UseAdminUserProvider()`
+sample. Read both values from deployment configuration:
+
+```csharp
+var adminUserName = builder.Configuration["Identity:Bootstrap:UserName"]
+    ?? throw new InvalidOperationException("Identity:Bootstrap:UserName is required.");
+var adminPassword = builder.Configuration["Identity:Bootstrap:Password"]
+    ?? throw new InvalidOperationException("Identity:Bootstrap:Password is required.");
+
+builder.Services.AddElsa(elsa => elsa
+    .UseIdentity(identity => identity.UseDefaultAdmin(
+        adminUserName,
+        adminPassword,
+        "admin",
+        new List<string> { "*" }))
+    .UseDefaultAuthentication());
+```
+
+The initializer is idempotent. Rotate the bootstrap credentials after initial
+access. `UseDefaultAuthentication()` does not grant the security-root
+permission to localhost by default; use an authenticated administrator for
+deployed hosts. An isolated local host can opt in explicitly with
+`EnableLocalHostPermissionGrantForSecurityRoot()`.
 
 ## Configure tokens, users, and roles
 

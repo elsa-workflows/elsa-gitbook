@@ -5,7 +5,14 @@ description: >-
 
 # Source File References
 
-This document provides exact source file references in the elsa-core repository that underpin the API & Client Guide documentation. These references are grounded in the elsa-core `main` branch.
+This document provides exact source file references in the elsa-core repository that underpin the API & Client Guide documentation.
+
+{% hint style="info" %}
+The permalinks in this maintainer index intentionally pin the `3.7.0` source
+baseline used by the API and Client Guide. They are historical evidence, not
+current Elsa 3.8.0 API claims; verify a changed implementation against the
+stable 3.8.0 tag before updating the guide.
+{% endhint %}
 
 ## API Client Library
 
