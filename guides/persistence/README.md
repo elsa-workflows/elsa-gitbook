@@ -102,7 +102,8 @@ See [MongoDB Setup Example](examples/mongodb-setup.md) for configuration details
 
 ### Dapper
 
-**Best for:** Performance-critical scenarios requiring fine-grained SQL control.
+**Best for:** Relational persistence when the team wants fine-grained SQL
+control and a built-in Dapper connection provider.
 
 **Pros:**
 
@@ -122,7 +123,11 @@ See [MongoDB Setup Example](examples/mongodb-setup.md) for configuration details
 * Teams with strong SQL expertise
 * Scenarios requiring custom query optimization
 
-See [Dapper Setup Example](examples/dapper-setup.md) for configuration details.
+The 3.8.0 extension provides built-in connection providers for SQLite, SQL
+Server, and PostgreSQL. MySQL is not a built-in Dapper provider. See the
+[Dapper persistence guide](examples/dapper-setup.md) for provider selection,
+SQL dialect behavior, and the FluentMigrator runner configuration required
+for automatic schema migrations.
 
 If the persistence requirement is specifically scheduled Quartz jobs, see
 [Quartz Scheduling](../running-workflows/quartz-scheduling.md). Quartz's job
@@ -281,30 +286,15 @@ The database name comes from the MongoDB connection string. Elsa creates its Mon
 
 ### Dapper Configuration
 
-Dapper requires module-level connection provider configuration. Select the Dapper stores separately for workflow management and runtime:
-
-```csharp
-using Elsa.Persistence.Dapper.Extensions;
-using Elsa.Persistence.Dapper.Services;
-
-var connectionString = builder.Configuration.GetConnectionString("PostgreSql")!;
-
-builder.Services.AddElsa(elsa =>
-{
-    elsa.UseDapper(dapper =>
-    {
-        dapper.DbConnectionProvider = _ => new PostgreSqlDbConnectionProvider(connectionString);
-        dapper.UseMigrations();
-    });
-
-    elsa.UseWorkflowManagement(management => management.UseDapper());
-    elsa.UseWorkflowRuntime(runtime => runtime.UseDapper());
-});
-```
+Dapper requires module-level connection-provider configuration, followed by
+explicit Dapper registration for workflow management and runtime. The
+provider also selects the SQL dialect used by the stores. See the [Dapper
+persistence guide](examples/dapper-setup.md) for complete SQLite and SQL
+Server examples, PostgreSQL boundaries, and custom-provider guidance.
 
 **Schema Responsibility:**
 
-* Use `dapper.UseMigrations()` to run Elsa's Dapper migrations for supported databases
+* Use a configured `dapper.UseMigrations(...)` runner to run Elsa's Dapper migrations for supported databases
 * If you do not enable Elsa migrations, you are responsible for creating and maintaining the database schema
 * Elsa's Dapper migrations create PascalCase tables and columns such as `WorkflowInstances`, `Bookmarks`, and `WorkflowExecutionLogRecords`
 * See [Dapper Setup Example](examples/dapper-setup.md) for a complete setup

@@ -108,14 +108,13 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- `DOC-093` Dapper persistence provider and dialect setup.
 - `DOC-094` Console Logs diagnostics and Studio operations.
 
 ### Recommended next slice
 
-- `DOC-093` Dapper persistence provider and dialect setup: the next
-  release-backed persistence gap is a focused provider and migration guide for
-  teams choosing Dapper instead of EF Core or MongoDB.
+- `DOC-094` Console Logs diagnostics and Studio operations: the remaining
+  release-backed diagnostics gap is a focused guide for raw console output,
+  retrieval, and Studio operations.
 
 ### Current run plan (2026-09-05)
 
@@ -150,6 +149,56 @@ acceptance criterion below is already complete.
 - Validated against unchanged `release/3.8.0` refs: Core `01db86e`, Studio
   `b7b3629`, and Extensions `a44e2b0`. No additional distinct topic was found;
   `DOC-093` is the next recommendation.
+
+### Fresh inventory (2026-09-06)
+
+- The published GitBook is now based on `origin/main` `9fa35d2`, which includes
+  the 3.8.0 release refresh and dashboard/template documentation after
+  `DOC-092` merged. `DOC-093` Dapper persistence and dialect setup and
+  `DOC-094` Console Logs diagnostics remain the only available slices.
+- The requested release branch remains `release/3.8.0`. The current source
+  refs are Core `8191ae3`, Studio `8539524`, and Extensions `66861ae`; the
+  Core and Studio refs advanced since the previous inventory, while the branch
+  name did not change. No additional distinct top-level topic was found.
+
+### Current run plan (2026-09-06)
+
+- Add a source-grounded Dapper persistence guide covering package selection,
+  dialect/provider registration, schema setup and migrations, connection
+  lifetime, and the boundary between Dapper persistence and Elsa's EF Core or
+  MongoDB providers.
+- Reconcile the existing Dapper example and persistence navigation so readers
+  can choose the provider, configure the correct SQL dialect, and avoid
+  applying the wrong migration definitions.
+- Validate the guide against the current `release/3.8.0` source in Core,
+  Studio, and Extensions; perform iterative self-review and local
+  documentation checks before delivery.
+
+### Current run selection (2026-09-06)
+
+- Selected `DOC-093` after the fresh inventory confirmed that the repository
+  has a Dapper setup page but its migration guidance still references 3.7.0
+  definitions and does not provide a complete release-backed dialect and
+  provider selection path. `DOC-094` Console Logs remains available for a
+  later run.
+- No additional distinct source-backed topic was discovered during the initial
+  3.8.0 Core, Studio, and Extensions inventory.
+
+### Current run completion (2026-09-06)
+
+- Completed `DOC-093` by replacing the historical Dapper page with a
+  3.8.0-verified provider and migration guide. It documents the built-in
+  SQLite, SQL Server, and PostgreSQL connection providers, the required SQL
+  dialect pairing, management/runtime/identity store selection, FluentMigrator
+  runner configuration, migration version prefixes, startup behavior, custom
+  provider boundaries, and durable deployment safeguards.
+- Reconciled the persistence overview and coverage metadata. Removed the old
+  3.7.0 migration instructions, the unsupported built-in MySQL claim, and the
+  PostgreSQL automatic-migration implication; the remaining `DOC-094` Console
+  Logs guide is now the recommended next slice.
+- Validated against the current `release/3.8.0` refs: Core `8191ae3`, Studio
+  `8539524`, and Extensions `66861ae`. The branch name did not change, and no
+  additional distinct topic was discovered during source review.
 
 ### Previous run plan (2026-09-04)
 
