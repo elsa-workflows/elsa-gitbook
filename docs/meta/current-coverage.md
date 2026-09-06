@@ -94,7 +94,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (36 pages)
+### GUIDES (37 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -117,6 +117,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Bookmark Resume Tokens** (`guides/security/bookmark-resume-tokens.md`)
 - **Secrets Management** (`guides/security/secrets-management.md`)
 - **Elasticsearch Setup** (`guides/persistence/examples/elasticsearch-setup.md`)
+- **Dapper persistence, provider selection, SQL dialects, and migrations** (`guides/persistence/examples/dapper-setup.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
@@ -308,7 +309,7 @@ Based on the current structure, the following core concepts are documented:
    - ❌ No dedicated page for Activities concept
    - ❌ No dedicated page for Triggers concept
    - ❌ No dedicated page for Bookmarks
-   - ❌ No persistence/storage explanation
+   - ✅ Persistence provider selection and storage configuration
    - ⚠️ Workflow lifecycle not fully explained
 
 3. **Elsa Studio**
@@ -340,7 +341,7 @@ Based on the current structure, the following core concepts are documented:
 8. **Guides**
    - ⚠️ HTTP workflows guide exists but could be expanded
    - ❌ No workflow testing guide
-   - ❌ No data persistence patterns guide
+   - ✅ Provider-specific persistence setup guides and migration boundaries
    - ✅ Security guidance now includes endpoint security, bookmark resume
      tokens, production hardening, and Elsa Secrets management
    - ❌ No workflow design patterns
