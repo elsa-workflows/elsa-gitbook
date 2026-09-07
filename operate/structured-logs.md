@@ -10,7 +10,7 @@ Elsa's `Elsa.Diagnostics.StructuredLogs` module captures `ILogger` events from
 an Elsa host and makes them available to operators through REST, SignalR, and
 Elsa Studio. It is a host-diagnostics feature: it is separate from the
 workflow journal, the `Elsa.Logging` workflow `Log` activity, and raw
-stdout/stderr capture.
+stdout/stderr capture. For raw managed console output, see [Console Logs](console-logs.md).
 
 Use this module when operators need searchable application logs with workflow,
 tenant, trace, and source metadata. Use [Log Persistence](../optimize/log-persistence.md)

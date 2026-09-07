@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-04)
+## Slice Inventory (2026-09-07)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -105,16 +105,16 @@ acceptance criterion below is already complete.
 - `DOC-090` Structured Logs diagnostics and Studio operations
 - `DOC-091` ElsaScript blob-storage workflow format and limitations
 - `DOC-092` Quartz scheduling and persistence configuration
+- `DOC-094` Console Logs diagnostics and Studio operations
 
 ### Available next slices
 
-- `DOC-094` Console Logs diagnostics and Studio operations.
+- None identified; the next run should begin with a fresh inventory.
 
 ### Recommended next slice
 
-- `DOC-094` Console Logs diagnostics and Studio operations: the remaining
-  release-backed diagnostics gap is a focused guide for raw console output,
-  retrieval, and Studio operations.
+- No planned slice remains after DOC-094. Re-inventory the published GitBook
+  and the current release source before selecting a new topic.
 
 ### Current run plan (2026-09-05)
 
@@ -126,6 +126,39 @@ acceptance criterion below is already complete.
   Quartz's durable multi-node scheduling path.
 - Validate against `release/3.8.0` in Core, Studio, and Extensions; perform
   self-review and local documentation checks before delivery.
+
+### Current run plan (2026-09-07)
+
+- Add a source-grounded Console Logs diagnostics guide covering managed
+  `stdout`/`stderr` capture, redaction and bounded buffering, workflow/activity
+  metadata, REST and SignalR access, and the Studio operations experience.
+- Reconcile the monitoring and structured-log pages so readers can choose raw
+  console output versus structured `ILogger` events and understand the
+  server-side, in-memory, and managed-console boundaries.
+- Validate against `release/3.8.0` in Core, Studio, and Extensions; perform
+  iterative self-review and local documentation checks before delivery.
+
+### Current run selection (2026-09-07)
+
+- Selected `DOC-094` after the fresh inventory confirmed it is the only
+  remaining planned slice. The published docs mention Console Logs in the
+  monitoring overview but do not provide a dedicated release-backed guide for
+  setup, filtering, dropped data, or Studio operations.
+- No additional distinct top-level topic was discovered during the initial
+  Core, Studio, and Extensions release-source inventory.
+
+### Current run completion (2026-09-07)
+
+- Completed `DOC-094` with a dedicated Console Logs guide covering managed
+  stdout/stderr capture, release defaults, redaction, bounded buffering,
+  workflow/activity metadata, REST and SignalR contracts, source health,
+  dashboard findings, Studio filtering and controls, URL state, embedded
+  workflow views, and operational boundaries.
+- Added the guide to navigation and reconciled the monitoring and Structured
+  Logs pages so readers can choose raw console output versus structured
+  `ILogger` events. No additional distinct top-level topic was discovered.
+- Validated against Core `release/3.8.0` `8191ae3`, Studio `8539524`, and
+  Extensions `66861ae`; the requested release branch name did not change.
 
 ### Current run selection (2026-09-05)
 

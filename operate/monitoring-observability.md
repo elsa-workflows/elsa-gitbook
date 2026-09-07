@@ -97,7 +97,9 @@ than you want to retain, tune them with
 ## Use Studio diagnostics for host-level logs
 
 The runtime signals above are workflow-centric. For host diagnostics,
-Elsa 3.8.0 also ships separate Studio diagnostics modules.
+Elsa 3.8.0 also ships separate Studio diagnostics modules. Use the dedicated
+[Console Logs](console-logs.md) guide for raw `stdout`/`stderr` capture,
+filtering, and Studio operations.
 
 ### Structured Logs
 
