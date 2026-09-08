@@ -302,59 +302,59 @@ Based on the current structure, the following core concepts are documented:
 
 ## Gaps and Weaknesses Identified
 
-### Missing or Weak Areas
+This audit was refreshed on 2026-09-08. The older version of this section
+listed several topics as missing even though dedicated pages had since been
+published. The entries below describe remaining improvement opportunities;
+they are not claims that the related subject is undocumented.
 
-1. **Getting Started**
-   - ❌ No comprehensive "first workflow" tutorial
-   - ❌ Limited EF Core / database configuration guidance
-   - ⚠️ Docker quickstart exists but could be more comprehensive
+### Remaining improvement opportunities
 
-2. **Core Concepts**
-   - ❌ No dedicated page for Activities concept
-   - ❌ No dedicated page for Triggers concept
-   - ❌ No dedicated page for Bookmarks
-   - ✅ Persistence provider selection and storage configuration
-   - ⚠️ Workflow lifecycle not fully explained
+1. **Getting started and concepts**
+   - The repository has Hello World, prerequisites, database, Docker, and
+     workflow-concept pages. A single end-to-end first-workflow path could
+     still connect those pages more directly for new users.
+   - Activities, triggers, and bookmarks are explained across concept,
+     activity, and running-workflow pages, but could be easier to discover as
+     dedicated concept entry points.
 
-3. **Elsa Studio**
-   - ❌ No comprehensive Studio tour/walkthrough
-   - ❌ Limited designer usage documentation
-   - ⚠️ No built-in generic Connections administration module in the 3.8.0
-     Studio release; custom hosts must provide the client UI
+2. **Elsa Studio**
+   - Studio tour, integration, customization, designer, and operations pages
+     exist. They could still be consolidated into a clearer task-oriented
+     walkthrough for connecting a Studio host to a server.
+   - The 3.8.0 release does not provide a built-in generic Connections
+     administration module; custom hosts must provide the client UI when they
+     use the Connections extension.
 
-4. **Deployment & Scaling**
-   - ⚠️ Distributed hosting mentioned but lacks detail
-   - ❌ No performance tuning guide
-   - ❌ No production deployment checklist
+3. **Deployment and scaling**
+   - Distributed hosting, Kubernetes, production hardening, readiness, and
+     performance guidance exist. A single production deployment checklist and
+     a compatibility matrix would make those operational decisions easier to
+     apply.
 
-5. **Observability & Troubleshooting**
-   - ❌ No debugging guide
-   - ❌ No troubleshooting common issues
-   - ⚠️ Monitoring and distributed tracing guides now exist, but related guides still need deeper consistency work
+4. **Observability and troubleshooting**
+   - Monitoring, structured logs, console logs, distributed tracing, incidents,
+     readiness, and workflow investigation are documented. Cross-guide
+     troubleshooting paths and a single symptom-to-diagnostic map remain useful
+     follow-up work.
 
-6. **Migration & Versioning**
-   - ❌ No migration guide from v2 to v3
-   - ❌ No version compatibility matrix
-   - ❌ No breaking changes documentation
+5. **Reference completeness**
+   - API/client and activity-reference entry points exist, but they do not yet
+     cover every module and activity at the same depth.
+   - Configuration management is documented, while a generated or exhaustive
+     option-by-option reference is still a separate opportunity.
 
-7. **Reference Documentation**
-   - ⚠️ Activity reference incomplete (only a few activities documented)
-   - ❌ No API reference
-   - ⚠️ Configuration management guide now exists, but a full option-by-option reference is still missing
-
-8. **Guides**
-   - ⚠️ HTTP workflows guide exists but could be expanded
-   - ❌ No workflow testing guide
-   - ✅ Provider-specific persistence setup guides and migration boundaries
-   - ✅ Security guidance now includes endpoint security, bookmark resume
-     tokens, production hardening, and Elsa Secrets management
-   - ❌ No workflow design patterns
+6. **Examples and migration detail**
+   - HTTP workflows, testing, patterns, provider-specific persistence, and
+     security guidance are present. More end-to-end examples, version
+     compatibility notes, and release-specific breaking-change summaries would
+     improve discoverability and upgrade confidence.
 
 ## Documentation Quality Notes
 
 - **Structure**: Generally well-organized with clear categories
 - **Navigation**: SUMMARY.md provides clear hierarchy
-- **Completeness**: Many advanced features documented, but foundational content has gaps
+- **Completeness**: Coverage is broad; the remaining gaps are mostly consolidation,
+  reference depth, and release-specific operational detail
 - **Examples**: Some code examples present but not consistently throughout
 - **Screenshots**: Present in some sections (e.g., README) but limited overall
 - **Cross-linking**: Limited cross-references between related topics
@@ -362,23 +362,27 @@ Based on the current structure, the following core concepts are documented:
 
 ## Recommendations
 
-1. **Priority 1 (Critical)**: Fill foundational gaps
-   - First HTTP workflow tutorial
-   - EF Core configuration guide
-   - Studio tour and connection setup
-   - Core concepts (Activities, Triggers, Bookmarks)
+1. **Priority 1 (High)**: Connect the existing entry points
+   - Add a single first-workflow path across prerequisites, hosting, database,
+     Studio, and the Hello World example.
+   - Add clearer concept landing pages or cross-links for activities, triggers,
+     bookmarks, and workflow lifecycle.
 
-2. **Priority 2 (High)**: Operational documentation
-   - Troubleshooting and debugging guide
-   - Production deployment guide
-   - Performance and scaling guide
+2. **Priority 2 (High)**: Improve operational decision support
+   - Add a production deployment checklist and a release/version compatibility
+     matrix.
+   - Connect symptoms to the appropriate console-log, structured-log, tracing,
+     incident, readiness, and workflow-investigation pages.
 
-3. **Priority 3 (Medium)**: Expand existing content
-   - Complete activity reference
-   - More workflow guides and patterns
-   - Migration documentation
+3. **Priority 3 (Medium)**: Expand reference depth
+   - Extend activity and API/client reference coverage consistently across
+     modules.
+   - Add release-specific breaking-change summaries and more end-to-end
+     examples for common hosting and integration paths.
 
-4. **Priority 4 (Nice-to-have)**: Polish
-   - Add more screenshots and diagrams
-   - Improve cross-linking
+4. **Priority 4 (Polish)**: Improve discoverability
+   - Add focused diagrams or screenshots where they clarify Studio and
+     operations workflows.
+   - Continue reconciling cross-links and source pins when release branches
+     advance.
    - Add FAQ section

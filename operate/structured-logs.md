@@ -268,6 +268,6 @@ This page is validated against `release/3.8.0` at the following commits:
 - [Core structured-log module](https://github.com/elsa-workflows/elsa-core/tree/01db86ec213e952e186cdada945a70c917f302f1/src/modules/Elsa.Diagnostics.StructuredLogs)
 - [Core SQLite persistence](https://github.com/elsa-workflows/elsa-core/tree/01db86ec213e952e186cdada945a70c917f302f1/src/modules/Elsa.Diagnostics.StructuredLogs.Persistence.Sqlite)
 - [Core structured-log dashboard](https://github.com/elsa-workflows/elsa-core/tree/01db86ec213e952e186cdada945a70c917f302f1/src/modules/Elsa.Diagnostics.StructuredLogs.Dashboard)
-- [Studio structured-log module](https://github.com/elsa-workflows/elsa-studio/tree/a9f7b70ae36b9b81c16f327a8187df6cc77b1503/src/modules/Elsa.Studio.Diagnostics.StructuredLogs)
-- [Studio structured-log dashboard](https://github.com/elsa-workflows/elsa-studio/tree/a9f7b70ae36b9b81c16f327a8187df6cc77b1503/src/modules/Elsa.Studio.Diagnostics.StructuredLogs.Dashboard)
+- [Studio structured-log module](https://github.com/elsa-workflows/elsa-studio/tree/85395246140c6b192a2457992da8704b0cdec3d0/src/modules/Elsa.Studio.Diagnostics.StructuredLogs)
+- [Studio structured-log dashboard](https://github.com/elsa-workflows/elsa-studio/tree/85395246140c6b192a2457992da8704b0cdec3d0/src/modules/Elsa.Studio.Diagnostics.StructuredLogs.Dashboard)
 - [`Elsa.Logging` workflow activity](https://github.com/elsa-workflows/elsa-extensions/tree/a44e2b09af1202ff4936f493756e114c357eff81/src/modules/diagnostics/Elsa.Logging)

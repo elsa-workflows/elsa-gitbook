@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-07)
+## Slice Inventory (2026-09-08)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -105,16 +105,51 @@ acceptance criterion below is already complete.
 - `DOC-090` Structured Logs diagnostics and Studio operations
 - `DOC-091` ElsaScript blob-storage workflow format and limitations
 - `DOC-092` Quartz scheduling and persistence configuration
+- `DOC-093` Dapper persistence and dialect setup
 - `DOC-094` Console Logs diagnostics and Studio operations
 
 ### Available next slices
 
-- None identified; the next run should begin with a fresh inventory.
+- `DOC-095` Release-source links and coverage metadata maintenance
 
 ### Recommended next slice
 
-- No planned slice remains after DOC-094. Re-inventory the published GitBook
-  and the current release source before selecting a new topic.
+- `DOC-095` Release-source links and coverage metadata maintenance. Refresh
+  stale pinned source links and reconcile the coverage audit with the pages
+  that are now published; this is maintenance of existing documentation, not
+  a new product feature guide.
+
+### Current run plan (2026-09-08)
+
+- Refresh published source links that still point at an older Studio commit,
+  verifying the replacement against the current `release/3.8.0` ref.
+- Rewrite the coverage audit's legacy "missing" claims so readers can tell
+  which topics are covered, which are partial, and which remain improvement
+  opportunities.
+- Validate local links, Markdown structure, and the exact release refs; run an
+  iterative self-review before delivery.
+
+### Current run selection (2026-09-08)
+
+- Selected `DOC-095` after the fresh inventory found no uncovered planned
+  feature slice but did find stale Studio source pins in published guides and
+  contradictory coverage metadata that still labels published guides as
+  missing.
+- No additional distinct top-level documentation topic was discovered during
+  the initial repository and `release/3.8.0` source inventory.
+
+### Current run completion (2026-09-08)
+
+- Completed `DOC-095` by refreshing the ElsaScript and Structured Logs Studio
+  source links to the current Studio `release/3.8.0` ref and reconciling the
+  coverage audit with the published GitBook pages.
+- Added `DOC-093` to the covered-slice inventory, replaced legacy missing-topic
+  claims with dated improvement opportunities, and refreshed the recommendations
+  so they point to consolidation, operational decision support, and reference
+  depth rather than already-published guides.
+- Validated against Core `01db86ec`, Studio `8539524`, and Extensions
+  `66861ae`; the requested release branch name did not change. No additional
+  distinct top-level topic was discovered.
 
 ### Current run plan (2026-09-05)
 
