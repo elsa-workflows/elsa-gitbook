@@ -107,17 +107,16 @@ acceptance criterion below is already complete.
 - `DOC-092` Quartz scheduling and persistence configuration
 - `DOC-093` Dapper persistence and dialect setup
 - `DOC-094` Console Logs diagnostics and Studio operations
+- `DOC-095` Release-source links and coverage metadata maintenance
 
 ### Available next slices
 
-- `DOC-095` Release-source links and coverage metadata maintenance
+- None identified; the next run should begin with a fresh inventory.
 
 ### Recommended next slice
 
-- `DOC-095` Release-source links and coverage metadata maintenance. Refresh
-  stale pinned source links and reconcile the coverage audit with the pages
-  that are now published; this is maintenance of existing documentation, not
-  a new product feature guide.
+- No planned slice remains after DOC-095. Re-inventory the published GitBook
+  and the current release source before selecting a new topic.
 
 ### Current run plan (2026-09-08)
 
