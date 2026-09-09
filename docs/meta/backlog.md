@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-08)
+## Slice Inventory (2026-09-09)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -108,15 +108,67 @@ acceptance criterion below is already complete.
 - `DOC-093` Dapper persistence and dialect setup
 - `DOC-094` Console Logs diagnostics and Studio operations
 - `DOC-095` Release-source links and coverage metadata maintenance
+- `DOC-096` Bookmark resume API contract and payload limits
 
 ### Available next slices
 
-- None identified; the next run should begin with a fresh inventory.
+- `DOC-097` Runtime administration and graceful drain operations
 
 ### Recommended next slice
 
-- No planned slice remains after DOC-095. Re-inventory the published GitBook
-  and the current release source before selecting a new topic.
+- `DOC-097` Runtime administration and graceful drain operations. Add a
+  decision-oriented cookbook for pause, resume, force-drain, status, runtime
+  permissions, readiness impact, and the Studio status indicator.
+
+### Current run inventory (2026-09-09)
+
+- The published GitBook is complete through `DOC-095`; no previously planned
+  feature slice remains.
+- The authoritative Core `origin/release/3.8.0` ref advanced from the local
+  snapshot `01db86ec` to tagged release `8191ae305`, while Studio remains at
+  `853952461` and Extensions at `66861ae082`. The Core change is concentrated
+  in the bookmark/runtime resume endpoint wrappers.
+- Core's current development line also contains `Elsa.Bpmn.Interchange` and
+  `Elsa.UserTasks`, but neither is present in the authoritative 3.8.0 release
+  tree, so they are deferred rather than added as release-backed slices.
+- `DOC-096` is the selected bounded maintenance slice. The independent review
+  also surfaced fragmented runtime administration and graceful-drain coverage;
+  this is added as the next release-eligible slice, `DOC-097`.
+
+### Current run plan (2026-09-09)
+
+- Reconcile `guides/security/bookmark-resume-tokens.md` with the tagged Core
+  resume endpoint: token query parameter, GET query-string input, POST JSON
+  input, asynchronous queueing, anonymous route, and the 1 MiB body limit.
+- Add a concise example and clarify that token validity, bookmark consumption,
+  request-body validation, and transport security are separate controls.
+- Validate exact release source links, local navigation/Markdown structure,
+  and the final diff through an iterative self-review before delivery.
+
+### Current run selection (2026-09-09)
+
+- Selected `DOC-096` because the release branch changed after DOC-095 and the
+  existing bookmark security page does not describe the release endpoint's
+  actual input modes or size limit.
+
+### Current run completion (2026-09-09)
+
+- Completed `DOC-096` by reconciling the bookmark resume security guide with
+  Core's tagged `release/3.8.0` endpoint: GET query input, POST JSON input,
+  asynchronous queueing, anonymous bearer-token access, and the 1 MiB body
+  limit. Added a pinned endpoint and runtime-contract source reference, and
+  replaced the stale security example with a concise operational checklist
+  that removes undocumented direct-database bookmark deletion advice.
+- Updated current coverage metadata and validated against Core `8191ae305`,
+  Studio `853952461`, and Extensions `66861ae082`. Core's local release
+  snapshot was stale, so the tagged remote `origin/release/3.8.0` ref was used;
+  the branch name did not change.
+- `Elsa.Bpmn` and `Elsa.UserTasks` remain development-line topics absent from
+  the tagged 3.8.0 source tree and were not added to the release-backed
+  inventory.
+- The next available slice is `DOC-097`, runtime administration and graceful
+  drain operations, based on Core runtime-admin endpoints and Studio's
+  read-only runtime status indicator.
 
 ### Current run plan (2026-09-08)
 

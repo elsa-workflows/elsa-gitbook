@@ -243,6 +243,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Elasticsearch workflow-instance and execution-log persistence setup,
   provider boundaries, index lifecycle, and release-backed limitations
 - ✅ Workflow-instance state, journal, activity-execution, and variable investigation guidance
+- ✅ Bookmark resume API contract, GET/POST input modes, asynchronous queueing,
+  bearer-token boundary, and request-size limit
 
 ### HTTP Workflows
 - ✅ Programmatic approach
