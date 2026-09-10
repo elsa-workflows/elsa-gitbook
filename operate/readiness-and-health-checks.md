@@ -173,6 +173,9 @@ storage](../guides/architecture/runtime-coordination-storage.md). For
 dispatch durability and retry behavior, see [Workflow dispatch
 outbox](../guides/architecture/workflow-dispatch-outbox.md).
 
+For the operator procedures that change runtime admission, see [Runtime
+Administration and Graceful Drain](runtime-administration.md).
+
 ## Diagnose a failed readiness check
 
 1. Call `/health/ready` directly on the affected node and record the HTTP

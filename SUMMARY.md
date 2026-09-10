@@ -181,6 +181,7 @@
 * [Structured Logs](operate/structured-logs.md)
 * [Console Logs](operate/console-logs.md)
 * [Readiness and Health Checks](operate/readiness-and-health-checks.md)
+* [Runtime Administration and Graceful Drain](operate/runtime-administration.md)
 * [Distributed Tracing](operate/distributed-tracing.md)
 * [Investigate a Workflow Instance](operate/workflow-state-and-journal.md)
 * [Variables](operate/workflow-instance-variables.md)

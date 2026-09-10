@@ -143,12 +143,13 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Introduction** (`multitenancy/introduction.md`)
 - **Setup** (`multitenancy/setup.md`)
 
-### OPERATE (11 pages)
+### OPERATE (12 pages)
 
 - **Monitoring & Observability** (`operate/monitoring-observability.md`)
 - **Structured Logs** (`operate/structured-logs.md`)
 - **Console Logs** (`operate/console-logs.md`)
 - **Readiness and Health Checks** (`operate/readiness-and-health-checks.md`)
+- **Runtime Administration and Graceful Drain** (`operate/runtime-administration.md`)
 - **Distributed Tracing** (`operate/distributed-tracing.md`)
 - **Investigate a Workflow Instance** (`operate/workflow-state-and-journal.md`)
 - **Incidents** (`operate/incidents/README.md`)
