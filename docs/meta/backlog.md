@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-09)
+## Slice Inventory (2026-09-10)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -109,47 +109,66 @@ acceptance criterion below is already complete.
 - `DOC-094` Console Logs diagnostics and Studio operations
 - `DOC-095` Release-source links and coverage metadata maintenance
 - `DOC-096` Bookmark resume API contract and payload limits
+- `DOC-097` Runtime administration and graceful drain operations
 
 ### Available next slices
 
-- `DOC-097` Runtime administration and graceful drain operations
+- None currently identified.
 
 ### Recommended next slice
 
-- `DOC-097` Runtime administration and graceful drain operations. Add a
-  decision-oriented cookbook for pause, resume, force-drain, status, runtime
-  permissions, readiness impact, and the Studio status indicator.
+- No planned feature slice remains. Future runs should re-inventory the
+  published docs and release source for a new, distinct gap.
 
-### Current run inventory (2026-09-09)
+### Current run inventory (2026-09-10)
 
-- The published GitBook is complete through `DOC-095`; no previously planned
-  feature slice remains.
-- The authoritative Core `origin/release/3.8.0` ref advanced from the local
-  snapshot `01db86ec` to tagged release `8191ae305`, while Studio remains at
-  `853952461` and Extensions at `66861ae082`. The Core change is concentrated
-  in the bookmark/runtime resume endpoint wrappers.
-- Core's current development line also contains `Elsa.Bpmn.Interchange` and
-  `Elsa.UserTasks`, but neither is present in the authoritative 3.8.0 release
-  tree, so they are deferred rather than added as release-backed slices.
-- `DOC-096` is the selected bounded maintenance slice. The independent review
-  also surfaced fragmented runtime administration and graceful-drain coverage;
-  this is added as the next release-eligible slice, `DOC-097`.
+- The published GitBook is complete through `DOC-096`; `DOC-097` is the only
+  available next slice.
+- The authoritative release refs remain Core `8191ae305`, Studio `853952461`,
+  and Extensions `66861ae082`; the requested branch is still
+  `release/3.8.0`.
+- The existing docs cover readiness, runtime coordination storage, permissions,
+  and dashboard status separately, but do not give operators one release-backed
+  procedure for pausing, resuming, draining, and verifying a host.
+- No additional distinct top-level documentation slice is added before source
+  validation; runtime administration remains the selected cross-persona gap.
 
-### Current run plan (2026-09-09)
+### Current run plan (2026-09-10)
 
-- Reconcile `guides/security/bookmark-resume-tokens.md` with the tagged Core
-  resume endpoint: token query parameter, GET query-string input, POST JSON
-  input, asynchronous queueing, anonymous route, and the 1 MiB body limit.
-- Add a concise example and clarify that token validity, bookmark consumption,
-  request-body validation, and transport security are separate controls.
-- Validate exact release source links, local navigation/Markdown structure,
-  and the final diff through an iterative self-review before delivery.
+- Add a concise operator cookbook for Core's runtime-admin endpoints: status,
+  pause, resume, and force-drain, including permissions and route mapping.
+- Explain how persisted pause policy, quiescence, graceful drain, readiness,
+  and Studio's read-only runtime status indicator fit together.
+- Validate every behavior against the current `release/3.8.0` Core and Studio
+  source, then run local navigation/Markdown checks and an iterative
+  self-review before delivery.
 
-### Current run selection (2026-09-09)
+### Current run selection (2026-09-10)
 
-- Selected `DOC-096` because the release branch changed after DOC-095 and the
-  existing bookmark security page does not describe the release endpoint's
-  actual input modes or size limit.
+- Selected `DOC-097` because the published docs have no decision-oriented
+  guide for runtime admission control and graceful drain operations.
+
+### Current run completion (2026-09-10)
+
+- Completed `DOC-097` by adding `operate/runtime-administration.md`, a
+  release-backed cookbook for runtime status, pause, resume, graceful host
+  drain, force-drain, pause persistence, readiness impact, permissions, and
+  Studio's read-only runtime status chip.
+- Linked the guide from `SUMMARY.md`, readiness and health checks, API
+  permissions, runtime coordination storage, and current coverage metadata.
+- Validated Core `release/3.8.0` at `8191ae305`, Studio `release/3.8.0` at
+  `853952461`, and Extensions `release/3.8.0` at `66861ae082`. No source
+  branch change was required and no additional top-level slice was discovered.
+- Passed focused Core API runtime-admin tests (4) and runtime quiescence /
+  drain tests (45), plus local links, SUMMARY targets, fenced-code,
+  whitespace, release-source assertions, and source-link HTTP checks.
+- A delegated release-source review found one high-priority boundary issue:
+  administrative pause is not a universal dispatch barrier because the
+  internal bookmark-queue processor does not consult `IQuiescenceSignal` in
+  this release. The guide now distinguishes HTTP admission, queue behavior,
+  per-node state, missing key-value storage, and cached force-drain outcomes.
+- The iterative self-review found no remaining high-priority factual,
+  source-grounding, navigation, structure, regression, or formatting issues.
 
 ### Current run completion (2026-09-09)
 

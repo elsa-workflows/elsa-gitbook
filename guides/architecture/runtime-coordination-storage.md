@@ -209,6 +209,7 @@ validation as well.
 
 ## Related guides
 
+- [Runtime administration and graceful drain](../../operate/runtime-administration.md)
 - [Workflow dispatch outbox](workflow-dispatch-outbox.md)
 - [Distributed hosting](../../hosting/distributed-hosting.md)
 - [Redis distributed locking](../clustering/examples/redis-lock-setup.md)

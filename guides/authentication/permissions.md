@@ -129,6 +129,9 @@ release 3.8.0. Prefer the named permissions for least privilege.
 `read:workflow-runtime`; do not give it to a user who only needs status
 visibility.
 
+For the endpoint procedures and readiness consequences, see [Runtime
+Administration and Graceful Drain](../../operate/runtime-administration.md).
+
 ## Module-specific permissions
 
 Install only the modules the host needs, then add their claims to the relevant
