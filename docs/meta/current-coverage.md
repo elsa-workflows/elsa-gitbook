@@ -115,6 +115,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Production Hardening** (`guides/security/production-hardening.md`)
 - **HTTP Endpoint Security** (`guides/security/http-endpoint-security.md`)
 - **Bookmark Resume Tokens** (`guides/security/bookmark-resume-tokens.md`)
+- **Public Trigger Tokens** (`guides/security/public-trigger-tokens.md`)
 - **Secrets Management** (`guides/security/secrets-management.md`)
 - **Elasticsearch Setup** (`guides/persistence/examples/elasticsearch-setup.md`)
 - **Dapper persistence, provider selection, SQL dialects, and migrations** (`guides/persistence/examples/dapper-setup.md`)
@@ -246,6 +247,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Workflow-instance state, journal, activity-execution, and variable investigation guidance
 - ✅ Bookmark resume API contract, GET/POST input modes, asynchronous queueing,
   bearer-token boundary, and request-size limit
+- ✅ Public event-trigger token generation, authenticated event triggering,
+  Data Protection key continuity, and multi-node callback operations
 
 ### HTTP Workflows
 - ✅ Programmatic approach
@@ -305,7 +308,7 @@ Based on the current structure, the following core concepts are documented:
 
 ## Gaps and Weaknesses Identified
 
-This audit was refreshed on 2026-09-08. The older version of this section
+This audit was refreshed on 2026-09-11. The older version of this section
 listed several topics as missing even though dedicated pages had since been
 published. The entries below describe remaining improvement opportunities;
 they are not claims that the related subject is undocumented.

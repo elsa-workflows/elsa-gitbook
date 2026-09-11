@@ -63,6 +63,7 @@
   * [Production Hardening](guides/security/production-hardening.md)
   * [HTTP Endpoint Security](guides/security/http-endpoint-security.md)
   * [Bookmark Resume Tokens](guides/security/bookmark-resume-tokens.md)
+  * [Public Trigger Tokens](guides/security/public-trigger-tokens.md)
   * [Secrets Management](guides/security/secrets-management.md)
 * [Deployment](guides/deployment/README.md)
   * [Configuration Management](guides/deployment/configuration-management.md)

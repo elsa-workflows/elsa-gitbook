@@ -21,6 +21,7 @@ permissions, and External Authentication, start with
 | --- | --- |
 | [HTTP Endpoint Security](http-endpoint-security.md) | Protect workflow routes created by the `HttpEndpoint` activity, including public endpoints and ASP.NET Core policies. |
 | [Bookmark Resume Tokens](bookmark-resume-tokens.md) | Send or receive tokenized callback URLs that resume waiting workflows. |
+| [Public Trigger Tokens](public-trigger-tokens.md) | Operate protected event-trigger URLs and keep Data Protection keys continuous across nodes. |
 | [Production Hardening](production-hardening.md) | Configure browser boundaries, ingress, TLS, Studio deployment, monitoring, and operational checks. |
 | [Secrets Management](secrets-management.md) | Store and resolve named values from workflows and Elsa modules. |
 
@@ -35,6 +36,9 @@ Security controls complement authentication; they do not replace it.
 - Treat a bookmark resume URL as a bearer capability. Give it an appropriate
   lifetime, do not log its token, and apply controls appropriate to the
   callback's risk. See [Bookmark resume tokens](bookmark-resume-tokens.md).
+- Treat public event-trigger URLs as bearer capabilities as well. Use the
+  [public trigger token guide](public-trigger-tokens.md) for the shared token
+  service, authenticated alternative, and multi-node Data Protection setup.
 - Keep host and infrastructure secrets outside source control. For values that
   workflows must resolve, use the [Secrets management](secrets-management.md)
   module and protect its encryption key.
