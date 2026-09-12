@@ -308,7 +308,7 @@ Based on the current structure, the following core concepts are documented:
 
 ## Gaps and Weaknesses Identified
 
-This audit was refreshed on 2026-09-11. The older version of this section
+This audit was refreshed on 2026-09-12. The older version of this section
 listed several topics as missing even though dedicated pages had since been
 published. The entries below describe remaining improvement opportunities;
 they are not claims that the related subject is undocumented.

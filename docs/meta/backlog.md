@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-11)
+## Slice Inventory (2026-09-12)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -121,10 +121,12 @@ acceptance criterion below is already complete.
 - No planned feature slice remains. Future runs should re-inventory the
   published docs and release source for a new, distinct gap.
 
-### Current run inventory (2026-09-11)
+### Current run inventory (2026-09-12)
 
-- The published GitBook is complete through `DOC-097`; no planned slice was
-  available before release-source review.
+- The published GitBook is complete through `DOC-097`; `DOC-098` is prepared
+  locally but was not published after the previous run's credential blocker.
+- No additional distinct feature slice was found, so this run resumes the
+  prepared `DOC-098` delivery rather than starting a new topic.
 - The authoritative release refs remain Core `8191ae305`, Studio `853952461`,
   and Extensions `66861ae082`; the requested branch is still
   `release/3.8.0`.
@@ -136,24 +138,21 @@ acceptance criterion below is already complete.
   designers, platform operators, and API integrators without changing the
   existing bookmark endpoint contract.
 
-### Current run plan (2026-09-11)
+### Current run plan (2026-09-12)
 
-- Add a concise security/operations guide for Core's shared SAS-token service,
-  public event-trigger URLs, authenticated event triggering, and Data
-  Protection key continuity.
-- Link the new guide from Security & Hardening and external-application
-  integration without duplicating the existing bookmark request contract.
-- Validate every claim against the current `release/3.8.0` Core source, then
-  run local navigation/Markdown checks and an iterative self-review before
-  delivery.
+- Revalidate the prepared security/operations guide against the current
+  `release/3.8.0` source snapshots and run the required local navigation,
+  Markdown, and self-review checks.
+- Push the clean slice branch, open the pull request, wait for its checks, and
+  merge it when all repository gates are green.
 
-### Current run selection (2026-09-11)
+### Current run selection (2026-09-12)
 
-- Selected `DOC-098` because the release exposes two public tokenized callback
+- Resumed `DOC-098` because the release exposes two public tokenized callback
   routes backed by `Elsa.SasTokens`, while the published docs cover only the
   bookmark request contract and omit event-token and key-continuity guidance.
 
-### Current run completion (2026-09-11)
+### Prior run implementation (2026-09-11)
 
 - Completed `DOC-098` by adding `guides/security/public-trigger-tokens.md`,
   covering public event-token generation, the authenticated event-trigger
