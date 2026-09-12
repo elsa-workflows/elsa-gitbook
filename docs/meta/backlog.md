@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-10)
+## Slice Inventory (2026-09-12)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -110,6 +110,7 @@ acceptance criterion below is already complete.
 - `DOC-095` Release-source links and coverage metadata maintenance
 - `DOC-096` Bookmark resume API contract and payload limits
 - `DOC-097` Runtime administration and graceful drain operations
+- `DOC-098` Public event-trigger tokens and Data Protection key continuity
 
 ### Available next slices
 
@@ -120,33 +121,61 @@ acceptance criterion below is already complete.
 - No planned feature slice remains. Future runs should re-inventory the
   published docs and release source for a new, distinct gap.
 
-### Current run inventory (2026-09-10)
+### Current run inventory (2026-09-12)
 
-- The published GitBook is complete through `DOC-096`; `DOC-097` is the only
-  available next slice.
+- The published GitBook is complete through `DOC-097`; `DOC-098` is prepared
+  locally but was not published after the previous run's credential blocker.
+- No additional distinct feature slice was found, so this run resumes the
+  prepared `DOC-098` delivery rather than starting a new topic.
 - The authoritative release refs remain Core `8191ae305`, Studio `853952461`,
   and Extensions `66861ae082`; the requested branch is still
   `release/3.8.0`.
-- The existing docs cover readiness, runtime coordination storage, permissions,
-  and dashboard status separately, but do not give operators one release-backed
-  procedure for pausing, resuming, draining, and verifying a host.
-- No additional distinct top-level documentation slice is added before source
-  validation; runtime administration remains the selected cross-persona gap.
+- Core source review found `Elsa.SasTokens` and the public
+  `/events/trigger?t=...` route. The existing bookmark guide covers
+  `/bookmarks/resume`, but does not cover the shared token service, event
+  trigger URLs, or multi-node Data Protection key continuity.
+- The selected slice is a security/operations guide that serves process
+  designers, platform operators, and API integrators without changing the
+  existing bookmark endpoint contract.
 
-### Current run plan (2026-09-10)
+### Current run plan (2026-09-12)
 
-- Add a concise operator cookbook for Core's runtime-admin endpoints: status,
-  pause, resume, and force-drain, including permissions and route mapping.
-- Explain how persisted pause policy, quiescence, graceful drain, readiness,
-  and Studio's read-only runtime status indicator fit together.
-- Validate every behavior against the current `release/3.8.0` Core and Studio
-  source, then run local navigation/Markdown checks and an iterative
-  self-review before delivery.
+- Revalidate the prepared security/operations guide against the current
+  `release/3.8.0` source snapshots and run the required local navigation,
+  Markdown, and self-review checks.
+- Push the clean slice branch, open the pull request, wait for its checks, and
+  merge it when all repository gates are green.
 
-### Current run selection (2026-09-10)
+### Current run selection (2026-09-12)
 
-- Selected `DOC-097` because the published docs have no decision-oriented
-  guide for runtime admission control and graceful drain operations.
+- Resumed `DOC-098` because the release exposes two public tokenized callback
+  routes backed by `Elsa.SasTokens`, while the published docs cover only the
+  bookmark request contract and omit event-token and key-continuity guidance.
+
+### Prior run implementation (2026-09-11)
+
+- Completed `DOC-098` by adding `guides/security/public-trigger-tokens.md`,
+  covering public event-token generation, the authenticated event-trigger
+  alternative, token lifetime and replay boundaries, Data Protection key-ring
+  continuity, conventional-host customization, and an operator checklist.
+- Linked the guide from `SUMMARY.md`, Security & Hardening, and external
+  application interaction; updated coverage metadata and closed the slice.
+- Validated Core `release/3.8.0` at `8191ae305`, Studio at `853952461`, and
+  Extensions at `66861ae082`. The requested branch did not change, and the
+  guide is Core-backed; Studio does not add a separate token implementation,
+  and the Extensions workbench only composes Core's `UseSasTokens` feature.
+- Focused Core `Elsa.SasTokens.UnitTests` passed (`6/6`). Release-source
+  assertions, repository-local links, SUMMARY targets, touched Markdown
+  structure, source-link HTTP checks, and `git diff --check` also passed.
+- Self-review pass 1 added direct links for the authenticated request model
+  and token payloads. Delegated Luna xhigh review then required explicit
+  expression-context typing, the authenticated route's asynchronous default,
+  and a clearer host-versus-Elsa key-ring boundary; all three were fixed.
+  Final pass 3 found no remaining high-priority factual, source-grounding,
+  navigation, structure, regression, or formatting issues.
+- Broad trailing-whitespace checking still reports one pre-existing issue in
+  untouched `activities/blocking-and-triggers/README.md`; touched files are
+  clean. Markdownlint, Vale, Lychee, and GitBook CLI are unavailable locally.
 
 ### Current run completion (2026-09-10)
 

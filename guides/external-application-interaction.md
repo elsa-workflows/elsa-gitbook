@@ -20,6 +20,10 @@ and design concerns. Choose the inbound path when the external system is the
 source of a business event. Choose an outbound sink when Elsa is notifying
 another application that work should be performed.
 
+For tokenized callbacks that target one workflow instance, see [Public Trigger
+Tokens](security/public-trigger-tokens.md) and [Bookmark Resume
+Tokens](security/bookmark-resume-tokens.md).
+
 This guide describes the implementation in the `release/3.8.0` snapshot of
 `elsa-extensions`.
 
