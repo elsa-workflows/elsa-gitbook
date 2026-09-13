@@ -55,6 +55,11 @@ Set limits from observed traffic and capacity rather than copying example
 numbers unchanged. Return `429 Too Many Requests`, monitor the responses, and
 provide burst capacity only where it cannot be abused.
 
+For an in-process policy scoped to routed Elsa API endpoints, see [Elsa API
+rate limiting](elsa-api-rate-limiting.md). Keep that application-level control
+in addition to an edge limit when the deployment needs both early rejection
+and host-specific quotas.
+
 For `HttpEndpoint` workflow routes, use its request timeout, request-size,
 file-size, MIME-type, and file-extension settings as applicable. Details are
 in [HTTP endpoint security](http-endpoint-security.md).
