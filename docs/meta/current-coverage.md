@@ -283,6 +283,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Authentication
 - ✅ External Authentication and Studio SSO administration
 - ✅ Elsa API permission reference with Studio capability and role templates
+- ✅ Elsa API rate limiting with named ASP.NET Core policy scope and middleware ordering
 - ✅ Alterations and alteration plans
 - ✅ Release-backed operational guide for immediate alterations, filtered
   plans, Studio staging, retry behavior, and durability

@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-12)
+## Slice Inventory (2026-09-13)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -111,6 +111,7 @@ acceptance criterion below is already complete.
 - `DOC-096` Bookmark resume API contract and payload limits
 - `DOC-097` Runtime administration and graceful drain operations
 - `DOC-098` Public event-trigger tokens and Data Protection key continuity
+- `DOC-099` Elsa API rate limiting middleware and policy scope
 
 ### Available next slices
 
@@ -120,6 +121,59 @@ acceptance criterion below is already complete.
 
 - No planned feature slice remains. Future runs should re-inventory the
   published docs and release source for a new, distinct gap.
+
+### Current run inventory (2026-09-13)
+
+- The published GitBook is complete through `DOC-098`; no prior planned
+  feature slice remains available.
+- Release-source review found a distinct Core capability that is not directly
+  documented: `UseWorkflowsApiRateLimiting` applies a named ASP.NET Core rate
+  limiting policy only to routed Elsa API endpoints under a configurable
+  prefix.
+- Existing ingress pages show generic proxy examples but do not explain the
+  Elsa-specific middleware, its required policy registration, or its routing
+  boundary. This is a new operational/security slice rather than a duplicate
+  of the existing HTTP endpoint security guide.
+- The authoritative release refs for this run are Core `8191ae305`, Studio
+  `853952461`, and Extensions `66861ae082`; the requested branch remains
+  `release/3.8.0`.
+
+### Current run plan (2026-09-13)
+
+- Add a concise security/operations guide for registering an ASP.NET Core
+  rate-limiting policy and applying it to Elsa's workflow API with
+  `UseWorkflowsApiRateLimiting`.
+- Explain the configurable API prefix, matched-endpoint boundary, middleware
+  ordering, 429 verification, and the distinction between Elsa's helper and
+  proxy/ingress rate limiting.
+- Validate every example against Core `release/3.8.0`, update navigation and
+  coverage metadata, self-review iteratively, and deliver only if checks pass.
+
+### Current run selection (2026-09-13)
+
+- Selected `DOC-099` because Core release `8191ae305` exposes a documented API
+  helper and tests for policy application, non-Elsa paths, unregistered
+  policies, route-prefix normalization, and unmatched endpoints, while the
+  published GitBook has no direct guidance for it.
+
+### Current run completion (2026-09-13)
+
+- Added `guides/security/elsa-api-rate-limiting.md`, documenting the named
+  ASP.NET Core policy contract, Elsa API route scope, endpoint-routing order,
+  options-based configuration, verification, operational boundaries, and
+  troubleshooting.
+- Linked the guide from `SUMMARY.md`, the Security & Hardening index, and
+  Production Hardening, and recorded `DOC-099` in current coverage.
+- Validated against Core `release/3.8.0` at `8191ae305`, Studio at `853952461`,
+  and Extensions at `66861ae082`; the requested branch remains
+  `release/3.8.0`. This slice is Core-backed; Studio and Extensions add no
+  separate implementation for the helper.
+- The second root self-review found no remaining high-priority factual,
+  source-grounding, navigation, structure, regression, or formatting issues.
+- Focused Core rate-limiting tests passed (`20/20`); release-source assertions,
+  local-link checks, Markdown fence checks, whitespace checks, and all four
+  new external source-link HTTP checks passed. Markdownlint, Vale, Lychee,
+  GitBook CLI, Rumdl, and PyMarkdown are unavailable locally.
 
 ### Current run inventory (2026-09-12)
 

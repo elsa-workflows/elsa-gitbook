@@ -62,6 +62,7 @@
 * [Security & Hardening](guides/security/README.md)
   * [Production Hardening](guides/security/production-hardening.md)
   * [HTTP Endpoint Security](guides/security/http-endpoint-security.md)
+  * [Elsa API Rate Limiting](guides/security/elsa-api-rate-limiting.md)
   * [Bookmark Resume Tokens](guides/security/bookmark-resume-tokens.md)
   * [Public Trigger Tokens](guides/security/public-trigger-tokens.md)
   * [Secrets Management](guides/security/secrets-management.md)

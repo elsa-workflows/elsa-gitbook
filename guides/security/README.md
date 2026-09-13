@@ -20,6 +20,7 @@ permissions, and External Authentication, start with
 | Guide | Use it when you need to... |
 | --- | --- |
 | [HTTP Endpoint Security](http-endpoint-security.md) | Protect workflow routes created by the `HttpEndpoint` activity, including public endpoints and ASP.NET Core policies. |
+| [Elsa API Rate Limiting](elsa-api-rate-limiting.md) | Apply a named ASP.NET Core rate-limiting policy to the routed Elsa API without changing workflow-ingress limits. |
 | [Bookmark Resume Tokens](bookmark-resume-tokens.md) | Send or receive tokenized callback URLs that resume waiting workflows. |
 | [Public Trigger Tokens](public-trigger-tokens.md) | Operate protected event-trigger URLs and keep Data Protection keys continuous across nodes. |
 | [Production Hardening](production-hardening.md) | Configure browser boundaries, ingress, TLS, Studio deployment, monitoring, and operational checks. |
