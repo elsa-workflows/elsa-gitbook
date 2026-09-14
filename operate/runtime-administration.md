@@ -1,7 +1,7 @@
 ---
 description: >-
   Release-backed operator guide for pausing, resuming, draining, and checking
-  an Elsa 3.8.0 workflow runtime.
+  an Elsa 3.8.1 workflow runtime.
 ---
 
 # Runtime administration and graceful drain
@@ -125,7 +125,7 @@ stopped.
 
 The paused stimulus-queue policy is `Buffer` by default. If you configure a
 maximum paused depth and choose `Reject`, new stimuli beyond the threshold are
-rejected instead. In the 3.8.0 Core source, the internal bookmark-queue
+rejected instead. In the 3.8.1 Core source, the internal bookmark-queue
 processor does not itself consult `IQuiescenceSignal`, even though its
 diagnostic ingress-source entry reports `Paused`; treat queued bookmark
 processing as a separate operational concern and verify it before using pause
@@ -203,6 +203,58 @@ already in progress and no prior outcome is available, the endpoint returns
 call can instead receive the cached outcome. Force-drain does not delete
 queued bookmark records.
 
+### Recover interrupted execution
+
+Core 3.8.1 separates interruption recording from recovery. When a force-drain
+cancels an active execution cycle, Elsa waits briefly for the runner to settle
+and then conditionally marks the persisted instance as:
+
+```text
+Status      = Running
+SubStatus   = Interrupted
+IsExecuting = false
+```
+
+It also writes a `WorkflowInterrupted` execution-log record. The reason is
+`OperatorForce` for an operator force-drain, `DeadlineBreach` when a graceful
+drain exceeds its deadline, or `PersistenceFailure` when the interruption
+could not be recorded normally. If the instance row does not exist yet, Elsa
+writes a forensic log entry with the persistence-failure reason instead.
+
+The conditional write protects real terminal outcomes. A naturally finished,
+faulted, or already user-cancelled instance is not turned back into an
+interrupted instance. A `Finished` + `Cancelled` row is promoted only when a
+short pre-cancel snapshot showed that the cancellation was caused by this
+drain. This prevents a late drain write from overwriting a completed workflow.
+
+On the next shell activation, the startup recovery task scans only
+`Running` + `Interrupted` instances and requeues them immediately. It restores
+the tenant context before restarting a tenant-scoped instance. The scan is
+bounded by `RuntimeOptions.RestartInterruptedWorkflowsBatchSize`, which is
+`100` by default. A separate recurring recovery task looks for stale
+`Running` + executing instances using `RuntimeOptions.InactivityThreshold`,
+which defaults to five minutes; this liveness-based path is distinct from the
+startup scan.
+
+You can tune these recovery settings with the runtime options:
+
+```csharp
+using Elsa.Workflows.Runtime.Options;
+
+builder.Services.Configure<RuntimeOptions>(options =>
+{
+    options.InactivityThreshold = TimeSpan.FromMinutes(5);
+    options.RestartInterruptedWorkflowsBatchSize = 100;
+});
+```
+
+For recovery after a process restart, configure durable workflow-instance,
+bookmark, and execution-log storage. In-memory stores cannot provide the
+records that the recovery scan needs after the process exits. Treat
+`WorkflowInterrupted` records as an operational trail: they identify the
+interruption and its reason, but recovery still depends on the persisted
+workflow instance and its runtime state being available to restart it.
+
 ## Verify readiness after an operation
 
 The runtime readiness check creates a workflow client and reads the quiescence
@@ -222,7 +274,7 @@ persistence and distributed-lock probes, see [Readiness and Health Checks](readi
 
 ## What Studio shows
 
-The Elsa 3.8.0 Studio dashboard renders the backend dashboard's runtime status
+The Elsa 3.8.1 Studio dashboard renders the backend dashboard's runtime status
 as a compact, read-only chip:
 
 | API status | Studio label | Visual meaning |
@@ -259,15 +311,18 @@ authorized operational tool for state changes.
 
 ## Release source
 
-This page is grounded in Elsa Core `release/3.8.0` and Elsa Studio
-`release/3.8.0`:
+This page is grounded in Elsa Core `release/3.8.1` and Elsa Studio
+`release/3.8.1`:
 
-- [Core runtime-admin endpoints](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Api/Endpoints/RuntimeAdmin)
-- [Core runtime-admin response models](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Api/Endpoints/RuntimeAdmin/Models.cs)
-- [Core runtime-admin service](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/Services/WorkflowRuntimeAdminService.cs)
-- [Core quiescence signal](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/Services/QuiescenceSignal.cs)
-- [Core drain orchestrator](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/Services/DrainOrchestrator.cs)
-- [Core graceful-shutdown options](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/Options/GracefulShutdownOptions.cs)
-- [Core runtime readiness check](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaRuntimeHealthCheck.cs)
-- [Studio dashboard runtime chip](https://github.com/elsa-workflows/elsa-studio/blob/release/3.8.0/src/modules/Elsa.Studio.Dashboard/Components/DashboardRuntimeChip.razor)
-- [Studio runtime status mapping](https://github.com/elsa-workflows/elsa-studio/blob/release/3.8.0/src/modules/Elsa.Studio.Dashboard/Services/DashboardUiMapper.cs)
+- [Core runtime-admin endpoints](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Api/Endpoints/RuntimeAdmin)
+- [Core runtime-admin response models](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Api/Endpoints/RuntimeAdmin/Models.cs)
+- [Core runtime-admin service](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/Services/WorkflowRuntimeAdminService.cs)
+- [Core quiescence signal](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/Services/QuiescenceSignal.cs)
+- [Core drain orchestrator](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/Services/DrainOrchestrator.cs)
+- [Core interrupted recovery scanner](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/Services/InterruptedRecoveryScanner.cs)
+- [Core interrupted recovery startup task](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/StartupTasks/RecoverInterruptedWorkflowsStartupTask.cs)
+- [Core interrupted workflow payload](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/Models/Payloads/WorkflowInterruptedPayload.cs)
+- [Core graceful-shutdown options](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/Options/GracefulShutdownOptions.cs)
+- [Core runtime readiness check](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaRuntimeHealthCheck.cs)
+- [Studio dashboard runtime chip](https://github.com/elsa-workflows/elsa-studio/blob/release/3.8.1/src/modules/Elsa.Studio.Dashboard/Components/DashboardRuntimeChip.razor)
+- [Studio runtime status mapping](https://github.com/elsa-workflows/elsa-studio/blob/release/3.8.1/src/modules/Elsa.Studio.Dashboard/Services/DashboardUiMapper.cs)

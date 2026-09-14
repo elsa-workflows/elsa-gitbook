@@ -242,6 +242,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Monitoring and distributed tracing guidance
 - ✅ Elsa.OpenTelemetry workflow/activity middleware, span contracts, error handlers, and Studio/collector boundaries
 - ✅ Runtime, persistence, and distributed-lock readiness guidance
+- ✅ 3.8.1 interrupted-workflow recording, startup recovery, liveness recovery,
+  and force-drain terminal-state safeguards
 - ✅ Elasticsearch workflow-instance and execution-log persistence setup,
   provider boundaries, index lifecycle, and release-backed limitations
 - ✅ Workflow-instance state, journal, activity-execution, and variable investigation guidance
