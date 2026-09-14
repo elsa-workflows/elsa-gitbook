@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-13)
+## Slice Inventory (2026-09-14)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -121,6 +121,51 @@ acceptance criterion below is already complete.
 
 - No planned feature slice remains. Future runs should re-inventory the
   published docs and release source for a new, distinct gap.
+
+### Current run inventory (2026-09-14)
+
+- The published GitBook is complete through `DOC-099`; no prior planned
+  feature slice remains available.
+- The latest released branch is now `release/3.8.1` in Core, Studio, and
+  Extensions. The requested `release/3.8.0` branch is stale or no longer
+  advertised by the remotes, so this run uses the 3.8.1 release snapshots.
+- Core 3.8.1 adds a startup scan for `Running` + `Interrupted` instances,
+  conditional `TryMarkInterruptedAsync` persistence during force-drain, and
+  `WorkflowInterrupted` forensic logging. The published pages still describe
+  only the 3.8.0 drain behavior and do not explain the recovery boundary.
+- This is a distinct release-maintenance slice because it changes the
+  operator-visible recovery and data-safety contract of an already documented
+  runtime operation.
+
+### Current run plan (2026-09-14)
+
+- Refresh `operate/runtime-administration.md` and
+  `guides/running-workflows/long-running-workflows.md` for Core and Studio
+  `release/3.8.1`.
+- Explain what force-drain persists, which terminal outcomes are protected,
+  how startup and timeout-based recovery differ, how batch size and liveness
+  threshold affect recovery, and how tenant context is restored.
+- Update coverage metadata, validate examples and source links, run the
+  iterative self-review, and deliver only if all available checks are clean.
+
+### Current run selection (2026-09-14)
+
+- Selected `DOC-100` because Core 3.8.1 contains source and tests for the new
+  interruption/recovery contract, while the two most relevant published
+  guides still pin and describe `release/3.8.0` behavior.
+
+### Current run completion (2026-09-14)
+
+- Refreshed `operate/runtime-administration.md` and
+  `guides/running-workflows/long-running-workflows.md` for Core and Studio
+  `release/3.8.1`.
+- Documented conditional `Running` + `Interrupted` persistence, forensic
+  `WorkflowInterrupted` records, startup requeue behavior, liveness recovery,
+  batch-size and inactivity settings, tenant context restoration, and terminal
+  state safeguards.
+- Updated the runtime-administration release links and current coverage
+  metadata. No new navigation entry was required because both guides were
+  already published.
 
 ### Current run inventory (2026-09-13)
 

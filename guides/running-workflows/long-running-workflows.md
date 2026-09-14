@@ -1,7 +1,7 @@
 # Long-Running Workflows
 
 Use long-running workflows when work should pause and resume instead of
-finishing in a single request or execution burst. In Elsa `release/3.8.0`, that
+finishing in a single request or execution burst. In Elsa `release/3.8.1`, that
 model is built on bookmarks, triggers, scheduling, queued stimuli, and runtime
 recovery.
 
@@ -63,7 +63,7 @@ Three practical rules matter for long-running workflows:
 - use distributed runtime and clustered scheduling when multiple nodes can
   resume the same work
 
-The sample server in `release/3.8.0` enables runtime persistence,
+The sample server in `release/3.8.1` enables runtime persistence,
 `UseDistributedRuntime()`, and `UseScheduling()` together for exactly this
 reason.
 
@@ -79,7 +79,7 @@ finishes.
 | Trigger | Start point for a workflow definition | `HttpEndpoint`, trigger `Timer`, trigger `Cron`, trigger `StartAt` |
 | Stimulus | Payload used to match a bookmark or trigger | event name, HTTP route, timer payload, task ID |
 
-In `release/3.8.0`, Elsa uses these runtime paths:
+In `release/3.8.1`, Elsa uses these runtime paths:
 
 1. The activity writes a bookmark or trigger payload.
 2. Elsa stores runtime state through the configured runtime store.
@@ -131,7 +131,7 @@ public class FollowUpWorkflow : WorkflowBase
 }
 ```
 
-In `release/3.8.0`:
+In `release/3.8.1`:
 
 - `Delay` calls `context.DelayFor(...)`, which creates a delay bookmark with a
   `ResumeAt` timestamp
@@ -165,7 +165,7 @@ This is different from an inline timer:
   message if the configured time is already in the past
 - inline scheduling activities wait inside the current workflow instance
 
-In `release/3.8.0`, trigger schedules are created by
+In `release/3.8.1`, trigger schedules are created by
 `DefaultTriggerScheduler`, while inline waits are created by
 `DefaultBookmarkScheduler`.
 
@@ -204,7 +204,7 @@ public class WaitForApproval : Activity
 `GenerateBookmarkTriggerUrl(...)` comes from Elsa's HTTP integration, so use it
 when your host includes the HTTP module.
 
-The built-in resume endpoint in `release/3.8.0` is:
+The built-in resume endpoint in `release/3.8.1` is:
 
 - `GET {RoutePrefix}/bookmarks/resume?t=...`
 - `POST {RoutePrefix}/bookmarks/resume?t=...`
@@ -222,7 +222,7 @@ resume path might do meaningful work after the bookmark is matched.
 `RunTask` is useful when the workflow asks the host application to do work
 outside the current execution path and continue later with a result.
 
-In `release/3.8.0`, `RunTask`:
+In `release/3.8.1`, `RunTask`:
 
 - generates a task ID
 - creates a bookmark keyed by a `RunTaskStimulus`
@@ -234,7 +234,7 @@ itself runs elsewhere.
 
 ## Resume paths you can rely on
 
-In `release/3.8.0`, long-running workflows typically resume through one of four
+In `release/3.8.1`, long-running workflows typically resume through one of four
 paths:
 
 | Resume path | Typical source | What Elsa does |
@@ -276,9 +276,17 @@ that can act as triggers.
   queued bookmark resumes and other deferred bookmark stimuli.
 - `PurgeBookmarkQueueRecurringTask` removes expired bookmark queue items based on
   `BookmarkQueuePurgeOptions`.
-- `RestartInterruptedWorkflowsTask` looks for workflow instances that are still
-  marked as executing but have been inactive longer than
+- On shell activation, Core 3.8.1 immediately scans `Running` + `Interrupted`
+  instances and requeues them in batches. Tenant context is restored before a
+  tenant-scoped restart.
+- `RestartInterruptedWorkflowsTask` is the separate liveness path: it looks for
+  `Running` instances still marked as executing but inactive longer than
   `RuntimeOptions.InactivityThreshold` and asks the runtime to restart them.
+  The default threshold and recovery batch size are five minutes and 100.
+- A force-drain records affected persisted instances as `Running` + `Interrupted`
+  and writes a `WorkflowInterrupted` execution-log entry. It uses conditional
+  writes so naturally finished, faulted, and already user-cancelled instances
+  are not requeued as drain interruptions.
 - For multi-node hosting, pair long-running workflows with the clustered
   guidance in [Clustering](../clustering/README.md) and
   [Distributed Hosting](../../hosting/distributed-hosting.md).
@@ -315,6 +323,26 @@ Before calling a workflow long-running and production-ready, verify:
 - Expecting synchronous HTTP responses from workflows that can suspend.
 - Forgetting clustered locking and scheduling when multiple nodes can process
   the same bookmarks.
+
+## Host interruption and recovery
+
+An interrupted execution is different from a workflow that is deliberately
+waiting on a bookmark. A force-drain cancels active execution cycles so the
+host can stop; on the next shell activation, Elsa requeues persisted instances
+whose status is `Running` and sub-status is `Interrupted`. This is the recovery
+path to verify when a deployment can be stopped while workflows are executing.
+
+Use [Runtime administration and graceful drain](../../operate/runtime-administration.md)
+for the force-drain endpoint and operator procedure. For production recovery,
+also verify that workflow-instance, bookmark, and execution-log persistence is
+durable and available to the new process. A `WorkflowInterrupted` log record is
+evidence of the interruption, not a substitute for the persisted workflow
+state needed to restart it.
+
+The recurring timeout-based task covers stale executing instances separately.
+It is controlled by `RuntimeOptions.InactivityThreshold`; the startup scan is
+controlled by `RuntimeOptions.RestartInterruptedWorkflowsBatchSize` and targets
+the explicit `Running` + `Interrupted` state.
 
 ## Related guides
 
