@@ -1,13 +1,13 @@
 ---
 description: >-
-  Configure the Elsa 3.8.0 Elasticsearch extension for workflow-instance and
+  Configure the Elsa 3.8.1 Elasticsearch extension for workflow-instance and
   execution-log persistence, with its provider boundaries and production
   caveats.
 ---
 
 # Elasticsearch Setup Example
 
-Elsa 3.8.0 includes an `Elsa.Persistence.Elasticsearch` extension for teams
+Elsa 3.8.1 includes an `Elsa.Persistence.Elasticsearch` extension for teams
 that already operate Elasticsearch and want Elasticsearch-backed workflow
 instance and workflow execution-log stores. It is not a complete replacement
 for every Elsa persistence store: workflow definitions, bookmarks, inbox
@@ -31,11 +31,11 @@ store ownership explicitly so operators know where each type of data lives.
 
 ## Packages and endpoint
 
-Install the extension package that matches the rest of your Elsa 3.8.0 package
+Install the extension package that matches the rest of your Elsa 3.8.1 package
 set:
 
 ```bash
-dotnet add package Elsa.Persistence.Elasticsearch --version 3.8.0
+dotnet add package Elsa.Persistence.Elasticsearch --version 3.8.1
 ```
 
 `ElasticsearchOptions.Endpoint` can be either an Elasticsearch URI or the name
@@ -151,7 +151,7 @@ retention policy.
 ## Index lifecycle and deployment checks
 
 The release source contains a `ConfigureClientAsync` hook that can create the
-workflow-instance index, but the 3.8.0 source tree contains no caller for that
+workflow-instance index, but the 3.8.1 source tree contains no caller for that
 hook. Do not assume that registering the package provisions indices or applies
 your production mappings. Before starting Elsa, verify the following in the
 target cluster:
@@ -172,7 +172,7 @@ by your organization.
 
 ## Release-backed limits to test
 
-The Elasticsearch workflow-instance store in 3.8.0 does not implement every
+The Elasticsearch workflow-instance store in 3.8.1 does not implement every
 `WorkflowInstanceFilter` option. Its source handles the singular identity,
 version, correlation, status, sub-status, and search-term fields, while
 collection-based ID filters and parent-instance filters remain TODO. The
@@ -184,6 +184,21 @@ EF Core or MongoDB store.
 The execution-log store supports filtering by workflow instance ID, activity
 ID, and event name. Other log-query requirements should be verified against
 the API and the release source before you promise them to operators.
+
+## Interrupted-workflow recovery
+
+The 3.8.1 workflow-instance store implements Elsa's conditional
+`TryMarkInterruptedAsync` update. It changes a non-terminal instance to
+`Running` + `Interrupted` with `IsExecuting = false`, refuses finished or
+faulted instances, and allows a finished/cancelled row only when the runtime
+explicitly permits that drain transition. This makes Elasticsearch eligible
+for the force-drain and startup-recovery path described in the [persistence
+provider recovery matrix](../README.md#interrupted-workflow-recovery-in-381).
+
+This does not provision indices, make the cluster durable, or configure the
+other runtime stores that startup recovery needs. Verify index permissions,
+refresh behavior, snapshots, and the companion bookmark and execution-log
+stores before relying on restart recovery.
 
 ## Troubleshooting
 
@@ -213,19 +228,19 @@ not to the Studio browser package.
 
 ## Release source
 
-The behavior described here is based on the `release/3.8.0` sources:
+The behavior described here is based on the `release/3.8.1` sources:
 
-- [`ModuleExtensions.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/persistence/Elsa.Persistence.Elasticsearch/Extensions/ModuleExtensions.cs)
-  and [`ElasticsearchFeature.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/persistence/Elsa.Persistence.Elasticsearch/Features/ElasticsearchFeature.cs)
+- [`ModuleExtensions.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Elasticsearch/Extensions/ModuleExtensions.cs)
+  and [`ElasticsearchFeature.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Elasticsearch/Features/ElasticsearchFeature.cs)
   define endpoint, authentication, and client setup.
-- [`ElasticWorkflowInstanceFeature.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Management/ElasticWorkflowInstanceFeature.cs)
-  and [`WorkflowInstanceStore.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Management/WorkflowInstanceStore.cs)
+- [`ElasticWorkflowInstanceFeature.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Management/ElasticWorkflowInstanceFeature.cs)
+  and [`WorkflowInstanceStore.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Management/WorkflowInstanceStore.cs)
   define the workflow-instance store and its filter behavior.
-- [`ElasticExecutionLogRecordFeature.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Runtime/ElasticExecutionLogRecordFeature.cs)
-  and [`WorkflowExecutionLogStore.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Runtime/WorkflowExecutionLogStore.cs)
+- [`ElasticExecutionLogRecordFeature.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Runtime/ElasticExecutionLogRecordFeature.cs)
+  and [`WorkflowExecutionLogStore.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Runtime/WorkflowExecutionLogStore.cs)
   define the execution-log store.
-- Core's [`WorkflowManagementFeature`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Management/Features/WorkflowManagementFeature.cs)
-  and [`WorkflowRuntimeFeature`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/Features/WorkflowRuntimeFeature.cs)
+- Core's [`WorkflowManagementFeature`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Management/Features/WorkflowManagementFeature.cs)
+  and [`WorkflowRuntimeFeature`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Runtime/Features/WorkflowRuntimeFeature.cs)
   provide the management/runtime composition points.
 
 ## Related guidance

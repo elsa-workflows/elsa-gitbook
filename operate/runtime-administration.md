@@ -250,9 +250,15 @@ builder.Services.Configure<RuntimeOptions>(options =>
 
 For recovery after a process restart, configure durable workflow-instance,
 bookmark, and execution-log storage. In-memory stores cannot provide the
-records that the recovery scan needs after the process exits. Treat
-`WorkflowInterrupted` records as an operational trail: they identify the
-interruption and its reason, but recovery still depends on the persisted
+records that the recovery scan needs after the process exits. The 3.8.1
+release implements the conditional interruption write for EF Core, Dapper,
+MongoDB, and Elasticsearch; a custom workflow-instance store must implement
+`IWorkflowInstanceStore.TryMarkInterruptedAsync` with equivalent terminal-state
+protection. See [Persistence: interrupted-workflow recovery](../guides/persistence/README.md#interrupted-workflow-recovery-in-381)
+for the provider matrix and verification checklist.
+
+Treat `WorkflowInterrupted` records as an operational trail: they identify
+the interruption and its reason, but recovery still depends on the persisted
 workflow instance and its runtime state being available to restart it.
 
 ## Verify readiness after an operation

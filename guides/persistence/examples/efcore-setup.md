@@ -163,6 +163,15 @@ dotnet ef database update --context ManagementElsaDbContext
 dotnet ef database update --context RuntimeElsaDbContext
 ```
 
+## Interrupted-workflow recovery
+
+The 3.8.1 EF Core workflow-instance store supports the conditional
+`TryMarkInterruptedAsync` update used by force-drain recovery. Keep the
+management and runtime databases durable, and configure the bookmark and
+execution-log stores durably as well if interrupted instances must resume
+after a process restart. See [Persistence provider recovery support](../README.md#interrupted-workflow-recovery-in-381)
+for the deployment checklist.
+
 ## Advanced Configuration
 
 ### Separate Databases

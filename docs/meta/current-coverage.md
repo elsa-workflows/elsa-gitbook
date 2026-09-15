@@ -244,6 +244,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Runtime, persistence, and distributed-lock readiness guidance
 - ✅ 3.8.1 interrupted-workflow recording, startup recovery, liveness recovery,
   and force-drain terminal-state safeguards
+- ✅ 3.8.1 persistence-provider recovery matrix for EF Core, Dapper, MongoDB,
+  Elasticsearch, and in-memory storage, including custom-store requirements
 - ✅ Elasticsearch workflow-instance and execution-log persistence setup,
   provider boundaries, index lifecycle, and release-backed limitations
 - ✅ Workflow-instance state, journal, activity-execution, and variable investigation guidance

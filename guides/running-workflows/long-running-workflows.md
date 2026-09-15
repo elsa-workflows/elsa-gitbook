@@ -287,6 +287,11 @@ that can act as triggers.
   and writes a `WorkflowInterrupted` execution-log entry. It uses conditional
   writes so naturally finished, faulted, and already user-cancelled instances
   are not requeued as drain interruptions.
+- The conditional instance-store write is implemented by the 3.8.1 EF Core,
+  Dapper, MongoDB, and Elasticsearch providers. The in-memory provider can
+  mark an instance during the current process but cannot provide restart
+  recovery after process exit. See [Persistence provider recovery support](../persistence/README.md#interrupted-workflow-recovery-in-381)
+  before choosing a provider for durable long-running workflows.
 - For multi-node hosting, pair long-running workflows with the clustered
   guidance in [Clustering](../clustering/README.md) and
   [Distributed Hosting](../../hosting/distributed-hosting.md).
