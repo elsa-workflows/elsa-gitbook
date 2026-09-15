@@ -122,6 +122,14 @@ db.bookmarks.getIndexes();
 db.workflow_execution_logs.getIndexes();
 ```
 
+## Interrupted-workflow recovery
+
+The 3.8.1 MongoDB workflow-instance store supports the conditional
+`TryMarkInterruptedAsync` update used by force-drain recovery. Use durable
+MongoDB collections for workflow instances, bookmarks, and execution logs when
+instances must survive a process restart. See [Persistence provider recovery support](../README.md#interrupted-workflow-recovery-in-381)
+for the deployment checklist.
+
 ## Advanced Configuration
 
 ### Custom Database and Collection Names

@@ -1,6 +1,6 @@
 ---
 description: >-
-  Configure Elsa Workflows 3.8.0 with the Dapper persistence provider,
+  Configure Elsa Workflows 3.8.1 with the Dapper persistence provider,
   including SQL dialect selection and FluentMigrator schema setup.
 ---
 
@@ -11,7 +11,7 @@ workflow management, workflow runtime, and (optionally) Elsa Identity. It
 uses a connection provider to create database connections and select the SQL
 dialect used by the stores.
 
-This page targets the `release/3.8.0` source. The extension contains built-in
+This page targets the `release/3.8.1` source. The extension contains built-in
 connection providers for SQLite, SQL Server, and PostgreSQL. The extension
 does not contain a MySQL connection provider; choosing MySQL in an unrelated
 Elsa EF Core example does not configure Dapper.
@@ -25,7 +25,7 @@ Choose MongoDB when a document database is a better fit for your deployment.
 
 Dapper is not a second workflow model: it replaces the persistence
 implementations behind Elsa's existing management and runtime contracts. The
-3.8.0 extension wires these stores:
+3.8.1 extension wires these stores:
 
 | Area | Stores configured by the Dapper feature |
 | --- | --- |
@@ -38,7 +38,7 @@ implementations behind Elsa's existing management and runtime contracts. The
 Add the Dapper extension to the server project:
 
 ```bash
-dotnet add package Elsa.Persistence.Dapper --version 3.8.0
+dotnet add package Elsa.Persistence.Dapper --version 3.8.1
 ```
 
 The extension references the separate `Elsa.Persistence.Dapper.Migrations`
@@ -46,7 +46,7 @@ assembly. Add that package explicitly when your host refers to the migration
 types, as the examples below do:
 
 ```bash
-dotnet add package Elsa.Persistence.Dapper.Migrations --version 3.8.0
+dotnet add package Elsa.Persistence.Dapper.Migrations --version 3.8.1
 ```
 
 The extension's built-in connection providers use these ADO.NET drivers:
@@ -66,13 +66,13 @@ dotnet add package FluentMigrator.Runner.SqlServer --version 7.2.0
 ```
 
 Use only the runner package for the database you select. The Dapper extension
-source and the 3.8.0 workbench explicitly configure `AddSQLite()` or
+source and the 3.8.1 workbench explicitly configure `AddSQLite()` or
 `AddSqlServer()`; PostgreSQL has a Dapper connection provider, but the
 workbench does not ship a PostgreSQL FluentMigrator runner configuration.
 
 ## Configure a durable SQL Server store
 
-The following is the registration shape used by the 3.8.0 workbench. Keep the
+The following is the registration shape used by the 3.8.1 workbench. Keep the
 connection string in configuration or a secret store; do not commit a real
 password.
 
@@ -208,7 +208,7 @@ The configured runner must therefore include all of the following:
 
 The bundled migration assembly groups versions by module prefix:
 
-| Module | Prefix | 3.8.0 source currently includes |
+| Module | Prefix | 3.8.1 source currently includes |
 | --- | ---: | --- |
 | Management | 1000 | `Initial` through `V3_4` |
 | Runtime | 2000 | `Initial` through `V3_7` |
@@ -228,6 +228,15 @@ Do not copy the old 3.7.0 snippets from this repository or mix Dapper
 migrations with EF Core migrations. If you manage PostgreSQL or another
 custom database externally, verify the generated SQL, indexes, data types,
 and migration history against your exact database engine.
+
+## Interrupted-workflow recovery
+
+The 3.8.1 Dapper workflow-instance store supports the conditional
+`TryMarkInterruptedAsync` update used by force-drain recovery. Apply the
+workflow-instance schema before enabling recovery, and keep workflow
+instances, bookmarks, and execution logs in durable storage when they must
+survive a process restart. See [Persistence provider recovery support](../README.md#interrupted-workflow-recovery-in-381)
+for the deployment checklist.
 
 ## SQL dialect behavior
 
@@ -261,7 +270,7 @@ runner must target the same engine.
 
 ## Elsa Studio boundary
 
-Dapper configuration is server-side. The 3.8.0 Studio source has no
+Dapper configuration is server-side. The 3.8.1 Studio source has no
 Dapper-specific persistence implementation or provider-selection screen. Once
 the server's management and runtime APIs use Dapper, Studio consumes those
 existing APIs; migrations, database credentials, dialect selection, and schema

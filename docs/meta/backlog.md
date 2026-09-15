@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-14)
+## Slice Inventory (2026-09-15)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -112,6 +112,8 @@ acceptance criterion below is already complete.
 - `DOC-097` Runtime administration and graceful drain operations
 - `DOC-098` Public event-trigger tokens and Data Protection key continuity
 - `DOC-099` Elsa API rate limiting middleware and policy scope
+- `DOC-100` Interrupted workflow persistence and startup recovery for 3.8.1
+- `DOC-101` Persistence-provider support for interrupted workflow recovery
 
 ### Available next slices
 
@@ -121,6 +123,32 @@ acceptance criterion below is already complete.
 
 - No planned feature slice remains. Future runs should re-inventory the
   published docs and release source for a new, distinct gap.
+
+### Current run plan (2026-09-15)
+
+- Refresh the persistence overview and provider examples so the 3.8.1
+  interrupted-workflow recovery contract is explicit and actionable.
+- Validation target: `release/3.8.1` in `elsa-core`, `elsa-studio`, and
+  `elsa-extensions`.
+- Presentation target: a provider matrix plus a short verification checklist,
+  with implementation details kept beside the existing runtime recovery guide.
+
+### Current run selection (2026-09-15)
+
+- Selected `DOC-101` because Core 3.8.1 adds the conditional
+  `TryMarkInterruptedAsync` contract and Extensions 3.8.1 implements it for
+  Dapper, MongoDB, and Elasticsearch, while the published persistence pages
+  do not explain provider support for interruption recovery.
+
+### Current run completion (2026-09-15)
+
+- Added the 3.8.1 persistence-provider recovery matrix and verification
+  checklist to `guides/persistence/README.md`.
+- Added provider-specific recovery notes to the EF Core, Dapper, MongoDB, and
+  Elasticsearch examples; refreshed stale Dapper and Elasticsearch 3.8.0
+  source/package pins to 3.8.1.
+- Linked the matrix from the runtime-administration and long-running-workflow
+  guides and updated coverage metadata. No new navigation entry was required.
 
 ### Current run inventory (2026-09-14)
 

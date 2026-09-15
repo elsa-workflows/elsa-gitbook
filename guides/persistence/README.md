@@ -123,7 +123,7 @@ control and a built-in Dapper connection provider.
 * Teams with strong SQL expertise
 * Scenarios requiring custom query optimization
 
-The 3.8.0 extension provides built-in connection providers for SQLite, SQL
+The 3.8.1 extension provides built-in connection providers for SQLite, SQL
 Server, and PostgreSQL. MySQL is not a built-in Dapper provider. See the
 [Dapper persistence guide](examples/dapper-setup.md) for provider selection,
 SQL dialect behavior, and the FluentMigrator runner configuration required
@@ -138,7 +138,7 @@ store is separate from Elsa's workflow-definition and workflow-instance stores.
 **Best for:** Deployments that already operate Elasticsearch and want
 workflow-instance and execution-log stores backed by Elasticsearch.
 
-**Important boundary:** The 3.8.0 extension does not replace every Elsa store.
+**Important boundary:** The 3.8.1 extension does not replace every Elsa store.
 It wires `IWorkflowInstanceStore` and `IWorkflowExecutionLogStore`; configure
 workflow definitions, bookmarks, inbox messages, and other stores separately.
 The release store also has filter and timestamp-update limitations, so validate
@@ -299,6 +299,64 @@ Server examples, PostgreSQL boundaries, and custom-provider guidance.
 * Elsa's Dapper migrations create PascalCase tables and columns such as `WorkflowInstances`, `Bookmarks`, and `WorkflowExecutionLogRecords`
 * See [Dapper Setup Example](examples/dapper-setup.md) for a complete setup
 
+## Interrupted-workflow recovery in 3.8.1
+
+Force-drain recovery depends on the workflow-instance store, not only on the
+runtime store. When Elsa interrupts an active execution, it conditionally
+updates the instance to `Status = Running`, `SubStatus = Interrupted`, and
+`IsExecuting = false`. The conditional write refuses to overwrite a finished
+or faulted instance; a cancelled finished instance is eligible only when the
+runtime has evidence that the drain caused the cancellation. On the next
+activation, the runtime scans persisted `Running` + `Interrupted` instances
+and requeues them.
+
+The 3.8.1 release implements this contract as follows:
+
+| Provider | Conditional interruption write | Restart recovery after process exit | Operational boundary |
+| --- | --- | --- | --- |
+| EF Core | Yes (`TryMarkInterruptedAsync`) | Yes, when the management, runtime, bookmark, and execution-log stores are durable | Use a shared database and distributed locking for multiple nodes |
+| Dapper | Yes | Yes, with the Dapper workflow-instance schema and durable runtime stores | Apply the Dapper schema before enabling recovery |
+| MongoDB | Yes | Yes, with durable MongoDB collections and runtime stores | Use a durable deployment; replica-set behavior remains a MongoDB concern |
+| Elasticsearch | Yes | Yes, with its workflow-instance and execution-log stores durable plus companion runtime stores configured separately | Validate update-by-query permissions and refresh behavior in the cluster |
+| In-memory | Yes, only in the process-local store | No; process exit removes the records needed by startup recovery | Suitable for development or explicitly disposable runs only |
+
+Custom workflow-instance stores must implement
+`IWorkflowInstanceStore.TryMarkInterruptedAsync` with the same conditional
+semantics to participate safely in force-drain recovery. A store that only
+loads an instance, mutates a snapshot, and saves it can race a terminal
+completion and reintroduce an already-finished workflow as interrupted.
+
+The release implementations are visible in Core's [`IWorkflowInstanceStore`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Management/Contracts/IWorkflowInstanceStore.cs)
+and [`MemoryWorkflowInstanceStore`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Workflows.Management/Stores/MemoryWorkflowInstanceStore.cs),
+the EF Core [`WorkflowInstanceStore`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.1/src/modules/Elsa.Persistence.EFCore/Modules/Management/WorkflowInstanceStore.cs),
+and the Extensions implementations for [Dapper](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Dapper/Modules/Management/Stores/DapperWorkflowInstanceStore.cs),
+[MongoDB](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.MongoDb/Modules/Management/WorkflowInstanceStore.cs),
+and [Elasticsearch](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.1/src/modules/persistence/Elsa.Persistence.Elasticsearch/Modules/Management/WorkflowInstanceStore.cs).
+
+### Verify a provider before relying on recovery
+
+Run this checklist for every deployment that uses force-drain or expects
+interrupted workflows to survive a restart:
+
+1. Confirm that `IWorkflowInstanceStore` is backed by the provider you intend
+   to use; do not assume that configuring a runtime store also configures the
+   workflow-instance store.
+2. Confirm that the provider implements the conditional interruption update
+   and that it does not update `Finished` or `Faulted` instances.
+3. Confirm durable storage for workflow instances, bookmarks, and execution
+   logs. Startup recovery cannot reconstruct a workflow from an in-memory
+   store after the process exits.
+4. In a non-production environment, force-drain a deliberately long-running
+   instance, verify its `Running` + `Interrupted` state and
+   `WorkflowInterrupted` log entry, restart the host, and verify that it is
+   requeued once.
+5. For a multi-node deployment, verify shared persistence, distributed
+   locking, tenant context, and the provider's update/transaction behavior
+   under concurrent completion.
+
+The runtime operation, interruption reasons, and startup scan are documented
+in [Runtime administration and graceful drain](../../operate/runtime-administration.md).
+
 ## Indexes & Queries
 
 Proper indexing is essential for production performance. Create indexes for frequently queried columns:
@@ -357,7 +415,7 @@ See [Indexing Notes](examples/indexing-notes.md) for provider-specific guidance.
 ## Retention & Cleanup
 
 Over time, completed workflow instances and their runtime records accumulate.
-Elsa 3.8.0 provides retention through the separate `Elsa.Retention` extension.
+Elsa 3.8.1 provides retention through the separate `Elsa.Retention` extension.
 It selects instances with `RetentionWorkflowInstanceFilter` and, for the
 built-in deletion policy, removes the related bookmarks, activity execution
 records, workflow execution logs, and workflow instances.
