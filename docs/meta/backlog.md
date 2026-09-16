@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-15)
+## Slice Inventory (2026-09-16)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -114,6 +114,7 @@ acceptance criterion below is already complete.
 - `DOC-099` Elsa API rate limiting middleware and policy scope
 - `DOC-100` Interrupted workflow persistence and startup recovery for 3.8.1
 - `DOC-101` Persistence-provider support for interrupted workflow recovery
+- `DOC-102` 3.8.2 multitenancy and in-memory key-value storage boundaries
 
 ### Available next slices
 
@@ -123,6 +124,52 @@ acceptance criterion below is already complete.
 
 - No planned feature slice remains. Future runs should re-inventory the
   published docs and release source for a new, distinct gap.
+
+### Current run inventory (2026-09-16)
+
+- The published GitBook is complete through `DOC-101`; no prior planned slice
+  remains available.
+- The latest released branch advanced from the requested `release/3.8.0` to
+  `release/3.8.2` in Core, Studio, and Extensions. This run uses exact
+  release/3.8.2 snapshots: Core `33181ae3`, Studio `1c72dc02`, and Extensions
+  `e7d05ef9`.
+- Core 3.8.2 removes `TenantVisibility` and changes the default
+  `MemoryKeyValueStore` to save, query, and delete records by key without
+  applying the ambient tenant. EF Core retains its tenant-aware query filter
+  when multitenancy is enabled. Existing multitenancy pages explain tenant
+  resolution and EF/separate-database options, but not this provider boundary.
+- The change affects a shared coordination store rather than the behavior of
+  every in-memory Elsa feature. The documentation must avoid generalizing the
+  warning to unrelated stores.
+
+### Current run plan (2026-09-16)
+
+- Add a focused storage-boundaries page under Multitenancy and link it from
+  the existing introduction, setup, persistence, and runtime-coordination
+  entry points where useful.
+- Explain tenant resolution versus storage isolation, the EF Core filter
+  contract, the 3.8.2 default in-memory key-value limitation, separate
+  database selection, and the custom-store verification boundary.
+- Validate examples and source links against release/3.8.2, self-review
+  iteratively, and deliver only if documentation checks and hosted gates pass.
+
+### Current run selection (2026-09-16)
+
+- Selected `DOC-102` because the 3.8.2 release changes the operator-visible
+  isolation and durability assumptions of the default key-value store, while
+  the published multitenancy and runtime coordination guidance does not make
+  that boundary explicit.
+
+### Current run completion (2026-09-16)
+
+- Added `multitenancy/storage-boundaries.md` and linked it from the
+  multitenancy introduction, setup, runtime coordination, and navigation.
+- Documented the distinction between tenant resolution and provider-enforced
+  storage isolation, the 3.8.2 EF Core filter contract, separate-database
+  configuration, and the default in-memory key-value store's process-local,
+  non-tenant-filtering behavior.
+- Updated coverage and sitemap metadata. No additional distinct follow-on
+  topic was identified during the release/3.8.2 inventory.
 
 ### Current run plan (2026-09-15)
 

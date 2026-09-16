@@ -1630,6 +1630,35 @@
     ]
   },
   {
+    "path": "multitenancy/storage-boundaries.md",
+    "title": "Storage boundaries",
+    "frontmatter": {
+      "description": "Explain how Elsa 3.8.2 separates tenant resolution from storage isolation, including the default in-memory key-value store boundary."
+    },
+    "headings": [
+      {
+        "level": 1,
+        "text": "Storage boundaries"
+      },
+      {
+        "level": 2,
+        "text": "Provider behavior in 3.8.2"
+      },
+      {
+        "level": 2,
+        "text": "The in-memory key-value warning"
+      },
+      {
+        "level": 2,
+        "text": "Release source"
+      },
+      {
+        "level": 2,
+        "text": "Related guides"
+      }
+    ]
+  },
+  {
     "path": "operate/incidents/README.md",
     "title": "Incidents",
     "frontmatter": {},

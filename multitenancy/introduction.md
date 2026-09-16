@@ -4,6 +4,11 @@
 
 Elsa supports multitenancy both within a shared database and through separate databases for each tenant.
 
+Tenant resolution does not automatically make every storage provider
+tenant-aware. For the release-specific boundary between EF Core filtering,
+separate-database selection, and the default in-memory key-value store, see
+[Storage boundaries](storage-boundaries.md).
+
 ### Shared Database
 
 Each entity has a `TenantId` property that links them to a specific tenant. This setup allows for a database with multiple tenants and their related information, such as workflows and any other entity derived from the `Entity` base class.
@@ -50,6 +55,5 @@ The _Tenants Provider_ is a service that lists all the tenants registered in you
   * Produces tenants from the `TenantsOptions` options class, which can be configured from e.g. _appsettings.json_.
 * `StoreTenantsProvider`
   * The `ITenantStore` service manages tenants with EF Core and MongoDB options. This allows tenants to be stored, added, updated, and removed from the database
-
 
 
