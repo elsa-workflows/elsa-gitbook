@@ -139,10 +139,11 @@ The documentation currently contains a broad set of markdown pages organized int
 
 - **>-** (`hosting/distributed-hosting.md`)
 
-### MULTITENANCY (2 pages)
+### MULTITENANCY (3 pages)
 
 - **Introduction** (`multitenancy/introduction.md`)
 - **Setup** (`multitenancy/setup.md`)
+- **Storage boundaries** (`multitenancy/storage-boundaries.md`)
 
 ### OPERATE (12 pages)
 
@@ -284,6 +285,8 @@ Based on the current structure, the following core concepts are documented:
 ### Advanced Features
 
 - ✅ Multitenancy setup
+- ✅ 3.8.2 tenant-resolution versus storage-isolation boundaries, including the
+  default in-memory key-value store limitation
 - ✅ Authentication
 - ✅ External Authentication and Studio SSO administration
 - ✅ Elsa API permission reference with Studio capability and role templates

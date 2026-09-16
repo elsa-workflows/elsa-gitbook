@@ -54,6 +54,13 @@ When using the default Identity module (`Elsa.Identity`), and the signed in user
 
 The **ClaimsTenantResolver** uses that claim to resolve the current tenant.
 
+{% hint style="warning" %}
+Tenant resolution and storage isolation are separate concerns. In Core 3.8.2,
+the default in-memory `IKeyValueStore` is process-local and does not apply
+tenant filtering. Use a durable provider and validate its tenant behavior for
+shared or multi-tenant deployments. See [Storage boundaries](storage-boundaries.md).
+{% endhint %}
+
 The following _appsettings.json_ section demonstrates an example of defining users, applications and roles that are linked to a given tenant:
 
 {% code title="appsettings.json" %}
@@ -128,7 +135,7 @@ The following _appsettings.json_ section demonstrates an example of defining use
 The hash and salt placeholders above are intentionally not usable
 credentials. Generate them with the identity tooling used by your deployment,
 and keep the signing key and credential material outside source control. Elsa
-3.8.0 rejects the known public signing-key samples outside `Development` and
+3.8.2 rejects the known public signing-key samples outside `Development` and
 `Demo`.
 
 {% hint style="warning" %}

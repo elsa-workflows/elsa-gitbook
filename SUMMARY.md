@@ -176,6 +176,7 @@
 
 * [Introduction](multitenancy/introduction.md)
 * [Setup](multitenancy/setup.md)
+* [Storage boundaries](multitenancy/storage-boundaries.md)
 
 ## Operate
 

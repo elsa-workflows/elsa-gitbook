@@ -8,7 +8,7 @@ description: >-
 
 Elsa has two infrastructure contracts that are easy to confuse:
 
-| Contract | What it stores or coordinates | Elsa 3.8.0 default |
+| Contract | What it stores or coordinates | Elsa 3.8.2 default |
 | --- | --- | --- |
 | `IKeyValueStore` | Small serialized records such as outbox items, instance heartbeats, and persisted administrative pauses | In-memory |
 | `IDistributedLockProvider` | Leases that ensure only one node performs a coordinated operation at a time | Local files under `App_Data/locks` |
@@ -44,9 +44,12 @@ runtime database or document store.
 
 ## Choose a key-value provider
 
-The default `MemoryKeyValueStore` loses its records when the process exits and
-is local to one process. Select a runtime persistence provider that also
-registers an `IKeyValueStore` implementation:
+The default `MemoryKeyValueStore` loses its records when the process exits,
+is local to one process, and does not apply ambient tenant filtering in Core
+3.8.2. Select a runtime persistence provider that also registers an
+`IKeyValueStore` implementation. For the distinction between tenant
+resolution and provider-enforced isolation, see [Multitenancy storage
+boundaries](../../multitenancy/storage-boundaries.md).
 
 | Runtime persistence | Key-value implementation in the release line | Typical fit |
 | --- | --- | --- |
