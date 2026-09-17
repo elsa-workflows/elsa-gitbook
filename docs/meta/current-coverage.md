@@ -316,10 +316,11 @@ Based on the current structure, the following core concepts are documented:
 
 ## Gaps and Weaknesses Identified
 
-This audit was refreshed on 2026-09-12. The older version of this section
-listed several topics as missing even though dedicated pages had since been
-published. The entries below describe remaining improvement opportunities;
-they are not claims that the related subject is undocumented.
+This opportunity list was checked against the published slice inventory on
+2026-09-17. The older version of this section listed several topics as missing
+even though dedicated pages had since been published. The entries below
+describe remaining improvement opportunities; they are not claims that the
+related subject is undocumented.
 
 ### Remaining improvement opportunities
 
@@ -330,11 +331,16 @@ they are not claims that the related subject is undocumented.
    - Activities, triggers, and bookmarks are explained across concept,
      activity, and running-workflow pages, but could be easier to discover as
      dedicated concept entry points.
+   - StateMachine is listed in the activity reference and architecture
+     overview, but a worked authoring guide for states and transitions would
+     help designers decide when and how to use it.
 
 2. **Elsa Studio**
    - Studio tour, integration, customization, designer, and operations pages
      exist. They could still be consolidated into a clearer task-oriented
      walkthrough for connecting a Studio host to a server.
+   - The workflow-investigation guide explains the activity-execution APIs,
+     but not the Studio activity-execution tab and details drawer.
    - The 3.8.0 release does not provide a built-in generic Connections
      administration module; custom hosts must provide the client UI when they
      use the Connections extension.
@@ -347,9 +353,13 @@ they are not claims that the related subject is undocumented.
 
 4. **Observability and troubleshooting**
    - Monitoring, structured logs, console logs, distributed tracing, incidents,
-     readiness, and workflow investigation are documented. Cross-guide
-     troubleshooting paths and a single symptom-to-diagnostic map remain useful
-     follow-up work.
+     readiness, and workflow investigation are documented. The troubleshooting
+     entry point now routes common symptoms to those signals; host-specific
+     escalation procedures and service-level runbooks remain separate
+     opportunities.
+   - Several linked diagnostic and scheduling guides still cite `release/3.8.0`;
+     reconcile their claims and source URLs with `release/3.8.2` in a separate
+     release-refresh slice.
 
 5. **Reference completeness**
    - API/client and activity-reference entry points exist, but they do not yet

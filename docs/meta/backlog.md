@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-16)
+## Slice Inventory (2026-09-17)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -115,50 +115,106 @@ acceptance criterion below is already complete.
 - `DOC-100` Interrupted workflow persistence and startup recovery for 3.8.1
 - `DOC-101` Persistence-provider support for interrupted workflow recovery
 - `DOC-102` 3.8.2 multitenancy and in-memory key-value storage boundaries
+- `DOC-103` Troubleshooting symptom-to-diagnostic map
 
 ### Available next slices
 
-- None currently identified.
+- `DOC-104` StateMachine authoring and transition lifecycle
+- `DOC-105` Inspect activity executions in Elsa Studio
+- `DOC-106` Refresh troubleshooting-linked 3.8.0 source references
 
 ### Recommended next slice
 
-- No planned feature slice remains. Future runs should re-inventory the
-  published docs and release source for a new, distinct gap.
+- `DOC-106` Refresh troubleshooting-linked 3.8.0 source references: multiple
+  guides reached from the troubleshooting map contain dead source links after
+  the 3.8.0 branches were removed. Reconcile the release-specific claims and
+  source URLs against the available 3.8.2 source before changing pins.
 
-### Current run inventory (2026-09-16)
+### Current run inventory (2026-09-17)
 
-- The published GitBook is complete through `DOC-101`; no prior planned slice
-  remains available.
-- The latest released branch advanced from the requested `release/3.8.0` to
-  `release/3.8.2` in Core, Studio, and Extensions. This run uses exact
-  release/3.8.2 snapshots: Core `33181ae3`, Studio `1c72dc02`, and Extensions
-  `e7d05ef9`.
-- Core 3.8.2 removes `TenantVisibility` and changes the default
-  `MemoryKeyValueStore` to save, query, and delete records by key without
-  applying the ambient tenant. EF Core retains its tenant-aware query filter
-  when multitenancy is enabled. Existing multitenancy pages explain tenant
-  resolution and EF/separate-database options, but not this provider boundary.
-- The change affects a shared coordination store rather than the behavior of
-  every in-memory Elsa feature. The documentation must avoid generalizing the
-  warning to unrelated stores.
+- The published GitBook is complete through `DOC-102`; no previously planned
+  slice remains available.
+- The latest released refs remain `release/3.8.2`: Core
+  `33181ae3048f628f591a0155b5665a8e4d1bcea2`, Studio
+  `1c72dc02c837919059b60efe5df2ed57ff2db2d9`, and Extensions
+  `e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e`. No newer release branch is
+  advertised by the three repositories.
+- The existing troubleshooting entry point is a long set of symptom
+  playbooks. Since those were written, focused operational guides now cover
+  instance state and journals, readiness and graceful drain, structured and
+  console logs, and distributed tracing. There is no short symptom-to-signal
+  map connecting them, so Studio users and operators must already know which
+  subsystem to inspect.
+- These guides point to distinct release-backed signals; the new slice should
+  route readers to them without restating their API contracts or promising
+  that a single signal proves end-to-end health.
+- Release-source and coverage review also found two distinct follow-on gaps:
+  StateMachine is listed but has no authoring walkthrough, and the workflow
+  investigation guide is API-first despite Studio's activity-execution detail
+  drawer. Both are grounded in the current Core/Studio source and are recorded
+  below for later slices.
+- Several detailed guides linked by the new map still identify `release/3.8.0`.
+  The Core readiness and Extensions Quartz source URLs for that branch return
+  HTTP 404, while `release/3.8.2` is available. Reconcile those guides and
+  their source links as a separate source-validation slice rather than
+  mechanically changing version pins.
 
-### Current run plan (2026-09-16)
+### Current run plan (2026-09-17)
 
-- Add a focused storage-boundaries page under Multitenancy and link it from
-  the existing introduction, setup, persistence, and runtime-coordination
-  entry points where useful.
-- Explain tenant resolution versus storage isolation, the EF Core filter
-  contract, the 3.8.2 default in-memory key-value limitation, separate
-  database selection, and the custom-store verification boundary.
-- Validate examples and source links against release/3.8.2, self-review
-  iteratively, and deliver only if documentation checks and hosted gates pass.
+- Improve the existing troubleshooting guide with a concise symptom / first
+  signal / next guide matrix; do not create a duplicate troubleshooting page.
+- Cover workflow state or fault, missing external/timer resumption, host
+  readiness or drain, and choosing structured logs, console logs, or tracing.
+- Verify every behavioral distinction against Core, Studio, and Extensions
+  `release/3.8.2`; check all changed local links and run the repository's
+  available documentation checks before PR delivery.
 
-### Current run selection (2026-09-16)
+### Current run selection (2026-09-17)
 
-- Selected `DOC-102` because the 3.8.2 release changes the operator-visible
-  isolation and durability assumptions of the default key-value store, while
-  the published multitenancy and runtime coordination guidance does not make
-  that boundary explicit.
+- Selected `DOC-103` because current behavior and diagnostic guidance are
+  spread across dedicated pages, but the troubleshooting entry point lacks a
+  compact, source-backed way to choose the first useful signal. This is a
+  discoverability improvement, not another description of those APIs.
+
+### Current run completion (2026-09-17)
+
+- Replaced the troubleshooting page's generic quick-start checklist with a
+  symptom-first matrix routing workflow state/faults, missed triggers/timers,
+  host readiness/drain, backend evidence, and Studio diagnostics to focused
+  guides. Added a cross-link from Monitoring & Observability.
+- Removed assumed endpoint/health paths and setup API names from the old
+  checklist; qualified activity-execution records as host-captured data.
+- Updated the current-coverage opportunity list and marked DOC-103 covered.
+  Added DOC-104 StateMachine authoring and DOC-105 Studio activity-execution
+  inspection as follow-on slices.
+- Local checks passed: `git diff --check`, changed-file local-link validation,
+  and fenced-code balance. Repository-local Markdown lint and GitBook build
+  commands are not configured or installed.
+- Source review found existing 3.8.0 links in readiness and Quartz guides now
+  return 404. DOC-106 records the source/content refresh follow-up; these links
+  were not mechanically retargeted without validating their release claims.
+
+### Newly discovered follow-on topics (2026-09-17)
+
+- `DOC-104` StateMachine authoring and transition lifecycle: add a designer- and
+  integrator-facing guide for states, initial/current state, trigger-driven and
+  automatic transitions, conditions, entry/exit activities, transition actions,
+  and the point where the state machine completes. Core `release/3.8.2` exposes
+  these contracts in `StateMachine`, `StateMachineState`, and `Transition`; the
+  activity reference currently only lists the shape. Validate the Studio
+  designer's actual editing affordances before documenting click steps.
+- `DOC-105` Inspect activity executions in Elsa Studio: extend the existing
+  workflow investigation guide with the Studio activity-execution tab and
+  details drawer, its state/outcome/output/retry panels, permission needs, and
+  persisted-data limitations. Core exposes the API contract, while Studio
+  `release/3.8.2` contains `ActivityExecutionsTab` and
+  `ActivityExecutionDetailsDrawer`; the current guide does not cover that
+  visual path. Confirm the click path and missing-data behavior before writing.
+- `DOC-106` Refresh troubleshooting-linked 3.8.0 source references: audit the
+  readiness, logging, tracing, and scheduling runbooks linked above, verify
+  their release-specific behavior against Core/Studio/Extensions
+  `release/3.8.2`, and replace or remove dead 3.8.0 source links only after
+  confirming the corresponding current or immutable source target.
 
 ### Current run completion (2026-09-16)
 

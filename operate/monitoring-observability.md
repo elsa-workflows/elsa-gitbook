@@ -10,6 +10,9 @@ Elsa 3.8.0 gives you several different observability layers. They solve
 different problems, so it helps to treat them as complementary instead of
 interchangeable.
 
+If you are starting from a symptom rather than choosing an observability
+tool, use the [troubleshooting decision map](../guides/troubleshooting/README.md#choose-the-first-diagnostic).
+
 Use this mapping:
 
 - For a single workflow instance, start with incidents, the workflow journal,
