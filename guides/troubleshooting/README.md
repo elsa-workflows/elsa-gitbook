@@ -1,27 +1,37 @@
 ---
 description: >-
-  Comprehensive troubleshooting guide for diagnosing and resolving common Elsa Workflows issues in development and production environments.
+  Symptom-first entry point for diagnosing Elsa workflow, host, and Studio
+  issues.
 ---
 
 # Troubleshooting Guide
 
-This guide helps operators and developers diagnose and resolve common Elsa Workflows issues. Each section is organized by symptom and provides step-by-step checks, root causes, and fixes grounded in Elsa's runtime behavior.
+Use this guide to choose a first diagnostic signal and find its focused
+runbook. An individual workflow's state, host readiness, and process-level
+diagnostics answer different questions.
 
 For short answers and links to the right task-specific guide, see the
 [Frequently Asked Questions](../faq.md).
 
-## Quick Start Checklist
+## Choose the first diagnostic
 
-Before diving into specific symptoms, verify these foundational items:
+Use workflow-instance records for one workflow, readiness checks for the Elsa
+probes configured on the host, and logs or traces for process-level behavior.
+A healthy readiness result does not prove that every external dependency is
+reachable or that a particular business workflow will complete.
 
-| Component | Check | Command/Location |
-|-----------|-------|------------------|
-| **Environment** | .NET runtime version compatible | `dotnet --info` |
-| **Database** | Connection string valid and accessible | Test with `dotnet ef database update` or connection test |
-| **Distributed Locks** | Lock provider configured (Redis/PostgreSQL/SQL Server) | Check `UseDistributedRuntime()` in Program.cs |
-| **Scheduler** | Quartz configured and clustering enabled (if multi-node) | Check `UseQuartzScheduler()` and clustering settings |
-| **Endpoints** | Elsa API accessible | `curl http://localhost:5000/elsa/api/workflow-definitions` |
-| **Health Checks** | Application healthy | `curl http://localhost:5000/health/ready` |
+| Symptom | First check and next guide |
+| --- | --- |
+| Instance appears idle or stopped | Read status, sub-status, and the latest journal entry in [Investigate a Workflow Instance](../../operate/workflow-state-and-journal.md). A suspended instance may be waiting; if an expected event or timer is missing, check [triggers](../running-workflows/using-a-trigger.md) or [timers](../running-workflows/timer-and-scheduled-workflows.md). |
+| Expected event did not resume an instance or scheduled trigger did not fire | Check the matching bookmark or trigger and the scheduler path: [Using a Trigger](../running-workflows/using-a-trigger.md), [Timer and Scheduled Workflows](../running-workflows/timer-and-scheduled-workflows.md), [Quartz Scheduling](../running-workflows/quartz-scheduling.md). |
+| Instance faulted or journal shows an activity failure | Start with any incident and the journal; inspect the activity execution record if the host captured it. See [Investigate a Workflow Instance](../../operate/workflow-state-and-journal.md), then [Structured Logs](../../operate/structured-logs.md) or [Distributed Tracing](../../operate/distributed-tracing.md). |
+| New work is not accepted across workflows | Check the Elsa readiness probes registered by the host in [Readiness and Health Checks](../../operate/readiness-and-health-checks.md). For a paused or draining runtime, see [Runtime Administration and Graceful Drain](../../operate/runtime-administration.md). |
+| You need backend evidence | Use [Structured Logs](../../operate/structured-logs.md) for `ILogger` events, [Console Logs](../../operate/console-logs.md) for managed `Console.Out` / `Console.Error`, or configured [Distributed Tracing](../../operate/distributed-tracing.md) for workflow/activity spans. These complement, but do not replace, the journal. |
+| A diagnostics page is unavailable in Studio | Confirm the backend feature and matching Studio module are enabled, then check the API URL and required access. Start with [Structured Logs](../../operate/structured-logs.md), [Console Logs](../../operate/console-logs.md), or [Distributed Tracing](../../operate/distributed-tracing.md), as applicable. |
+
+Use the detailed symptom playbooks below for checks specific to triggers,
+bookmarks, scheduling, and runtime configuration. Avoid assuming an endpoint
+path or persistence schema: both depend on the host and provider configuration.
 
 ---
 
