@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-17)
+## Slice Inventory (2026-09-18)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -116,19 +116,63 @@ acceptance criterion below is already complete.
 - `DOC-101` Persistence-provider support for interrupted workflow recovery
 - `DOC-102` 3.8.2 multitenancy and in-memory key-value storage boundaries
 - `DOC-103` Troubleshooting symptom-to-diagnostic map
+- `DOC-106` Troubleshooting-linked operational source refresh to 3.8.2
 
 ### Available next slices
 
 - `DOC-104` StateMachine authoring and transition lifecycle
 - `DOC-105` Inspect activity executions in Elsa Studio
-- `DOC-106` Refresh troubleshooting-linked 3.8.0 source references
+- `DOC-107` Incident and workflow-state guidance refresh to 3.8.2
+- `DOC-108` Workflow-definition lifecycle source refresh to 3.8.2
 
 ### Recommended next slice
 
-- `DOC-106` Refresh troubleshooting-linked 3.8.0 source references: multiple
-  guides reached from the troubleshooting map contain dead source links after
-  the 3.8.0 branches were removed. Reconcile the release-specific claims and
-  source URLs against the available 3.8.2 source before changing pins.
+- `DOC-107` Incident and workflow-state guidance refresh to 3.8.2: incident
+  and workflow-investigation pages still describe 3.8.0 behavior, while Core
+  3.8.1/3.8.2 changed exception-state and workflow-state extraction paths.
+  Reconcile their recovery guidance and claims against the current release.
+
+### Current run inventory (2026-09-18)
+
+- Before this run, the published GitBook was complete through `DOC-103` and
+  DOC-104 through DOC-106 were available. DOC-106 was selected because the
+  troubleshooting map directs readers into runbooks with stale 3.8.0 claims
+  and source links.
+- The latest released refs remain `release/3.8.2`: Core
+  `33181ae3048f628f591a0155b5665a8e4d1bcea2`, Studio
+  `1c72dc02c837919059b60efe5df2ed57ff2db2d9`, and Extensions
+  `e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e`. The three remotes advertise no
+  newer release branch.
+- DOC-104 StateMachine authoring and DOC-105 Studio activity-execution
+  inspection remain distinct, previously recorded opportunities. The broader
+  first-workflow, production-deployment, and Studio-host walkthrough
+  opportunities in current coverage are already tracked there. The source
+  audit also surfaced DOC-107: incident and workflow-state pages still claim
+  3.8.0 behavior despite intervening Core state-model changes. A separate
+  DOC-108 source-accuracy gap remains in the workflow-definition lifecycle
+  guide, which still cites Core/Studio `release/3.8.0` refs.
+
+### Current run plan (2026-09-18)
+
+- Audit the troubleshooting decision map and its readiness,
+  structured/console logging, distributed tracing, monitoring overview, and
+  timer/Quartz scheduling guides. Reconcile every affected 3.8.0 behavior
+  claim against Core, Studio, and Extensions `release/3.8.2`; update a release
+  pin or source URL only when the 3.8.2 implementation and target are verified.
+- Keep the change focused on release accuracy and link integrity. Do not
+  mechanically rewrite unrelated historical or preview documentation, and do
+  not change behavior claims that remain correct without clarifying their
+  release scope.
+- Run changed-page and repository-wide local-link checks, Markdown structure
+  and whitespace checks, available repository validation, plus source-backed
+  assertions for each corrected behavior and URL before PR delivery.
+
+### Current run selection (2026-09-18)
+
+- Selected `DOC-106`: the troubleshooting decision map now routes developers
+  and operators to these runbooks, but several still carry obsolete 3.8.0
+  source pins. A claim-by-claim 3.8.2 refresh improves trust and keeps linked
+  diagnostics actionable without duplicating the new symptom map.
 
 ### Current run inventory (2026-09-17)
 
@@ -216,7 +260,46 @@ acceptance criterion below is already complete.
   `release/3.8.2`, and replace or remove dead 3.8.0 source links only after
   confirming the corresponding current or immutable source target.
 
-### Current run completion (2026-09-16)
+### Current run completion (2026-09-18)
+
+- Updated the troubleshooting decision map, readiness, structured/console
+  logs, tracing, observability overview, and timer/Quartz guides from stale
+  3.8.0 claims and citations to verified 3.8.2 source commits.
+- Core and Studio graph diffs show no changes to the inspected diagnostics or
+  scheduling modules between their 3.8.0 refs and current 3.8.2 refs. Reviewed
+  the current release directly; clarified that Extensions' `Elsa.Logging.Console`
+  sink is distinct from Core's process-wide Console Logs diagnostics feature.
+- The release review confirmed Quartz hosted-service shutdown waits are enabled
+  by default, so the existing claim was retained. The monitoring overview's
+  brief incident summary remains assigned to DOC-107 for a deeper pass against
+  the updated exception/workflow-state model.
+- `git diff --check`, all 1,173 relative Markdown links across 218 tracked
+  Markdown files, and backtick-fence balance in all 10 changed pages passed.
+  All 32 external links in the audited pages returned HTTP 200, and all 28
+  immutable GitHub source paths exist at the cited commits. No repository-local
+  Markdown linter or GitBook build command is configured or installed; hosted
+  CI is the PR delivery gate.
+- Added DOC-106 to covered slices. DOC-104, DOC-105, and new candidate DOC-107
+  remain available, with DOC-107 recommended next because state/incident
+  behavior changed after the docs' current 3.8.0 source line. DOC-108 is also
+  queued to refresh the workflow-definition lifecycle source refs.
+
+### Newly discovered follow-on topics (2026-09-18)
+
+- `DOC-107` Incident and workflow-state guidance refresh to 3.8.2: reconcile
+  `operate/incidents/README.md`, its configuration/strategy guides, and
+  `operate/workflow-state-and-journal.md`, plus the incident/state summary in
+  `operate/monitoring-observability.md`, against Core and Studio
+  `release/3.8.2`. Core changed `ExceptionState`, `WorkflowStateExtractor`, and
+  workflow-instance state persistence after the 3.8.0 baseline; check
+  recovery-path counts, exception details, journal/API claims, and Studio
+  presentation before replacing the stale release labels.
+- `DOC-108` Workflow-definition lifecycle source refresh to 3.8.2: reconcile
+  `guides/running-workflows/workflow-definition-lifecycle.md` behavior and its
+  Core/Studio source links against the current release; the guide still cites
+  `release/3.8.0`, including Studio branch URLs.
+
+### Previous run completion (2026-09-16)
 
 - Added `multitenancy/storage-boundaries.md` and linked it from the
   multitenancy introduction, setup, runtime coordination, and navigation.

@@ -9,7 +9,9 @@ application restart or be coordinated by multiple Elsa nodes. Quartz is a
 replacement for Elsa's default workflow scheduler; it is not a replacement for
 Elsa's workflow-definition or workflow-instance persistence.
 
-This guide targets the Elsa `release/3.8.0` source line.
+This guide targets Elsa `release/3.8.2`, validated at Core commit
+`33181ae3048f628f591a0155b5665a8e4d1bcea2` and Extensions commit
+`e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e`.
 
 ## Decide whether you need Quartz
 
@@ -288,12 +290,12 @@ from becoming ready.
 
 ## Release-source references
 
-* [Core `UseScheduling`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Scheduling/Extensions/ModuleExtensions.cs) and [default scheduler](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Scheduling/Services/DefaultWorkflowScheduler.cs)
-* [Quartz module extensions](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz/Extensions/ModuleExtensions.cs)
-* [Quartz feature and scheduler identity](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz/Features/QuartzFeature.cs)
-* [Quartz workflow scheduler](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz/Services/QuartzWorkflowScheduler.cs)
-* [PostgreSQL Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.PostgreSql/PostgreSqlQuartzExtensions.cs)
-* [SQL Server Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.SqlServer/SqlServerQuartzExtensions.cs)
-* [MySQL Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.MySql/MySqlQuartzExtensions.cs)
-* [SQLite Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.Sqlite/SqliteQuartzExtensions.cs)
-* [Quartz scheduler feature](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/src/modules/scheduling/Elsa.Scheduling.Quartz/Features/QuartzSchedulerFeature.cs)
+* [Core `UseScheduling`](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Scheduling/Extensions/ModuleExtensions.cs) and [default scheduler](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Scheduling/Services/DefaultWorkflowScheduler.cs)
+* [Quartz module extensions](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz/Extensions/ModuleExtensions.cs)
+* [Quartz feature and scheduler identity](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz/Features/QuartzFeature.cs)
+* [Quartz workflow scheduler](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz/Services/QuartzWorkflowScheduler.cs)
+* [PostgreSQL Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.PostgreSql/PostgreSqlQuartzExtensions.cs)
+* [SQL Server Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.SqlServer/SqlServerQuartzExtensions.cs)
+* [MySQL Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.MySql/MySqlQuartzExtensions.cs)
+* [SQLite Quartz provider](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz.EFCore.Sqlite/SqliteQuartzExtensions.cs)
+* [Quartz scheduler feature](https://github.com/elsa-workflows/elsa-extensions/blob/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/scheduling/Elsa.Scheduling.Quartz/Features/QuartzSchedulerFeature.cs)

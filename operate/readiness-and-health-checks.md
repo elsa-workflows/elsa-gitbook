@@ -12,7 +12,7 @@ receive workflow work right now?** A workflow instance being `Running` or
 to the host and orchestrator; Elsa Studio does not replace them with workflow
 status indicators.
 
-The Elsa 3.8.0 runtime provides three Elsa-specific readiness probes:
+The Elsa 3.8.2 runtime provides three Elsa-specific readiness probes:
 
 | Probe | What it checks | Healthy when |
 | --- | --- | --- |
@@ -199,11 +199,12 @@ for host admission and orchestration decisions.
 
 ## Release source
 
-This page is grounded in Elsa Core `release/3.8.0`:
+This page is grounded in Elsa Core `release/3.8.2` at commit
+`33181ae3048f628f591a0155b5665a8e4d1bcea2`:
 
-- [`HealthCheckExtensions`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/Extensions/HealthCheckExtensions.cs)
-- [`ElsaReadinessHealthCheckOptions`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/Options/ElsaReadinessHealthCheckOptions.cs)
-- [`ElsaRuntimeHealthCheck`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaRuntimeHealthCheck.cs)
-- [`ElsaWorkflowPersistenceHealthCheck`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaWorkflowPersistenceHealthCheck.cs)
-- [`ElsaDistributedLockHealthCheck`](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaDistributedLockHealthCheck.cs)
-- [`Elsa.Server.Web` health endpoint mapping](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/src/apps/Elsa.Server.Web/Program.cs)
+- [`HealthCheckExtensions`](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Runtime/Extensions/HealthCheckExtensions.cs)
+- [`ElsaReadinessHealthCheckOptions`](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Runtime/Options/ElsaReadinessHealthCheckOptions.cs)
+- [`ElsaRuntimeHealthCheck`](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaRuntimeHealthCheck.cs)
+- [`ElsaWorkflowPersistenceHealthCheck`](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaWorkflowPersistenceHealthCheck.cs)
+- [`ElsaDistributedLockHealthCheck`](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Runtime/HealthChecks/ElsaDistributedLockHealthCheck.cs)
+- [`Elsa.Server.Web` health endpoint mapping](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/apps/Elsa.Server.Web/Program.cs)

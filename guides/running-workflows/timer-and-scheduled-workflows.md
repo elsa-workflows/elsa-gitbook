@@ -1,6 +1,6 @@
 # Timer and Scheduled Workflows
 
-Elsa 3.8.0 provides four built-in scheduling activities that cover most time-based workflow patterns:
+Elsa 3.8.2 provides four built-in scheduling activities that cover most time-based workflow patterns:
 
 * `Delay`: pause a running workflow and resume it later.
 * `Timer`: start a workflow repeatedly at a fixed interval, or wait for an interval inside a running workflow.
@@ -23,7 +23,7 @@ The main distinction is this:
 * `Delay` is for resuming an existing workflow instance.
 * `Timer`, `Cron`, and `StartAt` can act as workflow triggers when `CanStartWorkflow` is enabled.
 
-## How scheduling works in Elsa 3.8.0
+## How scheduling works in Elsa 3.8.2
 
 At the application level, scheduling is enabled with `UseScheduling()`:
 
@@ -34,7 +34,7 @@ builder.Services.AddElsa(elsa =>
 });
 ```
 
-In `release/3.8.0`, `UseScheduling()` wires Elsa to the default local scheduler, which is an in-memory, in-process scheduler. That is fine for local development and single-node deployments, but it is not the right operational model for durable multi-node timer execution.
+In `release/3.8.2`, `UseScheduling()` wires Elsa to the default local scheduler, which is an in-memory, in-process scheduler. That is fine for local development and single-node deployments, but it is not the right operational model for durable multi-node timer execution.
 
 Under the hood, Elsa uses two scheduling paths:
 
@@ -80,7 +80,7 @@ public class RecurringCleanupWorkflow : WorkflowBase
 }
 ```
 
-In 3.8.0, Elsa indexes a timer trigger by calculating `StartAt = UtcNow + Interval` at trigger-index time. In practice, the first run is relative to when the workflow definition is published or re-indexed, not relative to a fixed wall-clock time.
+In 3.8.2, Elsa indexes a timer trigger by calculating `StartAt = UtcNow + Interval` at trigger-index time. In practice, the first run is relative to when the workflow definition is published or re-indexed, not relative to a fixed wall-clock time.
 
 The public input name is `Interval`.
 
@@ -112,7 +112,7 @@ public class WeekdayReportWorkflow : WorkflowBase
 }
 ```
 
-Elsa 3.8.0 validates cron expressions through the `Cronos` parser using the six-field format with seconds. For example:
+Elsa 3.8.2 validates cron expressions through the `Cronos` parser using the six-field format with seconds. For example:
 
 * `0 0 9 * * MON-FRI` means 09:00:00 UTC on weekdays.
 * `0 */15 * * * *` means every 15 minutes.
@@ -123,7 +123,7 @@ Hangfire's recurring-job manager. Make sure it satisfies both systems; do not
 assume the local scheduler's six-field parser rules apply unchanged. See
 [Hangfire Integration](hangfire-integration.md).
 
-By default in 3.8.0, invalid cron expressions block publishing because workflow publishing fails on validation errors. If you intentionally want publishing to continue while surfacing validation warnings, disable that behavior in workflow management options:
+By default in 3.8.2, invalid cron expressions block publishing because workflow publishing fails on validation errors. If you intentionally want publishing to continue while surfacing validation warnings, disable that behavior in workflow management options:
 
 ```csharp
 builder.Services.AddElsa(elsa =>
@@ -196,7 +196,7 @@ public class FollowUpWorkflow : WorkflowBase
 
 `Delay` creates a bookmark with a specific resume time. It does not start new workflow instances by itself.
 
-In 3.8.0, the public input name is `TimeSpan`. Older examples that show `Duration` are not correct for Elsa 3.8.
+In 3.8.2, the public input name is `TimeSpan`. Older examples that show `Duration` are not correct for Elsa 3.8.
 
 ### Timer and Cron inside a running workflow
 
@@ -207,7 +207,7 @@ In 3.8.0, the public input name is `TimeSpan`. Older examples that show `Duratio
 
 That makes them useful for recurring loops, polling, and wait-until-next-window patterns where the workflow instance should keep its state between resumptions.
 
-In 3.8.0, `DefaultBookmarkScheduler` schedules:
+In 3.8.2, `DefaultBookmarkScheduler` schedules:
 
 * `Delay`, `Timer`, and `StartAt` bookmarks with `ScheduleAtAsync(...)`
 * `Cron` bookmarks with `ScheduleCronAsync(...)`
@@ -247,7 +247,7 @@ builder.Services.AddElsa(elsa =>
 });
 ```
 
-In `release/3.8.0`, Quartz replaces the scheduling feature's `IWorkflowScheduler`
+In `release/3.8.2`, Quartz replaces the scheduling feature's `IWorkflowScheduler`
 with `QuartzWorkflowScheduler` and uses `QuartzCronParser`. Quartz persistence
 and clustering are separate from Elsa workflow persistence; configure both when
 scheduled work and workflow state must survive a restart.
@@ -264,13 +264,13 @@ builder.Services.AddElsa(elsa =>
 });
 ```
 
-In `release/3.8.0`, Hangfire replaces the scheduling feature's `WorkflowScheduler` with `HangfireWorkflowScheduler`.
+In `release/3.8.2`, Hangfire replaces the scheduling feature's `WorkflowScheduler` with `HangfireWorkflowScheduler`.
 For durable storage, worker configuration, operational boundaries, and verification,
 see [Hangfire Integration](hangfire-integration.md).
 
 ## Operational notes
 
-Keep these 3.8.0 behaviors in mind:
+Keep these 3.8.2 behaviors in mind:
 
 * `Timer`, `Cron`, and `StartAt` only become workflow-starting triggers when `CanStartWorkflow` is enabled.
 * `Delay` always resumes an existing workflow instance; it is not a start trigger.

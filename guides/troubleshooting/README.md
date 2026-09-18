@@ -444,7 +444,7 @@ In workflows, the workflow instance ID and correlation ID are automatically adde
 
 ## OpenTelemetry tracing and diagnostics
 
-In `release/3.8.0`, core instrumentation emits baseline workflow and activity
+In `release/3.8.2`, core instrumentation emits baseline workflow and activity
 spans through the `Elsa.Workflows` activity source. The optional
 `Elsa.OpenTelemetry` extension adds a second span layer and error handlers.
 Separate Studio diagnostics modules provide structured logs, console logs, and
