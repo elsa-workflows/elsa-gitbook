@@ -1,12 +1,12 @@
 ---
 description: >-
-  Release-backed guide to observing Elsa 3.8.0 with incidents, execution logs,
+  Release-backed guide to observing Elsa 3.8.2 with incidents, execution logs,
   activity execution records, Studio diagnostics, and OpenTelemetry.
 ---
 
 # Monitoring & Observability
 
-Elsa 3.8.0 gives you several different observability layers. They solve
+Elsa 3.8.2 gives you several different observability layers. They solve
 different problems, so it helps to treat them as complementary instead of
 interchangeable.
 
@@ -39,7 +39,7 @@ records before looking at infrastructure telemetry.
 ### Incidents
 
 When an activity throws and the exception is not handled inside the workflow,
-Elsa records an incident on the workflow state. In `release/3.8.0`, incidents
+Elsa records an incident on the workflow state. In `release/3.8.2`, incidents
 are stored on `WorkflowState.Incidents` and shown in Elsa Studio's workflow
 instance viewer.
 
@@ -60,7 +60,7 @@ Elsa also keeps a workflow execution journal. The journal is an ordered stream
 of workflow execution log records such as `Started`, `Suspended`, and
 `Faulted`.
 
-In `release/3.8.0`, the workflow APIs expose the journal through:
+In `release/3.8.2`, the workflow APIs expose the journal through:
 
 - `GET /workflow-instances/{id}/journal`
 - `POST /workflow-instances/{id}/journal`
@@ -81,7 +81,7 @@ the runtime persistence store. These records are what power activity-level
 inspection in Studio, including state snapshots, outputs, timing, retries, and
 call stack navigation.
 
-In `release/3.8.0`, the relevant APIs include:
+In `release/3.8.2`, the relevant APIs include:
 
 - `GET /activity-executions/list`
 - `GET /activity-execution-summaries/list`
@@ -100,7 +100,7 @@ than you want to retain, tune them with
 ## Use Studio diagnostics for host-level logs
 
 The runtime signals above are workflow-centric. For host diagnostics,
-Elsa 3.8.0 also ships separate Studio diagnostics modules. Use the dedicated
+Elsa 3.8.2 also ships separate Studio diagnostics modules. Use the dedicated
 [Console Logs](console-logs.md) guide for raw `stdout`/`stderr` capture,
 filtering, and Studio operations.
 
@@ -172,7 +172,7 @@ app.UseConsoleLogs();
 
 ## Export workflow telemetry with OpenTelemetry
 
-In `release/3.8.0`, core `Elsa.Workflows` instrumentation automatically emits
+In `release/3.8.2`, core `Elsa.Workflows` instrumentation automatically emits
 baseline workflow/activity spans and metrics. The optional
 `Elsa.OpenTelemetry` extension creates an additional workflow/activity span
 layer from explicit execution-pipeline middleware. Both use the
@@ -213,7 +213,7 @@ instrumentation separately when you need additional metrics.
 
 ## Studio OpenTelemetry diagnostics are collector-side
 
-Elsa 3.8.0 also includes `Elsa.Diagnostics.OpenTelemetry`, but it serves a
+Elsa 3.8.2 also includes `Elsa.Diagnostics.OpenTelemetry`, but it serves a
 different purpose from the `Elsa.OpenTelemetry` span middleware.
 
 - Core `Elsa.Workflows` instrumentation produces baseline spans and metrics;

@@ -357,9 +357,11 @@ related subject is undocumented.
      entry point now routes common symptoms to those signals; host-specific
      escalation procedures and service-level runbooks remain separate
      opportunities.
-   - Several linked diagnostic and scheduling guides still cite `release/3.8.0`;
-     reconcile their claims and source URLs with `release/3.8.2` in a separate
-     release-refresh slice.
+   - DOC-106 refreshed the troubleshooting-linked readiness, logging, tracing,
+     observability, and scheduling guides against `release/3.8.2` and replaced
+     their obsolete source pins. Incident guides still claim `release/3.8.0`
+     behavior, and the monitoring overview's incident summary needs a deeper
+     pass against the current exception and workflow-state model in DOC-107.
 
 5. **Reference completeness**
    - API/client and activity-reference entry points exist, but they do not yet

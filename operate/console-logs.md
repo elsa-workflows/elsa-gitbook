@@ -1,6 +1,6 @@
 ---
 description: >-
-  Configure Elsa 3.8.0 raw console-log capture, filtering, SignalR streaming,
+  Configure Elsa 3.8.2 raw console-log capture, filtering, SignalR streaming,
   and Elsa Studio operations.
 ---
 
@@ -101,7 +101,7 @@ recent buffer durable.
 
 ## Configure capture safely
 
-The 3.8.0 Core source supplies these defaults before applying your feature
+The 3.8.2 Core source supplies these defaults before applying your feature
 configuration:
 
 | Option | Release default or behavior |
@@ -318,14 +318,18 @@ separate packages, permissions, buffers, and data models.
 
 ## Release source
 
-This page is validated against the requested `release/3.8.0` branch:
+This page is validated against `release/3.8.2`: Core
+`33181ae3048f628f591a0155b5665a8e4d1bcea2` and Studio
+`1c72dc02c837919059b60efe5df2ed57ff2db2d9`.
 
-- [Core Console Logs module at 8191ae3](https://github.com/elsa-workflows/elsa-core/tree/8191ae30554ea001b38bb44902dd90dc98c7a106/src/modules/Elsa.Diagnostics.ConsoleLogs)
-- [Core Console Logs dashboard at 8191ae3](https://github.com/elsa-workflows/elsa-core/tree/8191ae30554ea001b38bb44902dd90dc98c7a106/src/modules/Elsa.Diagnostics.ConsoleLogs.Dashboard)
-- [Core Console Logs design notes at 8191ae3](https://github.com/elsa-workflows/elsa-core/blob/8191ae30554ea001b38bb44902dd90dc98c7a106/doc/wiki/diagnostics-console-logs.md)
-- [Studio Console Logs module at 8539524](https://github.com/elsa-workflows/elsa-studio/tree/85395246140c6b192a2457992da8704b0cdec3d0/src/modules/Elsa.Studio.Diagnostics.ConsoleLogs)
-- [Studio Console Logs dashboard at 8539524](https://github.com/elsa-workflows/elsa-studio/tree/85395246140c6b192a2457992da8704b0cdec3d0/src/modules/Elsa.Studio.Diagnostics.ConsoleLogs.Dashboard)
+- [Core Console Logs module](https://github.com/elsa-workflows/elsa-core/tree/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Diagnostics.ConsoleLogs)
+- [Core Console Logs dashboard](https://github.com/elsa-workflows/elsa-core/tree/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Diagnostics.ConsoleLogs.Dashboard)
+- [Core Console Logs design notes](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/doc/wiki/diagnostics-console-logs.md)
+- [Studio Console Logs module](https://github.com/elsa-workflows/elsa-studio/tree/1c72dc02c837919059b60efe5df2ed57ff2db2d9/src/modules/Elsa.Studio.Diagnostics.ConsoleLogs)
+- [Studio Console Logs dashboard](https://github.com/elsa-workflows/elsa-studio/tree/1c72dc02c837919059b60efe5df2ed57ff2db2d9/src/modules/Elsa.Studio.Diagnostics.ConsoleLogs.Dashboard)
 
-The `release/3.8.0` Extensions source at `66861ae` has no direct Console Logs
-implementation; the feature is provided by Core and consumed by the Studio
-module.
+Extensions does not implement the `Elsa.Diagnostics.ConsoleLogs` process
+capture feature described here; Core provides it and Studio consumes it. The
+separate [`Elsa.Logging.Console` sink](https://github.com/elsa-workflows/elsa-extensions/tree/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/diagnostics/Elsa.Logging.Console)
+routes workflow `Log` activity output to a console target, but it is not a
+replacement for process-wide `stdout`/`stderr` capture.

@@ -1,6 +1,6 @@
 ---
 description: >-
-  Configure Elsa 3.8.0 structured log capture, Studio diagnostics, redaction,
+  Configure Elsa 3.8.2 structured log capture, Studio diagnostics, redaction,
   and durable storage.
 ---
 
@@ -19,7 +19,7 @@ for spans and metrics.
 
 ## Choose the packages
 
-The 3.8.0 release separates the server, dashboard contribution, and storage
+The 3.8.2 release separates the server, dashboard contribution, and storage
 packages:
 
 - `Elsa.Diagnostics.StructuredLogs` captures `ILogger` events, keeps recent
@@ -93,7 +93,7 @@ menu and dashboard widget are remote-feature-gated: if the server does not
 advertise the structured-log feature, Studio does not treat the page as
 available.
 
-Studio hosts in the 3.8.0 release compose these modules explicitly. The server
+Studio hosts in the 3.8.2 release compose these modules explicitly. The server
 must still enable the backend feature, and the Studio backend URL and
 authentication configuration must point to that server.
 
@@ -226,7 +226,7 @@ JSON stored in each row.
 The default SQLite filename is local to the process. It is suitable for a
 single host or development, not as a shared multi-node log store. For a
 cluster, use a relational provider that supplies its own connection factory,
-SQL dialect, migration runner, and shared database topology; the 3.8.0 core
+SQL dialect, migration runner, and shared database topology; the 3.8.2 core
 relational package does not provision those services automatically.
 
 ## Structured Logs versus the other logging features
@@ -263,11 +263,14 @@ permissions, buffers, and retention behavior.
 
 ## Release source
 
-This page is validated against `release/3.8.0` at the following commits:
+This page is validated against `release/3.8.2`: Core
+`33181ae3048f628f591a0155b5665a8e4d1bcea2`, Studio
+`1c72dc02c837919059b60efe5df2ed57ff2db2d9`, and Extensions
+`e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e`.
 
-- [Core structured-log module](https://github.com/elsa-workflows/elsa-core/tree/01db86ec213e952e186cdada945a70c917f302f1/src/modules/Elsa.Diagnostics.StructuredLogs)
-- [Core SQLite persistence](https://github.com/elsa-workflows/elsa-core/tree/01db86ec213e952e186cdada945a70c917f302f1/src/modules/Elsa.Diagnostics.StructuredLogs.Persistence.Sqlite)
-- [Core structured-log dashboard](https://github.com/elsa-workflows/elsa-core/tree/01db86ec213e952e186cdada945a70c917f302f1/src/modules/Elsa.Diagnostics.StructuredLogs.Dashboard)
-- [Studio structured-log module](https://github.com/elsa-workflows/elsa-studio/tree/85395246140c6b192a2457992da8704b0cdec3d0/src/modules/Elsa.Studio.Diagnostics.StructuredLogs)
-- [Studio structured-log dashboard](https://github.com/elsa-workflows/elsa-studio/tree/85395246140c6b192a2457992da8704b0cdec3d0/src/modules/Elsa.Studio.Diagnostics.StructuredLogs.Dashboard)
-- [`Elsa.Logging` workflow activity](https://github.com/elsa-workflows/elsa-extensions/tree/a44e2b09af1202ff4936f493756e114c357eff81/src/modules/diagnostics/Elsa.Logging)
+- [Core structured-log module](https://github.com/elsa-workflows/elsa-core/tree/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Diagnostics.StructuredLogs)
+- [Core SQLite persistence](https://github.com/elsa-workflows/elsa-core/tree/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Diagnostics.StructuredLogs.Persistence.Sqlite)
+- [Core structured-log dashboard](https://github.com/elsa-workflows/elsa-core/tree/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Diagnostics.StructuredLogs.Dashboard)
+- [Studio structured-log module](https://github.com/elsa-workflows/elsa-studio/tree/1c72dc02c837919059b60efe5df2ed57ff2db2d9/src/modules/Elsa.Studio.Diagnostics.StructuredLogs)
+- [Studio structured-log dashboard](https://github.com/elsa-workflows/elsa-studio/tree/1c72dc02c837919059b60efe5df2ed57ff2db2d9/src/modules/Elsa.Studio.Diagnostics.StructuredLogs.Dashboard)
+- [`Elsa.Logging` workflow activity](https://github.com/elsa-workflows/elsa-extensions/tree/e7d05ef930dfde2aa85bf9dcaf841e5a6ede0a1e/src/modules/diagnostics/Elsa.Logging)

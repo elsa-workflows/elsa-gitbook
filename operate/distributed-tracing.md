@@ -1,13 +1,13 @@
 ---
 description: >-
-  Release-backed guide to tracing Elsa 3.8.0 workflows with
+  Release-backed guide to tracing Elsa 3.8.2 workflows with
   Elsa.OpenTelemetry workflow/activity middleware and the OpenTelemetry
   diagnostics collector.
 ---
 
 # Distributed Tracing
 
-In `release/3.8.0`, Elsa has two distinct OpenTelemetry stories:
+In `release/3.8.2`, Elsa has two distinct OpenTelemetry stories:
 
 - Core `Elsa.Workflows` instrumentation emits baseline workflow/activity spans
   and metrics.
@@ -77,7 +77,7 @@ your application needs it.
 `Elsa.Diagnostics.OpenTelemetry` does not replace the `Elsa.OpenTelemetry`
 middleware. It adds a diagnostics collector and Studio-facing query surface.
 
-In `release/3.8.0`, the collector maps these HTTP/protobuf ingestion routes by
+In `release/3.8.2`, the collector maps these HTTP/protobuf ingestion routes by
 default:
 
 - `POST /elsa/otlp/v1/traces`
@@ -153,13 +153,13 @@ variables:
 - `OTEL_EXPORTER_OTLP_ENDPOINT`
 - `OTEL_EXPORTER_OTLP_PROTOCOL`
 
-## About gRPC ingestion in 3.8.0
+## About gRPC ingestion in 3.8.2
 
 This release exposes shared gRPC collector metadata, but the shared
 `Elsa.Diagnostics.OpenTelemetry` module does not itself bind a concrete gRPC
 collector service.
 
-What the code does in `release/3.8.0`:
+What the code does in `release/3.8.2`:
 
 - if `EnableGrpc` is `false`, no gRPC collector path is exposed;
 - if `EnableGrpc` is `true` but `GrpcEndpointPath` is empty, Elsa throws during
@@ -171,7 +171,7 @@ unless your host explicitly adds the gRPC binding.
 
 ## `Elsa.OpenTelemetry` middleware
 
-`Elsa.OpenTelemetry` is the release/3.8.0 extension package that supplies the
+`Elsa.OpenTelemetry` is the release/3.8.2 extension package that supplies the
 workflow and activity execution middleware. It is not enabled by
 `UseOpenTelemetry()` alone: add `UseWorkflowExecutionTracing()` and
 `UseActivityExecutionTracing()` to the pipelines you want to instrument.
