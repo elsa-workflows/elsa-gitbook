@@ -1,6 +1,6 @@
 ---
 description: >-
-  Investigate a live Elsa 3.8.0 workflow instance with Studio and the runtime
+  Investigate a live Elsa 3.8.2 workflow instance with Studio and the runtime
   APIs for state, journal entries, activity executions, and variables.
 ---
 
@@ -80,7 +80,7 @@ curl \
   --header 'Authorization: Bearer YOUR_TOKEN'
 ```
 
-In Elsa 3.8, the broad status is `Running` or `Finished`. The sub-status
+In Elsa 3.8.2, the broad status is `Running` or `Finished`. The sub-status
 provides the operational detail:
 
 | Sub-status | Meaning for an operator |
@@ -96,6 +96,36 @@ provides the operational detail:
 `Running` with `Suspended` is usually a healthy waiting workflow, not a failed
 one. For timer and bookmark behavior, see [Timer and Scheduled
 Workflows](../guides/running-workflows/timer-and-scheduled-workflows.md).
+
+### Read incidents as execution evidence
+
+An incident's `ActivityNodeId` identifies the static node in the workflow
+definition. The 3.8.2 incident model does not carry a separate activity-
+execution ID, so when the same node can run in a loop, be retried, or execute
+concurrently, correlate the incident with the journal and activity execution
+records instead of treating the node ID as a unique execution identifier.
+
+If a containing activity handles a child fault, `RecoverFromFault` resets the
+activity fault count and returns the activity to `Running`. In `release/3.8.2`,
+it does not remove the incident or clear the recorded exception. The journal
+and persisted incident collection must therefore be read separately when
+deciding whether a fault remains operationally visible.
+
+### Understand state rehydration warnings
+
+`WorkflowState` is the persisted snapshot used to resume an instance. It
+contains the definition identity, status and sub-status, bookmarks, incidents,
+scheduled work, properties, input/output, and the active activity execution
+contexts needed to reconstruct the in-memory call stacks.
+
+When a persisted instance is loaded against a newer definition, a saved
+activity execution context or completion callback can refer to an activity or
+node that no longer exists. Elsa `release/3.8.2` skips that unresolved
+reference and logs a warning classified as `MigrationCompatible` when the
+persisted and target definition version IDs differ, or `Unexpected` otherwise.
+Treat that warning as migration/recovery evidence: inspect the host logs and
+definition version before retrying or mutating the instance. It does not mean
+that every field in the persisted workflow state was discarded.
 
 ### 3. Follow the journal timeline
 
@@ -210,3 +240,15 @@ For fault handling and retry choices, see [Incidents](incidents/README.md).
 - [Workflow Instance Variables](workflow-instance-variables.md)
 - [Timer and Scheduled Workflows](../guides/running-workflows/timer-and-scheduled-workflows.md)
 - [API & Client](../guides/api-client/README.md)
+
+## Release source
+
+This guide is grounded in Elsa Core `release/3.8.2` at commit
+`33181ae3048f628f591a0155b5665a8e4d1bcea2` and Elsa Studio at commit
+`1c72dc02c837919059b60efe5df2ed57ff2db2d9`:
+
+- [Workflow state model](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/State/WorkflowState.cs)
+- [Workflow state extraction and rehydration](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/Services/WorkflowStateExtractor.cs)
+- [Activity fault and recovery](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/Extensions/ActivityExecutionContextExtensions.cs)
+- [Activity incident model](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/Models/ActivityIncident.cs)
+- [Studio workflow-instance details](https://github.com/elsa-workflows/elsa-studio/blob/1c72dc02c837919059b60efe5df2ed57ff2db2d9/src/modules/Elsa.Studio.Workflows/Components/WorkflowInstanceViewer/Components/WorkflowInstanceDetails.razor)

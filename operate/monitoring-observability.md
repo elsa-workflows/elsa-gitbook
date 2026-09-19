@@ -38,16 +38,21 @@ records before looking at infrastructure telemetry.
 
 ### Incidents
 
-When an activity throws and the exception is not handled inside the workflow,
-Elsa records an incident on the workflow state. In `release/3.8.2`, incidents
-are stored on `WorkflowState.Incidents` and shown in Elsa Studio's workflow
-instance viewer.
+When an activity throws, Elsa records an incident on the workflow state before
+the configured incident strategy decides whether the workflow should fault or
+continue. In `release/3.8.2`, incidents are stored on
+`WorkflowState.Incidents` and shown in Elsa Studio's workflow instance viewer.
 
 Use incidents when you need:
 
-- The failing activity and node ID.
+- The failing activity and node ID. When the same node is looped, retried, or
+  executed concurrently, correlate the incident with activity execution
+  records and the journal because the incident model has no separate execution
+  ID.
 - The exception message, inner exception, and stack trace.
-- A quick answer to whether the workflow faulted or continued with recorded incidents.
+- A quick answer to whether the workflow faulted or continued with recorded
+  incidents. Check the persisted status as well: the engine-level exception
+  handler can record an incident without changing the workflow status.
 
 Related docs:
 

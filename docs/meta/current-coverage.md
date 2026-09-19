@@ -240,6 +240,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Workflow instance variables
 - ✅ Activation strategies
 - ✅ Incidents and strategies
+- ✅ 3.8.2 incident pipeline, exception-state shape, handled-fault boundaries,
+  and workflow-state rehydration diagnostics
 - ✅ Monitoring and distributed tracing guidance
 - ✅ Elsa.OpenTelemetry workflow/activity middleware, span contracts, error handlers, and Studio/collector boundaries
 - ✅ Runtime, persistence, and distributed-lock readiness guidance
@@ -317,7 +319,7 @@ Based on the current structure, the following core concepts are documented:
 ## Gaps and Weaknesses Identified
 
 This opportunity list was checked against the published slice inventory on
-2026-09-17. The older version of this section listed several topics as missing
+2026-09-19. The older version of this section listed several topics as missing
 even though dedicated pages had since been published. The entries below
 describe remaining improvement opportunities; they are not claims that the
 related subject is undocumented.
@@ -359,9 +361,9 @@ related subject is undocumented.
      opportunities.
    - DOC-106 refreshed the troubleshooting-linked readiness, logging, tracing,
      observability, and scheduling guides against `release/3.8.2` and replaced
-     their obsolete source pins. Incident guides still claim `release/3.8.0`
-     behavior, and the monitoring overview's incident summary needs a deeper
-     pass against the current exception and workflow-state model in DOC-107.
+     their obsolete source pins. DOC-107 now reconciles the incident and
+     workflow-state guidance with the current exception and rehydration model;
+     host-specific escalation procedures remain separate opportunities.
 
 5. **Reference completeness**
    - API/client and activity-reference entry points exist, but they do not yet
