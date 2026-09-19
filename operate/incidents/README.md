@@ -1,15 +1,15 @@
 ---
 description: >-
   Release-backed guide to faults, incidents, retries, and operator recovery in
-  Elsa 3.8.0.
+  Elsa 3.8.2.
 ---
 
 # Incidents
 
-In Elsa `release/3.8.0`, an **incident** is the runtime record created when an
-activity or workflow faults. Incidents answer "what failed, where, and with
-which exception details?" They are separate from retry policy and separate from
-operator recovery actions.
+In Elsa `release/3.8.2`, an **incident** is the runtime record created when an
+activity or workflow execution encounters an exception. Incidents answer
+"what failed, where, and with which exception details?" They are separate from
+retry policy and separate from operator recovery actions.
 
 Use this page to understand:
 
@@ -23,11 +23,10 @@ built-in strategies, see [Strategies](strategies.md).
 
 ## What Elsa records when an activity faults
 
-When an unhandled exception escapes an activity, Elsa's activity exception
-middleware:
+When an exception escapes an activity, Elsa's activity exception middleware:
 
 1. marks the activity execution as `Faulted`
-2. captures an `ExceptionState`
+2. captures a serializable `ExceptionState`
 3. appends an `ActivityIncident` to `WorkflowExecutionContext.Incidents`
 4. resolves the configured incident strategy and invokes it
 
@@ -37,7 +36,8 @@ Each incident includes:
 - `ActivityNodeId`
 - `ActivityType`
 - `Message`
-- `Exception`
+- `Exception`, including the type, message, stack trace, inner exception, and
+  optional privacy-safe metadata
 - `Timestamp`
 
 Elsa also writes execution-log entries such as `Started`, `Suspended`, and
@@ -53,8 +53,13 @@ failure.
   incident is already recorded before the strategy runs.
 - The strategy mainly decides whether the overall workflow transitions to
   `WorkflowSubStatus.Faulted` or keeps running.
-- If an exception escapes the workflow pipeline itself, Elsa records an
-  incident and transitions the workflow to `Faulted` directly.
+- The workflow exception middleware records an incident and transitions the
+  workflow to `Faulted`.
+- The default engine-level exception middleware also records an incident and a
+  `Faulted` journal entry, but deliberately leaves the workflow and activity
+  status unchanged. In that path, inspect the persisted status alongside the
+  incident instead of assuming that an incident alone proves the workflow is
+  faulted.
 
 In practice, that means `ContinueWithIncidentsStrategy` is not an automatic
 retry mechanism. It only prevents the workflow from being faulted immediately
@@ -62,16 +67,23 @@ for activity-level incidents.
 
 ## Where incidents are stored and surfaced
 
-In `release/3.8.0`, incidents are stored on `WorkflowState.Incidents` and flow
+In `release/3.8.2`, incidents are stored on `WorkflowState.Incidents` and flow
 through the normal workflow instance APIs and Studio runtime views.
 
 ### Elsa Studio
 
-Studio exposes incidents in two main places:
+Studio exposes incidents in the workflow instance list and viewer:
 
 - the workflow instance list can filter by `Has Incidents`
-- the workflow instance viewer shows an **Incidents** tab with the recorded
-  message and exception payload
+- the workflow instance viewer shows an **Incidents** tab with the activity,
+  message, inner exception, and stack trace
+- the journal view can toggle incident entries in the execution timeline
+
+The 3.8.2 incident model identifies the activity and static node, but does not
+carry a separate activity-execution ID. When a node is retried, looped, or
+executed concurrently, correlate the incident with the journal and activity
+execution records rather than treating `ActivityNodeId` as a unique execution
+identifier.
 
 When resilience retries are enabled for an activity, Studio also surfaces a
 **Retries** tab for activity executions that recorded retry attempts.
@@ -91,7 +103,7 @@ for the sequence of events around the failure.
 
 ## Choosing the right recovery path
 
-Elsa has three different recovery stories in `3.8.0`.
+Elsa has three different recovery stories in `3.8.2`.
 
 ### 1. Change incident strategy
 
@@ -106,7 +118,7 @@ This is a workflow-behavior decision, not a retry policy.
 Use resilience when an activity should retry automatically inside the same
 execution attempt before it becomes an incident.
 
-In `release/3.8.0`:
+In `release/3.8.2`:
 
 - the resilience feature evaluates an activity's `resilienceStrategy`
   configuration
@@ -127,7 +139,7 @@ Use the Alterations retry endpoint when the workflow instance has already
 faulted and you want to retry the faulted activities after investigation or a
 fix.
 
-`release/3.8.0` exposes:
+`release/3.8.2` exposes:
 
 ```http
 POST /alterations/workflows/retry
@@ -166,3 +178,16 @@ For most production incidents:
 - [Monitoring & Observability](../monitoring-observability.md)
 - [Troubleshooting](../../guides/troubleshooting/README.md)
 - [Applying Alterations REST API](../../features/alterations/applying-alterations/rest-api.md)
+
+## Release source
+
+This page is grounded in Elsa Core `release/3.8.2` at commit
+`33181ae3048f628f591a0155b5665a8e4d1bcea2` and Elsa Studio at commit
+`1c72dc02c837919059b60efe5df2ed57ff2db2d9`:
+
+- [Activity exception middleware](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/Middleware/Activities/ExceptionHandlingMiddleware.cs)
+- [Workflow and engine exception middleware](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/Middleware/Workflows/ExceptionHandlingMiddleware.cs)
+- [Engine-level exception middleware](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/Middleware/Workflows/EngineExceptionHandlingMiddleware.cs)
+- [Activity incident model](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/Models/ActivityIncident.cs)
+- [Exception state model](https://github.com/elsa-workflows/elsa-core/blob/33181ae3048f628f591a0155b5665a8e4d1bcea2/src/modules/Elsa.Workflows.Core/State/ExceptionState.cs)
+- [Studio workflow-instance incident view](https://github.com/elsa-workflows/elsa-studio/blob/1c72dc02c837919059b60efe5df2ed57ff2db2d9/src/modules/Elsa.Studio.Workflows/Components/WorkflowInstanceViewer/Components/WorkflowInstanceDetails.razor)

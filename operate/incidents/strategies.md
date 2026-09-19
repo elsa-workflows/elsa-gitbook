@@ -1,5 +1,5 @@
 ---
-description: Built-in incident strategies and their real 3.8.0 behavior.
+description: Built-in incident strategies and their real 3.8.2 behavior.
 ---
 
 # Strategies
@@ -13,7 +13,7 @@ public interface IIncidentStrategy
 }
 ```
 
-In `release/3.8.0`, Elsa registers two built-in strategies.
+In `release/3.8.2`, Elsa registers two built-in strategies.
 
 ## `FaultStrategy`
 
@@ -41,7 +41,9 @@ That does **not** mean "ignore the error". By the time the strategy runs:
 - the exception has already been captured on the activity execution context
 
 The strategy simply leaves the workflow sub-status unchanged so the workflow
-can continue if the surrounding workflow structure allows it.
+can continue if the surrounding workflow structure allows it. The incident
+remains in `WorkflowExecutionContext.Incidents`, so a continuing workflow can
+still have recorded incidents.
 
 Use it when:
 
@@ -53,11 +55,17 @@ Do not use it as a substitute for retry logic. If the real requirement is
 "retry transient failures before faulting", configure a resilience strategy
 instead.
 
+If a containing activity claims a child fault, Elsa's `RecoverFromFault` path
+resets the activity fault count and transitions the activity back to
+`Running`. In `release/3.8.2`, that method does not remove the incident or
+clear the recorded exception; inspect the persisted incident collection and
+journal rather than assuming that recovery makes the incident disappear.
+
 ## Custom strategies
 
 You can implement your own `IIncidentStrategy` when you need custom behavior.
 
-In `3.8.0`, a custom strategy becomes visible to Studio automatically when:
+In `3.8.2`, a custom strategy becomes visible to Studio automatically when:
 
 1. it is registered as `IIncidentStrategy`
 2. the descriptors endpoint can resolve it from DI

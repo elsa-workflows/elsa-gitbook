@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-18)
+## Slice Inventory (2026-09-19)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -117,27 +117,26 @@ acceptance criterion below is already complete.
 - `DOC-102` 3.8.2 multitenancy and in-memory key-value storage boundaries
 - `DOC-103` Troubleshooting symptom-to-diagnostic map
 - `DOC-106` Troubleshooting-linked operational source refresh to 3.8.2
+- `DOC-107` Incident and workflow-state guidance refresh to 3.8.2
 
 ### Available next slices
 
 - `DOC-104` StateMachine authoring and transition lifecycle
 - `DOC-105` Inspect activity executions in Elsa Studio
-- `DOC-107` Incident and workflow-state guidance refresh to 3.8.2
 - `DOC-108` Workflow-definition lifecycle source refresh to 3.8.2
 
 ### Recommended next slice
 
-- `DOC-107` Incident and workflow-state guidance refresh to 3.8.2: incident
-  and workflow-investigation pages still describe 3.8.0 behavior, while Core
-  3.8.1/3.8.2 changed exception-state and workflow-state extraction paths.
-  Reconcile their recovery guidance and claims against the current release.
+- `DOC-104` StateMachine authoring and transition lifecycle: the next
+  designer-facing gap is a worked guide for states, transitions, and lifecycle
+  behavior.
 
-### Current run inventory (2026-09-18)
+### Current run inventory (2026-09-19)
 
-- Before this run, the published GitBook was complete through `DOC-103` and
-  DOC-104 through DOC-106 were available. DOC-106 was selected because the
-  troubleshooting map directs readers into runbooks with stale 3.8.0 claims
-  and source links.
+- Before this run, the published GitBook was complete through `DOC-106`.
+  `DOC-104`, `DOC-105`, `DOC-107`, and `DOC-108` remain available; `DOC-107`
+  is selected because the incident and workflow-investigation pages still
+  carry 3.8.0 wording and omit important 3.8.1/3.8.2 state-model behavior.
 - The latest released refs remain `release/3.8.2`: Core
   `33181ae3048f628f591a0155b5665a8e4d1bcea2`, Studio
   `1c72dc02c837919059b60efe5df2ed57ff2db2d9`, and Extensions
@@ -152,27 +151,38 @@ acceptance criterion below is already complete.
   DOC-108 source-accuracy gap remains in the workflow-definition lifecycle
   guide, which still cites Core/Studio `release/3.8.0` refs.
 
-### Current run plan (2026-09-18)
+### Current run plan (2026-09-19)
 
-- Audit the troubleshooting decision map and its readiness,
-  structured/console logging, distributed tracing, monitoring overview, and
-  timer/Quartz scheduling guides. Reconcile every affected 3.8.0 behavior
-  claim against Core, Studio, and Extensions `release/3.8.2`; update a release
-  pin or source URL only when the 3.8.2 implementation and target are verified.
-- Keep the change focused on release accuracy and link integrity. Do not
-  mechanically rewrite unrelated historical or preview documentation, and do
-  not change behavior claims that remain correct without clarifying their
-  release scope.
+- Reconcile `operate/incidents/README.md`, its configuration and strategy
+  pages, and `operate/workflow-state-and-journal.md` against Core, Studio, and
+  Extensions `release/3.8.2`. Explain the current incident pipeline,
+  incident identity and recovery boundaries, exception-state shape,
+  and workflow-state rehydration diagnostics without overstating Studio or API
+  behavior.
+- Refresh the monitoring overview's incident summary so it agrees with the
+  incident and workflow-state guides. Keep retry, journal, activity-execution,
+  and Studio claims tied to the contracts actually verified in the release.
 - Run changed-page and repository-wide local-link checks, Markdown structure
-  and whitespace checks, available repository validation, plus source-backed
-  assertions for each corrected behavior and URL before PR delivery.
+  and whitespace checks, available repository validation, and source-backed
+  assertions before PR delivery.
 
-### Current run selection (2026-09-18)
+### Current run selection (2026-09-19)
 
-- Selected `DOC-106`: the troubleshooting decision map now routes developers
-  and operators to these runbooks, but several still carry obsolete 3.8.0
-  source pins. A claim-by-claim 3.8.2 refresh improves trust and keeps linked
-  diagnostics actionable without duplicating the new symptom map.
+- Selected `DOC-107`: incident and workflow-state guidance is already present,
+  but its 3.8.0 framing and recovery explanation no longer match the released
+  exception/rehydration behavior. This is a focused accuracy and operator
+  workflow refresh, not a new API reference.
+
+### Current run completion (2026-09-19)
+
+- Refreshed the incident, incident-strategy, workflow-investigation, and
+  monitoring pages to `release/3.8.2`. Documented the separate activity,
+  workflow, and engine exception paths; corrected the incident model and
+  `RecoverFromFault` boundaries; and added the workflow-state rehydration
+  warning classifications.
+- Re-checked the Studio incident filter, incident details, journal toggle, and
+  workflow-state display against Studio `release/3.8.2`. No new distinct slice
+  was discovered; `DOC-104`, `DOC-105`, and `DOC-108` remain available.
 
 ### Current run inventory (2026-09-17)
 
