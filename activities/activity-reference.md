@@ -29,7 +29,7 @@ linked guide when the activity has important setup or operational behavior.
 ## Core workflow construction
 
 These activities are supplied by the core workflow/runtime modules in Elsa
-3.8.0.
+3.8.4.
 
 | Category | Activities | Use them when |
 | --- | --- | --- |
@@ -93,6 +93,8 @@ after the corresponding module is installed and configured.
   Avro factories, message matching, correlation, and hosted workers.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
+- [State machines](../guides/state-machines.md) explains states, transitions,
+  lifecycle slots, and the dedicated Elsa Studio designer.
 
 ## Choosing safely in Elsa Studio
 
