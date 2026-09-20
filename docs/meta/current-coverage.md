@@ -94,7 +94,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (37 pages)
+### GUIDES (38 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -120,6 +120,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Elasticsearch Setup** (`guides/persistence/examples/elasticsearch-setup.md`)
 - **Dapper persistence, provider selection, SQL dialects, and migrations** (`guides/persistence/examples/dapper-setup.md`)
 - **Running Workflows** (`guides/running-workflows/README.md`)
+- **State machines** (`guides/state-machines.md`)
 - **Dispatch Workflow Activity** (`guides/running-workflows/dispatch-workflow-activity.md`)
 - **Using a Trigger** (`guides/running-workflows/using-a-trigger.md`)
 - **Altering a Running Workflow Instance** (`guides/running-workflows/altering-workflow-instances.md`)
@@ -200,6 +201,7 @@ Based on the current structure, the following core concepts are documented:
 ### Activities
 - ✅ Common activity properties
 - ✅ Control flow activities (Decision)
+- ✅ StateMachine authoring, transition lifecycle, lifecycle slots, and the Elsa Studio designer
 - ✅ MassTransit integration
 - ✅ Email activity, SMTP configuration, attachments, and send-failure handling
 - ✅ CSV activity, input representations, delimiter/header handling, typed mapping, and memory behavior
@@ -333,9 +335,6 @@ related subject is undocumented.
    - Activities, triggers, and bookmarks are explained across concept,
      activity, and running-workflow pages, but could be easier to discover as
      dedicated concept entry points.
-   - StateMachine is listed in the activity reference and architecture
-     overview, but a worked authoring guide for states and transitions would
-     help designers decide when and how to use it.
 
 2. **Elsa Studio**
    - Studio tour, integration, customization, designer, and operations pages

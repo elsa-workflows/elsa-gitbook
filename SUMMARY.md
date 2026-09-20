@@ -112,6 +112,7 @@
   * [Long-Running Workflows](guides/running-workflows/long-running-workflows.md)
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
   * [Bulk Dispatch Workflows Activity](guides/running-workflows/bulk-dispatch-workflows.md)
+* [State machines](guides/state-machines.md)
 * [Studio User Guide](guides/studio/README.md)
   * [Expressions](guides/studio/expressions.md)
   * [JavaScript IntelliSense Type Definitions](guides/studio/javascript-type-definition-providers.md)
