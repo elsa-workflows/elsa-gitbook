@@ -188,6 +188,7 @@
 * [Runtime Administration and Graceful Drain](operate/runtime-administration.md)
 * [Distributed Tracing](operate/distributed-tracing.md)
 * [Investigate a Workflow Instance](operate/workflow-state-and-journal.md)
+* [Inspect Activity Executions in Elsa Studio](operate/activity-execution-inspection.md)
 * [Variables](operate/workflow-instance-variables.md)
 * [Activation Strategies](operate/workflow-activation-strategies.md)
 * [Incidents](operate/incidents/README.md)

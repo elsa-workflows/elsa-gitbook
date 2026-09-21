@@ -167,7 +167,9 @@ details and the activity-execution APIs for the captured activity snapshot.
 
 Activity execution APIs require `read:activity-execution`. They are distinct
 from the workflow-instance APIs because they can expose the detailed captured
-state of an activity.
+state of an activity. For the Studio workflow-instance viewer's click path and
+the limits of the execution drawer, see [Inspect Activity Executions in Elsa
+Studio](activity-execution-inspection.md).
 
 List a compact view for a workflow instance and activity node:
 
