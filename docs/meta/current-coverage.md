@@ -146,7 +146,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Setup** (`multitenancy/setup.md`)
 - **Storage boundaries** (`multitenancy/storage-boundaries.md`)
 
-### OPERATE (12 pages)
+### OPERATE (13 pages)
 
 - **Monitoring & Observability** (`operate/monitoring-observability.md`)
 - **Structured Logs** (`operate/structured-logs.md`)
@@ -155,6 +155,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Runtime Administration and Graceful Drain** (`operate/runtime-administration.md`)
 - **Distributed Tracing** (`operate/distributed-tracing.md`)
 - **Investigate a Workflow Instance** (`operate/workflow-state-and-journal.md`)
+- **Inspect Activity Executions in Elsa Studio** (`operate/activity-execution-inspection.md`)
 - **Incidents** (`operate/incidents/README.md`)
 - **Configuration** (`operate/incidents/configuration.md`)
 - **Strategies** (`operate/incidents/strategies.md`)
@@ -340,8 +341,9 @@ related subject is undocumented.
    - Studio tour, integration, customization, designer, and operations pages
      exist. They could still be consolidated into a clearer task-oriented
      walkthrough for connecting a Studio host to a server.
-   - The workflow-investigation guide explains the activity-execution APIs,
-     but not the Studio activity-execution tab and details drawer.
+   - The workflow-investigation guide and the Studio activity-execution guide
+     now cover both the API and the activity-execution tab/details drawer;
+     host-specific escalation procedures remain a separate opportunity.
    - The 3.8.0 release does not provide a built-in generic Connections
      administration module; custom hosts must provide the client UI when they
      use the Connections extension.

@@ -117,19 +117,19 @@ acceptance criterion below is already complete.
 - `DOC-102` 3.8.2 multitenancy and in-memory key-value storage boundaries
 - `DOC-103` Troubleshooting symptom-to-diagnostic map
 - `DOC-104` StateMachine authoring and transition lifecycle
+- `DOC-105` Inspect activity executions in Elsa Studio
 - `DOC-106` Troubleshooting-linked operational source refresh to 3.8.2
 - `DOC-107` Incident and workflow-state guidance refresh to 3.8.2
 
 ### Available next slices
 
-- `DOC-105` Inspect activity executions in Elsa Studio
 - `DOC-108` Workflow-definition lifecycle source refresh to 3.8.2
 
 ### Recommended next slice
 
-- `DOC-105` Inspect activity executions in Elsa Studio: the next
-  Studio-facing gap is a worked guide for the activity-execution tab and
-  details drawer.
+- `DOC-108` Workflow-definition lifecycle source refresh to 3.8.2: reconcile
+  the remaining workflow-definition lifecycle claims and source links against
+  the current release.
 
 ### Current run inventory (2026-09-20)
 
@@ -179,6 +179,56 @@ acceptance criterion below is already complete.
   `release/3.8.4`.
 - No additional distinct topic was discovered during source review. `DOC-105`
   and `DOC-108` remain available, with `DOC-105` recommended next.
+
+### Current run inventory (2026-09-21)
+
+- The published GitBook is complete through `DOC-104`. `DOC-105` (Studio
+  activity-execution inspection) and `DOC-108` (workflow-definition lifecycle
+  source refresh) remain available; `DOC-105` is selected for this run.
+- The latest advertised release branch is `release/3.8.4`, superseding the
+  requested `release/3.8.0`. The validated refs are Core
+  `33181ae3048f628f591a0155b5665a8e4d1bcea2`, Studio
+  `9bff3f785fd13bd80a3a7ecf88fec4aec8eef7ae`, and Extensions
+  `154ba15fb4da85b4bebecfbe43639579cbda1d0d`.
+- `DOC-105` is a distinct Studio-facing gap: the existing workflow
+  investigation guide documents API access to activity executions, but not
+  the Studio activity-execution tab or details drawer, its permissions, the
+  state/outcome/output/retry panels, or the limits of persisted evidence.
+- No additional distinct documentation topic was found during this
+  inventory. `DOC-108` remains a separate release-source reconciliation slice.
+
+### Current run plan (2026-09-21)
+
+- Add a concise, task-oriented activity-execution inspection guide for Studio
+  users and operators, grounded in the Core and Studio `release/3.8.4`
+  contracts. Explain the click path, what each panel shows, the required
+  permission, and what missing or empty data means.
+- Keep the guide complementary to the workflow state/journal API page:
+  start with when to use the Studio view, then cover the UI path, persisted
+  records and limitations, and an escalation path to the API or host logs.
+  Do not claim that the drawer proves live in-memory state or complete
+  workflow history.
+- Run source-backed assertions, changed-page and repository-wide link and
+  Markdown structure checks, whitespace checks, and available repository
+  validation before PR delivery.
+
+### Current run selection (2026-09-21)
+
+- Selected `DOC-105`: the Studio activity-execution tab and details drawer
+  are the next high-value cross-persona gap after the StateMachine guide.
+  Existing docs expose the API but do not show designers and operators how to
+  inspect a concrete execution or interpret the evidence it contains.
+
+### Current run completion (2026-09-21)
+
+- Added `operate/activity-execution-inspection.md`, linked it from `SUMMARY.md`
+  and the workflow investigation guide, and documented the Studio path from
+  Workflow Instances to an activity's Executions tab and Execution Details
+  drawer.
+- Grounded the guide in the `release/3.8.4` Core and Studio contracts for
+  summary/full-record loading, state/outcome/output/retry panels, unfinished
+  record refresh, permissions, and persisted-data limitations. No additional
+  distinct topic was discovered during this run; `DOC-108` remains available.
 
 ### Current run inventory (2026-09-17)
 
