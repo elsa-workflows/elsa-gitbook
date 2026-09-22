@@ -6,7 +6,7 @@ new draft without changing the identity used by callers, while operators can
 choose whether an API operation uses the latest, published, draft, or a
 specific version.
 
-This page describes the release `3.8.0` behavior and how it appears in Elsa
+This page describes the release `3.9.0` behavior and how it appears in Elsa
 Studio.
 
 ## The three identities to keep straight
@@ -78,7 +78,7 @@ Core exposes these selectors through `VersionOptions`:
 | --- | --- |
 | `Latest` | Current latest version, including an unpublished draft |
 | `Published` | Current published version only |
-| `LatestOrPublished` | Latest when available, otherwise published |
+| `LatestOrPublished` | Published when available, otherwise latest |
 | `LatestAndPublished` | Latest version only when it is also published |
 | `Draft` | An unpublished version |
 | `AllVersions` | Complete version history |
@@ -145,11 +145,13 @@ Inside the editor:
 - use the editor menu's **Unpublish** action to retract the current published
   version.
 
-Publishing can also update workflows that consume the published definition.
-Studio reports the count when the backend returns affected consuming
-workflows. This is separate from migrating already-running instances; use the
-[alterations guide](../../features/alterations/README.md) when existing
-instances must move to a newer published version.
+Publishing can also update workflows that consume the published definition,
+but only when the referenced definition is configured as usable as an activity
+and its `AutoUpdateConsumingWorkflows` option is enabled. Studio reports the
+count when the backend returns affected consuming workflows. This is separate
+from migrating already-running instances; use the [alterations
+guide](../../features/alterations/README.md) when existing instances must move
+to a newer published version.
 
 ## Inspect and roll back version history
 
@@ -175,9 +177,9 @@ The rollback endpoint is:
 POST /elsa/api/workflow-definitions/{definitionId}/revert/{version}
 ```
 
-It uses the `publish:workflow-definitions` permission and returns the newly
-created version summary. This endpoint is a version-history operation, not a
-runtime migration. If instances already run an older version, plan their
+It uses the `workflows/definitions/versions:revert` permission and returns the
+newly created version summary. This endpoint is a version-history operation,
+not a runtime migration. If instances already run an older version, plan their
 migration separately with alterations.
 
 ## API operations and permissions
@@ -186,12 +188,19 @@ The main lifecycle operations are:
 
 | Operation | Endpoint | Permission |
 | --- | --- | --- |
-| List definitions or versions | `GET /workflow-definitions` and `GET /workflow-definitions/{definitionId}/versions` | `read:workflow-definitions` |
-| Save a draft | `POST /workflow-definitions` or the version update endpoint exposed by the API links | `write:workflow-definitions` |
-| Publish latest | `POST /workflow-definitions/{definitionId}/publish` | `publish:workflow-definitions` |
-| Retract published version | `POST /workflow-definitions/{definitionId}/retract` | `retract:workflow-definitions` |
-| Roll back to a version | `POST /workflow-definitions/{definitionId}/revert/{version}` | `publish:workflow-definitions` |
-| Start a workflow | `GET`/`POST .../execute` or `POST .../dispatch` | `exec:workflow-definitions` |
+| List definitions | `GET /workflow-definitions` and `GET /workflow-definitions/{definitionId}` | `workflows/definitions:view` |
+| List versions | `GET /workflow-definitions/{definitionId}/versions` | `workflows/definitions/versions:view` |
+| Save a draft | `POST /workflow-definitions` or the version update endpoint exposed by the API links | `workflows/definitions:write` |
+| Publish latest | `POST /workflow-definitions/{definitionId}/publish` | `workflows/definitions:publish` |
+| Retract published version | `POST /workflow-definitions/{definitionId}/retract` | `workflows/definitions:retract` |
+| Roll back to a version | `POST /workflow-definitions/{definitionId}/revert/{version}` | `workflows/definitions/versions:revert` |
+| Start a workflow | `GET`/`POST .../execute` or `POST .../dispatch` | `workflows/definitions:execute` |
+
+The `3.9.0` API expresses permissions as `{resource}:{verb}` claims. The
+workflow-definition version endpoints use a separate resource from the main
+definition endpoints. A host can grant a subtree such as
+`workflows/definitions/*` when that is appropriate, but least-privilege roles
+can grant only the resource and verb needed for the operation.
 
 Use the API's hypermedia links to determine whether a specific definition is
 read-only or whether an operation is available. Studio uses those links to
@@ -216,12 +225,19 @@ definition version.
 
 ## Release source
 
-The behavior on this page is based on the current `release/3.8.0` refs:
+The behavior on this page is based on the current `release/3.9.0` refs:
 
-- [Core workflow definition publisher](https://github.com/elsa-workflows/elsa-core/blob/f1e2a092f916c41d1949bf36efa16a90abda664d/src/modules/Elsa.Workflows.Management/Services/WorkflowDefinitionPublisher.cs)
-- [Core version selectors](https://github.com/elsa-workflows/elsa-core/blob/f1e2a092f916c41d1949bf36efa16a90abda664d/src/clients/Elsa.Api.Client/Shared/Models/VersionOptions.cs)
-- [Core execute version default](https://github.com/elsa-workflows/elsa-core/blob/f1e2a092f916c41d1949bf36efa16a90abda664d/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Execute/WorkflowExecutionHelper.cs)
-- [Core publish endpoint](https://github.com/elsa-workflows/elsa-core/blob/f1e2a092f916c41d1949bf36efa16a90abda664d/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Publish/Endpoint.cs)
-- [Core rollback endpoint](https://github.com/elsa-workflows/elsa-core/blob/f1e2a092f916c41d1949bf36efa16a90abda664d/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Version/Revert.cs)
-- [Studio workflow list](https://github.com/elsa-workflows/elsa-studio/blob/release/3.8.0/src/modules/Elsa.Studio.Workflows/Components/WorkflowDefinitionList/WorkflowDefinitionList.razor)
-- [Studio version history](https://github.com/elsa-workflows/elsa-studio/blob/release/3.8.0/src/modules/Elsa.Studio.Workflows/Components/WorkflowDefinitionEditor/Components/WorkflowProperties/Tabs/VersionHistory/VersionHistoryTab.razor.cs)
+- [Core workflow definition publisher](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Management/Services/WorkflowDefinitionPublisher.cs)
+- [Core version selectors](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Common/Models/VersionOptions.cs)
+- [Core version-options JSON converter](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Common/Converters/VersionOptionsJsonConverter.cs)
+- [Core execute version default](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Execute/WorkflowExecutionHelper.cs)
+- [Core dispatch version default](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Dispatch/Endpoint.cs)
+- [Core publish endpoint](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Publish/Endpoint.cs)
+- [Core retract endpoint](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Retract/Endpoint.cs)
+- [Core version list endpoint](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Version/List.cs)
+- [Core rollback endpoint](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Api/Endpoints/WorkflowDefinitions/Version/Revert.cs)
+- [Core workflow permissions](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Api/Permissions/WorkflowPermissions.cs)
+- [Core consuming-workflow update condition](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/modules/Elsa.Workflows.Management/Services/WorkflowReferenceUpdater.cs)
+- [Studio workflow list](https://github.com/elsa-workflows/elsa-studio/blob/f68d5b05a9c88ccd7db160af5503ce751aacb966/src/modules/Elsa.Studio.Workflows/Components/WorkflowDefinitionList/WorkflowDefinitionList.razor)
+- [Studio workflow editor](https://github.com/elsa-workflows/elsa-studio/blob/f68d5b05a9c88ccd7db160af5503ce751aacb966/src/modules/Elsa.Studio.Workflows/Components/WorkflowDefinitionEditor/WorkflowDefinitionEditor.razor)
+- [Studio version history](https://github.com/elsa-workflows/elsa-studio/blob/f68d5b05a9c88ccd7db160af5503ce751aacb966/src/modules/Elsa.Studio.Workflows/Components/WorkflowDefinitionEditor/Components/WorkflowProperties/Tabs/VersionHistory/VersionHistoryTab.razor.cs)

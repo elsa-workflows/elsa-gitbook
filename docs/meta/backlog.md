@@ -120,16 +120,68 @@ acceptance criterion below is already complete.
 - `DOC-105` Inspect activity executions in Elsa Studio
 - `DOC-106` Troubleshooting-linked operational source refresh to 3.8.2
 - `DOC-107` Incident and workflow-state guidance refresh to 3.8.2
+- `DOC-108` Workflow-definition lifecycle source refresh to 3.9.0
 
 ### Available next slices
 
-- `DOC-108` Workflow-definition lifecycle source refresh to 3.8.2
+- `DOC-109` API permission catalog source refresh to 3.9.0
 
 ### Recommended next slice
 
-- `DOC-108` Workflow-definition lifecycle source refresh to 3.8.2: reconcile
-  the remaining workflow-definition lifecycle claims and source links against
-  the current release.
+- `DOC-109` API permission catalog source refresh to 3.9.0: reconcile the
+  legacy permission examples and resource/verb claims against the current
+  release.
+
+`DOC-109` was added during the 2026-09-22 inventory. The current permission
+catalog still describes the legacy `read:...` claim vocabulary, while the
+current release source declares hierarchical resources and verbs, including a
+separate workflow-definition-versions resource. Keep that broader permission
+refresh separate from this lifecycle slice.
+
+### Current run inventory (2026-09-22)
+
+- The published GitBook is complete through `DOC-107`; `DOC-108` is the
+  remaining planned lifecycle slice. `DOC-109` is newly identified and is
+  queued separately for the API permission catalog.
+- The latest advertised release branch is `release/3.9.0`, superseding the
+  requested `release/3.8.0`. The validated refs for this run are Core
+  `457f94e0f68d761387972ec447fc439ee2d5d576`, Studio
+  `f68d5b05a9c88ccd7db160af5503ce751aacb966`, and Extensions
+  `9d0e6fa4ec07818d60dd3e65ccaa84491eac94cf`.
+- The existing lifecycle guide is a distinct source-refresh gap: its release
+  text and every immutable source link still target `release/3.8.0`, its
+  rollback permission claim no longer matches the current endpoint contract,
+  and its consuming-workflow update wording is broader than the current
+  conditional behavior. No additional distinct topic was found beyond the
+  separately queued permission-catalog refresh.
+
+### Current run plan (2026-09-22)
+
+- Reconcile `guides/running-workflows/workflow-definition-lifecycle.md` with
+  Core and Studio `release/3.9.0`: identities, draft/save/publish/retract/
+  rollback behavior, selectors and defaults, Studio version history, and
+  permission/resource boundaries.
+- Preserve the guide's concise designer/integrator format, but make the
+  API-versus-Studio differences explicit and qualify automatic updates to
+  consuming workflows by the source-backed workflow options.
+- Run source-backed assertions, changed-page and repository-wide link and
+  Markdown structure checks, whitespace checks, and available repository
+  validation before PR delivery.
+
+### Current run selection (2026-09-22)
+
+- Selected `DOC-108`: workflow-definition version lifecycle is the remaining
+  planned release-reconciliation gap, and the existing guide contains stale
+  source refs plus two behavior/authorization claims that need correction.
+
+### Current run completion (2026-09-22)
+
+- Refreshed `guides/running-workflows/workflow-definition-lifecycle.md` from
+  stale 3.8.0 references to immutable Core and Studio `release/3.9.0` refs,
+  corrected selector and rollback-permission claims, and qualified automatic
+  consuming-workflow updates.
+- No additional distinct topic was discovered during the source review. The
+  newly identified permission-catalog refresh remains queued as `DOC-109`.
 
 ### Current run inventory (2026-09-20)
 
