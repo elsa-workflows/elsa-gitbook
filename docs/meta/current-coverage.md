@@ -322,7 +322,7 @@ Based on the current structure, the following core concepts are documented:
 ## Gaps and Weaknesses Identified
 
 This opportunity list was checked against the published slice inventory on
-2026-09-22. The older version of this section listed several topics as missing
+2026-09-23. The older version of this section listed several topics as missing
 even though dedicated pages had since been published. The entries below
 describe remaining improvement opportunities; they are not claims that the
 related subject is undocumented.
@@ -371,9 +371,9 @@ related subject is undocumented.
      cover every module and activity at the same depth.
    - Configuration management is documented, while a generated or exhaustive
      option-by-option reference is still a separate opportunity.
-   - DOC-109 remains as a separate release-refresh opportunity: the API
-     permission catalog still describes legacy claim strings while the current
-     `release/3.9.0` source declares hierarchical resources and verbs.
+   - The API permission catalog is now reconciled with the current
+     `release/3.9.0` resource/verb source. Future release branches may require
+     another claim-by-claim refresh.
 
 6. **Examples and migration detail**
    - HTTP workflows, testing, patterns, provider-specific persistence, and
