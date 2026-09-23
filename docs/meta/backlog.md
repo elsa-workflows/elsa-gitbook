@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-19)
+## Slice Inventory (2026-09-23)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -121,22 +121,70 @@ acceptance criterion below is already complete.
 - `DOC-106` Troubleshooting-linked operational source refresh to 3.8.2
 - `DOC-107` Incident and workflow-state guidance refresh to 3.8.2
 - `DOC-108` Workflow-definition lifecycle source refresh to 3.9.0
+- `DOC-109` API permission catalog source refresh to 3.9.0
 
 ### Available next slices
 
-- `DOC-109` API permission catalog source refresh to 3.9.0
+- None currently identified. Re-inventory after the next advertised release
+  branch or when a distinct documentation gap is discovered.
 
 ### Recommended next slice
 
-- `DOC-109` API permission catalog source refresh to 3.9.0: reconcile the
-  legacy permission examples and resource/verb claims against the current
-  release.
+- No next slice is recommended until the next inventory refresh.
 
 `DOC-109` was added during the 2026-09-22 inventory. The current permission
 catalog still describes the legacy `read:...` claim vocabulary, while the
 current release source declares hierarchical resources and verbs, including a
 separate workflow-definition-versions resource. Keep that broader permission
 refresh separate from this lifecycle slice.
+
+### Current run inventory (2026-09-23)
+
+- The published GitBook is complete through `DOC-108`; `DOC-109` is the only
+  available slice. No newly discovered topic is distinct enough to add before
+  this run.
+- The requested `release/3.8.0` is superseded by the advertised
+  `release/3.9.0`. The source refs selected for this run are Core
+  `457f94e0f68d761387972ec447fc439ee2d5d576`, Studio
+  `f68d5b05a9c88ccd7db160af5503ce751aacb966`, and Extensions
+  `9d0e6fa4ec07818d60dd3e65ccaa84491eac94cf`.
+- `guides/authentication/permissions.md` is the focused catalog gap: its
+  examples, tables, and release note still describe the pre-3.9.0
+  `read:...` claim vocabulary. Related authentication and HTTP endpoint pages
+  should be checked for contradictory permission examples, but this slice
+  remains a permission-catalog refresh rather than a general security rewrite.
+
+### Current run plan (2026-09-23)
+
+- Reconcile the permission guide with the 3.9.0 Core, Studio, and Extensions
+  contracts: hierarchical resource/verb parsing and matching, wildcard
+  behavior, workflow-definition version permissions, common Studio metadata,
+  runtime and module permissions, and the boundary between Elsa API claims,
+  workflow ingress policies, and host authorization.
+- Preserve a practical least-privilege format for developers, Studio users,
+  operators, and CTOs: explain how to identify the required resource/verb,
+  provide role templates and troubleshooting steps, and avoid implying that
+  the catalog is exhaustive when installed modules can contribute permissions.
+- Run source-backed assertions, changed-page and repository-wide link and
+  Markdown structure checks, whitespace checks, and available repository
+  validation before PR delivery.
+
+### Current run selection (2026-09-23)
+
+- Selected `DOC-109`: the published permission catalog was the remaining
+  release-reconciliation gap and is the only available planned slice.
+
+### Current run completion (2026-09-23)
+
+- Refreshed `guides/authentication/permissions.md` and the related HTTP
+  endpoint security examples against Core, Studio, and Extensions
+  `release/3.9.0`. The guide now documents the resource/verb grammar,
+  wildcard and catalog endpoints, workflow-definition versions, common Core
+  resources, Studio role-authoring behavior, extension compatibility strings,
+  and least-privilege troubleshooting.
+- No additional distinct topic was discovered during the source review. The
+  next inventory should begin from the next advertised release or a newly
+  verified gap.
 
 ### Current run inventory (2026-09-22)
 
