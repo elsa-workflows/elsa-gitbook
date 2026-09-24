@@ -190,6 +190,8 @@ permissions to every designer.
 | `resilience/strategies` | `view` | Browse resilience strategies. |
 | `resilience/simulation` | `execute` | Simulate a resilience response. |
 | `alterations` | `view`, `execute` | Inspect and run alteration plans. |
+| `user-tasks` | `view`, `update`, `claim`, `complete`, `assign`, `cancel`, `invite`, `supervise` | Work on human tasks or supervise a tenant-wide task queue. |
+| `user-tasks/participants` | `view` | Search users and groups for task assignment. |
 
 External Authentication, User Tasks, AI, and other Core modules contribute
 additional resources and module-specific verbs. Query the catalog instead of

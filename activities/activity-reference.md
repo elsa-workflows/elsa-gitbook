@@ -21,6 +21,7 @@ linked guide when the activity has important setup or operational behavior.
 | Choose a path | **Decision**, **If**, **Switch**, or **Fork (flow)** | Use Decision/If for a Boolean choice, Switch for cases, and Fork (flow) for concurrent flowchart paths. |
 | Repeat work | **For**, **For Each**, **While**, or **Parallel For Each** | Use the parallel form only when the child work is safe to run concurrently. **Break** exits a loop. |
 | Keep or change workflow data | **Set Variable**, **Correlate**, or **Set Name** | Variables carry data in their declared scope; correlation and instance name make related instances easier to find. |
+| Wait for a person | **User Task** | Creates a workflow-bound task, suspends the workflow, and resumes it after a permitted human action. See [User Tasks](../guides/running-workflows/user-tasks.md). |
 | Wait for time or an external event | **Delay**, **Timer**, **Cron**, **HTTP Endpoint**, or **Event** | These activities create a wait/trigger boundary rather than keeping a request open. |
 | Start another workflow | **Dispatch Workflow**, **Execute Workflow**, or **Bulk Dispatch Workflows** | Pick the child-workflow behavior deliberately; the linked guides explain dispatch and fan-out semantics. |
 | Call or expose an HTTP service | **HTTP Request**, **HTTP Request (flow)**, **HTTP Endpoint**, or **HTTP Response** | Enable the HTTP module and review security before exposing an endpoint. |
@@ -29,7 +30,7 @@ linked guide when the activity has important setup or operational behavior.
 ## Core workflow construction
 
 These activities are supplied by the core workflow/runtime modules in Elsa
-3.8.4.
+3.9.0. Installed modules can add more activities.
 
 | Category | Activities | Use them when |
 | --- | --- | --- |
@@ -40,6 +41,7 @@ These activities are supplied by the core workflow/runtime modules in Elsa
 | Completion and faults | **Complete**, **Finish**, **Fault** | Completing a composite, finishing the workflow, or reporting a categorized fault for incident handling. |
 | Composition | **Dispatch Workflow**, **Execute Workflow**, **Bulk Dispatch Workflows** | Starting child instances, either as a dispatch, an execution, or one per item. See [workflow-as-activity](workflow-as-activity/README.md), [Dispatch Workflow](../guides/running-workflows/dispatch-workflow-activity.md), and [Bulk Dispatch Workflows](../guides/running-workflows/bulk-dispatch-workflows.md). |
 | Events | **Publish Event**, **Event** | Publishing a named event or waiting for one. For a custom blocking or trigger activity, see [Blocking Activities & Triggers](blocking-and-triggers/README.md). |
+| Human work | **User Task** | Suspending a workflow while a permitted worker reviews, completes, or manages a task. See [User Tasks](../guides/running-workflows/user-tasks.md) for persistence, Studio, API, and guest-access boundaries. |
 
 ## Time and scheduled execution
 

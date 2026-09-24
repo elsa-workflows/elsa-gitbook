@@ -250,6 +250,9 @@ For more troubleshooting guidance, see the [Troubleshooting Guide](../troublesho
 
 You can also run workflows programmatically from your .NET application using Elsa's API client or by directly using the workflow runtime services.
 
+For workflows that pause for a person to review or complete work, see the
+[User Tasks guide](user-tasks.md).
+
 ### Using IWorkflowRunner
 
 The `IWorkflowRunner` service executes workflows directly in-process. This is useful for short-lived workflows that don't require background execution.

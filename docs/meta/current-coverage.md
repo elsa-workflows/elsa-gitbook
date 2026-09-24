@@ -259,6 +259,8 @@ Based on the current structure, the following core concepts are documented:
   bearer-token boundary, and request-size limit
 - ✅ Public event-trigger token generation, authenticated event triggering,
   Data Protection key continuity, and multi-node callback operations
+- ✅ User Tasks activity, task projection, Studio queue/detail workflow,
+  API operations, permissions, persistence, concurrency, and guest invitations
 
 ### HTTP Workflows
 - ✅ Programmatic approach

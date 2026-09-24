@@ -16,6 +16,7 @@ enough runtime state to continue later. Typical wait points are:
 - a scheduled pause such as `Delay`, inline `Timer`, inline `Cron`, or inline
   `StartAt`
 - a callback wait such as an approval link or other bookmark-based resume
+- a human work item such as the [User Task activity](user-tasks.md)
 - a trigger or blocking activity waiting for external input such as HTTP,
   events, signals, or broker messages
 - a background hand-off such as `RunTask`
