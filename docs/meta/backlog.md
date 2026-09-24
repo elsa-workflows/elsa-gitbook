@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-23)
+## Slice Inventory (2026-09-24)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -122,21 +122,75 @@ acceptance criterion below is already complete.
 - `DOC-107` Incident and workflow-state guidance refresh to 3.8.2
 - `DOC-108` Workflow-definition lifecycle source refresh to 3.9.0
 - `DOC-109` API permission catalog source refresh to 3.9.0
+- `DOC-110` Elsa User Tasks: workflow-bound human work, Studio queue, API,
+  persistence, and guest-invitation boundaries
 
 ### Available next slices
 
-- None currently identified. Re-inventory after the next advertised release
-  branch or when a distinct documentation gap is discovered.
+- `DOC-111` BPMN authoring and interchange in Elsa Studio: import analysis,
+  diagram editing, runtime capability limits, and export behavior.
 
 ### Recommended next slice
 
-- No next slice is recommended until the next inventory refresh.
+- `DOC-111` BPMN authoring and interchange in Elsa Studio. The 3.9.0 Core and
+  Studio releases add BPMN import, analysis, editing, and export, but the
+  published GitBook has no guide for designers or integrators using that
+  interchange surface.
 
 `DOC-109` was added during the 2026-09-22 inventory. The current permission
 catalog still describes the legacy `read:...` claim vocabulary, while the
 current release source declares hierarchical resources and verbs, including a
 separate workflow-definition-versions resource. Keep that broader permission
 refresh separate from this lifecycle slice.
+
+### Current run inventory (2026-09-24)
+
+- The published GitBook is complete through `DOC-109`; no earlier planned
+  slice remains available.
+- The requested `release/3.8.0` is superseded by the advertised
+  `release/3.9.0`. The source refs selected for this run are Core
+  `457f94e0f68d761387972ec447fc439ee2d5d576`, Studio
+  `f68d5b05a9c88ccd7db160af5503ce751aacb966`, and Extensions
+  `9d0e6fa4ec07818d60dd3e65ccaa84491eac94cf`.
+- Source review found `Elsa.UserTasks` and `Elsa.Studio.UserTasks` in Core and
+  Studio 3.9.0, with no corresponding implementation in Extensions. The
+  current GitBook mentions User Tasks only in the permission catalog and has
+  no practical guide for the feature's runtime, Studio, API, persistence, or
+  guest access.
+- The inventory also discovered `DOC-111` as a distinct follow-on: 3.9.0 adds
+  BPMN import, analysis, editing, and export in Core and Studio, but the
+  GitBook has no BPMN authoring or interchange guide. It remains queued for a
+  later run so this slice stays focused.
+
+### Current run plan (2026-09-24)
+
+- Add one concise User Tasks guide covering the workflow `UserTask` activity,
+  suspension/resume lifecycle, participants and membership resolution, forms,
+  actions, due/timeout/cancellation behavior, Studio queue/detail workflow,
+  persistence registration, permissions, optimistic concurrency, and the
+  optional invitation/guest boundary.
+- Lead with the developer/designer workflow, then give Studio usage,
+  integration/API and operational boundaries. State explicitly which pieces
+  are Core/Studio 3.9.0 behavior and that Extensions contributes no User Tasks
+  implementation in this release.
+- Validate every behavioral example against the immutable release source,
+  add navigation and cross-links, run source-backed assertions plus Markdown,
+  link, fence, whitespace, and available repository checks, and complete the
+  iterative self-review before PR delivery.
+
+### Current run selection (2026-09-24)
+
+- Selected `DOC-110`: the newly shipped 3.9.0 User Tasks feature was the most
+  substantial distinct gap found during this inventory.
+
+### Current run completion (2026-09-24)
+
+- Added the User Tasks guide and navigation links for designers, task workers,
+  integrators, and operators.
+- Validated the runtime, Studio, API, persistence, permission, concurrency,
+  and guest-invitation guidance against the pinned 3.9.0 source refs. No new
+  high-priority documentation issue remained after self-review.
+- Kept `DOC-111` queued as the next distinct documentation slice.
 
 ### Current run inventory (2026-09-23)
 

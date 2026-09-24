@@ -108,6 +108,7 @@
   * [Timer and Scheduled Workflows](guides/running-workflows/timer-and-scheduled-workflows.md)
   * [Quartz Scheduling](guides/running-workflows/quartz-scheduling.md)
   * [Workflow Definition Version Lifecycle](guides/running-workflows/workflow-definition-lifecycle.md)
+  * [User Tasks](guides/running-workflows/user-tasks.md)
   * [Hangfire Integration](guides/running-workflows/hangfire-integration.md)
   * [Long-Running Workflows](guides/running-workflows/long-running-workflows.md)
   * [Dispatch Workflow Activity](guides/running-workflows/dispatch-workflow-activity.md)
