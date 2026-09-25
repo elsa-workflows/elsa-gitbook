@@ -134,6 +134,7 @@ Explore these guides to learn more about using Elsa Studio effectively:
 - **[Studio Tour & Troubleshooting](../../studio/studio-tour-troubleshooting.md)**: Detailed walkthrough of the Studio interface with troubleshooting tips
 - **[Workflow Editor](../../studio/workflow-editor/README.md)**: Advanced features of the workflow editor
 - **[Running Workflows](../running-workflows/using-elsa-studio.md)**: How to execute and test your workflows
+- **[BPMN Authoring and Interchange](../bpmn-authoring-and-interchange.md)**: Import, bind, edit, and export BPMN workflows with Elsa Studio
 
 ## Tips for Success
 
@@ -161,3 +162,4 @@ Ready to dive deeper? Here are some recommended paths:
 - **[Customization](customization.md)** - Learn how to change Studio composition, branding, widgets, and editor behavior without forking the shell
 - **[Custom UI Components](custom-ui-components.md)** - Learn how to create custom property editors for specialized activity inputs
 - **[Integration guide](integration/README.md)** - Discover how to integrate Elsa Studio into your existing React, Angular, Blazor, or MVC application
+- **[BPMN authoring guide](../bpmn-authoring-and-interchange.md)** - Import BPMN files, review analysis findings, and preserve round-trip source

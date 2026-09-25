@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-24)
+## Slice Inventory (2026-09-25)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -124,18 +124,16 @@ acceptance criterion below is already complete.
 - `DOC-109` API permission catalog source refresh to 3.9.0
 - `DOC-110` Elsa User Tasks: workflow-bound human work, Studio queue, API,
   persistence, and guest-invitation boundaries
+- `DOC-111` BPMN authoring and interchange in Elsa Studio
 
 ### Available next slices
 
-- `DOC-111` BPMN authoring and interchange in Elsa Studio: import analysis,
-  diagram editing, runtime capability limits, and export behavior.
+- None identified during this run's release-source review.
 
 ### Recommended next slice
 
-- `DOC-111` BPMN authoring and interchange in Elsa Studio. The 3.9.0 Core and
-  Studio releases add BPMN import, analysis, editing, and export, but the
-  published GitBook has no guide for designers or integrators using that
-  interchange surface.
+- No distinct next slice is currently queued. Re-inventory the published
+  GitBook and latest release sources on the next run.
 
 `DOC-109` was added during the 2026-09-22 inventory. The current permission
 catalog still describes the legacy `read:...` claim vocabulary, while the
@@ -191,6 +189,58 @@ refresh separate from this lifecycle slice.
   and guest-invitation guidance against the pinned 3.9.0 source refs. No new
   high-priority documentation issue remained after self-review.
 - Kept `DOC-111` queued as the next distinct documentation slice.
+
+### Current run inventory (2026-09-25)
+
+- The published GitBook is complete through `DOC-110`; `DOC-111` is the only
+  available slice. No additional distinct topic was found during the initial
+  BPMN source review.
+- The requested `release/3.8.0` is superseded by the current `release/3.9.0`
+  branches. The freshly pinned source refs for this run are Core
+  `4eb78f0fea903166f6049520a96331aca90e19e5`, Studio
+  `51b176b01403c2798fc64ac6c24ab2a31df56c4b`, and Extensions
+  `194fac3bb74c6b7b0acf3ed34d3369d8ed1b37a4`.
+- Core 3.9.0 provides the `Elsa.Bpmn` runtime and `Elsa.Bpmn.Interchange`
+  modules. Studio provides the BPMN file-import flow, analysis dialog,
+  BPMN-aware designer, performed-by binding panel, document session, and
+  export route. Extensions has no BPMN implementation for this slice.
+- The published GitBook has no BPMN authoring or interchange guide. Existing
+  JSON loading, Studio integration, execution-model, and workflow-lifecycle
+  pages will receive focused cross-links rather than a broad rewrite.
+
+### Current run plan (2026-09-25)
+
+- Add one concise BPMN authoring and interchange guide for designers and
+  integrators. Lead with the Studio import/analyze/edit/export workflow, then
+  explain Core registration, BPMN-to-Elsa binding boundaries, runtime trigger
+  behavior, API routes and permissions, optimistic concurrency, and stale or
+  missing-source export limitations.
+- Include a minimal `elsa:activityBinding` example and a mapping table for
+  the BPMN constructs that become Elsa activities. Clearly separate standard
+  BPMN content from Elsa's vendor extension and from the stored document JSON
+  used by Studio.
+- Validate every behavioral claim against the pinned 3.9.0 source, add
+  navigation and task-oriented cross-links, run source-backed assertions plus
+  Markdown/link/fence/whitespace checks, and complete iterative self-review
+  before PR delivery.
+
+### Current run selection (2026-09-25)
+
+- Selected `DOC-111`: BPMN is the only remaining planned slice and the
+  release-backed Studio/Core surface is absent from the published GitBook.
+
+### Current run completion (2026-09-25)
+
+- Added `guides/bpmn-authoring-and-interchange.md` with Studio import and
+  analysis workflow, BPMN-to-Elsa activity mappings, `elsa:activityBinding`,
+  runtime trigger behavior, server registration, document API concurrency,
+  permissions, export boundaries, and troubleshooting.
+- Added navigation and focused cross-links from the Studio, JSON-loading, and
+  coverage pages. No additional distinct topic was discovered during the
+  source review.
+- Validated the guide against the pinned Core, Studio, and Extensions
+  `release/3.9.0` refs; no high-priority documentation issue remains after
+  the final self-review.
 
 ### Current run inventory (2026-09-23)
 
