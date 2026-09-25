@@ -216,6 +216,9 @@ and follow [Loading Workflows from ElsaScript](loading-workflows-from-elsascript
 For provider behavior, reload operations, and custom external sources, see
 [Workflow Providers](extensibility/workflow-providers.md).
 
+If the source format is BPMN 2.0 XML rather than Elsa workflow JSON, see
+[BPMN Authoring and Interchange](bpmn-authoring-and-interchange.md).
+
 ## Summary <a href="#summary" id="summary"></a>
 
 In this guide, we've demonstrated configuring an Elsa Server to host workflows from JSON files. We covered loading a JSON file, deserialising it into the `Workflow` class, and executing the workflow.

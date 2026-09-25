@@ -94,7 +94,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (38 pages)
+### GUIDES (39 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -102,6 +102,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Programmatic** (`guides/http-workflows/programmatic.md`)
 - **Loading Workflows from JSON** (`guides/loading-workflows-from-json.md`)
 - **Loading Workflows from ElsaScript** (`guides/loading-workflows-from-elsascript.md`)
+- **BPMN Authoring and Interchange** (`guides/bpmn-authoring-and-interchange.md`)
 - **Hangfire Integration** (`guides/running-workflows/hangfire-integration.md`)
 - **Quartz Scheduling** (`guides/running-workflows/quartz-scheduling.md`)
 - **Workflow Providers** (`guides/extensibility/workflow-providers.md`)
@@ -261,6 +262,8 @@ Based on the current structure, the following core concepts are documented:
   Data Protection key continuity, and multi-node callback operations
 - ✅ User Tasks activity, task projection, Studio queue/detail workflow,
   API operations, permissions, persistence, concurrency, and guest invitations
+- ✅ BPMN 2.0 import analysis, Studio authoring and binding, runtime trigger
+  behavior, document API concurrency, and retained-source export boundaries
 
 ### HTTP Workflows
 - ✅ Programmatic approach
@@ -324,7 +327,7 @@ Based on the current structure, the following core concepts are documented:
 ## Gaps and Weaknesses Identified
 
 This opportunity list was checked against the published slice inventory on
-2026-09-23. The older version of this section listed several topics as missing
+2026-09-25. The older version of this section listed several topics as missing
 even though dedicated pages had since been published. The entries below
 describe remaining improvement opportunities; they are not claims that the
 related subject is undocumented.
