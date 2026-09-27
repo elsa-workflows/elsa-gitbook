@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (19 pages)
+### ACTIVITIES (20 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -28,6 +28,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **SQL activities** (`activities/sql.md`)
 - **Azure Service Bus activities** (`activities/azure-service-bus.md`)
 - **Kafka activities** (`activities/kafka.md`)
+- **MQTT activities** (`activities/mqtt.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -219,6 +220,9 @@ Based on the current structure, the following core concepts are documented:
   hosted workers, message serialization, and Studio/server boundaries
 - ✅ Kafka activities, consumer/producer definitions, string/JSON/Avro
   factories, message matching, correlation, and hosted worker lifecycle
+- ✅ MQTT named connections, topic triggers, text payloads, publishing,
+  persisted trigger/bookmark subscriptions, reconnect behavior, and
+  server/Studio boundaries
 - ✅ Diagnostics activities
 
 ### Elsa Studio

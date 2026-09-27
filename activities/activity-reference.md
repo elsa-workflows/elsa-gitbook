@@ -93,6 +93,9 @@ after the corresponding module is installed and configured.
   resource initialization, send/receive activities, and hosted workers.
 - [Kafka](kafka.md) explains consumer and producer definitions, string/JSON/
   Avro factories, message matching, correlation, and hosted workers.
+- [MQTT](mqtt.md) explains named broker connections, topic triggers, text
+  payloads, publishing, subscriptions, reconnect behavior, and server/Studio
+  boundaries.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 - [State machines](../guides/state-machines.md) explains states, transitions,
