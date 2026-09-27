@@ -152,6 +152,7 @@
 * [SQL activities](activities/sql.md)
 * [Azure Service Bus](activities/azure-service-bus.md)
 * [Kafka activities](activities/kafka.md)
+* [MQTT activities](activities/mqtt.md)
 * [Diagnostics](activities/diagnostics/README.md)
   * [Log](activities/diagnostics/log.md)
 

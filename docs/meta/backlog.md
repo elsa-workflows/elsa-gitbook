@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-25)
+## Slice Inventory (2026-09-27)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -125,6 +125,7 @@ acceptance criterion below is already complete.
 - `DOC-110` Elsa User Tasks: workflow-bound human work, Studio queue, API,
   persistence, and guest-invitation boundaries
 - `DOC-111` BPMN authoring and interchange in Elsa Studio
+- `DOC-112` MQTT messaging activities and workflow triggers
 
 ### Available next slices
 
@@ -134,6 +135,50 @@ acceptance criterion below is already complete.
 
 - No distinct next slice is currently queued. Re-inventory the published
   GitBook and latest release sources on the next run.
+
+### Current run inventory (2026-09-27)
+
+- The published GitBook is complete through `DOC-111`; no earlier planned
+  slice remains available.
+- The requested `release/3.8.0` is superseded by the current `release/3.9.0`
+  branches. This run uses Core `c3c974c34e244ecfb5a2638e270ade9877cc4982`,
+  Studio `3e241676e695ec55e00b45a2dc73469f03c72192`, and Extensions
+  `3a7ae6b7ad689be2f5849920c6b36fe3ea59b9aa`.
+- Release-source review found the Extensions `Elsa.Mqtt` module, with no
+  dedicated MQTT page or navigation entry in the GitBook. The module adds
+  named broker connections, the `MQTT Message Received` trigger, the
+  `Publish MQTT message` activity, topic-filter matching, Studio input
+  dropdowns, startup subscription binding, and reconnect behavior.
+- LDAP is another uncovered Extensions module, but MQTT is selected because
+  it has a complete trigger-and-publish workflow surface and directly
+  complements the existing Kafka, Azure Service Bus, and Slack guidance.
+
+### Current run plan (2026-09-27)
+
+- Add one concise MQTT guide for workflow designers and backend integrators.
+  Lead with package installation, server registration, named connection and
+  TLS configuration, then document both activities, MQTT wildcard matching,
+  trigger/bookmark subscription lifecycle, reconnect settings, Studio/server
+  boundaries, and operational limitations.
+- Use source-grounded examples for `UseMqtt`, `MqttConnectionOptions`, a
+  trigger workflow, and a publish activity. Clarify that Elsa receives text
+  payloads as `MqttMessage` and does not provision brokers or expose a
+  generic MQTT administration screen.
+- Validate against the immutable 3.9.0 Extensions source and tests, add
+  navigation and focused cross-links, run local Markdown/link/fence checks,
+  complete iterative self-review, then deliver the PR autonomously.
+
+### Current run selection (2026-09-27)
+
+- Selected `DOC-112`: MQTT messaging activities and workflow triggers.
+
+### Current run completion (2026-09-27)
+
+- Added `activities/mqtt.md`, linked it from the activity navigation and
+  activity reference, and updated coverage metadata.
+- Validated the guide against the immutable Extensions `release/3.9.0`
+  source and focused MQTT test project. No new distinct follow-on topic was
+  added during implementation review.
 
 `DOC-109` was added during the 2026-09-22 inventory. The current permission
 catalog still describes the legacy `read:...` claim vocabulary, while the
