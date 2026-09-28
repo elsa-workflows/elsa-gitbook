@@ -96,6 +96,8 @@ after the corresponding module is installed and configured.
 - [MQTT](mqtt.md) explains named broker connections, topic triggers, text
   payloads, publishing, subscriptions, reconnect behavior, and server/Studio
   boundaries.
+- [LDAP](ldap.md) explains named directory connections, bind and TLS settings,
+  search and write activities, result shapes, and server/Studio boundaries.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
 - [State machines](../guides/state-machines.md) explains states, transitions,

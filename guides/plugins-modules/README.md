@@ -138,6 +138,8 @@ For provider-backed file reads and writes, see the [File Storage activities
 guide](../../activities/file-storage.md).
 For standalone Kafka messaging, see the [Kafka activities
 guide](../../activities/kafka.md).
+For LDAP directory integrations, see the [LDAP activities
+guide](../../activities/ldap.md).
 
 ## Creating a Custom Feature
 
