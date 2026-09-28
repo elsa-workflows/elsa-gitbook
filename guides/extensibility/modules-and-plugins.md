@@ -613,6 +613,8 @@ builder.Services.AddElsa(elsa => elsa
   query/command/scalar activities, parameter binding, and result limits.
 - [Kafka activities](../../activities/kafka.md) for consumer/producer
   definitions, JSON and Avro factories, message matching, and worker lifecycle.
+- [LDAP activities](../../activities/ldap.md) for named directory connections,
+  search and write operations, bind behavior, and Studio boundaries.
 - **[Custom Activities](../../extensibility/custom-activities.md)** - Detailed guide on creating activities
 - **[Plugins & Modules](../plugins-modules/README.md)** - Extended guide with more examples
 - **[Architecture Overview](../architecture/README.md)** - Understanding Elsa's architecture

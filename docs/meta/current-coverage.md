@@ -7,7 +7,7 @@ This document summarizes the existing documentation structure and key topics cov
 The documentation currently contains a broad set of markdown pages organized into the following sections:
 
 
-### ACTIVITIES (20 pages)
+### ACTIVITIES (21 pages)
 
 - **>-** (`activities/common-properties.md`)
 - **This section covers all built-in control flow activities.** (`activities/control-flow/README.md`)
@@ -29,6 +29,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Azure Service Bus activities** (`activities/azure-service-bus.md`)
 - **Kafka activities** (`activities/kafka.md`)
 - **MQTT activities** (`activities/mqtt.md`)
+- **LDAP activities** (`activities/ldap.md`)
 
 ### APPLICATION-TYPES (3 pages)
 
@@ -223,6 +224,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ MQTT named connections, topic triggers, text payloads, publishing,
   persisted trigger/bookmark subscriptions, reconnect behavior, and
   server/Studio boundaries
+- ✅ LDAP named connections, bind and TLS configuration, search and write
+  activities, result shapes, and server/Studio boundaries
 - ✅ Diagnostics activities
 
 ### Elsa Studio

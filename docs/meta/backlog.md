@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-27)
+## Slice Inventory (2026-09-28)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -126,15 +126,17 @@ acceptance criterion below is already complete.
   persistence, and guest-invitation boundaries
 - `DOC-111` BPMN authoring and interchange in Elsa Studio
 - `DOC-112` MQTT messaging activities and workflow triggers
+- `DOC-113` LDAP directory activities and connection configuration
 
 ### Available next slices
 
-- None identified during this run's release-source review.
+- None identified beyond the selected DOC-113 slice during this run's
+  release-source review.
 
 ### Recommended next slice
 
-- No distinct next slice is currently queued. Re-inventory the published
-  GitBook and latest release sources on the next run.
+- Re-inventory the published GitBook and latest release sources after DOC-113;
+  no distinct next slice is currently queued.
 
 ### Current run inventory (2026-09-27)
 
@@ -178,6 +180,52 @@ acceptance criterion below is already complete.
   activity reference, and updated coverage metadata.
 - Validated the guide against the immutable Extensions `release/3.9.0`
   source and focused MQTT test project. No new distinct follow-on topic was
+  added during implementation review.
+
+### Current run inventory (2026-09-28)
+
+- The published GitBook is complete through `DOC-112`; no earlier planned
+  slice remains available.
+- The requested `release/3.8.0` is superseded by current `release/3.9.0`
+  branches. The source refs selected for this run are Core
+  `fa68369a2bd34c10f8f60eb4e15a67bba361e5e5`, Studio
+  `aa6b1a3fcb8646950560fc7a7fda836eaf1da3d3`, and Extensions
+  `9d9049e63184a3a1ba5d259061d5b51f2456a841`.
+- Release-source review found the uncovered Extensions `Elsa.Ldap` module.
+  It adds seven LDAP activities, named connection options, optional SSL/TLS,
+  anonymous or basic binding, serializable search-result outputs, and Studio
+  connection-name dropdown metadata. Core and Studio contain no LDAP
+  implementation, and the published GitBook has no LDAP guide or navigation
+  entry.
+- No higher-impact distinct topic was found during the same review. MQTT is
+  already covered by DOC-112; the LDAP module is the next source-backed gap.
+
+### Current run plan (2026-09-28)
+
+- Add one concise LDAP guide for workflow designers and backend integrators.
+  Lead with package installation, `UseLdap` registration, default and named
+  connections, TLS and bind behavior, then document search, compare, add,
+  modify, move, and delete activities with their actual outcomes and output
+  shapes.
+- Explain the Studio boundary precisely: the extension contributes activity
+  metadata and a connection-name dropdown, but does not provide an LDAP
+  administration UI or provision directories. Include DN/filter/scope
+  examples, secret-handling guidance, and operational limitations grounded in
+  the release source.
+- Validate against the immutable 3.9.0 Extensions source and focused tests,
+  add navigation and cross-links, run local Markdown/link/fence checks,
+  complete iterative self-review, then deliver the PR autonomously.
+
+### Current run selection (2026-09-28)
+
+- Selected `DOC-113`: LDAP directory activities and connection configuration.
+
+### Current run completion (2026-09-28)
+
+- Added `activities/ldap.md`, linked it from `SUMMARY.md`, the activity
+  reference, and module guidance, and updated current coverage metadata.
+- Validated the guide against the immutable Extensions `release/3.9.0`
+  source and focused LDAP unit tests. No new distinct follow-on topic was
   added during implementation review.
 
 `DOC-109` was added during the 2026-09-22 inventory. The current permission
