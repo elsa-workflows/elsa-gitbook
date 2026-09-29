@@ -135,6 +135,7 @@ Explore these guides to learn more about using Elsa Studio effectively:
 - **[Workflow Editor](../../studio/workflow-editor/README.md)**: Advanced features of the workflow editor
 - **[Running Workflows](../running-workflows/using-elsa-studio.md)**: How to execute and test your workflows
 - **[BPMN Authoring and Interchange](../bpmn-authoring-and-interchange.md)**: Import, bind, edit, and export BPMN workflows with Elsa Studio
+- **[Output Converters](../extensibility/output-converters.md)**: Convert activity outputs at typed variable and workflow-output bindings
 
 ## Tips for Success
 

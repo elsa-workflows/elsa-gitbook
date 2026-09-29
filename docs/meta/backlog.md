@@ -130,13 +130,64 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- None identified beyond the selected DOC-113 slice during this run's
-  release-source review.
+- `DOC-114` Output converters for typed output bindings.
 
 ### Recommended next slice
 
-- Re-inventory the published GitBook and latest release sources after DOC-113;
-  no distinct next slice is currently queued.
+- `DOC-114` Output converters for typed output bindings, Studio configuration,
+  discovery, validation, and extension authoring.
+
+### Current run inventory (2026-09-29)
+
+- The published GitBook is complete through `DOC-113`; no earlier planned
+  slice remains available.
+- The requested `release/3.8.0` is superseded by the current advertised
+  `release/3.9.0` branches. The source refs selected for this run are Core
+  `0352fd28b41ff072152620bc49f5f91217d109fe`, Studio
+  `08c0fe72b52a28129d6e8f66cb7d05c92c5508f3`, and Extensions
+  `9d9049e63184a3a1ba5d259061d5b51f2456a841`.
+- Release-source review found the Core output-converter contracts, the
+  permissioned `/descriptors/output-converters` endpoint, and Studio's
+  Outputs-tab editor, but the published GitBook has no dedicated guide or
+  navigation entry. Existing pages mention output converters only as a
+  permission or concept reference.
+- The same review found caching and other module-level topics already covered
+  across architecture, clustering, and broker-topology guidance; they remain
+  improvement opportunities, not a higher-value distinct slice for this run.
+
+### Current run plan (2026-09-29)
+
+- Add one concise output-converters guide for activity authors, workflow
+  designers, backend integrators, and operators. Lead with the binding-level
+  runtime model and a complete converter example, then explain registration,
+  stable IDs, settings schemas, Studio Outputs-tab behavior, discovery API and
+  permission, validation/failure behavior, deployment compatibility, and
+  troubleshooting.
+- Ground the guide in the 3.9.0 Core and Studio contracts. Explicitly state
+  that conversion is synchronous, deterministic, side-effect free, and
+  scoped to the selected output binding; it is not a general serialization or
+  workflow-state transformation hook.
+- Validate with focused Core output-converter tests and Studio output-converter
+  tests where feasible, plus changed-page links, navigation targets, balanced
+  fences, source assertions, immutable source links, and iterative self-review.
+
+### Current run selection (2026-09-29)
+
+- Selected `DOC-114`: Output converters for typed output bindings.
+
+### Current run completion (2026-09-29)
+
+- Added `guides/extensibility/output-converters.md`, linked it from
+  `SUMMARY.md`, the Studio guide, and the activity reference, and updated
+  current coverage metadata.
+- Validated the guide against the immutable 3.9.0 Core and Studio source
+  refs, including the runtime binding path, registration contract, discovery
+  endpoint and permission, and Studio Outputs-tab behavior. Core and Studio
+  output-converter tests passed.
+- No additional distinct follow-on topic was added during implementation
+  review. Caching remains a broader consolidation opportunity because the
+  published GitBook already covers its architecture, clustering, and broker
+  invalidation surfaces.
 
 ### Current run inventory (2026-09-27)
 

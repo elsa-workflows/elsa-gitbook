@@ -100,6 +100,7 @@ after the corresponding module is installed and configured.
   search and write activities, result shapes, and server/Studio boundaries.
 - [Diagnostics](diagnostics/README.md) explains the Log activity and where to inspect output.
 - [Custom Activities](../extensibility/custom-activities.md) shows how to add a domain-specific activity to the same catalogue.
+- [Output Converters](../guides/extensibility/output-converters.md) shows how to transform an activity output for one typed binding without changing the activity's native output.
 - [State machines](../guides/state-machines.md) explains states, transitions,
   lifecycle slots, and the dedicated Elsa Studio designer.
 
