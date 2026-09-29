@@ -97,6 +97,7 @@
 * [BPMN Authoring and Interchange](guides/bpmn-authoring-and-interchange.md)
 * [Plugins & Modules](guides/plugins-modules/README.md)
   * [Package Manifests for Extensions](guides/plugins-modules/package-manifests.md)
+  * [Output Converters](guides/extensibility/output-converters.md)
 * [Extensibility](guides/extensibility/modules-and-plugins.md)
   * [DropIns](guides/extensibility/dropins.md)
 * [Testing & Debugging Workflows](guides/testing-debugging.md)

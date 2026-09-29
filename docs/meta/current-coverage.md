@@ -271,6 +271,9 @@ Based on the current structure, the following core concepts are documented:
   API operations, permissions, persistence, concurrency, and guest invitations
 - ✅ BPMN 2.0 import analysis, Studio authoring and binding, runtime trigger
   behavior, document API concurrency, and retained-source export boundaries
+- ✅ Output converters for typed output bindings, Core registration and
+  validation, Studio Outputs-tab configuration, discovery API, and deployment
+  compatibility
 
 ### HTTP Workflows
 - ✅ Programmatic approach
