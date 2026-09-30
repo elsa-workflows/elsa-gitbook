@@ -329,7 +329,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Agents runtime activities, provider/API composition, persistence choices,
   Studio administration, and security boundaries
 - ✅ Proto.Actor workflow runtime, actor-cluster hosting, separate persistence,
-  tenant propagation, and 3.8.0 client limitations
+  tenant propagation, Redis-backed Pub/Sub subscriber storage, and 3.9.0
+  client limitations
 
 ### Expressions
 - ✅ C#, JavaScript, Python, Liquid

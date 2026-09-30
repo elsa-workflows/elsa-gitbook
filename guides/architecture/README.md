@@ -187,8 +187,9 @@ For detailed multitenancy setup, see the [Multitenancy Introduction](../../multi
 
 For actor-based workflow coordination across hosts, see the
 [Proto.Actor Workflow Runtime](protoactor-workflow-runtime.md) guide. It
-documents the additional cluster, remote transport, actor persistence, and
-release-specific client limitations.
+documents the additional cluster, remote transport, actor persistence,
+optional Redis-backed Pub/Sub subscriber storage, and release-specific client
+limitations.
 
 ## System Architecture (Mindmap)
 
