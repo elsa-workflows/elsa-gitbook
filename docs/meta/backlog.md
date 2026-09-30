@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-28)
+## Slice Inventory (2026-09-30)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -127,17 +127,66 @@ acceptance criterion below is already complete.
 - `DOC-111` BPMN authoring and interchange in Elsa Studio
 - `DOC-112` MQTT messaging activities and workflow triggers
 - `DOC-113` LDAP directory activities and connection configuration
+- `DOC-114` Output converters for typed output bindings
 
 ### Available next slices
 
-- `DOC-114` Output converters for typed output bindings.
+- No queued slice remains; perform a fresh release-source inventory next run.
 
 ### Recommended next slice
 
-- `DOC-114` Output converters for typed output bindings, Studio configuration,
-  discovery, validation, and extension authoring.
+- Fresh release-source inventory for the next distinct documentation gap.
 
-### Current run inventory (2026-09-29)
+### Current run inventory (2026-09-30)
+
+- The published GitBook is complete through `DOC-114`; no earlier planned
+  slice remains available.
+- The requested `release/3.8.0` is superseded by the current advertised
+  `release/3.9.0` branches. The source refs selected for this run are Core
+  `bb0b2221d1b6239626af00634951483002a8f3bb`, Studio
+  `e7fb3f717a4d15316674b508e05a47737946bf0e`, and Extensions
+  `9d9049e63184a3a1ba5d259061d5b51f2456a841`.
+- Release-source review found a new `Elsa.Actors.ProtoActor.PubSub.Redis`
+  package and `UseRedisPubSubSubscribersStore` feature extension in 3.9.0.
+  The existing Proto.Actor guide documents only the in-memory subscriber
+  store, still describes 3.8.0, and has no Redis configuration or key-space
+  guidance.
+- Core and Studio do not add a separate Redis Pub/Sub workflow or Studio
+  surface for this slice. The change is an Extensions-hosting capability,
+  so the guide should keep workflow design and Studio boundaries explicit.
+
+### Current run plan (2026-09-30)
+
+- Refresh `guides/architecture/protoactor-workflow-runtime.md` to 3.9.0,
+  preserve and revalidate its runtime/client limitations, and add one concise
+  Redis Pub/Sub subscriber-store section for platform integrators and CTOs.
+- Show the package, `IConnectionMultiplexer` registration, feature call,
+  shared database/cluster requirements, default key format, custom key
+  formatter, restart/migration durability boundary, and troubleshooting.
+- Validate against the exact release refs, changed-page links, navigation
+  targets, balanced fences, source assertions, immutable source links, and
+  iterative self-review. Run any focused source tests that are practical.
+
+### Current run selection (2026-09-30)
+
+- Selected `DOC-115`: Redis-backed Proto.Actor Pub/Sub subscriber storage.
+
+### Current run completion (2026-09-30)
+
+- Refreshed `guides/architecture/protoactor-workflow-runtime.md` to the
+  advertised 3.9.0 source refs and documented the optional
+  `Elsa.Actors.ProtoActor.PubSub.Redis` package, DI registration, shared Redis
+  requirements, key format/customization, durability boundary, and Studio
+  scope. Updated the architecture cross-reference and current-coverage
+  metadata.
+- Validated the exact Core, Studio, and Extensions refs; Redis subscriber
+  store tests passed 10/10; changed-page links, all 195 SUMMARY targets,
+  balanced fences, whitespace, source assertions, and 16 immutable GitHub
+  source links passed. No additional distinct follow-on topic was discovered.
+- Self-review pass 1 fixed an incomplete custom-database example and added
+  namespace imports; pass 2 found no remaining high-priority issue.
+
+### Previous run inventory (2026-09-29)
 
 - The published GitBook is complete through `DOC-113`; no earlier planned
   slice remains available.
@@ -155,7 +204,7 @@ acceptance criterion below is already complete.
   across architecture, clustering, and broker-topology guidance; they remain
   improvement opportunities, not a higher-value distinct slice for this run.
 
-### Current run plan (2026-09-29)
+### Previous run plan (2026-09-29)
 
 - Add one concise output-converters guide for activity authors, workflow
   designers, backend integrators, and operators. Lead with the binding-level
@@ -171,11 +220,11 @@ acceptance criterion below is already complete.
   tests where feasible, plus changed-page links, navigation targets, balanced
   fences, source assertions, immutable source links, and iterative self-review.
 
-### Current run selection (2026-09-29)
+### Previous run selection (2026-09-29)
 
 - Selected `DOC-114`: Output converters for typed output bindings.
 
-### Current run completion (2026-09-29)
+### Previous run completion (2026-09-29)
 
 - Added `guides/extensibility/output-converters.md`, linked it from
   `SUMMARY.md`, the Studio guide, and the activity reference, and updated
