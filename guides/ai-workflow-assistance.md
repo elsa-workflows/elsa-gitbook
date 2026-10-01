@@ -12,7 +12,7 @@ reviewable workflow proposals. It is a server-mediated feature: Studio sends
 references and messages to Elsa Server, the AI Host resolves authorized
 context and tools, and a configured provider performs the model interaction.
 
-This guide describes the implementation shipped in `release/3.8.0`. Treat it
+This guide describes the implementation shipped in `release/3.9.0`. Treat it
 as a capability and deployment guide, not as a promise that every planned AI
 API is already available.
 
@@ -228,25 +228,35 @@ warnings, graph diff, actor, tenant, and (for updates) the baseline workflow
 version. They produce either a validated or blocked proposal; they do not
 persist a workflow definition.
 
-The current `release/3.8.0` implementation exposes these server endpoints:
+The current `release/3.9.0` implementation exposes these server endpoints:
 
 - `GET /ai/capabilities` — advertises AI capabilities and attachment kinds to
-  Studio; requires `ai:capabilities:view`.
+  Studio; requires `ai/capabilities:view`.
 - `GET /ai/tools?agent=...` — lists tools visible to the current actor, tenant,
-  and agent; requires `ai:tools:view`.
+  and agent; requires `ai/tools:view`.
 - `POST /ai/chat` — starts or reconnects a streamed chat turn; requires
-  `ai:chat`.
+  `ai/chat:execute`.
+
+These are Core 3.9.0 resource-and-verb claims: the resource is first and the
+verb is after the colon. Grant the smallest claims the Studio user needs,
+usually all three for a Weaver user:
+
+```text
+ai/capabilities:view
+ai/tools:view
+ai/chat:execute
+```
+
+The AI Host registers these three resources in the permission catalog. A
+resource wildcard such as `ai/*:view` can cover the two read endpoints, but
+it does not grant chat execution. Use the deployed permission catalog as the
+authority when a host adds modules or changes role grants.
 
 The release does not yet expose proposal detail, approve, reject, or apply
 endpoints. Studio can display proposal events, but its Approve, Reject, and
 Apply buttons remain disabled. Do not document or build an integration around
 `/ai/proposals/{id}/approve` or `/ai/proposals/{id}/apply` until those endpoints
 land in a released backend.
-
-The code also defines proposal permission names (`ai:proposals:view`,
-`ai:proposals:approve`, and `ai:proposals:apply`) for the governed action
-surface. Their presence does not mean that the corresponding action routes
-exist in this release.
 
 ## Security and governance
 
@@ -310,19 +320,19 @@ configured grace window.
 
 ## Release-source validation
 
-This page was checked against the following `release/3.8.0` snapshots:
+This page was checked against the following `release/3.9.0` snapshots:
 
-- Core [`5429008d`](https://github.com/elsa-workflows/elsa-core/tree/5429008d98a56afd29b4fd11107f7760710b1a64):
-  - [AI Host README](https://github.com/elsa-workflows/elsa-core/blob/5429008d98a56afd29b4fd11107f7760710b1a64/src/modules/Elsa.AI.Host/README.md)
-  - [Host options](https://github.com/elsa-workflows/elsa-core/blob/5429008d98a56afd29b4fd11107f7760710b1a64/src/modules/Elsa.AI.Host/Options/AIHostOptions.cs)
-  - [AI endpoints](https://github.com/elsa-workflows/elsa-core/tree/5429008d98a56afd29b4fd11107f7760710b1a64/src/modules/Elsa.AI.Host/Endpoints/AI)
-  - [Copilot provider](https://github.com/elsa-workflows/elsa-core/tree/5429008d98a56afd29b4fd11107f7760710b1a64/src/modules/Elsa.AI.Copilot)
-- Studio [`d25f0aae`](https://github.com/elsa-workflows/elsa-studio/tree/d25f0aaeb5f14af6c5938d173aae828d87ebad5c):
-  - [Weaver module](https://github.com/elsa-workflows/elsa-studio/tree/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.AI)
-  - [Weaver page](https://github.com/elsa-workflows/elsa-studio/blob/d25f0aaeb5f14af6c5938d173aae828d87ebad5c/src/modules/Elsa.Studio.AI/UI/Pages/Weaver.razor)
-- Extensions [`335a2649`](https://github.com/elsa-workflows/elsa-extensions/tree/335a26495318f6ee1528bf2723b7333c753ce9a2):
-  - [Agents module](https://github.com/elsa-workflows/elsa-extensions/tree/335a26495318f6ee1528bf2723b7333c753ce9a2/src/modules/agents)
+- Core [`bb0b2221`](https://github.com/elsa-workflows/elsa-core/tree/bb0b2221d1b6239626af00634951483002a8f3bb):
+  - [AI Host README](https://github.com/elsa-workflows/elsa-core/blob/bb0b2221d1b6239626af00634951483002a8f3bb/src/modules/Elsa.AI.Host/README.md)
+  - [Host options](https://github.com/elsa-workflows/elsa-core/blob/bb0b2221d1b6239626af00634951483002a8f3bb/src/modules/Elsa.AI.Host/Options/AIHostOptions.cs)
+  - [AI endpoints](https://github.com/elsa-workflows/elsa-core/tree/bb0b2221d1b6239626af00634951483002a8f3bb/src/modules/Elsa.AI.Host/Endpoints/AI)
+  - [AI permission resources](https://github.com/elsa-workflows/elsa-core/blob/bb0b2221d1b6239626af00634951483002a8f3bb/src/modules/Elsa.AI.Host/Permissions/AIResourcePermissions.cs)
+  - [Copilot provider](https://github.com/elsa-workflows/elsa-core/tree/bb0b2221d1b6239626af00634951483002a8f3bb/src/modules/Elsa.AI.Copilot)
+- Studio [`e7fb3f71`](https://github.com/elsa-workflows/elsa-studio/tree/e7fb3f717a4d15316674b508e05a47737946bf0e):
+  - [Weaver module](https://github.com/elsa-workflows/elsa-studio/tree/e7fb3f717a4d15316674b508e05a47737946bf0e/src/modules/Elsa.Studio.AI)
+  - [Weaver API](https://github.com/elsa-workflows/elsa-studio/blob/e7fb3f717a4d15316674b508e05a47737946bf0e/src/modules/Elsa.Studio.AI/Client/IWeaverApi.cs)
+- Extensions [`9d9049e6`](https://github.com/elsa-workflows/elsa-extensions/tree/9d9049e63184a3a1ba5d259061d5b51f2456a841):
+  - [Agents module](https://github.com/elsa-workflows/elsa-extensions/tree/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/agents)
 
-The latest released branch remained `release/3.8.0` in all three source
-repositories; the refs had advanced since the previous inventory, so this page
-uses the commits above.
+The requested `release/3.8.0` branch is superseded by the advertised
+`release/3.9.0` branches, so this refresh uses the 3.9.0 commits above.

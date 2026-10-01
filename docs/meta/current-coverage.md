@@ -240,8 +240,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Custom activity icons through Studio display-settings providers
 - ✅ Studio activity port providers for dynamic outcomes and embedded activities
 - ✅ Optional Workflow Context module with provider selection and activity settings
-- ✅ Weaver AI workspace integration, grounded context, tool governance, and
-  current proposal-review boundary
+- ✅ Weaver AI workspace integration, grounded context, 3.9.0 resource/verb
+  permissions, tool governance, and current proposal-review boundary
 - ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility
 
 ### Hosting & Operations
@@ -322,8 +322,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Console Logs diagnostics, managed stdout/stderr capture, redaction,
   bounded buffering, workflow metadata, REST/SignalR access, and Studio
   operations
-- ✅ Weaver AI Host and Studio workflow assistance guide, including provider,
-  persistence, permissions, and audit boundaries
+- ✅ Weaver AI Host and Studio workflow assistance guide, including 3.9.0
+  provider, persistence, resource/verb permissions, and audit boundaries
 - ✅ Workflow-definition labels, Studio management, API assignment, filtering,
   persistence, and permission boundaries
 - ✅ Agents runtime activities, provider/API composition, persistence choices,
