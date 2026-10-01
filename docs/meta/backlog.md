@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-09-30)
+## Slice Inventory (2026-10-01)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -131,45 +131,88 @@ acceptance criterion below is already complete.
 
 ### Available next slices
 
-- No queued slice remains; perform a fresh release-source inventory next run.
+- `DOC-117` Studio environment selection and remote-backend routing.
+- `DOC-118` Proto.Actor distributed-cache invalidation and cluster signals.
 
 ### Recommended next slice
 
-- Fresh release-source inventory for the next distinct documentation gap.
+- `DOC-117` Studio environment selection and remote-backend routing.
 
-### Current run inventory (2026-09-30)
+### Newly discovered topics
 
-- The published GitBook is complete through `DOC-114`; no earlier planned
+- `DOC-117` Studio's 3.9.0 Environments module loads a server-provided
+  environment catalog, switches the active remote backend, and scopes feature
+  discovery to that environment. The GitBook has no dedicated guide; the
+  hosting/platform boundary and the `/environments` contract need source
+  validation before publication.
+- Persistence vNext is present in Core 3.9.0, but its release source still
+  carries a draft feature specification and no public host workflow was found
+  during this inventory. Keep it as a release-status research item rather than
+  documenting it as a generally available persistence provider.
+- `DOC-118` Extensions 3.9.0 includes a Proto.Actor distributed-cache feature
+  that publishes cache-key invalidation signals to each host's local cache.
+  It is distinct from `DOC-115` Redis subscriber metadata storage and needs a
+  focused guide for cluster operators. Document signal delivery and the
+  configured-cluster boundary without implying cached-value replication,
+  durability, or exactly-once delivery.
+
+### Current run inventory (2026-10-01)
+
+- The published GitBook is complete through `DOC-115`; no earlier planned
   slice remains available.
 - The requested `release/3.8.0` is superseded by the current advertised
-  `release/3.9.0` branches. The source refs selected for this run are Core
+  `release/3.9.0` branches.
+- The source refs selected for this run are Core
   `bb0b2221d1b6239626af00634951483002a8f3bb`, Studio
   `e7fb3f717a4d15316674b508e05a47737946bf0e`, and Extensions
   `9d9049e63184a3a1ba5d259061d5b51f2456a841`.
-- Release-source review found a new `Elsa.Actors.ProtoActor.PubSub.Redis`
-  package and `UseRedisPubSubSubscribersStore` feature extension in 3.9.0.
-  The existing Proto.Actor guide documents only the in-memory subscriber
-  store, still describes 3.8.0, and has no Redis configuration or key-space
-  guidance.
-- Core and Studio do not add a separate Redis Pub/Sub workflow or Studio
-  surface for this slice. The change is an Extensions-hosting capability,
-  so the guide should keep workflow design and Studio boundaries explicit.
+- The existing Weaver guide is source-pinned to 3.8.0. Core 3.9.0 changed
+  the AI permission surface from the older aggregate permission constants to
+  resource/verb permissions and changed identity/capability handling in the
+  AI endpoints. The guide needs a claim-by-claim 3.9.0 refresh, not a new AI
+  product promise.
+- Studio 3.9.0 still treats Weaver as a server-mediated feature. It provides
+  the remote client/module and authenticated backend routing; it does not host
+  provider credentials or apply AI proposals locally. The AI Agents guide is
+  related but remains a separate extension surface.
 
-### Current run plan (2026-09-30)
+### Current run plan (2026-10-01)
 
-- Refresh `guides/architecture/protoactor-workflow-runtime.md` to 3.9.0,
-  preserve and revalidate its runtime/client limitations, and add one concise
-  Redis Pub/Sub subscriber-store section for platform integrators and CTOs.
-- Show the package, `IConnectionMultiplexer` registration, feature call,
-  shared database/cluster requirements, default key format, custom key
-  formatter, restart/migration durability boundary, and troubleshooting.
-- Validate against the exact release refs, changed-page links, navigation
-  targets, balanced fences, source assertions, immutable source links, and
-  iterative self-review. Run any focused source tests that are practical.
+- Refresh `guides/ai-workflow-assistance.md` to the exact 3.9.0 Core and
+  Studio contracts, keeping the practical Weaver workflow for designers,
+  domain specialists, technical users, and operators.
+- Reconcile provider composition, persistence defaults, identity/tenant
+  behavior, capabilities/tools/chat permissions, proposal action boundaries,
+  Studio module registration, and troubleshooting. Keep the distinction from
+  the separate `Elsa.Agents.*` extension explicit.
+- Validate against immutable release-source links, endpoint/permission
+  assertions, changed-page links, navigation targets, balanced fences,
+  whitespace, and iterative self-review. Run focused Core/Studio AI tests if
+  the local dependency cache permits.
 
-### Current run selection (2026-09-30)
+### Current run selection (2026-10-01)
 
-- Selected `DOC-115`: Redis-backed Proto.Actor Pub/Sub subscriber storage.
+- Selected `DOC-116`: Weaver AI workflow assistance source refresh to 3.9.0.
+
+### Current run completion (2026-10-01)
+
+- Refreshed `guides/ai-workflow-assistance.md` from the stale 3.8.0 snapshot to
+  the advertised 3.9.0 Core, Studio, and Extensions commits. Corrected the
+  endpoint permission claims to `ai/capabilities:view`, `ai/tools:view`, and
+  `ai/chat:execute`; removed the unreleased proposal-permission implication;
+  and updated provider, persistence, Studio routing, and source references.
+- Updated `docs/meta/current-coverage.md` to identify the 3.9.0 permission
+  boundary. Core AI Host unit tests passed 50/50; changed-page links, all 225
+  Markdown relative links, all 195 SUMMARY targets, balanced fences,
+  whitespace, source assertions, and 11 immutable GitHub links also passed.
+  Studio AI tests were not run because the shared build-slot wrapper remained
+  occupied by unrelated worktrees; the attempt was stopped after 60 seconds.
+- Self-review pass 1 found and fixed the stale Studio source path and the
+  incomplete release-branch statement in the plan; pass 2 found no remaining
+  high-priority issue. The delegated inventory also added `DOC-118` as a
+  distinct next-slice candidate.
+- The next inventory should choose between `DOC-117` and `DOC-118`; the
+  latter was newly confirmed by the delegated release-source review.
 
 ### Current run completion (2026-09-30)
 
