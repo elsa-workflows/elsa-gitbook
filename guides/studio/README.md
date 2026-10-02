@@ -126,6 +126,7 @@ To start working with Elsa Studio:
 Explore these guides to learn more about using Elsa Studio effectively:
 
 - **[Expressions](expressions.md)**: Learn how to use JavaScript and C# expressions to reference variables and create dynamic workflows
+- **[Environments](environments.md)**: Connect one Studio host to multiple Elsa Server backends and switch between them
 - **[Customization](customization.md)**: Understand the main Studio customization seams in release 3.8.0, including host composition, menus, widgets, branding, and editor extensibility
 - **[Custom Activity Icons](../extensibility/custom-icons.md)**: Add Studio-side icons for custom activities
 - **[Custom UI Components](custom-ui-components.md)**: Create custom property editors for activity inputs
@@ -160,6 +161,7 @@ Explore these guides to learn more about using Elsa Studio effectively:
 Ready to dive deeper? Here are some recommended paths:
 
 - **[Expressions guide](expressions.md)** - Learn how to work with variables and create dynamic workflows using JavaScript and C# expressions
+- **[Environments guide](environments.md)** - Configure optional multi-backend switching for a Studio host
 - **[Customization](customization.md)** - Learn how to change Studio composition, branding, widgets, and editor behavior without forking the shell
 - **[Custom UI Components](custom-ui-components.md)** - Learn how to create custom property editors for specialized activity inputs
 - **[Integration guide](integration/README.md)** - Discover how to integrate Elsa Studio into your existing React, Angular, Blazor, or MVC application

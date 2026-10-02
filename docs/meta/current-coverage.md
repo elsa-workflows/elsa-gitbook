@@ -96,7 +96,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Packages** (`getting-started/packages.md`)
 - **Prerequisites** (`getting-started/prerequisites.md`)
 
-### GUIDES (39 pages)
+### GUIDES (40 pages)
 
 - **External Application Interaction** (`guides/external-application-interaction.md`)
 - **HTTP Workflows** (`guides/http-workflows/README.md`)
@@ -129,6 +129,7 @@ The documentation currently contains a broad set of markdown pages organized int
 - **Altering a Running Workflow Instance** (`guides/running-workflows/altering-workflow-instances.md`)
 - **Workflow Definition Version Lifecycle** (`guides/running-workflows/workflow-definition-lifecycle.md`)
 - **Using Elsa Studio** (`guides/running-workflows/using-elsa-studio.md`)
+- **Studio Environments** (`guides/studio/environments.md`)
 - **OpenAPI for HTTP workflow triggers** (`guides/http-workflows/openapi.md`)
 - **Weaver and AI Workflow Assistance** (`guides/ai-workflow-assistance.md`)
 - **Agents Activities and Studio Administration** (`guides/ai-agents.md`)
@@ -243,6 +244,7 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Weaver AI workspace integration, grounded context, 3.9.0 resource/verb
   permissions, tool governance, and current proposal-review boundary
 - ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility
+- ✅ Optional Studio Environments module, `/environments` catalog contract, backend switching, and environment-scoped feature discovery
 
 ### Hosting & Operations
 - ✅ Distributed hosting
