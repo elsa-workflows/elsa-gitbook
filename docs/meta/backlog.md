@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-10-01)
+## Slice Inventory (2026-10-02)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -128,6 +128,8 @@ acceptance criterion below is already complete.
 - `DOC-112` MQTT messaging activities and workflow triggers
 - `DOC-113` LDAP directory activities and connection configuration
 - `DOC-114` Output converters for typed output bindings
+- `DOC-115` Proto.Actor Redis Pub/Sub subscriber storage
+- `DOC-116` Weaver AI workflow assistance source refresh to 3.9.0
 
 ### Available next slices
 
@@ -213,6 +215,39 @@ acceptance criterion below is already complete.
   distinct next-slice candidate.
 - The next inventory should choose between `DOC-117` and `DOC-118`; the
   latter was newly confirmed by the delegated release-source review.
+
+### Current run inventory (2026-10-02)
+
+- The published GitBook is complete through `DOC-116`; `DOC-117` and
+  `DOC-118` remain the available focused slices.
+- The requested `release/3.8.0` is superseded by the current advertised
+  `release/3.9.0` branches. Fresh refs for this run are Core
+  `9fbbef9411eb313c40e1aa301044bb7dc8dd7a36`, Studio
+  `bd443662bb5f8a3e07ca1c489f39a37527526200`, and Extensions
+  `9d9049e63184a3a1ba5d259061d5b51f2456a841`.
+- DOC-117 remains the recommended slice: Studio's optional Environments
+  module has a concise host-registration contract, a server-provided
+  `/environments` response, environment-specific remote API routing, and
+  feature-catalog implications that are not covered by the existing Studio
+  integration pages.
+- DOC-118 remains queued as a distinct operator-facing slice. Persistence
+  vNext remains research-only because its 3.9.0 source still carries a draft
+  specification and no public host workflow was found.
+
+### Current run plan (2026-10-02)
+
+- Add `guides/studio/environments.md` for developers hosting Elsa Studio with
+  more than one Elsa Server backend. Lead with when to use the module and the
+  two-line host registration, then document the `/environments` response,
+  authentication, backend switching, feature discovery, failure behavior, and
+  Studio/server boundaries.
+- Validate every setup and behavior claim against the immutable Studio
+  `release/3.9.0` source, link the guide from Studio navigation, update current
+  coverage, and keep DOC-118 queued for a later run.
+
+### Current run selection (2026-10-02)
+
+- Selected `DOC-117`: Studio environment selection and remote-backend routing.
 
 ### Current run completion (2026-09-30)
 

@@ -213,6 +213,7 @@
 ## Studio
 
 * [Studio Tour & Troubleshooting](studio/studio-tour-troubleshooting.md)
+* [Studio Environments](guides/studio/environments.md)
 * [Design](studio/design/README.md)
   * [Workflow Editor Design Notes](studio/design/workflow-editor-3.5-preview.md)
   * [Activity Pickers](studio/design/activity-pickers-3.7-preview.md)
