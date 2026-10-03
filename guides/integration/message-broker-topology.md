@@ -232,7 +232,10 @@ orphaned resources with an ownership-aware operator or deployment process.
 `distributedCaching.UseMassTransit()` is not workflow-message processing. When
 a cache signal is published, Elsa sends a `TriggerChangeTokenSignal` containing
 the cache key. Each node consumes the signal and invokes its local change-token
-handler.
+handler. Hosts that use Proto.Actor for this transport follow the separate
+[Proto.Actor distributed-cache invalidation guide](../architecture/protoactor-distributed-cache.md);
+that path publishes the key through a Proto.Actor topic to a member-local
+invalidator actor.
 
 The released extensions feature registers the temporary consumer name
 `elsa-trigger-change-token-signal`; the selected MassTransit transport adds the

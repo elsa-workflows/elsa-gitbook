@@ -116,7 +116,15 @@ Admin updates workflow via Node 1:
 - Node 3: Receives event → Clears local cache ✓
 ```
 
-**Result:** All nodes use the updated workflow definition immediately.
+**Result:** After each node receives the invalidation signal, subsequent reads
+use the updated workflow definition. The deployment should still test signal
+delivery and cache behavior during restarts or transport failures.
+
+Proto.Actor is another release-backed transport for the same cache-key
+invalidation boundary. It uses a member-local invalidator actor in a shared
+Proto.Actor cluster rather than a MassTransit broker. See [Proto.Actor
+distributed-cache invalidation](../architecture/protoactor-distributed-cache.md)
+when the deployment uses that transport.
 
 ### How Elsa Mitigates These Risks
 

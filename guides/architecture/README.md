@@ -191,6 +191,12 @@ documents the additional cluster, remote transport, actor persistence,
 optional Redis-backed Pub/Sub subscriber storage, and release-specific client
 limitations.
 
+For cache-key invalidation across those hosts, see
+[Proto.Actor Distributed-Cache Invalidation](protoactor-distributed-cache.md).
+It documents the separate distributed-cache registration, member-local
+invalidator actor, cluster signal path, and the boundary between invalidation
+signals and cached values.
+
 ## System Architecture (Mindmap)
 
 Here's a textual representation of Elsa's core functionality and surrounding modules:
