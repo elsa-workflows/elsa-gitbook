@@ -15,7 +15,7 @@ distributed-lock providers.
 
 The implementation is shipped by the `Elsa.Workflows.Runtime.ProtoActor` and
 `Elsa.Actors.ProtoActor` modules in
-[`elsa-extensions` release/3.9.0](https://github.com/elsa-workflows/elsa-extensions/tree/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules).
+[`elsa-extensions` release/3.9.0](https://github.com/elsa-workflows/elsa-extensions/tree/aa646675043fc37e01936c760ad97522d9097a46/src/modules).
 Elsa Studio has no Proto.Actor-specific module in the same release; Studio
 continues to use the server's normal HTTP API.
 
@@ -68,9 +68,9 @@ The two registrations are intentionally separate. The runtime feature sets
 the workflow runtime implementation, while the actor feature creates the
 `ActorSystem` and registers the `Cluster`. The release source shows both
 extension methods in
-[`WorkflowRuntimeFeatureExtensions.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Extensions/WorkflowRuntimeFeatureExtensions.cs)
+[`WorkflowRuntimeFeatureExtensions.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Extensions/WorkflowRuntimeFeatureExtensions.cs)
 and
-[`ProtoActorFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/actors/Elsa.Actors.ProtoActor/Features/ProtoActorFeature.cs).
+[`ProtoActorFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/actors/Elsa.Actors.ProtoActor/Features/ProtoActorFeature.cs).
 
 ### Development defaults
 
@@ -79,7 +79,7 @@ If you omit the `PersistenceProvider`, the actor feature uses
 it uses Proto.Actor's in-memory test provider and binds remote transport to
 localhost. Those defaults are useful for a single-process development host;
 they are not a multi-node deployment configuration. They are defined in
-[`ProtoActorFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/actors/Elsa.Actors.ProtoActor/Features/ProtoActorFeature.cs).
+[`ProtoActorFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/actors/Elsa.Actors.ProtoActor/Features/ProtoActorFeature.cs).
 
 ## Persist Pub/Sub subscribers in Redis
 
@@ -176,9 +176,9 @@ transport. Studio has no Redis-specific configuration surface in the 3.9.0
 source; designers continue to work with the server's normal workflow API.
 
 The extension points are implemented by
-[`UseRedisPubSubSubscribersStore`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/actors/Elsa.Actors.ProtoActor.PubSub.Redis/Extensions/ProtoActorFeatureExtensions.cs),
-[`RedisPubSubSubscribersStoreFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/actors/Elsa.Actors.ProtoActor.PubSub.Redis/Features/RedisPubSubSubscribersStoreFeature.cs),
-and [`RedisSubscribersStore`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/actors/Elsa.Actors.ProtoActor.PubSub.Redis/Services/RedisSubscribersStore.cs).
+[`UseRedisPubSubSubscribersStore`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/actors/Elsa.Actors.ProtoActor.PubSub.Redis/Extensions/ProtoActorFeatureExtensions.cs),
+[`RedisPubSubSubscribersStoreFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/actors/Elsa.Actors.ProtoActor.PubSub.Redis/Features/RedisPubSubSubscribersStoreFeature.cs),
+and [`RedisSubscribersStore`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/actors/Elsa.Actors.ProtoActor.PubSub.Redis/Services/RedisSubscribersStore.cs).
 
 ## Configure a multi-host cluster
 
@@ -207,9 +207,9 @@ The Kubernetes provider and the advertised host pattern are the same approach
 used by the release workbench. In Kubernetes, supply the pod IP or another
 reachable address through deployment configuration; do not advertise
 `localhost` to other pods. See the workbench's
-[`ProtoActor` setup](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/workbench/Elsa.Server.Web/Program.cs#L582-L606)
+[`ProtoActor` setup](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/workbench/Elsa.Server.Web/Program.cs#L582-L606)
 and the module's
-[`ProtoActorFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/actors/Elsa.Actors.ProtoActor/Features/ProtoActorFeature.cs#L35-L145)
+[`ProtoActorFeature`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/actors/Elsa.Actors.ProtoActor/Features/ProtoActorFeature.cs#L35-L145)
 for the release-backed extension points.
 
 `ClusterName`, the cluster-provider choice, remote addressing, and actor
@@ -224,7 +224,7 @@ The client addresses a virtual actor named from the workflow instance ID, and
 the actor loads workflow state and the workflow graph before running or
 resuming it. The actor handles create, run, create-and-run, cancel, stop,
 delete, export, and import messages in the generated
-[`WorkflowInstance` protocol](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Proto/WorkflowInstance.proto).
+[`WorkflowInstance` protocol](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Proto/WorkflowInstance.proto).
 
 This does not make all Elsa services actor-based. Workflow state is still
 created and saved through `IWorkflowInstanceManager`, using the workflow
@@ -233,10 +233,10 @@ management/runtime persistence configured for the host. The actor feature's
 both deliberately when you need restart durability.
 
 The runtime implementation and the workflow actor are visible in
-[`ProtoActorWorkflowRuntime.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowRuntime.cs),
-[`ProtoActorWorkflowClient.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowClient.cs),
+[`ProtoActorWorkflowRuntime.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowRuntime.cs),
+[`ProtoActorWorkflowClient.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowClient.cs),
 and
-[`WorkflowInstance.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Actors/WorkflowInstance.cs).
+[`WorkflowInstance.cs`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Actors/WorkflowInstance.cs).
 
 ### Keep related infrastructure separate
 
@@ -252,6 +252,9 @@ and
   transports. The release workbench can enable Proto.Actor for distributed
   cache invalidation independently of selecting it as the workflow runtime.
 
+For the cache-specific registration, signal path, and troubleshooting flow,
+see [Proto.Actor distributed-cache invalidation](protoactor-distributed-cache.md).
+
 ## Tenant propagation
 
 When an Elsa tenant is active, the Proto.Actor workflow client adds the tenant
@@ -261,9 +264,9 @@ keeps the actor's Elsa services aligned with the tenant that initiated the
 operation.
 
 The propagation path is implemented in
-[`ProtoActorWorkflowClient`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowClient.cs#L66-L102)
+[`ProtoActorWorkflowClient`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowClient.cs#L66-L102)
 and
-[`TenantScopeMiddleware`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/actors/Elsa.Actors.ProtoActor/Middleware/TenantScopeMiddleware.cs).
+[`TenantScopeMiddleware`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/actors/Elsa.Actors.ProtoActor/Middleware/TenantScopeMiddleware.cs).
 Configure Elsa's tenant resolution before relying on this behavior, and test
 cross-tenant requests at the API boundary.
 
@@ -282,7 +285,7 @@ Do not build application logic that assumes those two client methods work when
 running the 3.9.0 Proto.Actor runtime. Use the supported API path for the
 operation or choose another runtime until the release changes. This limitation
 is visible in the release
-[`ProtoActorWorkflowClient`](https://github.com/elsa-workflows/elsa-extensions/blob/9d9049e63184a3a1ba5d259061d5b51f2456a841/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowClient.cs#L52-L65).
+[`ProtoActorWorkflowClient`](https://github.com/elsa-workflows/elsa-extensions/blob/aa646675043fc37e01936c760ad97522d9097a46/src/modules/runtimes/Elsa.Workflows.Runtime.ProtoActor/Services/ProtoActorWorkflowClient.cs#L52-L65).
 
 There is no Proto.Actor-specific Studio setting in the 3.9.0
 [Studio release source](https://github.com/elsa-workflows/elsa-studio/tree/e7fb3f717a4d15316674b508e05a47737946bf0e/src/modules).

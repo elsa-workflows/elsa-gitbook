@@ -39,6 +39,7 @@
   * [Runtime Coordination Storage](guides/architecture/runtime-coordination-storage.md)
   * [Standalone and Modular Hosting](guides/architecture/standalone-and-modular-hosting.md)
   * [Proto.Actor Workflow Runtime](guides/architecture/protoactor-workflow-runtime.md)
+  * [Proto.Actor Distributed-Cache Invalidation](guides/architecture/protoactor-distributed-cache.md)
 * [Onboarding](guides/onboarding/README.md)
   * [Hosting Elsa in an Existing App](guides/onboarding/hosting-elsa-in-existing-app.md)
 * [Authentication & Authorization](guides/authentication/README.md)

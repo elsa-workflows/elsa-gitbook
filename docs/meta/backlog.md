@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-10-02)
+## Slice Inventory (2026-10-03)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -130,15 +130,18 @@ acceptance criterion below is already complete.
 - `DOC-114` Output converters for typed output bindings
 - `DOC-115` Proto.Actor Redis Pub/Sub subscriber storage
 - `DOC-116` Weaver AI workflow assistance source refresh to 3.9.0
+- `DOC-117` Studio environment selection and remote-backend routing
+- `DOC-118` Proto.Actor distributed-cache invalidation and cluster signals
 
 ### Available next slices
 
-- `DOC-117` Studio environment selection and remote-backend routing.
-- `DOC-118` Proto.Actor distributed-cache invalidation and cluster signals.
+- No focused slice remains from the current inventory; run a fresh
+  release-source inventory next time.
 
 ### Recommended next slice
 
-- `DOC-117` Studio environment selection and remote-backend routing.
+- Run a fresh release-source inventory rather than assuming another topic is
+  available.
 
 ### Newly discovered topics
 
@@ -248,6 +251,65 @@ acceptance criterion below is already complete.
 ### Current run selection (2026-10-02)
 
 - Selected `DOC-117`: Studio environment selection and remote-backend routing.
+
+### Current run inventory (2026-10-03)
+
+- The published GitBook now includes `DOC-117` through the merged Studio
+  Environments guide. `DOC-118` is the only focused slice still available;
+  earlier planned slices are covered or substantially covered.
+- The requested `release/3.8.0` is superseded by the currently advertised
+  `release/3.9.0` branches. Fresh refs for this run are Core
+  `9fbbef9411eb313c40e1aa301044bb7dc8dd7a36`, Studio
+  `bd443662bb5f8a3e07ca1c489f39a37527526200`, and Extensions
+  `aa646675043fc37e01936c760ad97522d9097a46`.
+- Release-source review confirms that `DOC-118` is distinct from the covered
+  Redis Pub/Sub subscriber-storage slice: the Proto.Actor distributed-cache
+  feature publishes cache-key change-token signals to each host's local cache
+  actor. No additional distinct source-backed topic was found during this
+  inventory. Persistence vNext remains research-only because its release
+  source still carries a draft specification and no public host workflow was
+  found.
+
+### Current run plan (2026-10-03)
+
+- Add a focused operator/developer guide for Proto.Actor distributed-cache
+  invalidation. Lead with when to enable it, the minimal registration, and
+  the signal path from a changed cache key to each host's local change-token
+  handler.
+- Explain the required shared Proto.Actor cluster boundary, local-cache
+  semantics, package/module composition, and troubleshooting. Explicitly
+  distinguish cache-key invalidation from cached-value replication, durable
+  storage, workflow persistence, message processing, and exactly-once
+  delivery.
+- Validate the guide against immutable Core, Studio, and Extensions
+  `release/3.9.0` source links, focused Extensions tests where feasible,
+  changed-page links, navigation targets, balanced fences, whitespace, and
+  iterative self-review. Keep the existing MassTransit cache-invalidation
+  guidance accurate and cross-link the two transport choices.
+
+### Current run selection (2026-10-03)
+
+- Selected `DOC-118`: Proto.Actor distributed-cache invalidation and cluster
+  signals.
+
+### Current run completion (2026-10-03)
+
+- Added `guides/architecture/protoactor-distributed-cache.md` for the 3.9.0
+  Proto.Actor cache-key signal path, member-local invalidator lifecycle,
+  cluster requirements, operational boundaries, and troubleshooting.
+- Linked the guide from architecture navigation, the Proto.Actor runtime guide,
+  the broker-topology guide, and clustering guidance; updated current
+  coverage and marked `DOC-118` covered.
+- Validated the current Core `9fbbef9411eb313c40e1aa301044bb7dc8dd7a36`,
+  Studio `bd443662bb5f8a3e07ca1c489f39a37527526200`, and Extensions
+  `aa646675043fc37e01936c760ad97522d9097a46` release refs. Extensions
+  distributed-cache integration tests passed `8/8`; source assertions,
+  changed-page links, all SUMMARY targets, balanced fences, whitespace, and
+  immutable source links passed.
+- Self-review pass 1 fixed an overbroad clustering freshness statement by
+  qualifying it on signal receipt. Final self-review found no remaining
+  high-priority factual, source-grounding, link, structure, regression, or
+  formatting issues.
 
 ### Current run completion (2026-09-30)
 

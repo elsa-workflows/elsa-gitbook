@@ -333,6 +333,8 @@ Based on the current structure, the following core concepts are documented:
 - ✅ Proto.Actor workflow runtime, actor-cluster hosting, separate persistence,
   tenant propagation, Redis-backed Pub/Sub subscriber storage, and 3.9.0
   client limitations
+- ✅ Proto.Actor distributed-cache invalidation, member-local change-token
+  actors, cluster signal delivery, and cached-value/durability boundaries
 
 ### Expressions
 - ✅ C#, JavaScript, Python, Liquid
