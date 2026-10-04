@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-10-03)
+## Slice Inventory (2026-10-04)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -132,16 +132,16 @@ acceptance criterion below is already complete.
 - `DOC-116` Weaver AI workflow assistance source refresh to 3.9.0
 - `DOC-117` Studio environment selection and remote-backend routing
 - `DOC-118` Proto.Actor distributed-cache invalidation and cluster signals
+- `DOC-119` Elsa Identity 3.9.0 refresh-token subject resolution and 401 migration contract
 
 ### Available next slices
 
-- No focused slice remains from the current inventory; run a fresh
-  release-source inventory next time.
+- `DOC-120` Studio OIDC safe return paths and deployment sub-path preservation
+  remains available for the next run.
 
 ### Recommended next slice
 
-- Run a fresh release-source inventory rather than assuming another topic is
-  available.
+- `DOC-120` is the next recommended slice after the completed DOC-119 refresh.
 
 ### Newly discovered topics
 
@@ -160,6 +160,67 @@ acceptance criterion below is already complete.
   focused guide for cluster operators. Document signal delivery and the
   configured-cluster boundary without implying cached-value replication,
   durability, or exactly-once delivery.
+- `DOC-119` Core 3.9.0 resolves refresh-token users by a consistent stable
+  subject claim and rejects missing, blank, conflicting, or unknown subjects
+  with `401 Unauthorized`. The existing Identity guide only explains refresh
+  tokens generally and does not document this migration-sensitive contract.
+- `DOC-120` Studio 3.9.0 preserves safe post-login return paths and
+  deployment sub-paths in its OIDC callback flow; the existing Direct OIDC
+  guide does not explain this behavior. Keep it queued after DOC-119.
+
+### Current run inventory (2026-10-04)
+
+- The published GitBook is complete through `DOC-118` at `main` commit
+  `7e08424e1a143d478f56e41b304e496f0adcc18b`; the local remote-tracking ref
+  was stale at the DOC-118 merge and was refreshed before this plan update.
+- The requested `release/3.8.0` is superseded by the latest advertised
+  `release/3.9.0` branches. Fresh refs are Core
+  `e606a53723370ba7ee80670e5f5c935535aa42d6`, Studio
+  `a30ed7c997dfb3cff1d5d095a4ee19ff03c7fe42`, and Extensions
+  `89d4eb9b739ae135604aac2a1de18653a289bdb0`.
+- A published-main review found no prior focused slice left in the plan. The
+  release-source comparison found DOC-119 as a distinct, client-facing
+  refresh-token compatibility gap. DOC-025 remains covered, although its
+  guide may merit a separate source-maintenance audit; persistence vNext
+  remains research-only.
+
+### Current run plan (2026-10-04)
+
+- Refresh `guides/authentication/elsa-identity.md` for Core 3.9.0. Document
+  the refresh endpoint, bearer-token request, replacement-token behavior,
+  stable subject resolution, exact `401` cases, same-name account-recreation
+  protection, and the client reauthentication boundary.
+- Keep Elsa Identity's local credential flow separate from External
+  Authentication sessions, avoid implying usernames identify token owners,
+  and link the migration note and source-backed endpoint tests.
+- Validate source assertions, focused Core Identity tests, changed-page and
+  navigation links, balanced fences, whitespace, immutable source links, and
+  iterative self-review before delivery.
+
+### Current run selection (2026-10-04)
+
+- Selected `DOC-119`: Elsa Identity 3.9.0 refresh-token subject resolution and
+  its `401 Unauthorized` migration contract.
+
+### Current run completion (2026-10-04)
+
+- Refreshed `guides/authentication/elsa-identity.md` with the Elsa Identity
+  refresh endpoint, replacement-token/session behavior, stable subject
+  resolution, exact `401` cases, same-name account-recreation protection, and
+  the client reauthentication boundary. Kept the existing 3.8.0 setup sample
+  unchanged because the slice was limited to the 3.9.0 refresh contract.
+- Updated current coverage and the slice inventory. The published-main
+  inventory was corrected from stale local `origin/main` `72f5a55` to
+  `7e08424`; the next candidate is DOC-120 for Studio OIDC return-path safety.
+- Source assertions, changed-page links, all SUMMARY targets, all local
+  Markdown links, balanced fences, changed-page whitespace, and four
+  immutable Core source links passed. The focused Core Identity test attempt
+  was blocked by the release worktree's test-project dependency resolution
+  errors after restore; source tests cover the documented cases and hosted CI
+  remains the authoritative test gate.
+- Self-review pass 1 removed an overbroad package-version refresh outside this
+  slice and pass 2 found no remaining high-priority factual, source-grounding,
+  example, link, structure, regression, or formatting issues.
 
 ### Current run inventory (2026-10-01)
 

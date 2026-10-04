@@ -245,6 +245,7 @@ Based on the current structure, the following core concepts are documented:
   permissions, tool governance, and current proposal-review boundary
 - ✅ External Authentication adapters, policies, matchers, grant sources, and Studio editor extensibility
 - ✅ Optional Studio Environments module, `/environments` catalog contract, backend switching, and environment-scoped feature discovery
+- ✅ Elsa Identity 3.9.0 refresh-token endpoint, stable subject resolution, and `401` reauthentication boundary
 
 ### Hosting & Operations
 - ✅ Distributed hosting
