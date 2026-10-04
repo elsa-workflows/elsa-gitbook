@@ -157,6 +157,41 @@ Both the Blazor Server and WebAssembly Studio hosts support Elsa Identity.
 Studio signs in against the Elsa backend and sends the resulting bearer token
 with API requests.
 
+## Refresh an access token
+
+When an access token expires, send the refresh token as a bearer token to
+`POST /identity/refresh-token`:
+
+```bash
+curl -X POST https://elsa.example/elsa/api/identity/refresh-token \
+  -H "Authorization: Bearer $REFRESH_TOKEN"
+```
+
+For a valid Elsa Identity refresh token, the endpoint returns `200 OK` with a
+new access token and refresh token. The replacement refresh token continues
+the same session, so revoking that session also revokes tokens issued by the
+refresh operation. Replace the stored refresh token when the response
+contains a new one.
+
+### Refresh-token subject requirements
+
+In Elsa 3.9.0, the refresh endpoint resolves the user by the stable user ID in
+the token, not by the user's name. Every `sub` and inbound-mapped
+`NameIdentifier` claim must contain the same non-blank ID. A missing, blank,
+conflicting, or unknown subject is rejected with `401 Unauthorized`.
+
+This prevents a still-valid token from following a deleted account to a new
+account that happens to reuse its name. Clients should treat this `401` like
+any other refresh failure: discard the unusable refresh token and require the
+user or service to authenticate again. Do not interpret a successful response
+with `isAuthenticated: false` as the normal refresh-failure signal for the
+3.9.0 contract.
+
+This behavior applies to Elsa Identity's local credential flow. It is separate
+from External Authentication session and refresh-token handling, which uses
+the provider connection and session configuration documented in that
+authentication topology.
+
 ## Production guidance
 
 - Store signing keys and credential material outside source control.
@@ -168,6 +203,16 @@ with API requests.
   deployments.
 - Rotate signing keys and credentials through a planned process that accounts
   for already issued tokens.
+
+## Source references
+
+This guide is validated against the advertised Core `release/3.9.0` branch at
+commit `e606a53723370ba7ee80670e5f5c935535aa42d6`:
+
+- [Refresh-token subject resolution](https://github.com/elsa-workflows/elsa-core/blob/e606a53723370ba7ee80670e5f5c935535aa42d6/src/modules/Elsa.Identity/Services/RefreshTokenSubject.cs)
+- [Refresh-token endpoint](https://github.com/elsa-workflows/elsa-core/blob/e606a53723370ba7ee80670e5f5c935535aa42d6/src/modules/Elsa.Identity/Endpoints/RefreshToken/Endpoint.cs)
+- [Refresh-token migration note](https://github.com/elsa-workflows/elsa-core/blob/e606a53723370ba7ee80670e5f5c935535aa42d6/doc/migrations/refresh-token-user-resolution.md)
+- [Refresh-token endpoint tests](https://github.com/elsa-workflows/elsa-core/blob/e606a53723370ba7ee80670e5f5c935535aa42d6/test/unit/Elsa.Identity.UnitTests/Endpoints/RefreshTokenEndpointTests.cs)
 
 ## Related guides
 
