@@ -130,6 +130,7 @@
 * [Troubleshooting](guides/troubleshooting/README.md)
 * [Frequently Asked Questions](guides/faq.md)
 * [Community & Resources](guides/community-resources.md)
+* [Training](https://www.elsaworkflows.io/elsa-plus/training)
 * [Adoption Evidence and Case Studies](guides/case-studies.md)
 
 ## Activities
