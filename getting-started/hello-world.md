@@ -26,7 +26,7 @@ Navigate to your newly created project's root directory and add the following pa
 
 ```bash
 cd ElsaConsole
-dotnet add package Elsa --version 3.8.0
+dotnet add package Elsa --version 3.9.0
 ```
 {% endstep %}
 
@@ -90,12 +90,12 @@ dotnet new web -n "ElsaWeb"
 {% step %}
 **Add Packages**
 
-Navigate to your project's root directory and install the Elsa 3.8.0 packages:
+Navigate to your project's root directory and install the Elsa 3.9.0 packages:
 
 ```bash
 cd ElsaWeb
-dotnet add package Elsa --version 3.8.0
-dotnet add package Elsa.Http --version 3.8.0
+dotnet add package Elsa --version 3.9.0
+dotnet add package Elsa.Http --version 3.9.0
 ```
 {% endstep %}
 

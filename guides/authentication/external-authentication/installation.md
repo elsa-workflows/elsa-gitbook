@@ -1,14 +1,14 @@
 ---
 description: >-
-  Install the Elsa 3.8.0 External Authentication broker, its OpenID Connect
+  Install the Elsa External Authentication broker, its OpenID Connect
   adapter, optional secret bridge, and durable persistence providers.
 ---
 
 # Install External Authentication
 
-External Authentication is available in the stable Elsa 3.8.0 Core and Studio
-packages on NuGet.org. Keep the Core, Studio, and Extensions package families
-on the same `3.8.0` version.
+External Authentication is available in the stable Elsa Core and Studio
+packages on NuGet.org since 3.8.0. Keep the Core, Studio, and Extensions
+package families on the same version, such as `3.9.0`.
 
 External Authentication makes Elsa Server a broker between Elsa Studio and one or more upstream identity providers. Elsa owns the sign-in transaction, issues the Elsa access and refresh tokens that Studio consumes, and can centrally manage connections, identity links, sessions, and permission mapping. The first supplied provider adapter is OpenID Connect.
 
@@ -25,7 +25,7 @@ Use a real secret manager, environment variables, or another configuration provi
 
 ## Install stable packages
 
-Stable Elsa 3.8.0 packages are available from NuGet.org; no preview feed is
+Stable Elsa 3.9.0 packages are available from NuGet.org; no preview feed is
 required. Pin the version explicitly for repeatable restores:
 
 ## Choose packages
@@ -33,8 +33,8 @@ required. Pin the version explicitly for repeatable restores:
 Install the foundation and at least one protocol adapter:
 
 ```bash
-dotnet add package Elsa.ExternalAuthentication --version 3.8.0
-dotnet add package Elsa.ExternalAuthentication.OpenIdConnect --version 3.8.0
+dotnet add package Elsa.ExternalAuthentication --version 3.9.0
+dotnet add package Elsa.ExternalAuthentication.OpenIdConnect --version 3.9.0
 ```
 
 The available packages are:
@@ -54,7 +54,7 @@ The available packages are:
 For example, a SQL Server deployment adds:
 
 ```bash
-dotnet add package Elsa.ExternalAuthentication.Persistence.EFCore.SqlServer --version 3.8.0
+dotnet add package Elsa.ExternalAuthentication.Persistence.EFCore.SqlServer --version 3.9.0
 ```
 
 The provider-specific package is required for its migrations and, in a CShells host, to make the corresponding shell feature discoverable. Identity persistence and External Authentication persistence are separate features: adding `Elsa.Persistence.EFCore.*` or enabling an Identity persistence feature does **not** make broker state durable.

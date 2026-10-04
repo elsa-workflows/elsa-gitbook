@@ -21,7 +21,7 @@ descriptors and definition dropdown values from the Elsa Server.
 Install the package in the application that executes workflows:
 
 ```bash
-dotnet add package Elsa.ServiceBus.Kafka --version 3.8.0
+dotnet add package Elsa.ServiceBus.Kafka --version 3.9.0
 ```
 
 Register the feature during Elsa startup. The following example declares a

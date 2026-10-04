@@ -144,12 +144,18 @@ the deployed catalog for the definitive list and for any additional module.
 | `workflows/tasks` | `complete` | Complete external workflow tasks. |
 | `workflows/tests` | `execute` | Execute activity tests. |
 
-Definition versions are a separate resource. For example, a Studio user who
-can list definitions with `workflows/definitions:view` still needs
-`workflows/definitions/versions:view` to load version history and
-`workflows/definitions/versions:revert` to roll a definition back.
+Listing a definition's versions needs `workflows/definitions:view`. Deleting
+or reverting a version needs `workflows/definitions/versions:delete` or
+`:revert`.
 
 ### Studio and designer metadata
+
+In 3.9.0 these catalogs, `GET /features/installed` and
+`GET /resilience/strategies` are readable by any signed-in user. The grants
+below stay valid but no longer gate reads, with one exception:
+`workflows/descriptors/activities:view` (or `workflows/definitions:view`) is
+still needed for `GET /descriptors/activities?refresh=true` to refresh, and
+`workflows/descriptors/activities:view` for activity option providers.
 
 | Resource | Verb | What it provides |
 | --- | --- | --- |
@@ -178,7 +184,7 @@ permissions to every designer.
 | `identity/users` | `view`, `create`, `update`, `delete` | Manage user accounts. |
 | `identity/roles` | `view`, `create`, `update`, `delete` | Manage roles and their grants. |
 | `identity/applications` | `create` | Create API client applications. |
-| `dashboard` | `view` | View operational dashboard data. |
+| `dashboard` | `view` | Read the whole dashboard. See [Dashboard access](#dashboard-access). |
 | `diagnostics/console-logs` | `view` | Read live and recent console logs. |
 | `diagnostics/structured-logs` | `view` | Read structured log records and sources. |
 | `diagnostics/opentelemetry` | `view` | Search traces, logs, metrics, and resources. |
@@ -222,7 +228,10 @@ source or package documentation because extension contracts can migrate
 independently from Core.
 
 For custom modules, prefer Core's `RequirePermission(resource, verb)` contract
-and register a `PermissionDescriptor` provider. That lets the endpoint and
+and register a `PermissionDescriptor` provider. When any of several permissions
+should be enough, use `RequireAnyPermission((resource, verb), ...)`.
+`EndpointPermissionRegistry.FindRequirement` and `AllRequirements` report those
+endpoints; `Find` and `All` leave them out. That lets the endpoint and
 the catalog describe the same resource, supported verbs, and display metadata.
 
 ## Starter role templates
@@ -233,7 +242,7 @@ needed by that role.
 
 | Role | Start with |
 | --- | --- |
-| Studio viewer | `workflows/definitions:view`, `workflows/definitions/versions:view`, `workflows/instances:view`, `workflows/activity-executions:view`, and the designer metadata grants such as `workflows/descriptors/activities:view`, `workflows/descriptors/expressions:view`, `workflows/descriptors/storage-drivers:view`, and `workflows/descriptors/variables:view`. |
+| Studio viewer | `workflows/definitions:view`, `workflows/instances:view`, and `workflows/activity-executions:view`. The designer catalogs need no grant. |
 | Workflow designer | Studio viewer plus `workflows/definitions:write`, `workflows/definitions:publish`, `workflows/definitions:retract`, and `workflows/definitions:delete`; add `workflows/definitions/versions:revert` only for rollback. |
 | Workflow operator | Studio viewer plus `workflows/instances:cancel`, `workflows/instances:delete`, and `workflows/runtime:view`. |
 | Runtime administrator | `workflows/runtime:view` and `workflows/runtime:control`. |
@@ -244,12 +253,36 @@ The Studio viewer and runtime administrator templates are intentionally
 separate. Designing workflows does not require authority to pause or drain a
 running host.
 
+## Dashboard access
+
+The dashboard is open to every signed-in user. Each section shows only what
+the caller may read, with `dashboard:view` or the permission of its data:
+
+| Dashboard data | Readable with `dashboard:view` or |
+| --- | --- |
+| Workflow-instance metrics, trends, recent activity, needs-attention, hotspots | `workflows/instances:view` |
+| Runtime status | `workflows/runtime:view` |
+| Structured logs | `diagnostics/structured-logs:view` |
+| Console logs | `diagnostics/console-logs:view` |
+
+`GET /dashboard/overview` returns a section the caller can't read with
+`Capability` set to `Unauthorized` and no data. Dashboard contributions from
+modules that declare no permission still need `dashboard:view`. A contributor
+can check `DashboardContext.CanRead` to skip queries; `null` means
+unrestricted.
+
 ## What Studio users see
 
-Studio is an API client, not a second authorization authority. In 3.9.0 its
-security module reads the current caller's permissions and the server's
-permission catalog to tailor role and navigation affordances, but the server
-still authorizes every API request.
+Studio is an API client, not a second authorization authority. In 3.9.0 it
+hides menus, pages and actions the user can't use, and shows an access-denied
+page instead of a raw 403. The server still authorizes every API request.
+
+Elsa-issued tokens always carry the `permissions` claim. A user with no grants
+gets the single value `none`. If a third-party OpenID Connect token has no
+`permissions` claim, Studio does not hide anything and the server decides.
+
+Permission changes reach a user when their token is refreshed. Studio shows
+them after a page reload.
 
 When a Studio screen is incomplete:
 
@@ -284,7 +317,10 @@ authorization are separate layers.
 
 ## Release source checked
 
-This page was checked against the remote `release/3.9.0` refs:
+This page was checked against the remote `release/3.9.0` refs, and its
+dashboard, descriptor-catalog and Studio sections against the final `3.9.0`
+tag and its
+[authorization model migration guide](https://github.com/elsa-workflows/elsa-core/blob/6436609a1a3874d3fea7ccf690897792f5a1f702/doc/migrations/authorization-model.md):
 
 - [Core permission grammar and matching](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/common/Elsa.Api.Common/Authorization/Permission.cs)
 - [Core permission matcher](https://github.com/elsa-workflows/elsa-core/blob/457f94e0f68d761387972ec447fc439ee2d5d576/src/common/Elsa.Api.Common/Authorization/PermissionMatcher.cs)

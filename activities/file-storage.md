@@ -20,7 +20,7 @@ workflow-definition artifact.
 Install the package in the application that executes workflows:
 
 ```bash
-dotnet add package Elsa.Storage.Files --version 3.8.0
+dotnet add package Elsa.Storage.Files --version 3.9.0
 ```
 
 Register the module during Elsa configuration:

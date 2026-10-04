@@ -219,11 +219,11 @@ The operations use these routes:
   published definitions already in the store; it does not re-read an external
   provider.
 
-The reload endpoint requires `actions:workflow-definitions:reload`. In a
+The reload endpoint requires `workflows/definitions:reload`. In a
 distributed host, Elsa uses a distributed lock so only one node performs the
 reload at a time.
 
-The refresh endpoint requires `actions:workflow-definitions:refresh`. Send an
+The refresh endpoint requires `workflows/definitions:refresh`. Send an
 optional list of definition IDs to limit the operation; when it is omitted,
 all definitions are processed. The endpoint processes definitions in batches
 of 10 and can return `202 Accepted` when another refresh is already in

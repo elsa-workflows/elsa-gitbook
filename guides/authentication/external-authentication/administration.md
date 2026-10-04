@@ -6,8 +6,8 @@ description: >-
 
 # External Authentication administration
 
-> **Elsa 3.8.0 stable.** This functionality is included in the stable Elsa Core
-> and Studio 3.8.0 packages. Keep both package families aligned.
+> **Available since Elsa 3.8.0.** This functionality is included in the stable
+> Elsa Core and Studio packages. Keep both package families aligned.
 
 After a Studio host registers `Elsa.Studio.ExternalAuthentication`, its
 **Administration → Identity & access** menu can expose an Elsa Server-backed
@@ -22,25 +22,26 @@ permission-gated; hidden controls do not replace Elsa API authorization.
 
 | Route | Purpose | Menu permission |
 | --- | --- | --- |
-| `/security/external-authentication/connections` | Manage identity-provider connections | `external-authentication:connections:read` |
-| `/security/external-authentication/identity-links` | Prelink, replace, and unlink external identities | `external-authentication:links:manage` |
-| `/security/external-authentication/sessions` | View and optionally revoke broker sessions | `external-authentication:sessions:read` |
+| `/security/external-authentication/connections` | Manage identity-provider connections | `external-authentication/connections:view` |
+| `/security/external-authentication/identity-links` | Prelink, replace, and unlink external identities | `external-authentication/identity-links:write` |
+| `/security/external-authentication/sessions` | View and optionally revoke broker sessions | `external-authentication/sessions:view` |
 
 Connection actions additionally use these permission strings:
 
 | Action | Permission |
 | --- | --- |
-| Create connection or an allowed override | `external-authentication:connections:create` |
-| Save, enable, disable, or promote an override | `external-authentication:connections:update` |
-| Archive or restore | `external-authentication:connections:archive` |
-| Test connection | `external-authentication:connections:test` |
-| Preview sign-in | `external-authentication:connections:preview` |
-| Configure unlinked-identity policy | `external-authentication:policies:manage` |
-| Delegate connection permissions | `external-authentication:permissions:delegate` |
-| Use unrestricted delegation | `external-authentication:permissions:delegate-unrestricted` |
-| Configure unsafe provider settings | `external-authentication:provider-trust:unsafe` |
-| Load roles for a create-user policy | `read:role` |
-| Revoke a session | `external-authentication:sessions:revoke` |
+| Create connection or an allowed override | `external-authentication/connections:create` |
+| Save, enable, disable, or promote an override | `external-authentication/connections:update` |
+| Archive or restore | `external-authentication/connections:archive` |
+| Test connection | `external-authentication/connections:test` |
+| Preview sign-in | `external-authentication/connections:preview` |
+| Configure unlinked-identity policy | `external-authentication/policies:update` |
+| Change a policy's default create-user roles | `external-authentication/policies/default-roles:update` |
+| Delegate connection permissions | `external-authentication/permission-grants:delegate` |
+| Use unrestricted delegation | `external-authentication/permission-grants:delegate-unrestricted` |
+| Configure unsafe provider settings | `external-authentication/provider-trust:override` |
+| Load roles for a create-user policy | `identity/roles:view` |
+| Revoke a session | `external-authentication/sessions:revoke` |
 
 `*` satisfies the Studio permission affordance checks, but grant only the
 smallest set required. The Elsa Server endpoints remain authoritative: a screen
@@ -123,14 +124,14 @@ configured state, and resolvability—not the value.
 Adapters supply field descriptors, validation, capabilities, and (optionally) a
 custom editor contract. Studio uses these server-provided descriptors for
 provider-specific fields, so the available fields vary by adapter and the
-installed 3.8.0 package set.
+installed package set.
 
 For unlinked identities, the policy form is descriptor-driven:
 
 - `match-user` is shown only when Elsa Server advertises an installed user
   matcher. Studio renders that matcher's fields and required claim types.
 - Create-user outcomes load available roles from `/identity/roles`.
-- Loading roles requires `read:role`. If roles cannot be loaded, the role
+- Loading roles requires `identity/roles:view`. If roles cannot be loaded, the role
   picker becomes read-only and warns the operator instead of accepting raw role
   IDs.
 
@@ -206,7 +207,7 @@ who understand the identity source; it is not a general user-profile editor.
 ## Session administration
 
 **Administration > Identity & access > Authentication sessions** is optional and appears with
-`external-authentication:sessions:read`. It supports filters for user ID,
+`external-authentication/sessions:view`. It supports filters for user ID,
 connection key, and active/revoked status, plus cursor paging.
 
 {% hint style="warning" %}
@@ -222,7 +223,7 @@ status. It never exposes tokens, external subjects, or claim snapshots.
 
 <figure><img src="../../../.gitbook/assets/external-authentication-sessions.png" alt="Authentication sessions page in Elsa Studio"><figcaption>The session administration page exposes operational metadata only; tokens and upstream identity values never appear.</figcaption></figure>
 
-With `external-authentication:sessions:revoke`, select **Revoke** and confirm.
+With `external-authentication/sessions:revoke`, select **Revoke** and confirm.
 The request uses the `administrator_revoked` reason; the user must authenticate
 again. Revocation cannot recover or reveal the session's tokens.
 

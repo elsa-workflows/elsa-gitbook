@@ -7,8 +7,8 @@ description: >-
 # External Authentication REST API
 
 {% hint style="warning" %}
-These APIs are available in the stable Elsa 3.8.0 package family. Generate
-clients against the exact `3.8.0` contracts you deploy and keep Core and Studio
+These APIs are available in the stable Elsa package family since 3.8.0.
+Generate clients against the exact contracts you deploy and keep Core and Studio
 package versions aligned.
 {% endhint %}
 
@@ -44,11 +44,11 @@ GET /external-authentication/descriptors/managed-secret-resolvers
 GET /external-authentication/descriptors/permissions
 ```
 
-They require `external-authentication:connections:read`. A missing or
+They require `external-authentication/connections:view`. A missing or
 incompatible custom Studio editor falls back to the descriptor-driven generic
 editor. Studio obtains Elsa role options from the Identity role API; reading
-that list requires `read:role`, while assigning default create-user roles is
-governed by `external-authentication:roles:assign` and delegation boundaries.
+that list requires `identity/roles:view`, while assigning default create-user roles is
+governed by `external-authentication/policies/default-roles:update` and delegation boundaries.
 
 ## Connection Management
 
@@ -98,7 +98,7 @@ POST   /external-authentication/identity-links/{linkId}/replace
 DELETE /external-authentication/identity-links/{linkId}
 ```
 
-These operations require `external-authentication:links:manage`. The issuer must
+These operations require `external-authentication/identity-links:write`. The issuer must
 be an absolute HTTPS URI. Serve the management API only over TLS because the
 request contains the upstream subject. Elsa normalizes and immediately
 transforms the subject to a keyed hash; the raw subject is never returned.
@@ -114,18 +114,18 @@ GET    /external-authentication/sessions?userId=&connectionKey=&status=&cursor=&
 DELETE /external-authentication/sessions/{sessionId}
 ```
 
-Read requires `external-authentication:sessions:read`; revoke requires `external-authentication:sessions:revoke`. Responses contain only safe metadata—never tokens, token hashes, external subjects, or claim snapshots.
+Read requires `external-authentication/sessions:view`; revoke requires `external-authentication/sessions:revoke`. Responses contain only safe metadata—never tokens, token hashes, external subjects, or claim snapshots.
 
 ## Permissions
 
 | Area | Permissions |
 | --- | --- |
-| Read/create/update/archive connections | `external-authentication:connections:read`, `:create`, `:update`, `:archive` |
-| Test and preview | `external-authentication:connections:test`, `:preview` |
-| Unsafe provider trust | `external-authentication:provider-trust:unsafe` |
-| Policies and roles | `external-authentication:policies:manage`, `external-authentication:roles:assign` |
-| Identity links | `external-authentication:links:manage` |
-| Sessions | `external-authentication:sessions:read`, `external-authentication:sessions:revoke` |
+| Read/create/update/archive connections | `external-authentication/connections:view`, `:create`, `:update`, `:archive` |
+| Test and preview | `external-authentication/connections:test`, `:preview` |
+| Unsafe provider trust | `external-authentication/provider-trust:override` |
+| Policies and roles | `external-authentication/policies:update`, `external-authentication/policies/default-roles:update` |
+| Identity links | `external-authentication/identity-links:write` |
+| Sessions | `external-authentication/sessions:view`, `external-authentication/sessions:revoke` |
 
 The Elsa API is the authorization boundary. Hidden menus and disabled buttons in Studio are usability affordances, not security controls.
 

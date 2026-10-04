@@ -198,14 +198,14 @@ MyWorkflows.Extensions/
 ```xml
 <ItemGroup>
   <!-- Core Elsa packages -->
-  <PackageReference Include="Elsa" Version="3.8.0" />
-  <PackageReference Include="Elsa.Workflows.Core" Version="3.8.0" />
+  <PackageReference Include="Elsa" Version="3.9.0" />
+  <PackageReference Include="Elsa.Workflows.Core" Version="3.9.0" />
   
   <!-- Optional: For HTTP activities -->
-  <PackageReference Include="Elsa.Http" Version="3.8.0" />
+  <PackageReference Include="Elsa.Http" Version="3.9.0" />
   
   <!-- Optional: For entity framework -->
-  <PackageReference Include="Elsa.Persistence.EFCore" Version="3.8.0" />
+  <PackageReference Include="Elsa.Persistence.EFCore" Version="3.9.0" />
 </ItemGroup>
 ```
 
@@ -269,8 +269,8 @@ The patterns described in this guide are compatible with Elsa Workflows version 
 
 ```xml
 <!-- Use version ranges for forward compatibility -->
-<PackageReference Include="Elsa" Version="3.8.0" />
-<PackageReference Include="Elsa.Workflows.Core" Version="3.8.0" />
+<PackageReference Include="Elsa" Version="3.9.0" />
+<PackageReference Include="Elsa.Workflows.Core" Version="3.9.0" />
 ```
 
 ## Community Extensions

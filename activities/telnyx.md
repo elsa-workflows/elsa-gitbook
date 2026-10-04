@@ -18,7 +18,7 @@ store Telnyx credentials, receive webhooks, or call the Telnyx API itself.
 Install the package in the application that executes workflows:
 
 ```bash
-dotnet add package Elsa.Telnyx --version 3.8.0
+dotnet add package Elsa.Telnyx --version 3.9.0
 ```
 
 Enable the module and configure the API key. `ApiUrl` defaults to

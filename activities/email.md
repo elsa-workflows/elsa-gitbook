@@ -17,7 +17,7 @@ send mail or configure SMTP credentials.
 Install the package in the Elsa Server project:
 
 ```bash
-dotnet add package Elsa.Email --version 3.8.0
+dotnet add package Elsa.Email --version 3.9.0
 ```
 
 Register the feature in the Elsa builder. The `ConfigureOptions` callback is

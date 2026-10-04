@@ -17,7 +17,7 @@ the activity inputs; it does not upload the data from the browser.
 Install the package in the application that executes workflows:
 
 ```bash
-dotnet add package Elsa.Storage.AzureStorage --version 3.8.0
+dotnet add package Elsa.Storage.AzureStorage --version 3.9.0
 ```
 
 In 3.8.0, this package does not provide a `UseAzureStorage()` extension method.

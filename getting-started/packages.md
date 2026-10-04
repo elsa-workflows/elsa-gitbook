@@ -9,9 +9,10 @@ systems like service buses, cloud services, and additional features such as
 or [Telnyx voice and webhook automation](../activities/telnyx.md).
 
 {% hint style="info" %}
-The current stable package line is Elsa **3.8.0**, published on NuGet.org. Pin
-the Elsa packages used by an application to the same `3.8.0` version while
-upgrading; do not mix stable, RC, and preview builds.
+The current stable package line is Elsa **3.9.0**, published on NuGet.org. Pin
+every Elsa Core, Studio, and Extensions package to the same `3.9.0` version; do
+not mix versions or stable, RC, and preview builds. See [Upgrade to Elsa
+3.9.0](upgrading-to-3.9.md).
 {% endhint %}
 
 ## **Main Package**
@@ -27,7 +28,7 @@ The primary package you'll need to get started with Elsa is the `Elsa` package. 
 To install the core `Elsa` package, use the `dotnet` CLI:
 
 ```
-dotnet add package Elsa --version 3.8.0
+dotnet add package Elsa --version 3.9.0
 ```
 
 ## **Project Templates**
@@ -38,6 +39,10 @@ stable template package:
 ```bash
 dotnet new install Elsa.Templates@3.8.0
 ```
+
+`Elsa.Templates` 3.9.0 is not published yet, so the templates generate 3.8.0
+projects. To use 3.9.0, update the generated package references and follow
+[Upgrade to Elsa 3.9.0](upgrading-to-3.9.md).
 
 See [Upgrade to Elsa 3.8.0](upgrading-to-3.8.md#start-from-the-elsa-templates)
 for the supported generation options, feature models, authentication choices,
@@ -62,10 +67,10 @@ RC packages are also available on NuGet.org. They offer a sneak peek into upcomi
 ### **Previews** <a href="#previews" id="previews"></a>
 
 Preview versions are a separate prerelease channel and may introduce breaking
-changes. Feedz availability and publication timing are independent of the
-Elsa 3.8.0 stable release; use the feed only when the relevant release notes
-or branch instructions confirm that a preview package is available. Stable
-3.8.0 applications should use NuGet.org and should not add the preview source.
+changes. Feedz availability and publication timing are independent of stable
+releases; use the feed only when the relevant release notes or branch
+instructions confirm that a preview package is available. Stable applications
+should use NuGet.org and should not add the preview source.
 
 To access preview packages, include the feed URL when using the dotnet CLI or add it to your `NuGet.config`:
 

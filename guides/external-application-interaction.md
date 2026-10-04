@@ -33,7 +33,7 @@ Add the Elsa HTTP Webhooks package that matches the rest of your Elsa 3.8.0
 packages:
 
 ```bash
-dotnet add package Elsa.Http.Webhooks --version 3.8.0
+dotnet add package Elsa.Http.Webhooks --version 3.9.0
 ```
 
 Enable it in the Elsa module configuration:

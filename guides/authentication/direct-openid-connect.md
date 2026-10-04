@@ -152,7 +152,7 @@ builder.Services
                 foreach (var role in context.Principal.FindAll("role").Select(x => x.Value))
                 {
                     if (role == "elsa-operator")
-                        identity.AddClaim(new Claim(PermissionNames.ClaimType, "read:workflow-definitions"));
+                        identity.AddClaim(new Claim(PermissionNames.ClaimType, "workflows/definitions:view"));
                 }
 
                 return Task.CompletedTask;

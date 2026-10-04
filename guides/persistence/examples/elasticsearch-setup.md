@@ -35,7 +35,7 @@ Install the extension package that matches the rest of your Elsa 3.8.1 package
 set:
 
 ```bash
-dotnet add package Elsa.Persistence.Elasticsearch --version 3.8.1
+dotnet add package Elsa.Persistence.Elasticsearch --version 3.9.0
 ```
 
 `ElasticsearchOptions.Endpoint` can be either an Elasticsearch URI or the name

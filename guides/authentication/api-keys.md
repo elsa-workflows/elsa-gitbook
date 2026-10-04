@@ -17,7 +17,7 @@ application's roles determine the `permissions` claims granted to the caller.
 
 The identity application endpoint creates a client ID, client secret, and API
 key, stores their hashes, and returns the generated credentials. The caller
-must have `create:application` and satisfy the identity security-root policy.
+must have `identity/applications:create`.
 
 With the default Elsa API prefix, submit:
 

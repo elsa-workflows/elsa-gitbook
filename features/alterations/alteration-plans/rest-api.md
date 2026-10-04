@@ -2,7 +2,7 @@
 
 The Alterations module exposes a REST API for submitting, inspecting, and dry-running alteration plans.
 
-Plan submission and dry-run require the `run:alterations` permission. Reading stored plan and job status requires `read:alterations`.
+Plan submission and dry-run require the `alterations:execute` permission. Reading stored plan and job status requires `alterations:view`.
 
 ## Submit a plan
 
@@ -87,7 +87,7 @@ The dry-run endpoint accepts the same `AlterationWorkflowInstanceFilter` model t
 
 ## Get plan and job status
 
-This endpoint requires `read:alterations`.
+This endpoint requires `alterations:view`.
 
 Use the plan ID to query the current plan and its jobs:
 

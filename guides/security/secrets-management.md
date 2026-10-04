@@ -74,6 +74,15 @@ stable for as long as encrypted values in the repository must remain
 readable. Changing or losing it prevents Elsa from resolving the encrypted
 payloads.
 
+Without a key, listing secrets still works, but storing or reading an
+encrypted value fails. For example, `POST /secrets` returns `400` with
+`Elsa Secrets encryption key is not configured`. Generate a 32-byte key and
+store it base64-encoded, for example:
+
+```bash
+openssl rand -base64 32
+```
+
 The default repository is a JSON file at:
 
 ```text
@@ -228,10 +237,10 @@ classes in the release use these permissions:
 
 | Operation | Permission |
 | --- | --- |
-| List, read, descriptors, and picker | `read:secrets` |
-| Create, update details, rotate, and revoke | `write:secrets` |
-| Test resolution | `test:secrets` |
-| Delete | `delete:secrets` |
+| List, read, descriptors, and picker | `secrets:view` |
+| Create, update details, rotate, and revoke | `secrets:write` |
+| Test resolution | `secrets:test` |
+| Delete | `secrets:delete` |
 
 The corresponding routes are:
 

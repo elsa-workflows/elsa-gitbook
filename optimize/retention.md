@@ -23,7 +23,7 @@ Add the extension to the server that owns the workflow management and runtime
 stores:
 
 ```bash
-dotnet add package Elsa.Retention --version 3.8.0
+dotnet add package Elsa.Retention --version 3.9.0
 ```
 
 Register it inside `AddElsa`. The retention module does not add a deletion

@@ -6,8 +6,9 @@ description: >-
 
 # Studio integration
 
-> **Elsa 3.8.0 stable.** External Authentication is included in the stable Elsa
-> Core and Studio packages. Keep the package families aligned at `3.8.0`.
+> **Available since Elsa 3.8.0.** External Authentication is included in the
+> stable Elsa Core and Studio packages. Keep the package families aligned, for
+> example at `3.9.0`.
 
 External Authentication makes Elsa Server the authentication broker for Studio.
 Studio asks Elsa Server which sign-in methods are available, starts the selected
@@ -25,7 +26,7 @@ existing direct `OpenIdConnect` or `ElsaIdentity` modes.
 
 Complete the Elsa Server External Authentication setup first:
 
-1. Install compatible Elsa 3.8.0 Core and Studio packages from NuGet.org.
+1. Install compatible Elsa 3.9.0 Core and Studio packages from NuGet.org.
 2. Enable and configure External Authentication in Elsa Server, including at
    least one enabled, valid connection or a broker-local sign-in path.
 3. Create a dedicated **Elsa Authentication Client** for Studio. This is not
@@ -45,11 +46,11 @@ Add the shared management/UI package plus exactly one package matching the
 Studio hosting model:
 
 ```bash
-dotnet add package Elsa.Studio.ExternalAuthentication --version 3.8.0
+dotnet add package Elsa.Studio.ExternalAuthentication --version 3.9.0
 # Choose one host package:
-dotnet add package Elsa.Studio.ExternalAuthentication.BlazorServer --version 3.8.0
+dotnet add package Elsa.Studio.ExternalAuthentication.BlazorServer --version 3.9.0
 # or
-dotnet add package Elsa.Studio.ExternalAuthentication.BlazorWasm --version 3.8.0
+dotnet add package Elsa.Studio.ExternalAuthentication.BlazorWasm --version 3.9.0
 ```
 
 Keep all Elsa Core packages and all Elsa Studio packages on the same stable

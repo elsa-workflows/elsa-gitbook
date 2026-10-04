@@ -9,7 +9,7 @@ description: >-
 An Elsa Server is an ASP.NET Core web application that lets you manage workflows using a REST API and execute them. You can store your workflows in various places like databases, file systems, or even cloud storage.
 
 {% hint style="warning" %}
-This walkthrough requires the .NET 10 SDK and targets Elsa 3.8.0. The 3.8.0 server requires a configured JWT
+This walkthrough requires the .NET 10 SDK and targets Elsa 3.9.0. The server requires a configured JWT
 signing key and no longer supplies production-usable admin credentials or API
 keys. Use deployment-owned configuration for identity values; do not copy
 secrets into `Program.cs`.
@@ -38,18 +38,18 @@ The following is a step-by-step guide to setting up a new ASP.NET Core Web Appli
     Add some commonly used Elsa packages.
 
     ```bash
-    dotnet add package Elsa --version 3.8.0
-    dotnet add package Elsa.Persistence.EFCore --version 3.8.0
-    dotnet add package Elsa.Persistence.EFCore.Sqlite --version 3.8.0
-    dotnet add package Elsa.Http --version 3.8.0
-    dotnet add package Elsa.Identity --version 3.8.0
-    dotnet add package Elsa.Scheduling --version 3.8.0
-    dotnet add package Elsa.Workflows.Api --version 3.8.0
-    dotnet add package Elsa.Dashboard.Api --version 3.8.0
-    dotnet add package Elsa.Workflows.Runtime.Dashboard --version 3.8.0
-    dotnet add package Elsa.Expressions.CSharp --version 3.8.0
-    dotnet add package Elsa.Expressions.JavaScript --version 3.8.0
-    dotnet add package Elsa.Expressions.Liquid --version 3.8.0
+    dotnet add package Elsa --version 3.9.0
+    dotnet add package Elsa.Persistence.EFCore --version 3.9.0
+    dotnet add package Elsa.Persistence.EFCore.Sqlite --version 3.9.0
+    dotnet add package Elsa.Http --version 3.9.0
+    dotnet add package Elsa.Identity --version 3.9.0
+    dotnet add package Elsa.Scheduling --version 3.9.0
+    dotnet add package Elsa.Workflows.Api --version 3.9.0
+    dotnet add package Elsa.Dashboard.Api --version 3.9.0
+    dotnet add package Elsa.Workflows.Runtime.Dashboard --version 3.9.0
+    dotnet add package Elsa.Expressions.CSharp --version 3.9.0
+    dotnet add package Elsa.Expressions.JavaScript --version 3.9.0
+    dotnet add package Elsa.Expressions.Liquid --version 3.9.0
     ```
 4.  We need to add some code to make our server work. Open the `Program.cs` file in your project and replace its contents with the code provided below. This code does a lot of things like setting up database connections, enabling user authentication, and preparing the server to handle workflows.
 
@@ -167,9 +167,9 @@ dotnet user-secrets set "Identity:Bootstrap:Password" "replace-with-a-local-boot
 ```
 
 The C# and Python expression engines are host-code execution and are disabled
-by default. If trusted authors need them, opt in explicitly and grant the
-matching `exec:csharp-expressions` or `exec:python-expressions` permission;
-neither engine is a sandbox. See [Upgrade to Elsa 3.8.0](../getting-started/upgrading-to-3.8.md)
+by default. If trusted authors need them, opt in explicitly. In 3.9 there is no
+per-author permission for them: every author who can write workflow
+definitions can use an enabled engine. Neither engine is a sandbox. See [Upgrade to Elsa 3.8.0](../getting-started/upgrading-to-3.8.md)
 for the complete migration checklist.
 
 ## Launch the Application﻿ <a href="#run-application" id="run-application"></a>

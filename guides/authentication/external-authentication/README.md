@@ -7,10 +7,10 @@ description: >-
 # External Authentication
 
 {% hint style="info" %}
-**Available in Elsa 3.8.0**
+**Available since Elsa 3.8.0**
 
-External Authentication is included in the stable Elsa 3.8.0 Core and Studio
-packages. Install the matching `3.8.0` package family from NuGet.org and keep
+External Authentication is included in the stable Elsa Core and Studio
+packages. Install the matching `3.9.0` package family from NuGet.org and keep
 Core, Studio, and Extensions versions aligned.
 {% endhint %}
 

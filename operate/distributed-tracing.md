@@ -98,14 +98,12 @@ For live updates, the diagnostics module also maps the SignalR hub route:
 
 - `/elsa/hubs/diagnostics/opentelemetry`
 
-Read access is protected by `read:diagnostics:opentelemetry`.
+Read access is protected by `diagnostics/opentelemetry:view`.
 
 ## Securing OTLP ingestion
 
-The diagnostics collector has a separate ingestion permission concept.
-
-- Read endpoints use `read:diagnostics:opentelemetry`.
-- OTLP ingestion uses `ingest:diagnostics:opentelemetry` internally.
+Read endpoints use `diagnostics/opentelemetry:view`. OTLP ingestion has no
+Elsa permission.
 
 For HTTP/protobuf ingestion, `OpenTelemetryDiagnosticsOptions` supports API key
 protection. Configure it through standard options binding:
@@ -201,7 +199,7 @@ Use this when Elsa Studio users also need an in-product trace view.
 
 - Export `Elsa.Workflows` spans to your OTLP backend.
 - Send OTLP telemetry to Elsa's diagnostics collector as well.
-- Grant operators `read:diagnostics:opentelemetry`.
+- Grant operators `diagnostics/opentelemetry:view`.
 - Tune in-memory capacities so Studio diagnostics stay bounded.
 
 ## Troubleshooting
@@ -219,7 +217,7 @@ If traces do not appear where you expect, check these points in order:
 5. If Studio diagnostics are empty, verify the collector routes under
    `/elsa/otlp/v1` and the `x-otlp-api-key` header when enabled.
 6. If SignalR trace streaming fails, verify the user has
-   `read:diagnostics:opentelemetry`.
+   `diagnostics/opentelemetry:view`.
 7. If you enabled gRPC ingestion, confirm your host actually bound the gRPC
    collector service instead of only setting collector metadata.
 

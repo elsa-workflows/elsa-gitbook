@@ -147,8 +147,7 @@ After registering the provider:
 4. Type the declared type or property name and confirm that Monaco offers the
    expected completion or type information.
 
-The endpoint requires either `read:*` or the specific
-`read:javascript-type-definitions` permission. A missing permission can look
+The endpoint requires `workflows/scripting/javascript:view`. A missing permission can look
 like a provider problem because Studio cannot load the declaration library.
 The endpoint resolves the latest workflow graph; a missing workflow
 definition returns an API error instead of a declaration document.
@@ -163,7 +162,7 @@ Check the following in order:
 - The provider is registered in the server process connected to Studio.
 - The provider's context filters do not exclude the current activity type.
 - The declaration uses valid TypeScript syntax and identifiers.
-- The Studio client has `read:javascript-type-definitions` or a wildcard
+- The Studio client has `workflows/scripting/javascript:view` or a wildcard
   permission.
 - The input is using the **JavaScript** expression type, not **Default**,
   **Liquid**, or a custom UI editor.

@@ -133,8 +133,15 @@ prefers `api-key` over `access-token`.
 
 ## React Wrapper
 
-`elsa-studio` includes a React wrapper in
-`src/wrappers/wrappers/react-wrapper`.
+The React wrapper is published to npm as
+`@elsa-workflows/elsa-studio-wasm-react` and the custom elements as
+`@elsa-workflows/elsa-studio-wasm`:
+
+```bash
+npm install @elsa-workflows/elsa-studio-wasm-react
+```
+
+Its source is in `src/wrappers/wrappers/react-wrapper` of `elsa-studio`.
 
 The wrapper exposes these components:
 

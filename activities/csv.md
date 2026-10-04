@@ -17,7 +17,7 @@ parse CSV data itself.
 Install the package in the server project that executes the workflow:
 
 ```bash
-dotnet add package Elsa.Data.Csv --version 3.8.0
+dotnet add package Elsa.Data.Csv --version 3.9.0
 ```
 
 Register the feature during Elsa startup:

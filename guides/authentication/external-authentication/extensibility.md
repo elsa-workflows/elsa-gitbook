@@ -13,7 +13,7 @@ settings are handled.
 
 This page is for developers who own a trusted Elsa deployment and, optionally,
 an Elsa Studio package. It documents the extension contracts in the stable Elsa
-3.8.0 release. Pin and test the exact package versions you deploy.
+release. Pin and test the exact package versions you deploy.
 
 ## Choose the right extension point
 

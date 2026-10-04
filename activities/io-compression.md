@@ -20,7 +20,7 @@ compression in the browser.
 Install the package in the Elsa Server that executes the workflow:
 
 ```bash
-dotnet add package Elsa.IO.Compression --version 3.8.0
+dotnet add package Elsa.IO.Compression --version 3.9.0
 ```
 
 Register the compression feature during Elsa startup:
@@ -47,7 +47,7 @@ and `https://` inputs, install `Elsa.IO.Http` and explicitly configure its
 feature as well:
 
 ```bash
-dotnet add package Elsa.IO.Http --version 3.8.0
+dotnet add package Elsa.IO.Http --version 3.9.0
 ```
 
 ```csharp

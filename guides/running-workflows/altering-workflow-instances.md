@@ -54,8 +54,8 @@ The module registers the five built-in alteration types:
 - `Cancel` cancels the workflow instance.
 - `Migrate` loads a specific version of the same workflow definition.
 
-The server endpoints require `run:alterations` for writes and dry runs, and
-`read:alterations` to retrieve a stored plan and its jobs. The Studio module
+The server endpoints require `alterations:execute` for writes and dry runs, and
+`alterations:view` to retrieve a stored plan and its jobs. The Studio module
 also needs to be enabled and connected to the server's Alterations feature.
 
 ## Apply a known change immediately
@@ -159,7 +159,7 @@ Host: localhost:5001
 ```
 
 An empty match is still a valid plan: Elsa stores the plan, creates no jobs,
-and completes the plan through the no-job path. Use `read:alterations` to
+and completes the plan through the no-job path. Use `alterations:view` to
 inspect the plan, job status, timestamps, and per-job log entries.
 
 ## Use the Studio workflow
@@ -252,7 +252,7 @@ for the implementation contract.
 ## Operational checklist
 
 - Confirm the target IDs or dry-run filter results before changing state.
-- Use `run:alterations` and `read:alterations` as separate least-privilege
+- Use `alterations:execute` and `alterations:view` as separate least-privilege
   capabilities.
 - Test a representative instance before submitting a broad plan.
 - Keep variable IDs, activity IDs, and workflow definition versions stable

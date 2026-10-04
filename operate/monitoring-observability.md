@@ -120,7 +120,7 @@ Key routes and permission:
 - `POST /diagnostics/structured-logs/recent`
 - `GET /diagnostics/structured-logs/sources`
 - `/elsa/hubs/diagnostics/structured-logs`
-- `read:diagnostics:structured-logs`
+- `diagnostics/structured-logs:view`
 
 Use Structured Logs when you want:
 
@@ -143,7 +143,7 @@ Key routes and permission:
 - `POST /diagnostics/console-logs/recent`
 - `GET /diagnostics/console-logs/sources`
 - `/elsa/hubs/diagnostics/console-logs`
-- `read:diagnostics:console-logs`
+- `diagnostics/console-logs:view`
 
 Use Console Logs when you want:
 
@@ -240,7 +240,7 @@ The diagnostics collector exposes:
 - `GET /diagnostics/opentelemetry/collector-configuration`
 - `/elsa/hubs/diagnostics/opentelemetry`
 
-Read access requires `read:diagnostics:opentelemetry`. OTLP ingestion can also
+Read access requires `diagnostics/opentelemetry:view`. OTLP ingestion can also
 be protected with an API key through
 `OpenTelemetryDiagnosticsOptions.ApiKey`, using the `x-otlp-api-key` header by
 default.

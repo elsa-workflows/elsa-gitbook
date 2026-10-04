@@ -19,7 +19,7 @@ store the client secret, or provide an Orchard Core administration UI.
 Install the package in the application that executes the workflow:
 
 ```bash
-dotnet add package Elsa.OrchardCore --version 3.8.0
+dotnet add package Elsa.OrchardCore --version 3.9.0
 ```
 
 Enable the module and configure both option types. `BaseAddress` is the

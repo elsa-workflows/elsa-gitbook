@@ -21,7 +21,7 @@ first-class `UseSlack()` extension method.
 Install the server-side package in the application that executes workflows:
 
 ```bash
-dotnet add package Elsa.Slack --version 3.8.0
+dotnet add package Elsa.Slack --version 3.9.0
 ```
 
 The release exposes `SlackFeature`, but its `Apply` method only registers the

@@ -6,9 +6,8 @@ description: >-
 
 # Configure External Authentication
 
-This guide documents the stable Elsa 3.8.0 External Authentication modules.
-Keep the Core and Studio package families aligned at `3.8.0` when applying the
-configuration.
+This guide documents the stable Elsa External Authentication modules. Keep the
+Core and Studio package families aligned when applying the configuration.
 
 External Authentication has two configuration boundaries:
 
@@ -161,7 +160,7 @@ The `openid-connect` adapter uses an authorization-code flow. Its safe default i
 - `clientSecret`: a required secret binding field, never a value inside `adapterSettings`.
 - `endSessionEndpoint`: optional explicit upstream logout endpoint.
 
-Manual trust additionally requires `issuer`, `authorizationEndpoint`, and `tokenEndpoint`, plus either `jwksUri` or pinned `signingKeys`. Treat it as an exception: explicit trust overrides require both deployment allowance and the `external-authentication:provider-trust:unsafe` permission, plus an explicit confirmation when saved. Discovery-derived issuer, endpoints, and signing keys are the recommended configuration.
+Manual trust additionally requires `issuer`, `authorizationEndpoint`, and `tokenEndpoint`, plus either `jwksUri` or pinned `signingKeys`. Treat it as an exception: explicit trust overrides require both deployment allowance and the `external-authentication/provider-trust:override` permission, plus an explicit confirmation when saved. Discovery-derived issuer, endpoints, and signing keys are the recommended configuration.
 
 The adapter validates the authorization response and ID token, including correlation state, issuer, signature, audience/authorized party, expiry, nonce, and S256 PKCE. It projects only allowlisted claims and does not return provider tokens through broker or management APIs.
 

@@ -4,7 +4,7 @@ The Alterations module exposes `POST /alterations/run` for immediate execution a
 
 Use this endpoint when you already know the target instance IDs and want the results immediately. If you want Elsa to select instances from a filter and process them in the background, use [alteration plans](../alteration-plans/rest-api.md) instead.
 
-All endpoints on this page require the `run:alterations` permission.
+All endpoints on this page require the `alterations:execute` permission.
 
 For example, to apply an alteration that modifies a variable, migrates the workflow instance to a new version, and schedules an activity, use the following request:
 

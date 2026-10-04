@@ -98,8 +98,7 @@ reusable Elsa extension rather than one host application.
 
 Elsa Server exposes registered variable types from
 `GET /descriptors/variables`. The endpoint returns the type name, display name,
-category, and description; it requires `read:*` or
-`read:variable-descriptors`. Elsa Studio calls this endpoint and groups the
+category, and description; any signed-in user can call it. Elsa Studio calls this endpoint and groups the
 returned descriptors by category in its type picker. The same remote list
 supplies the type choices for workflow variables, inputs, outputs, and
 type-picker UI hints.
@@ -215,8 +214,7 @@ Before publishing a workflow that uses a custom type, verify:
 3. Every Elsa Server node has the same type assembly and registration.
 4. A type that must be selectable in Studio uses
    `AddVariableTypeAndAlias<T>`, not only `RegisterTypeAlias`.
-5. The Studio backend identity has `read:variable-descriptors` (or the
-   broader `read:*`) if the picker is empty or the endpoint returns 403.
+5. The Studio user is signed in; otherwise the endpoint returns 401.
 6. A type rename includes a legacy identifier registration and a rollout plan
    for existing definitions.
 7. JavaScript runtime exposure is intentional and limited to trusted workflow

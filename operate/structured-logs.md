@@ -100,7 +100,7 @@ authentication configuration must point to that server.
 ## Inspect the server contract
 
 All REST endpoints use the configured Elsa API prefix and require
-`read:diagnostics:structured-logs`:
+`diagnostics/structured-logs:view`:
 
 - `GET` or `POST /diagnostics/structured-logs/recent` returns recent events.
   The POST form accepts a `StructuredLogFilter` body.
@@ -250,7 +250,7 @@ permissions, buffers, and retention behavior.
 
 1. Confirm the server package is installed and `UseStructuredLogs` is present.
 2. Confirm `app.UseStructuredLogs()` runs after routing is configured.
-3. Confirm the caller has `read:diagnostics:structured-logs` for REST requests
+3. Confirm the caller has `diagnostics/structured-logs:view` for REST requests
    and is authenticated for SignalR.
 4. Confirm custom Studio hosts register both `AddStructuredLogsModule` and
    `AddStructuredLogsDashboardModule`.

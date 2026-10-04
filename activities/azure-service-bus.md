@@ -22,7 +22,7 @@ workers, resource initialization, and message delivery.
 Install the package in the application that executes workflows:
 
 ```bash
-dotnet add package Elsa.ServiceBus.AzureServiceBus --version 3.8.0
+dotnet add package Elsa.ServiceBus.AzureServiceBus --version 3.9.0
 ```
 
 Register the feature with either a connection string or a configured
