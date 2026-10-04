@@ -54,7 +54,7 @@ dotnet add package Elsa.Studio.ExternalAuthentication.BlazorWasm --version 3.9.0
 ```
 
 Keep all Elsa Core packages and all Elsa Studio packages on the same stable
-`3.8.0` version for repeatable restores and compatible contracts.
+`3.9.0` version for repeatable restores and compatible contracts.
 
 | Hosting model | Packages | Broker client type |
 | --- | --- | --- |

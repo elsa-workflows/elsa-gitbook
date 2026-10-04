@@ -16,7 +16,7 @@ This is different from Studio's existing direct OpenID Connect mode, in which St
 
 ## Prerequisites
 
-- An Elsa **3.8.0** application with Elsa Identity enabled. The broker issues Elsa credentials, so it needs Elsa Identity token signing and a user/role provider.
+- An Elsa **3.9.0** application with Elsa Identity enabled. The broker issues Elsa credentials, so it needs Elsa Identity token signing and a user/role provider.
 - An upstream OpenID Connect provider with a confidential client registration for Elsa Server.
 - A public HTTPS address for Elsa Server. It is used to derive the fixed provider callbacks.
 - For production or multiple nodes, a relational database supported by the selected persistence provider and a shared ASP.NET Core Data Protection key store. See [Production](production.md).

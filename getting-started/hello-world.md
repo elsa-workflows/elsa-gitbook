@@ -73,7 +73,7 @@ This code sets up a service container and adds Elsa services to it. The `service
 
 ## ASP.NET Core
 
-The ASP.NET Core sample below uses the Elsa 3.8.0 HTTP activity API. Keep the
+The ASP.NET Core sample below uses the Elsa HTTP activity API. Keep the
 `Elsa` and `Elsa.Http` package versions aligned when copying the sample.
 
 {% stepper %}

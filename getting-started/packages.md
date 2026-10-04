@@ -33,16 +33,16 @@ dotnet add package Elsa --version 3.9.0
 
 ## **Project Templates**
 
-For a new .NET 10 server, Studio, or combined application, install the exact
-stable template package:
+For a new .NET 10 server, Studio, or combined application, install the stable
+template package:
 
 ```bash
-dotnet new install Elsa.Templates@3.8.0
+dotnet new install Elsa.Templates
 ```
 
-`Elsa.Templates` 3.9.0 is not published yet, so the templates generate 3.8.0
-projects. To use 3.9.0, update the generated package references and follow
-[Upgrade to Elsa 3.9.0](upgrading-to-3.9.md).
+Generated projects use the Elsa version of the template package. If that is
+older than 3.9.0, update the package references and follow [Upgrade to Elsa
+3.9.0](upgrading-to-3.9.md).
 
 See [Upgrade to Elsa 3.8.0](upgrading-to-3.8.md#start-from-the-elsa-templates)
 for the supported generation options, feature models, authentication choices,

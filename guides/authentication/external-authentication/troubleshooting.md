@@ -20,7 +20,7 @@ URLs in logs or support tickets.
 ## Fast triage
 
 1. Record the Studio host model (Blazor Server or WebAssembly), public Studio
-   origin, Elsa API `Backend:Url`, and the resolved `3.8.0` package versions—without
+   origin, Elsa API `Backend:Url`, and the resolved package versions—without
    secret values.
 2. Confirm `Authentication:Provider` is exactly `ExternalAuthentication`.
 3. Confirm Studio's `ClientId` identifies a dedicated Elsa Authentication

@@ -40,8 +40,8 @@ Set every `Elsa.*` and `Elsa.Studio.*` package to `3.9.0`. The Studio npm
 packages are `@elsa-workflows/elsa-studio-wasm` and
 `@elsa-workflows/elsa-studio-wasm-react`.
 
-`Elsa.Templates` is still `3.8.0`. Generate from it, then update the package
-references and follow this page.
+If your `Elsa.Templates` version is older than 3.9.0, update the generated
+package references to `3.9.0`, then follow this page.
 
 ## Re-author role permissions
 
@@ -167,8 +167,10 @@ refresh tokens.
 
 ## Multitenant rolling upgrades
 
-The bookmark queue lock, the administrative pause key and the outbox scan
-marker are now per tenant. The first 3.9 node moves a 3.8 pause to the new key,
+The bookmark queue lock and the outbox scan marker are now per tenant. The
+administrative pause key is now tenant-agnostic
+(`elsa.quiescence.host-pause.{shell}`). The first 3.9 node moves a 3.8 pause
+to the new key,
 so finish the upgrade before relying on `AcrossReactivations`. See the
 [Core release notes](https://github.com/elsa-workflows/elsa-core/releases/tag/3.9.0)
 for details and an optional cleanup query.

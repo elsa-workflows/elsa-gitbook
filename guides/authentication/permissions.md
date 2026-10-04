@@ -144,9 +144,11 @@ the deployed catalog for the definitive list and for any additional module.
 | `workflows/tasks` | `complete` | Complete external workflow tasks. |
 | `workflows/tests` | `execute` | Execute activity tests. |
 
-Listing a definition's versions needs `workflows/definitions:view`. Deleting
-or reverting a version needs `workflows/definitions/versions:delete` or
-`:revert`.
+Listing a definition's versions needs `workflows/definitions:view`. Reverting
+a version needs `workflows/definitions/versions:revert`. Deleting a version
+from Studio (`DELETE /workflow-definition-versions/{id}` and the bulk delete)
+needs `workflows/definitions:delete`; `workflows/definitions/versions:delete`
+covers only `DELETE /workflow-definitions/{definitionId}/version/{version}`.
 
 ### Studio and designer metadata
 

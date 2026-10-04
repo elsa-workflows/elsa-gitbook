@@ -270,7 +270,7 @@ npm install @elsa-workflows/elsa-studio-wasm        # custom elements
 npm install @elsa-workflows/elsa-studio-wasm-react  # React wrapper
 ```
 
-The `latest` dist-tag is 3.9.0. The `elsa-studio-wasm` value used as an OpenID Connect `ClientId` in examples is an identity-provider client ID, not a package name.
+The `elsa-studio-wasm` value used as an OpenID Connect `ClientId` in examples is an identity-provider client ID, not a package name.
 
 The React wrapper's source is in `src/wrappers/wrappers/react-wrapper` of the `elsa-studio` repository.
 

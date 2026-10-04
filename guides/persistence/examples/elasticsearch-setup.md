@@ -31,7 +31,7 @@ store ownership explicitly so operators know where each type of data lives.
 
 ## Packages and endpoint
 
-Install the extension package that matches the rest of your Elsa 3.8.1 package
+Install the extension package that matches the rest of your Elsa 3.9.0 package
 set:
 
 ```bash

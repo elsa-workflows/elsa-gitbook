@@ -29,7 +29,7 @@ This guide describes the implementation in the `release/3.8.0` snapshot of
 
 ## Install and enable the module
 
-Add the Elsa HTTP Webhooks package that matches the rest of your Elsa 3.8.0
+Add the Elsa HTTP Webhooks package that matches the rest of your Elsa 3.9.0
 packages:
 
 ```bash

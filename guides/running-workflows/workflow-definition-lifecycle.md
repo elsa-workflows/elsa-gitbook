@@ -189,16 +189,16 @@ The main lifecycle operations are:
 | Operation | Endpoint | Permission |
 | --- | --- | --- |
 | List definitions | `GET /workflow-definitions` and `GET /workflow-definitions/{definitionId}` | `workflows/definitions:view` |
-| List versions | `GET /workflow-definitions/{definitionId}/versions` | `workflows/definitions/versions:view` |
+| List versions | `GET /workflow-definitions/{definitionId}/versions` | `workflows/definitions:view` |
 | Save a draft | `POST /workflow-definitions` or the version update endpoint exposed by the API links | `workflows/definitions:write` |
 | Publish latest | `POST /workflow-definitions/{definitionId}/publish` | `workflows/definitions:publish` |
 | Retract published version | `POST /workflow-definitions/{definitionId}/retract` | `workflows/definitions:retract` |
 | Roll back to a version | `POST /workflow-definitions/{definitionId}/revert/{version}` | `workflows/definitions/versions:revert` |
 | Start a workflow | `GET`/`POST .../execute` or `POST .../dispatch` | `workflows/definitions:execute` |
 
-The `3.9.0` API expresses permissions as `{resource}:{verb}` claims. The
-workflow-definition version endpoints use a separate resource from the main
-definition endpoints. A host can grant a subtree such as
+The `3.9.0` API expresses permissions as `{resource}:{verb}` claims. Listing
+versions uses the main definition resource; rolling back uses the separate
+`workflows/definitions/versions` resource. A host can grant a subtree such as
 `workflows/definitions/*` when that is appropriate, but least-privilege roles
 can grant only the resource and verb needed for the operation.
 
