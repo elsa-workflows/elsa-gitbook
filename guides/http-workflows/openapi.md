@@ -24,7 +24,7 @@ automatically.
 Add the package version that matches the rest of your Elsa deployment:
 
 ```bash
-dotnet add package Elsa.Http.OpenApi --version 3.8.0
+dotnet add package Elsa.Http.OpenApi --version 3.9.0
 ```
 
 Enable the feature while configuring Elsa's HTTP module, then map its two

@@ -7,7 +7,7 @@ description: >-
 # Keycloak Walkthrough
 
 {% hint style="info" %}
-This walkthrough uses the stable Elsa 3.8.0 External Authentication packages.
+This walkthrough uses the stable Elsa External Authentication packages.
 Use sample credentials only in an isolated development environment and keep
 provider secrets outside source control.
 {% endhint %}

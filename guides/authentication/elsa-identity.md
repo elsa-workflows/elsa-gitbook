@@ -12,10 +12,10 @@ strings; issued JWTs and authenticated API keys expose those permissions as
 `permissions` claims.
 
 {% hint style="info" %}
-The examples target Elsa 3.8.0. Install the identity package from NuGet.org:
+The examples target Elsa 3.9.0. Install the identity package from NuGet.org:
 
 ```bash
-dotnet add package Elsa.Identity --version 3.8.0
+dotnet add package Elsa.Identity --version 3.9.0
 ```
 {% endhint %}
 
@@ -62,7 +62,7 @@ app.Run();
 The authentication and authorization middleware must run before the Elsa API
 endpoints.
 
-For a new host that needs an initial administrator, prefer the 3.8.0
+For a new host that needs an initial administrator, prefer the
 `DefaultAdminUser` bootstrap instead of a hard-coded `UseAdminUserProvider()`
 sample. Read both values from deployment configuration:
 
@@ -84,10 +84,11 @@ builder.Services.AddElsa(elsa => elsa
 The initializer is idempotent. The abbreviated registration above uses
 in-memory identity stores; for durable users and roles, use the EF identity
 provider shown in the [server setup guide](../../application-types/elsa-server.md).
-Rotate the bootstrap credentials after initial access. `UseDefaultAuthentication()` does not grant the security-root
-permission to localhost by default; use an authenticated administrator for
-deployed hosts. An isolated local host can opt in explicitly with
-`EnableLocalHostPermissionGrantForSecurityRoot()`.
+Rotate the bootstrap credentials after initial access. Elsa 3.9 removed the
+localhost permission grant and `EnableLocalHostPermissionGrantForSecurityRoot()`.
+Bootstrap with `UseDefaultAdmin` or an admin API key
+(`UseDefaultAuthentication(auth => auth.UseAdminApiKey(key))`). If neither is
+configured and no users exist, startup logs an error.
 
 ## Configure tokens, users, and roles
 
@@ -101,7 +102,7 @@ shape is:
       "SigningKey": "set-outside-source-control",
       "Issuer": "https://elsa.example",
       "Audience": "https://elsa.example",
-      "AccessTokenLifetime": "01:00:00",
+      "AccessTokenLifetime": "00:15:00",
       "RefreshTokenLifetime": "7.00:00:00"
     },
     "Roles": [
@@ -109,9 +110,9 @@ shape is:
         "Id": "workflow-viewer",
         "Name": "Workflow Viewer",
         "Permissions": [
-          "read:workflow-definitions",
-          "read:workflow-instances",
-          "read:activity-execution"
+          "workflows/definitions:view",
+          "workflows/instances:view",
+          "workflows/activity-executions:view"
         ]
       }
     ],
@@ -191,6 +192,54 @@ This behavior applies to Elsa Identity's local credential flow. It is separate
 from External Authentication session and refresh-token handling, which uses
 the provider connection and session configuration documented in that
 authentication topology.
+
+## Sign out
+
+`POST /identity/logout` ends the sign-in session of a refresh token. Call it
+with a valid access token and the refresh token in the body:
+
+```http
+POST /elsa/api/identity/logout
+Authorization: Bearer <access token>
+Content-Type: application/json
+
+{ "refreshToken": "<refresh token>" }
+```
+
+It returns `204 No Content`. After that, every refresh token of the session
+gets `401` from `/identity/refresh-token`. Other sessions of the same user are
+not affected.
+
+- **Access tokens are not revoked.** They stay valid until they expire. The
+  default `AccessTokenLifetime` is 15 minutes in 3.9 (it was 1 hour).
+- **Revocations need storage.** With EF Core persistence they are stored in the
+  `RevokedSessions` table. Apply that migration before upgraded hosts refresh
+  tokens; startup migration covers it unless `RunMigrations` is off. Without
+  EF Core (for example MongoDB or Dapper), revocations are kept in memory on
+  each node and are lost on restart.
+- Password reset and user deletion don't end existing sessions, and there is
+  no "sign out everywhere" yet.
+
+Studio's Elsa Identity sign-in adds a user menu with **Sign out** that calls
+this endpoint.
+
+## Manage roles in Studio
+
+In Studio, open **Identity & access** > **Roles**. The menu entry needs
+`identity/roles:view`; creating, editing and deleting a role need
+`identity/roles:create`, `:update` and `:delete`.
+
+- **Exact permissions** lists the permission catalog by category. **Select
+  all** grants only the permissions currently shown by the search filter, and
+  turns into **Deselect** when they are all selected.
+- **Advanced grants** holds wildcards such as `workflows/*:view` or `*`.
+- A stored grant that no longer resolves, such as a pre-3.9
+  `read:workflow-definitions`, appears under **Review and repair**. Replace or
+  remove it before you can save the role.
+- **Delete role** shows where the role is still used before you confirm.
+
+Role changes reach a user at the next token refresh. Studio shows them after a
+page reload.
 
 ## Production guidance
 

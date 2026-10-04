@@ -150,7 +150,7 @@ The request requires `workflowInstanceIds` and optionally `activityIds`. When
 workflow state's incident list.
 
 This endpoint belongs to the Alterations module and requires the
-`run:alterations` permission. See
+`alterations:execute` permission. See
 [Applying Alterations REST API](../../features/alterations/applying-alterations/rest-api.md).
 
 ## Practical troubleshooting flow

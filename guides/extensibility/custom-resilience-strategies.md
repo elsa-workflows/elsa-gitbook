@@ -133,8 +133,8 @@ is the separate value referenced by workflow definitions.
 ```
 
 Elsa reads this array from `Resilience:Strategies` and lists the resulting
-instances from `GET /resilience/strategies`. The strategy endpoint requires
-one of `read:*`, `read:resilience`, or `read:resilience:strategies`.
+instances from `GET /resilience/strategies`. Any signed-in user can call
+the strategy endpoint.
 
 ### Modular shell hosts
 

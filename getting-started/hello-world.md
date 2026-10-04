@@ -26,7 +26,7 @@ Navigate to your newly created project's root directory and add the following pa
 
 ```bash
 cd ElsaConsole
-dotnet add package Elsa --version 3.8.0
+dotnet add package Elsa --version 3.9.0
 ```
 {% endstep %}
 
@@ -73,7 +73,7 @@ This code sets up a service container and adds Elsa services to it. The `service
 
 ## ASP.NET Core
 
-The ASP.NET Core sample below uses the Elsa 3.8.0 HTTP activity API. Keep the
+The ASP.NET Core sample below uses the Elsa HTTP activity API. Keep the
 `Elsa` and `Elsa.Http` package versions aligned when copying the sample.
 
 {% stepper %}
@@ -90,12 +90,12 @@ dotnet new web -n "ElsaWeb"
 {% step %}
 **Add Packages**
 
-Navigate to your project's root directory and install the Elsa 3.8.0 packages:
+Navigate to your project's root directory and install the Elsa 3.9.0 packages:
 
 ```bash
 cd ElsaWeb
-dotnet add package Elsa --version 3.8.0
-dotnet add package Elsa.Http --version 3.8.0
+dotnet add package Elsa --version 3.9.0
+dotnet add package Elsa.Http --version 3.9.0
 ```
 {% endstep %}
 

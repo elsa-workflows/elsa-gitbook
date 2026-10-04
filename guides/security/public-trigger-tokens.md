@@ -30,7 +30,7 @@ bookmark request body, query parameters, and 1 MiB POST limit, see
 | --- | --- | --- |
 | Resume one waiting bookmark with optional workflow input | Bookmark resume | Resolves the token to a bookmark and resumes it synchronously or through the bookmark queue. |
 | Publish a named event to one workflow instance | Public event trigger | Resolves the token to an event name and workflow instance, then publishes the event. It does not accept an input body. |
-| Publish an event from an authenticated integration | Authenticated event trigger | `POST /events/{eventName}/trigger` with the `trigger:event` permission. The request can include input, correlation, instance, activity, and execution-mode fields. |
+| Publish an event from an authenticated integration | Authenticated event trigger | `POST /events/{eventName}/trigger` with the `workflows/events:trigger` permission. The request can include input, correlation, instance, activity, and execution-mode fields. |
 
 Do not use the public event route when the caller needs to provide arbitrary
 event input or an authenticated identity. Use the authenticated route or a
@@ -100,7 +100,7 @@ Content-Type: application/json
 }
 ```
 
-The endpoint requires the `trigger:event` permission. Its request supports an
+The endpoint requires the `workflows/events:trigger` permission. Its request supports an
 optional workflow instance ID, correlation ID, activity instance ID, input,
 and execution mode. The release defaults the execution mode to asynchronous;
 set it explicitly when the caller needs a different mode. Use this endpoint

@@ -139,7 +139,17 @@ Use `ClientSecret` only for confidential clients such as the server host. In the
 
 `AuthenticationScopes` are used during Studio sign-in. `BackendApiScopes` are used when Studio requests bearer tokens for Elsa Server API calls.
 
-For Blazor Server Studio, register `{studio-url}/signin-oidc` as the redirect URI and `{studio-url}/signout-callback-oidc` as the signed-out callback URI unless you override the defaults. Studio initiates logout at `{studio-url}/authentication/logout`.
+For Blazor Server Studio, register `{studio-url}/signin-oidc` as the redirect URI and `{studio-url}/signout-callback-oidc` as the signed-out callback URI unless you override the defaults. Studio initiates logout with an antiforgery-protected `POST {studio-url}/authentication/logout`; a `GET` no longer signs out. Use **Sign out** in the app bar's user menu, or `POST` with an antiforgery token.
+
+If you use a custom `_Host.cshtml`, render `<persist-component-state />` after the root components and before `_framework/blazor.server.js`. Without it, sign-out on a long-polling circuit has no antiforgery token and is rejected with a 400:
+
+```html
+<component type="typeof(App)" render-mode="ServerPrerendered" />
+<persist-component-state />
+<script src="_framework/blazor.server.js"></script>
+```
+
+The Elsa Identity and OpenID Connect sign-in modules add a user menu with **Sign out** to the app bar. If your host adds its own user menu, remove it.
 
 ## Standalone Blazor WebAssembly Host
 
@@ -253,7 +263,16 @@ If you use an API key instead of a bearer token, provide `api-key` and omit `acc
 
 ### React Integration
 
-The `elsa-studio` repository includes a React wrapper in `src/wrappers/wrappers/react-wrapper`.
+The custom elements and the React wrapper are published to npm under the `@elsa-workflows` scope (the unscoped names don't exist):
+
+```bash
+npm install @elsa-workflows/elsa-studio-wasm        # custom elements
+npm install @elsa-workflows/elsa-studio-wasm-react  # React wrapper
+```
+
+The `elsa-studio-wasm` value used as an OpenID Connect `ClientId` in examples is an identity-provider client ID, not a package name.
+
+The React wrapper's source is in `src/wrappers/wrappers/react-wrapper` of the `elsa-studio` repository.
 
 Its `BackendProvider` component renders `elsa-backend-provider`, and its `WorkflowDefinitionEditor` component renders `elsa-workflow-definition-editor`.
 

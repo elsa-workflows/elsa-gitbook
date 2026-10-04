@@ -6,9 +6,9 @@ description: >-
 
 # External Authentication troubleshooting
 
-> **Elsa 3.8.0 stable.** External Authentication ships in the stable Core and
-> Studio package family. Check that Elsa Core and Elsa Studio use compatible
-> `3.8.0` packages before investigating a runtime symptom as a configuration
+> **Available since Elsa 3.8.0.** External Authentication ships in the stable
+> Core and Studio package family. Check that Elsa Core and Elsa Studio use the
+> same version before investigating a runtime symptom as a configuration
 > problem.
 
 Start with the boundary that failed: Studio host startup, login method discovery,
@@ -20,7 +20,7 @@ URLs in logs or support tickets.
 ## Fast triage
 
 1. Record the Studio host model (Blazor Server or WebAssembly), public Studio
-   origin, Elsa API `Backend:Url`, and the resolved `3.8.0` package versions—without
+   origin, Elsa API `Backend:Url`, and the resolved package versions—without
    secret values.
 2. Confirm `Authentication:Provider` is exactly `ExternalAuthentication`.
 3. Confirm Studio's `ClientId` identifies a dedicated Elsa Authentication
@@ -202,7 +202,7 @@ Elsa endpoint permission. A Studio menu item being visible is not proof that
 the API will authorize the action.
 
 For External Authentication administration, verify the exact permission, such
-as `external-authentication:connections:read`, rather than a similarly named
+as `external-authentication/connections:view`, rather than a similarly named
 role. See [External Authentication administration](administration.md#routes-and-permissions).
 
 ### WASM user is signed out after refresh/reload
@@ -248,8 +248,8 @@ Confirm that the shared `AddExternalAuthenticationModule(backendApiConfig)`
 registration is present, Elsa Server advertises the External Authentication
 feature, and the current user has the route's menu permission. For example,
 connection management requires
-`external-authentication:connections:read`; identity links require
-`external-authentication:links:manage`.
+`external-authentication/connections:view`; identity links require
+`external-authentication/identity-links:write`.
 
 ### Connection cannot be edited
 
@@ -286,7 +286,7 @@ tokens or raw claims.
 When disabling would remove the final normal login method, Studio requires an
 explicit recovery override confirmation. Verify an independent recovery path
 first, including break-glass access where applicable. You may optionally revoke
-active sessions if you have `external-authentication:sessions:revoke`; otherwise
+active sessions if you have `external-authentication/sessions:revoke`; otherwise
 existing sessions can remain active until expiry or separate revocation.
 
 ### Archived connection does not reappear as a login method
@@ -297,7 +297,7 @@ configuration-owned connection.
 
 ### Identity link action is denied or has unexpected sign-in results
 
-Confirm `external-authentication:links:manage`, tenant context, Elsa user ID,
+Confirm `external-authentication/identity-links:write`, tenant context, Elsa user ID,
 connection key, issuer, and subject. Replacing a link resets its sign-in
 history; unlinking prevents that external identity from signing in until an
 appropriate new link or policy permits it.
@@ -306,8 +306,8 @@ appropriate new link or policy permits it.
 
 The page deliberately contains only safe metadata and never returns tokens,
 external subject values, or claim snapshots. Confirm
-`external-authentication:sessions:read` for viewing and
-`external-authentication:sessions:revoke` to revoke. This is a privacy/security
+`external-authentication/sessions:view` for viewing and
+`external-authentication/sessions:revoke` to revoke. This is a privacy/security
 boundary, not a data-loading error.
 
 ## Verification commands

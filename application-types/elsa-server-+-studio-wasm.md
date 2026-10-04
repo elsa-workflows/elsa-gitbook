@@ -11,8 +11,8 @@ Instead of running Elsa Server and Elsa Studio as separate ASP.NET Core applicat
 For Elsa Studio, we will setup the Blazor parts using Blazor WebAssembly, which static files will be served from the ASP.NET Core host application.
 
 {% hint style="warning" %}
-This walkthrough requires the .NET 10 SDK and targets Elsa 3.8.0. The server must receive a real identity signing
-key and deployment-owned users/applications before startup. Stable 3.8.0 does
+This walkthrough requires the .NET 10 SDK and targets Elsa 3.9.0. The server must receive a real identity signing
+key and deployment-owned users/applications before startup. Elsa does
 not provide production-usable default admin credentials.
 {% endhint %}
 
@@ -59,18 +59,18 @@ In this chapter, we will setup the host, which will host both the Elsa Server en
     Add the following packages:
 
     ```bash
-    dotnet add package Elsa --version 3.8.0
-    dotnet add package Elsa.Persistence.EFCore --version 3.8.0
-    dotnet add package Elsa.Persistence.EFCore.Sqlite --version 3.8.0
-    dotnet add package Elsa.Http --version 3.8.0
-    dotnet add package Elsa.Identity --version 3.8.0
-    dotnet add package Elsa.Scheduling --version 3.8.0
-    dotnet add package Elsa.Workflows.Api --version 3.8.0
-    dotnet add package Elsa.Dashboard.Api --version 3.8.0
-    dotnet add package Elsa.Workflows.Runtime.Dashboard --version 3.8.0
-    dotnet add package Elsa.Expressions.CSharp --version 3.8.0
-    dotnet add package Elsa.Expressions.JavaScript --version 3.8.0
-    dotnet add package Elsa.Expressions.Liquid --version 3.8.0
+    dotnet add package Elsa --version 3.9.0
+    dotnet add package Elsa.Persistence.EFCore --version 3.9.0
+    dotnet add package Elsa.Persistence.EFCore.Sqlite --version 3.9.0
+    dotnet add package Elsa.Http --version 3.9.0
+    dotnet add package Elsa.Identity --version 3.9.0
+    dotnet add package Elsa.Scheduling --version 3.9.0
+    dotnet add package Elsa.Workflows.Api --version 3.9.0
+    dotnet add package Elsa.Dashboard.Api --version 3.9.0
+    dotnet add package Elsa.Workflows.Runtime.Dashboard --version 3.9.0
+    dotnet add package Elsa.Expressions.CSharp --version 3.9.0
+    dotnet add package Elsa.Expressions.JavaScript --version 3.9.0
+    dotnet add package Elsa.Expressions.Liquid --version 3.9.0
     dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server --version 10.0.8
     ```
 2.  **Update Program.cs**
@@ -156,8 +156,8 @@ double-underscore environment-variable forms) through deployment-owned
 configuration. Set `Identity:Tokens:SigningKey` (or
 `Identity__Tokens__SigningKey`) to a random printable-ASCII value of at least
 32 characters. The C# and Python engines are host-code execution and are
-disabled by default; enable them only for trusted authors and grant the
-matching `exec:csharp-expressions` or `exec:python-expressions` permission.
+disabled by default; enable them only on hosts where every workflow author is
+trusted.
 See
 [Upgrade to Elsa 3.8.0](../getting-started/upgrading-to-3.8.md) for the full
 security and module checklist.
@@ -204,7 +204,7 @@ security and module checklist.
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-        <title>Elsa Studio 3.8.0</title>
+        <title>Elsa Studio</title>
         <base href="/"/>
         <link rel="apple-touch-icon" sizes="180x180" href="@basePath/_content/Elsa.Studio.Shell/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="@basePath/_content/Elsa.Studio.Shell/favicon-32x32.png">
@@ -263,14 +263,14 @@ Next, we will modify the client project.
 
     ```bash
     cd ../ElsaStudio
-    dotnet add package Elsa.Studio --version 3.8.0
-    dotnet add package Elsa.Studio.Authentication.UI --version 3.8.0
-    dotnet add package Elsa.Studio.Core.BlazorWasm --version 3.8.0
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm --version 3.8.0
-    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI --version 3.8.0
-    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm --version 3.8.0
-    dotnet add package Elsa.Studio.Localization.BlazorWasm --version 3.8.0
-    dotnet add package Elsa.Api.Client --version 3.8.0
+    dotnet add package Elsa.Studio --version 3.9.0
+    dotnet add package Elsa.Studio.Authentication.UI --version 3.9.0
+    dotnet add package Elsa.Studio.Core.BlazorWasm --version 3.9.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.BlazorWasm --version 3.9.0
+    dotnet add package Elsa.Studio.Authentication.ElsaIdentity.UI --version 3.9.0
+    dotnet add package Elsa.Studio.Authentication.OpenIdConnect.BlazorWasm --version 3.9.0
+    dotnet add package Elsa.Studio.Localization.BlazorWasm --version 3.9.0
+    dotnet add package Elsa.Api.Client --version 3.9.0
     dotnet add package Microsoft.AspNetCore.Components.WebAssembly --version 10.0.8
     dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Authentication --version 10.0.8
     ```

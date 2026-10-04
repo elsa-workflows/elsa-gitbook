@@ -19,11 +19,10 @@ status, sub-status, incidents, or journal timeline.
 
 - Open a Studio host connected to the Elsa server that owns the instance.
 - Make sure your role can read activity executions with
-  `read:activity-execution`. The summary, full-record, and call-stack endpoints
+  `workflows/activity-executions:view`. The summary, full-record, and call-stack endpoints
   use this permission.
 - If you need retry details, the connected host must also expose the Elsa
-  Resilience feature and allow the retry endpoint's configured permissions:
-  `read:*`, `read:resilience`, or `read:resilience:retries`. A retry panel is
+  Resilience feature, and your role needs `resilience/retries:view`. A retry panel is
   not shown when no retry records are returned.
 - If state, outcomes, or output are missing, check the workflow's [log
   persistence](../optimize/log-persistence.md) configuration before treating
@@ -77,7 +76,7 @@ it is a different view from the execution-specific drawer.
 
 Confirm that you selected the intended activity node and that the instance has
 actually reached that activity. Then check the server response and the
-`read:activity-execution` permission. The tab is populated from the activity
+`workflows/activity-executions:view` permission. The tab is populated from the activity
 execution summary endpoint, filtered by workflow instance ID and activity node
 ID.
 
@@ -118,8 +117,8 @@ different API prefix; the route suffixes remain the same.
 | Execution call stack | `GET /activity-executions/EXECUTION_ID/call-stack` |
 | Retry attempts | `GET /resilience/retries/EXECUTION_ID` |
 
-All activity-execution routes require `read:activity-execution`. The retry
-route has its own resilience-read permission configuration. Use the API when
+All activity-execution routes require `workflows/activity-executions:view`. The retry
+route requires `resilience/retries:view`. Use the API when
 you need a call stack, paging, raw record data, or a diagnostic script rather
 than the Studio presentation.
 

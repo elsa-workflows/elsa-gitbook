@@ -115,17 +115,17 @@ host's route configuration.
 
 Label catalog operations:
 
-- `GET /labels` and `GET /labels/{id}` — `read:labels`.
-- `POST /labels` — `create:labels`.
-- `POST /labels/{id}` — `update:labels`.
-- `DELETE /labels/{id}` — `delete:labels`.
+- `GET /labels` and `GET /labels/{id}` — `labels:view`.
+- `POST /labels` — `labels:create`.
+- `POST /labels/{id}` — `labels:update`.
+- `DELETE /labels/{id}` — `labels:delete`.
 
 Definition-association operations:
 
 - `GET /workflow-definitions/{id}/labels` —
-  `read:workflow-definition-labels`.
+  `workflows/definitions/labels:view`.
 - `POST /workflow-definitions/{id}/labels` —
-  `update:workflow-definition-labels`.
+  `workflows/definitions/labels:update`.
 
 Create a label with a name, description, and optional color:
 
@@ -180,7 +180,7 @@ does not add labels to a running workflow.
 ## Permissions and tenants
 
 Grant only the operations each role needs. A catalog viewer generally needs
-`read:labels` and, when loading associations, `read:workflow-definition-labels`.
+`labels:view` and, when loading associations, `workflows/definitions/labels:view`.
 Label administrators need the create, update, and delete permissions as well
 as the association update permission.
 

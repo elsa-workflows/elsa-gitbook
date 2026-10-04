@@ -6,7 +6,7 @@ description: >-
 
 # Migrate from Direct OpenID Connect
 
-> **Elsa 3.8.0 stable:** Brokered External Authentication is included in the
+> **Available since Elsa 3.8.0:** Brokered External Authentication is included in the
 > stable Core and Studio packages. Plan this as a reversible, staged migration;
 > do not remove the existing direct OpenID Connect registration until the
 > brokered flow is proven in your environment.

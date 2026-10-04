@@ -18,12 +18,12 @@ route suffixes unchanged.
 
 | Question | Start here | Required permission |
 | --- | --- | --- |
-| Which instances are waiting, faulted, or have incidents? | `GET` or `POST /workflow-instances` | `read:workflow-instances` |
-| What is the full persisted state of one instance? | `GET /workflow-instances/{id}` | `read:workflow-instances` |
-| Did it change state recently? | `GET /workflow-instances/{id}/execution-state` | `read:workflow-instances` |
-| Which activity transition explains the result? | `GET` or `POST /workflow-instances/{id}/journal` | `read:workflow-instances` |
-| What was captured for one activity execution? | `/activity-executions/*` | `read:activity-execution` |
-| What are the root workflow's declared variables? | `/workflow-instances/{id}/variables` | `read:workflow-instances` |
+| Which instances are waiting, faulted, or have incidents? | `GET` or `POST /workflow-instances` | `workflows/instances:view` |
+| What is the full persisted state of one instance? | `GET /workflow-instances/{id}` | `workflows/instances:view` |
+| Did it change state recently? | `GET /workflow-instances/{id}/execution-state` | `workflows/instances:view` |
+| Which activity transition explains the result? | `GET` or `POST /workflow-instances/{id}/journal` | `workflows/instances:view` |
+| What was captured for one activity execution? | `/activity-executions/*` | `workflows/activity-executions:view` |
+| What are the root workflow's declared variables? | `/workflow-instances/{id}/variables` | `workflows/instances:view` |
 
 The two permissions are deliberately separate. A role that can read an
 instance's status and journal does not automatically have access to detailed
@@ -165,7 +165,7 @@ details and the activity-execution APIs for the captured activity snapshot.
 
 ### 4. Inspect the relevant activity execution
 
-Activity execution APIs require `read:activity-execution`. They are distinct
+Activity execution APIs require `workflows/activity-executions:view`. They are distinct
 from the workflow-instance APIs because they can expose the detailed captured
 state of an activity. For the Studio workflow-instance viewer's click path and
 the limits of the execution drawer, see [Inspect Activity Executions in Elsa
@@ -207,7 +207,7 @@ Persistence](../optimize/log-persistence.md).
 The instance viewer's **Variables** tab is the safer first choice for a manual
 inspection. The API also exposes `GET /workflow-instances/{id}/variables` and
 `POST /workflow-instances/{id}/variables`; the read route requires
-`read:workflow-instances`, while mutation requires `write:workflow-instances`.
+`workflows/instances:view`, while mutation requires `workflows/instances:write`.
 The list contains the root workflow's declared variables and excludes values
 tagged `LargeData`; do not mistake it for every activity-local or dynamic value
 in the execution context. Use the instance's persisted state or the
@@ -229,7 +229,7 @@ After investigation, choose the action that matches the evidence:
 - **Faulted:** read the incident and surrounding journal entries, fix the
   cause, then use the documented operational retry path if appropriate.
 - **Wrong variable value:** correct only the specific persisted variable, with
-  the `write:workflow-instances` permission and an audit trail.
+  the `workflows/instances:write` permission and an audit trail.
 - **Unexpected execution chain:** use the call stack and parent workflow ID to
   trace the caller before retrying or cancelling.
 

@@ -212,7 +212,7 @@ Clients receive `ReceiveConsoleLogLineAsync`,
 can also call the hub's `StreamAsync` method for a SignalR streaming result.
 When a client reconnects, it should resubscribe with its latest filter.
 
-REST and hub access both require the `read:diagnostics:console-logs`
+REST and hub access both require the `diagnostics/console-logs:view`
 permission. The hub also requires an authenticated SignalR connection. Apply
 the same authentication, proxy, and WebSocket policy to this hub as to the
 rest of the Elsa API.
@@ -299,7 +299,7 @@ separate packages, permissions, buffers, and data models.
 2. Confirm `app.UseConsoleLogs()` runs in the endpoint-routing pipeline so the
    SignalR hub is mapped.
 3. Confirm the caller is authenticated and has
-   `read:diagnostics:console-logs`.
+   `diagnostics/console-logs:view`.
 4. Confirm the Studio module points to the same backend and that the backend
    advertises `Elsa.Diagnostics.ConsoleLogs.ShellFeatures.ConsoleLogs`.
 5. If recent lines are empty, check the source selector, stream, time, and

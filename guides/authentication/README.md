@@ -28,8 +28,8 @@ controls.
 | Authentication must be disabled for an isolated local environment | [Disable Authentication in Development](disable-authentication.md) |
 
 {% hint style="info" %}
-External Authentication is available in the stable Elsa 3.8.0 Core and Studio
-packages. Install the matching package family from NuGet.org.
+External Authentication is available in the stable Elsa Core and Studio
+packages since 3.8.0. Install the matching package family from NuGet.org.
 {% endhint %}
 
 Direct OpenID Connect and External Authentication are different topologies.

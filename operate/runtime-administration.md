@@ -25,9 +25,8 @@ queued or scheduled dispatch has stopped.
 | Escalate an unsafe or stuck shutdown | `POST /admin/workflow-runtime/force-drain` | Immediately force-cancels active execution cycles and leaves the runtime draining |
 
 The route prefix is relative to the Elsa API base configured by your host. The
-release endpoints use the `ManageWorkflowRuntime` permission for pause,
-resume, and force-drain. Status accepts either `read:workflow-runtime` or
-`ManageWorkflowRuntime`. See [Elsa API Permissions](../guides/authentication/permissions.md)
+release endpoints use the `workflows/runtime:control` permission for pause,
+resume, and force-drain. Status requires `workflows/runtime:view`. See [Elsa API Permissions](../guides/authentication/permissions.md)
 for role design.
 
 ## Configure graceful shutdown
@@ -69,7 +68,7 @@ the remaining overall drain budget.
 
 ```http
 GET /admin/workflow-runtime/status
-Authorization: Bearer <token with read:workflow-runtime>
+Authorization: Bearer <token with workflows/runtime:view>
 ```
 
 The response contains the composite quiescence state, each registered ingress

@@ -40,7 +40,7 @@ Install the ElsaScript Blob Storage package in the application that hosts and
 executes workflows:
 
 ```bash
-dotnet add package Elsa.WorkflowProviders.BlobStorage.ElsaScript --version 3.8.0
+dotnet add package Elsa.WorkflowProviders.BlobStorage.ElsaScript --version 3.9.0
 ```
 
 Register both the base provider and its ElsaScript format handler:
@@ -160,7 +160,7 @@ curl --request POST \
 ```
 
 Use the route and authentication scheme configured by your host. The action
-requires `actions:workflow-definitions:reload`.
+requires `workflows/definitions:reload`.
 
 Do not use the `refresh` action for this purpose. Refresh re-indexes triggers
 for definitions already in the store; it does not read the external blob
@@ -230,7 +230,7 @@ Keep these release-specific constraints in mind:
    expression providers registered.
 4. **Changes are not visible:** call `POST
    /actions/workflow-definitions/reload` with a principal that has
-   `actions:workflow-definitions:reload`; `refresh` does not reload blobs.
+   `workflows/definitions:reload`; `refresh` does not reload blobs.
 5. **A deleted file still appears:** this is expected provider behavior. Remove
    or retract the persisted definition explicitly.
 

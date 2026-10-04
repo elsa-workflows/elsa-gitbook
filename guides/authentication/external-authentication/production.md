@@ -6,8 +6,8 @@ description: >-
 
 # Run External Authentication in Production
 
-> **Elsa 3.8.0 stable:** External Authentication is part of the stable Core and
-> Studio package family. Keep a tested `3.8.0` package set, rehearse upgrade and
+> **Available since Elsa 3.8.0:** External Authentication is part of the stable
+> Core and Studio package family. Keep a tested package set, rehearse upgrade and
 > rollback, and retest sign-in, refresh, logout, and recovery paths after every
 > deployment change.
 

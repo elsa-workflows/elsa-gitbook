@@ -12,6 +12,7 @@
 * [Hello World](getting-started/hello-world.md)
 * [Prerequisites](getting-started/prerequisites.md)
 * [Packages](getting-started/packages.md)
+* [Upgrade to Elsa 3.9.0](getting-started/upgrading-to-3.9.md)
 * [Upgrade to Elsa 3.8.0](getting-started/upgrading-to-3.8.md)
 * [Database Configuration](getting-started/database-configuration.md)
 * [Containers](getting-started/containers/README.md)

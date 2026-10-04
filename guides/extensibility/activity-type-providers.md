@@ -152,8 +152,10 @@ If an external source changes after startup, refresh the registry explicitly:
 GET /descriptors/activities?refresh=true
 ```
 
-The endpoint requires `read:*` or `read:activity-descriptors`. It refreshes the
-server registry before returning the descriptor list. Make sure the provider
+Any signed-in user can call the endpoint. The `refresh=true` flag only takes
+effect for a caller with `workflows/descriptors/activities:view` or
+`workflows/definitions:view`; for other callers it is ignored. With the flag,
+the server refreshes its registry before returning the descriptor list. Make sure the provider
 reads current data and that all nodes share the same source and configuration.
 
 ## How Elsa Studio consumes providers

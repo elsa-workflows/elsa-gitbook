@@ -68,7 +68,7 @@ That endpoint returns the registered `IIncidentStrategy` implementations and
 their display metadata. When you pick one in the workflow definition settings,
 Studio stores the selected type alias or type name in
 `WorkflowDefinition.Options.IncidentStrategyType`.
-The endpoint requires the `read:incident-strategies` permission.
+Any signed-in user can call the endpoint.
 
 <figure><img src="../../.gitbook/assets/workflow-definition-incident-settings.png" alt=""><figcaption></figcaption></figure>
 

@@ -32,8 +32,8 @@ URL for your deployment.
 
 Management endpoints are protected by Elsa permission claims when API security
 is enabled. For example, listing workflow definitions requires
-`read:workflow-definitions`, while listing workflow instances requires
-`read:workflow-instances`. Give an integration only the permissions it needs;
+`workflows/definitions:view`, while listing workflow instances requires
+`workflows/instances:view`. Give an integration only the permissions it needs;
 do not reuse a Studio administrator token for background services.
 
 Configure authentication and claims before calling these endpoints. See
@@ -88,19 +88,19 @@ public sealed class WorkflowCatalog(IWorkflowDefinitionsApi definitions)
 
 | Area | HTTP method and route (relative to the API base) | .NET client interface | Typical permission |
 | --- | --- | --- | --- |
-| List definitions | `GET /workflow-definitions` | `IWorkflowDefinitionsApi.ListAsync` | `read:workflow-definitions` |
-| Get a definition by stable ID | `GET /workflow-definitions/by-definition-id/{definitionId}` | `IWorkflowDefinitionsApi.GetByDefinitionIdAsync` | `read:workflow-definitions` |
-| Save a definition | `POST /workflow-definitions` | `IWorkflowDefinitionsApi.SaveAsync` | `write:workflow-definitions` |
-| Publish a definition | `POST /workflow-definitions/{definitionId}/publish` | `IWorkflowDefinitionsApi.PublishAsync` | `publish:workflow-definitions` |
-| Run a definition now | `POST /workflow-definitions/{definitionId}/execute` | `IExecuteWorkflowApi.ExecuteAsync` | `exec:workflow-definitions` |
-| Queue a definition to run | `POST /workflow-definitions/{definitionId}/dispatch` | `IExecuteWorkflowApi.DispatchAsync` | `exec:workflow-definitions` |
-| List instances | `GET` or `POST /workflow-instances` | `IWorkflowInstancesApi.ListAsync` | `read:workflow-instances` |
-| Get an instance | `GET /workflow-instances/{id}` | `IWorkflowInstancesApi.GetAsync` | `read:workflow-instances` |
-| Read an instance journal | `GET /workflow-instances/{id}/journal` | `IWorkflowInstancesApi.GetJournalAsync` | `read:workflow-instances` |
-| Read filtered journal records | `POST /workflow-instances/{id}/journal` | `IWorkflowInstancesApi.GetFilteredJournalAsync` | `read:workflow-instances` |
-| Read execution state | `GET /workflow-instances/{id}/execution-state` | `IWorkflowInstancesApi.GetExecutionStateAsync` | `read:workflow-instances` |
-| Cancel an instance | `POST /cancel/workflow-instances/{id}` | `IWorkflowInstancesApi.CancelAsync` | `cancel:workflow-instances` |
-| List activity descriptors | `GET /descriptors/activities` | `IActivityDescriptorsApi.ListAsync` | `read:activity-descriptors` |
+| List definitions | `GET /workflow-definitions` | `IWorkflowDefinitionsApi.ListAsync` | `workflows/definitions:view` |
+| Get a definition by stable ID | `GET /workflow-definitions/by-definition-id/{definitionId}` | `IWorkflowDefinitionsApi.GetByDefinitionIdAsync` | `workflows/definitions:view` |
+| Save a definition | `POST /workflow-definitions` | `IWorkflowDefinitionsApi.SaveAsync` | `workflows/definitions:write` |
+| Publish a definition | `POST /workflow-definitions/{definitionId}/publish` | `IWorkflowDefinitionsApi.PublishAsync` | `workflows/definitions:publish` |
+| Run a definition now | `POST /workflow-definitions/{definitionId}/execute` | `IExecuteWorkflowApi.ExecuteAsync` | `workflows/definitions:execute` |
+| Queue a definition to run | `POST /workflow-definitions/{definitionId}/dispatch` | `IExecuteWorkflowApi.DispatchAsync` | `workflows/definitions:execute` |
+| List instances | `GET` or `POST /workflow-instances` | `IWorkflowInstancesApi.ListAsync` | `workflows/instances:view` |
+| Get an instance | `GET /workflow-instances/{id}` | `IWorkflowInstancesApi.GetAsync` | `workflows/instances:view` |
+| Read an instance journal | `GET /workflow-instances/{id}/journal` | `IWorkflowInstancesApi.GetJournalAsync` | `workflows/instances:view` |
+| Read filtered journal records | `POST /workflow-instances/{id}/journal` | `IWorkflowInstancesApi.GetFilteredJournalAsync` | `workflows/instances:view` |
+| Read execution state | `GET /workflow-instances/{id}/execution-state` | `IWorkflowInstancesApi.GetExecutionStateAsync` | `workflows/instances:view` |
+| Cancel an instance | `POST /cancel/workflow-instances/{id}` | `IWorkflowInstancesApi.CancelAsync` | `workflows/instances:cancel` |
+| List activity descriptors | `GET /descriptors/activities` | `IActivityDescriptorsApi.ListAsync` | Any signed-in user |
 
 The table lists the principal routes rather than every bulk, import, export,
 reload, and administration endpoint. When your host exposes OpenAPI, use the

@@ -11,6 +11,12 @@ workflow management, workflow runtime, and (optionally) Elsa Identity. It
 uses a connection provider to create database connections and select the SQL
 dialect used by the stores.
 
+{% hint style="info" %}
+Elsa 3.9.0 fixes Dapper migrations on fresh databases, including PostgreSQL, and
+adds runtime migration `20008`. See [Upgrade to Elsa
+3.9.0](../../../getting-started/upgrading-to-3.9.md#dapper).
+{% endhint %}
+
 This page targets the `release/3.8.1` source. The extension contains built-in
 connection providers for SQLite, SQL Server, and PostgreSQL. The extension
 does not contain a MySQL connection provider; choosing MySQL in an unrelated
@@ -38,7 +44,7 @@ implementations behind Elsa's existing management and runtime contracts. The
 Add the Dapper extension to the server project:
 
 ```bash
-dotnet add package Elsa.Persistence.Dapper --version 3.8.1
+dotnet add package Elsa.Persistence.Dapper --version 3.9.0
 ```
 
 The extension references the separate `Elsa.Persistence.Dapper.Migrations`
@@ -46,7 +52,7 @@ assembly. Add that package explicitly when your host refers to the migration
 types, as the examples below do:
 
 ```bash
-dotnet add package Elsa.Persistence.Dapper.Migrations --version 3.8.1
+dotnet add package Elsa.Persistence.Dapper.Migrations --version 3.9.0
 ```
 
 The extension's built-in connection providers use these ADO.NET drivers:

@@ -543,9 +543,9 @@ To share your module as a NuGet package:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elsa" Version="3.8.0" />
-    <PackageReference Include="Elsa.Workflows.Core" Version="3.8.0" />
-    <PackageReference Include="Elsa.Workflows.Runtime" Version="3.8.0" />
+    <PackageReference Include="Elsa" Version="3.9.0" />
+    <PackageReference Include="Elsa.Workflows.Core" Version="3.9.0" />
+    <PackageReference Include="Elsa.Workflows.Runtime" Version="3.9.0" />
   </ItemGroup>
 </Project>
 ```

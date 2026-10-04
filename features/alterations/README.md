@@ -17,7 +17,7 @@ Enabling `UseAlterations()` adds:
 * in-memory alteration plan and job stores by default
 * an in-memory background dispatcher for alteration jobs by default
 
-The write endpoints shown on this page require the `run:alterations` permission. Reading stored plan and job status uses `read:alterations`.
+The write endpoints shown on this page require the `alterations:execute` permission. Reading stored plan and job status uses `alterations:view`.
 
 ## When to use alterations
 
