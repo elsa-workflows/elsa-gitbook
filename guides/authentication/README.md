@@ -35,7 +35,7 @@ packages since 3.8.0. Install the matching package family from NuGet.org.
 Direct OpenID Connect and External Authentication are different topologies.
 External Authentication is the strategic successor for new deployments that
 need Elsa-managed provider connections and sessions. Direct OIDC remains
-supported throughout Elsa 3.x and is not formally deprecated in Elsa 3.8.
+supported in Elsa 3.9 and is not formally deprecated.
 
 ## Understand the security boundaries
 
