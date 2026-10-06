@@ -4,7 +4,7 @@ This backlog is prioritized by user impact and frequency of complaints
 based on gap analysis from 161 issues across elsa-studio and
 elsa-gitbook.
 
-## Slice Inventory (2026-10-04)
+## Slice Inventory (2026-10-06)
 
 This inventory reflects the current GitBook contents before selecting the
 next automation slice. "Covered" means the repository now includes a
@@ -133,15 +133,33 @@ acceptance criterion below is already complete.
 - `DOC-117` Studio environment selection and remote-backend routing
 - `DOC-118` Proto.Actor distributed-cache invalidation and cluster signals
 - `DOC-119` Elsa Identity 3.9.0 refresh-token subject resolution and 401 migration contract
+- `DOC-120` Studio OIDC safe return paths and deployment sub-path preservation
 
 ### Available next slices
 
-- `DOC-120` Studio OIDC safe return paths and deployment sub-path preservation
-  remains available for the next run.
+- `DOC-121` Studio reverse-proxy and sub-path hosting: document end-to-end
+  routing, static assets, backend API URLs, and SignalR behind a path-based
+  reverse proxy. DOC-120 validates authentication return paths only.
 
 ### Recommended next slice
 
-- `DOC-120` is the next recommended slice after the completed DOC-119 refresh.
+- `DOC-121` Studio reverse-proxy and sub-path hosting: provide a release-backed
+  end-to-end deployment guide for hosting Studio below a URL path.
+
+### Current run plan
+
+- `DOC-120` Studio OIDC safe return paths and deployment sub-path preservation
+  completed 2026-10-06 in `guides/authentication/direct-openid-connect.md`.
+  Added the released safe return-path contract, path-base examples, callback
+  registration guidance, and host-specific WebAssembly callback behavior.
+- Validation target used: `release/3.9.0` in `elsa-core`, `elsa-studio`, and
+  `elsa-extensions`; this supersedes the previous 3.8.0 target.
+- Presentation target met: a concise deployment and troubleshooting section
+  in the existing Direct OpenID Connect guide.
+
+### Recommended next slice
+
+- `DOC-121` is the next recommended slice after the completed DOC-120 refresh.
 
 ### Newly discovered topics
 
@@ -164,63 +182,60 @@ acceptance criterion below is already complete.
   subject claim and rejects missing, blank, conflicting, or unknown subjects
   with `401 Unauthorized`. The existing Identity guide only explains refresh
   tokens generally and does not document this migration-sensitive contract.
-- `DOC-120` Studio 3.9.0 preserves safe post-login return paths and
-  deployment sub-paths in its OIDC callback flow; the existing Direct OIDC
-  guide does not explain this behavior. Keep it queued after DOC-119.
+- `DOC-121` Studio 3.9.0 supports preserving the active path base in OIDC
+  return state, but DOC-120 evidence does not establish end-to-end sub-path
+  hosting for static assets, backend API URLs, or SignalR. Research these
+  surfaces before documenting a reverse-proxy recipe.
 
-### Current run inventory (2026-10-04)
+### Current run inventory (2026-10-06)
 
-- The published GitBook is complete through `DOC-118` at `main` commit
-  `7e08424e1a143d478f56e41b304e496f0adcc18b`; the local remote-tracking ref
-  was stale at the DOC-118 merge and was refreshed before this plan update.
+- The published GitBook is complete through `DOC-119` at `main` commit
+  `fdd4abb`; the local remote-tracking ref was refreshed from GitHub before
+  this plan update.
 - The requested `release/3.8.0` is superseded by the latest advertised
   `release/3.9.0` branches. Fresh refs are Core
-  `e606a53723370ba7ee80670e5f5c935535aa42d6`, Studio
+  `5d3582b6309a2fd8ea33ebdb8c39fb040bfdc514`, Studio
   `a30ed7c997dfb3cff1d5d095a4ee19ff03c7fe42`, and Extensions
   `89d4eb9b739ae135604aac2a1de18653a289bdb0`.
-- A published-main review found no prior focused slice left in the plan. The
-  release-source comparison found DOC-119 as a distinct, client-facing
-  refresh-token compatibility gap. DOC-025 remains covered, although its
-  guide may merit a separate source-maintenance audit; persistence vNext
-  remains research-only.
+- The published backlog identified DOC-120 as the only available focused
+  slice. Source review confirmed its safe redirect and return-path behavior
+  and added DOC-121 for the broader reverse-proxy sub-path gap. No other
+  distinct follow-on topic was discovered; persistence vNext remains
+  research-only.
 
-### Current run plan (2026-10-04)
+### Current run plan (2026-10-06)
 
-- Refresh `guides/authentication/elsa-identity.md` for Core 3.9.0. Document
-  the refresh endpoint, bearer-token request, replacement-token behavior,
-  stable subject resolution, exact `401` cases, same-name account-recreation
-  protection, and the client reauthentication boundary.
-- Keep Elsa Identity's local credential flow separate from External
-  Authentication sessions, avoid implying usernames identify token owners,
-  and link the migration note and source-backed endpoint tests.
-- Validate source assertions, focused Core Identity tests, changed-page and
-  navigation links, balanced fences, whitespace, immutable source links, and
-  iterative self-review before delivery.
+- Refresh `guides/authentication/direct-openid-connect.md` for Studio 3.9.0.
+  Cover safe return paths, path-base preservation in sign-in state, callback
+  registration under a sub-path, and server versus WebAssembly callback
+  behavior without claiming end-to-end proxy support.
+- Keep the broader proxy/routing/asset/API/SignalR deployment recipe queued as
+  DOC-121 and ground it in the corresponding release source before drafting.
+- Validate the exact release refs, changed-page and navigation links,
+  balanced fences, whitespace, immutable source links, and iterative
+  self-review before delivery.
 
-### Current run selection (2026-10-04)
+### Current run selection (2026-10-06)
 
-- Selected `DOC-119`: Elsa Identity 3.9.0 refresh-token subject resolution and
-  its `401 Unauthorized` migration contract.
+- Selected `DOC-120`: Studio OIDC safe return paths and deployment sub-path
+  preservation.
 
-### Current run completion (2026-10-04)
+### Current run completion (2026-10-06)
 
-- Refreshed `guides/authentication/elsa-identity.md` with the Elsa Identity
-  refresh endpoint, replacement-token/session behavior, stable subject
-  resolution, exact `401` cases, same-name account-recreation protection, and
-  the client reauthentication boundary. Kept the existing 3.8.0 setup sample
-  unchanged because the slice was limited to the 3.9.0 refresh contract.
-- Updated current coverage and the slice inventory. The published-main
-  inventory was corrected from stale local `origin/main` `72f5a55` to
-  `7e08424`; the next candidate is DOC-120 for Studio OIDC return-path safety.
-- Source assertions, changed-page links, all SUMMARY targets, all local
-  Markdown links, balanced fences, changed-page whitespace, and four
-  immutable Core source links passed. The focused Core Identity test attempt
-  was blocked by the release worktree's test-project dependency resolution
-  errors after restore; source tests cover the documented cases and hosted CI
-  remains the authoritative test gate.
-- Self-review pass 1 removed an overbroad package-version refresh outside this
-  slice and pass 2 found no remaining high-priority factual, source-grounding,
-  example, link, structure, regression, or formatting issues.
+- Refreshed the Direct OpenID Connect guide with the Studio 3.9.0 callback and
+  return-path behavior, path-base examples, and sub-path callback registration
+  notes. The 3.9.0 release branch is still latest; Core advanced to
+  `5d3582b` since the previous inventory, while Studio and Extensions refs are
+  unchanged.
+- Two self-review passes found and fixed one overstatement: captured return
+  state does not configure the provider callback or prove end-to-end hosting
+  under a reverse-proxy sub-path. No remaining high-priority factual, example,
+  link, structure, navigation, regression, or formatting issues remain.
+- Local checks passed: release-source assertions, changed-page relative links,
+  all `SUMMARY.md` targets, balanced Markdown fences, `git diff --check`, and
+  HTTP 200 for all nine immutable source links. Markdownlint, Vale, Lychee,
+  and GitBook CLI are not installed locally; no documentation test/build
+  command is configured in this checkout.
 
 ### Current run inventory (2026-10-01)
 
