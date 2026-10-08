@@ -16,7 +16,7 @@ The [Elsa Apps repository](https://github.com/elsa-workflows/elsa-apps) builds t
 The exact version tags `elsaworkflows/elsa-server:3.9.0` and `elsaworkflows/elsa-studio:3.9.0` are aliases for the Server and hosted WebAssembly images respectively. The corresponding `3.8.4` aliases are available too. Images support Linux on AMD64 and ARM64.
 
 {% hint style="warning" %}
-Do not use `elsaworkflows/elsa-studio:latest` for an Elsa 3 deployment: that tag follows Elsa 4 preview builds. The older `elsa-server-v3`, `elsa-studio-v3` and `elsa-server-and-studio-v3` repositories are legacy images; their `latest` tags do not track the current Elsa 3 release. Older Compose examples using those names need their image and configuration references reviewed before use.
+Do not use `elsaworkflows/elsa-server:latest` or `elsaworkflows/elsa-studio:latest` for an Elsa 3 deployment: those tags follow Elsa 4 preview builds. The older `elsa-server-v3`, `elsa-studio-v3` and `elsa-server-and-studio-v3` repositories are legacy images; their `latest` tags do not track the current Elsa 3 release. Older Compose examples using those names need their image and configuration references reviewed before use.
 {% endhint %}
 
 ### Elsa Server + Studio <a href="#elsa-server-and-studio" id="elsa-server-and-studio"></a>
