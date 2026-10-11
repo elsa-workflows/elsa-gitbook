@@ -2,7 +2,7 @@
 
 Use an exact Elsa 3 image version, and run Server and Studio at the same version. The examples below use `3.9.0`; `3.8.4` is also available for applications on that release line. See [Upgrading to Elsa 3.9](../upgrading-to-3.9.md) before upgrading an existing installation.
 
-Dockerfiles for Elsa Server and Studio hosts live in the [elsa-core docker directory](https://github.com/elsa-workflows/elsa-core/tree/3.9.0/docker):
+Dockerfiles for Elsa Server and Studio hosts live in the [elsa-core docker directory](https://github.com/elsa-workflows/elsa-core/tree/3.9.0/docker). The Docker Hub repositories used in the examples below are:
 
 | Application | Docker Hub repository |
 | --- | --- |
