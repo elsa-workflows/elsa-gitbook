@@ -50,7 +50,7 @@ feedback on an approach or have a question that is not yet a confirmed bug.
 Use the repositories according to the kind of example you need:
 
 - **Code-first workflows and server behavior:** browse the [core source and
-  reference apps](https://github.com/elsa-workflows/elsa-core/tree/release/3.8.0).
+  reference apps](https://github.com/elsa-workflows/elsa-core/tree/3.9.0).
 - **Visual design and embedded Studio:** browse the [Studio source](https://github.com/elsa-workflows/elsa-core/tree/main/studio)
   and the [Studio integration guides](studio/README.md).
 - **External services:** browse the [extensions source](https://github.com/elsa-workflows/elsa-core/tree/main/extensions),
@@ -98,7 +98,7 @@ question. Use the repository's private security-reporting path instead.
 - Open an issue before a large change so the maintainers can confirm scope.
 - Use a pull request for a focused fix, include the Elsa version you validated,
   and link the relevant issue or Discussion.
-- For code contributions, follow the [core contributing guidance](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/CONTRIBUTING.md).
+- For code contributions, follow the [core contributing guidance](https://github.com/elsa-workflows/elsa-core/blob/3.9.0/CONTRIBUTING.md).
   Studio and extensions now live inside elsa-core, so use that same guide.
 
 ## Release boundary for this guide
