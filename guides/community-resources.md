@@ -16,10 +16,11 @@ available for Elsa 3; community channels are external sites and can change.
   announcements, and Elsa+ services.
 - [Elsa core repository](https://github.com/elsa-workflows/elsa-core) for the
   workflow engine, server, APIs, activities, and release notes.
-- [Elsa Studio repository](https://github.com/elsa-workflows/elsa-studio) for
-  the modular dashboard and Studio extension points.
-- [Elsa extensions repository](https://github.com/elsa-workflows/elsa-extensions)
-  for integration modules developed outside the core repository. Check each
+- [Elsa Studio source](https://github.com/elsa-workflows/elsa-core/tree/main/studio)
+  for the modular dashboard and Studio extension points. Studio now lives
+  inside elsa-core.
+- [Elsa extensions source](https://github.com/elsa-workflows/elsa-core/tree/main/extensions)
+  for integration modules that now live inside elsa-core. Check each
   module's status and README before adopting it.
 
 When you are evaluating an example or answer, check its package versions and
@@ -33,8 +34,8 @@ different namespaces, APIs, or hosting modules.
 | Learn a concept or follow a setup path | [Documentation](https://docs.elsaworkflows.io/) and the [Elsa samples](https://github.com/elsa-workflows/elsa-samples) | Start with the guide that matches your host type and Elsa version. |
 | Ask how to approach a design or integration | [GitHub Discussions](https://github.com/elsa-workflows/elsa-core/discussions) | Describe the business goal, hosting model, package versions, and the smallest relevant workflow. |
 | Report a reproducible core or server defect | [Core issues](https://github.com/elsa-workflows/elsa-core/issues) | Include a minimal reproduction, expected behavior, actual behavior, and logs. |
-| Report a Studio defect | [Studio issues](https://github.com/elsa-workflows/elsa-studio/issues) | Include the Studio host model, browser, server URL shape, and whether the issue reproduces with the release version. |
-| Report an extension defect | [Extensions issues](https://github.com/elsa-workflows/elsa-extensions/issues) | Name the integration package, provider version, host configuration, and external-service response. |
+| Report a Studio defect | [Core issues](https://github.com/elsa-workflows/elsa-core/issues) | Studio now lives inside elsa-core; report issues there. Include the Studio host model, browser, server URL shape, and whether the issue reproduces with the release version. |
+| Report an extension defect | [Core issues](https://github.com/elsa-workflows/elsa-core/issues) | Extensions now live inside elsa-core; report issues there. Name the integration package, provider version, host configuration, and external-service response. |
 | Search or ask a short technical question | [Stack Overflow questions tagged `elsa-workflows`](https://stackoverflow.com/questions/tagged/elsa-workflows) | Search first, then provide a focused question and a runnable or reproducible example. |
 | Talk to people in real time | [Elsa Discord](https://discord.gg/hhChk5H472) | Use a concise summary and link back to a Discussion or issue when the answer should be searchable. |
 | Check what changed or what is released | [Core releases](https://github.com/elsa-workflows/elsa-core/releases) and [NuGet](https://www.nuget.org/) | Verify the package version, release notes, and compatibility before upgrading. |
@@ -50,9 +51,9 @@ Use the repositories according to the kind of example you need:
 
 - **Code-first workflows and server behavior:** browse the [core source and
   reference apps](https://github.com/elsa-workflows/elsa-core/tree/release/3.8.0).
-- **Visual design and embedded Studio:** browse the [Studio source](https://github.com/elsa-workflows/elsa-studio/tree/release/3.8.0)
+- **Visual design and embedded Studio:** browse the [Studio source](https://github.com/elsa-workflows/elsa-core/tree/main/studio)
   and the [Studio integration guides](studio/README.md).
-- **External services:** browse the [extensions source](https://github.com/elsa-workflows/elsa-extensions/tree/release/3.8.0),
+- **External services:** browse the [extensions source](https://github.com/elsa-workflows/elsa-core/tree/main/extensions),
   then open the integration's README and project file before copying its
   registration code.
 - **End-to-end learning examples:** browse the [Elsa samples repository](https://github.com/elsa-workflows/elsa-samples).
@@ -97,18 +98,17 @@ question. Use the repository's private security-reporting path instead.
 - Open an issue before a large change so the maintainers can confirm scope.
 - Use a pull request for a focused fix, include the Elsa version you validated,
   and link the relevant issue or Discussion.
-- For code contributions, follow the [core contributing guidance](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/CONTRIBUTING.md),
-  [Studio contributing guidance](https://github.com/elsa-workflows/elsa-studio/blob/release/3.8.0/CONTRIBUTING.md),
-  or [extensions contributing guidance](https://github.com/elsa-workflows/elsa-extensions/blob/release/3.8.0/CONTRIBUTING.md).
+- For code contributions, follow the [core contributing guidance](https://github.com/elsa-workflows/elsa-core/blob/release/3.8.0/CONTRIBUTING.md).
+  Studio and extensions now live inside elsa-core, so use that same guide.
 
 ## Release boundary for this guide
 
-The repository and channel map was checked against the `release/3.8.0`
-source repositories on 2026-08-07:
+The repository and channel map was checked against elsa-core on 2026-10-11.
+Studio and extensions now live inside elsa-core; report issues there.
 
 - [Core README at the validated release commit](https://github.com/elsa-workflows/elsa-core/blob/5429008d98a56afd29b4fd11107f7760710b1a64/README.md)
-- [Studio README at the validated release commit](https://github.com/elsa-workflows/elsa-studio/blob/7c6bac091d62a8f8fe8273332e65158b45b60326/README.md)
-- [Extensions README at the validated release commit](https://github.com/elsa-workflows/elsa-extensions/blob/335a26495318f6ee1528bf2723b7333c753ce9a2/README.md)
+- [Studio documentation on main](https://github.com/elsa-workflows/elsa-core/blob/main/studio/docs/README.md)
+- [Extensions documentation on main](https://github.com/elsa-workflows/elsa-core/blob/main/extensions/docs/README.md)
 
 These source files confirm the official repository boundaries and shared
 Discord and Stack Overflow channels. They do not guarantee that every
