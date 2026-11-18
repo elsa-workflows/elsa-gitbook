@@ -9,10 +9,10 @@ systems like service buses, cloud services, and additional features such as
 or [Telnyx voice and webhook automation](../activities/telnyx.md).
 
 {% hint style="info" %}
-The current stable package line is Elsa **3.9.0**, published on NuGet.org. Pin
-every Elsa Core, Studio, and Extensions package to the same `3.9.0` version; do
-not mix versions or stable, RC, and preview builds. See [Upgrade to Elsa
-3.9.0](upgrading-to-3.9.md).
+The current stable release is Elsa **3.10.2**, published on NuGet.org. Pin
+your Elsa Core, Studio, and Extensions packages to `3.10.2`. Review the
+[3.10.2 upgrade notes](https://github.com/elsa-workflows/elsa-core/releases/tag/3.10.2)
+before upgrading an existing deployment.
 {% endhint %}
 
 ## **Main Package**
@@ -28,27 +28,25 @@ The primary package you'll need to get started with Elsa is the `Elsa` package. 
 To install the core `Elsa` package, use the `dotnet` CLI:
 
 ```
-dotnet add package Elsa --version 3.9.0
+dotnet add package Elsa --version 3.10.2
 ```
 
 ## **Project Templates**
 
-For a new .NET 10 server, Studio, or combined application, install the stable
-template package:
+For a new .NET 10 server, Studio, or combined application, install
+`Elsa.Templates` 3.10.2:
 
 ```bash
-dotnet new install Elsa.Templates
+dotnet new install Elsa.Templates@3.10.2
 ```
 
-Generated projects use the Elsa version of the template package. If that is
-older than 3.9.0, update the package references and follow [Upgrade to Elsa
-3.9.0](upgrading-to-3.9.md).
+This template release generates projects using Elsa Core and Studio 3.10.2.
+See the [Templates release notes](https://github.com/elsa-workflows/elsa-templates/releases/tag/3.10.2)
+for the combined-host deep link configuration.
 
-See [Upgrade to Elsa 3.8.0](upgrading-to-3.8.md#start-from-the-elsa-templates)
-for the supported generation options, feature models, authentication choices,
-and local Development identity defaults. The [Elsa.Templates 3.8.0 GitHub
-release](https://github.com/elsa-workflows/elsa-templates/releases/tag/3.8.0)
-contains the package release details.
+See the [3.10.2 template guide](https://github.com/elsa-workflows/elsa-templates/tree/3.10.2#usage)
+for generation options, feature models, authentication choices, and Development
+identity defaults.
 
 ## **Package Feeds**
 
