@@ -12,7 +12,8 @@ or [Telnyx voice and webhook automation](../activities/telnyx.md).
 The current stable release is Elsa **3.10.2**, published on NuGet.org. Pin
 your Elsa Core, Studio, and Extensions packages to `3.10.2`. Review the
 [3.10.2 upgrade notes](https://github.com/elsa-workflows/elsa-core/releases/tag/3.10.2)
-before upgrading an existing deployment.
+before upgrading an existing deployment. `Elsa.Platform.Integration` 3.10.2
+is available from [Feedz](https://f.feedz.io/elsa-workflows/elsa-3/nuget/index.json).
 {% endhint %}
 
 ## **Main Package**
@@ -42,7 +43,10 @@ dotnet new install Elsa.Templates@3.10.2
 
 This template release generates projects using Elsa Core and Studio 3.10.2.
 See the [Templates release notes](https://github.com/elsa-workflows/elsa-templates/releases/tag/3.10.2)
-for the combined-host deep link configuration.
+for the combined static host's deep-link configuration. For a CShells backend,
+generate the server with `elsa-server` and a separate Blazor Server Studio with
+`elsa-studio`. The release notes detail the combined CShells sign-in limitation
+and the `Backend:Url` setting for the separate Studio.
 
 See the [3.10.2 template guide](https://github.com/elsa-workflows/elsa-templates/tree/3.10.2#usage)
 for generation options, feature models, authentication choices, and Development
@@ -57,6 +61,8 @@ Elsa packages are distributed through various feeds based on their stability and
 ### **Releases** <a href="#releases" id="releases"></a>
 
 Stable versions of Elsa are distributed via NuGet.org.
+For the Feedz-only `Elsa.Platform.Integration` 3.10.2 package, include the Feedz
+source listed above.
 
 ### **Release Candidates (RC)** <a href="#release-candidates-rc" id="release-candidates-rc"></a>
 
@@ -66,9 +72,8 @@ RC packages are also available on NuGet.org. They offer a sneak peek into upcomi
 
 Preview versions are a separate prerelease channel and may introduce breaking
 changes. Feedz availability and publication timing are independent of stable
-releases; use the feed only when the relevant release notes or branch
-instructions confirm that a preview package is available. Stable applications
-should use NuGet.org and should not add the preview source.
+releases. Use the Feedz source for packages explicitly available there, and use
+NuGet.org for the usual stable install.
 
 To access preview packages, include the feed URL when using the dotnet CLI or add it to your `NuGet.config`:
 
