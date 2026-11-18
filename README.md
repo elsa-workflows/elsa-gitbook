@@ -7,9 +7,9 @@ description: Introducing Elsa Workflows 3
 Elsa Workflows is a set of open-source .NET libraries designed to enhance .NET applications with workflow capabilities. Think of it as lego blocks for creating workflow engines in .NET.
 
 {% hint style="info" %}
-These docs target the Elsa 3.9.0 stable package family. See [Upgrade to Elsa
-3.9.0](getting-started/upgrading-to-3.9.md) for what's new and the breaking
-changes.
+The current stable release is Elsa **3.10.2**. See the [package installation guide](getting-started/packages.md)
+and [3.10.2 upgrade notes](https://github.com/elsa-workflows/elsa-core/releases/tag/3.10.2).
+Versioned walkthroughs identify the Elsa release they cover.
 {% endhint %}
 
 Workflows in Elsa can be defined in different ways:
